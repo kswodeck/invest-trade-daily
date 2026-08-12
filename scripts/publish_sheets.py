@@ -364,12 +364,23 @@ def open_spreadsheet():
 
 
 def get_or_create(spreadsheet, title: str, rows: int, cols: int):
+    """Fetch or create a tab, sized to hold `rows` x `cols`.
+
+    Clearing a worksheet does not resize its grid, so a reused tab keeps
+    whatever dimensions it was created with. Performance grows by a few rows
+    every day and would eventually exceed them, failing the write with
+    "exceeds grid limits" — so grow the grid explicitly when needed.
+    """
+    rows, cols = max(rows, 50), max(cols, 26)
     try:
         ws = spreadsheet.worksheet(title)
-        ws.clear()
-        return ws
     except Exception:  # noqa: BLE001 - gspread raises WorksheetNotFound
-        return spreadsheet.add_worksheet(title=title, rows=max(rows, 50), cols=max(cols, 26))
+        return spreadsheet.add_worksheet(title=title, rows=rows, cols=cols)
+
+    ws.clear()
+    if ws.row_count < rows or ws.col_count < cols:
+        ws.resize(rows=max(rows, ws.row_count), cols=max(cols, ws.col_count))
+    return ws
 
 
 def style_grid(ws, header_row: int, n_cols: int, n_rows: int, ideas: list[dict]) -> None:
