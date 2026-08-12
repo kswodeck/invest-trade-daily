@@ -6,9 +6,30 @@ allowed-tools: WebSearch, WebFetch, Bash, Read, Write, Edit, Glob, Grep
 
 # Daily research phase
 
-You are researching trade ideas for today's report. Read
-`config/strategy.md` and `config/universe.md` first — they define what counts as
-a good idea and what is tradeable. They override anything here that conflicts.
+You are researching trade ideas for today's report. Read these three files
+first — they override anything here that conflicts:
+
+| File | What it gives you |
+| --- | --- |
+| `config/strategy.md` | What counts as a good idea, and how to rank |
+| `config/universe.md` | What is tradeable |
+| `reports/<date>/prior_context.md` | What you already recommended, and how it went |
+
+## Prior context is not optional reading
+
+`prior_context.md` lists your open positions, your hit rate by category, and the
+symbols you have been repeating. Three obligations come out of it:
+
+1. **Manage open positions before hunting new ones.** For each open position,
+   decide: hold, adjust the target or stop on new information, or close early.
+   If something changed, emit a recommendation for that symbol and mark it as an
+   update to an existing position — do not present it as a fresh idea.
+2. **Do not re-pitch.** A symbol you have recommended three days running is a
+   sign you are anchored, not a sign of conviction. Re-recommend it only if
+   something concrete changed, and say what changed.
+3. **Let the track record inform the bar, carefully.** If a category is
+   consistently losing, raise the bar for it. But under roughly 15 closed trades
+   the sample is noise — say so rather than over-fitting to a bad week.
 
 ## The single most important rule
 
@@ -96,6 +117,11 @@ these, and it may be parsing a file that stops mid-sentence.
 - <finding> — source: <url>
 
 ## [HH:MM ET] REJECTED — TSLA — no dated catalyst inside horizon, R:R 1.2
+
+## [HH:MM ET] POSITION UPDATE — NVDA — opened 2026-08-05, +6.2%
+- decision: hold, raise stop to 176 (now above entry)
+- why: earnings moved to 2026-08-27; thesis intact, first target within 2 ATR
+- action: emit as a recommendation flagged as an update, not a new entry
 ```
 
 Log rejections too, in one line. They stop the synthesis phase from

@@ -120,7 +120,13 @@ and skip what is not.
 
 ## 5. Verify
 
-Actions → **Daily Trade Report** → **Run workflow**, and set:
+First run **Actions → Data Sources Check → Run workflow**. It probes all nine
+data sources and does a real write-read-delete against your Sheet, then prints
+a table of what works. This is the fastest way to catch a setup mistake, and it
+takes about a minute.
+
+Then run the real thing: Actions → **Daily Trade Report** → **Run workflow**,
+and set:
 
 ```
 research_minutes: 5
@@ -139,6 +145,28 @@ If it fails, the job log names the failing phase. Common causes:
 | `invalid_grant` / auth error on the Claude step | Token expired; rerun `claude setup-token` |
 | `Your Request Originates from an Undeclared Automated Tool` | `SEC_USER_AGENT` missing or not an email |
 | Workflow never fires at 6am | See "Scheduling" below |
+| Run is red but the Sheet updated | Intentional — see "Failure alerts" below |
+
+---
+
+## Failure alerts
+
+There is no notification channel to configure. The run finishes, the Sheet is
+current, and you open it when you want it.
+
+The one deliberate exception: when the pipeline fails badly enough that the
+report is a stub with no ideas, **the workflow marks itself red on purpose**.
+GitHub emails repository owners about failed scheduled runs but says nothing
+about successful ones — so without this, the single morning that produced
+nothing would also be the single morning you heard nothing about. A red run
+with a fresh Sheet is not a contradiction; it means "published, but the
+contents are an apology."
+
+The Sheet write and the git commit both happen *before* that failure, so a red
+run still leaves you the full record.
+
+To check what happened, open the run and read the summary — it names which
+phase failed and includes the report's data-quality note.
 
 ---
 

@@ -63,6 +63,7 @@ def stub(date_str: str, reason: str, notes_path: Path, truncated: bool) -> dict:
         "generated_at_et": datetime.now(ET).isoformat(timespec="seconds"),
         "research_minutes": None,
         "truncated": truncated,
+        "pipeline_failure": True,
         "data_quality_notes": (
             f"NO RECOMMENDATIONS PUBLISHED. The synthesis phase did not produce a usable "
             f"report ({reason}). {notes_excerpt(notes_path)} "

@@ -14,6 +14,10 @@ to a Google Sheet.
 ```
 06:00 ET (cron, DST-aware)
    │
+   ├─ Phase 0 — CONTEXT
+   │    Summarizes open positions, hit rate by category, and recently
+   │    repeated symbols so the research phase has memory.
+   │
    ├─ Phase 1 — RESEARCH  (Opus, hard 60 min cap)
    │    Scans news, filings, macro, price action, event markets.
    │    Appends every finding to reports/<date>/notes.md as it goes,
@@ -37,6 +41,15 @@ to watch a clock. When the research step is killed, `continue-on-error` lets the
 job proceed to synthesis anyway — so **the report always ships**, it just ships
 with less research behind it. The `truncated` flag in `report.json` records
 whether that happened.
+
+### When it breaks
+
+If synthesis produces nothing usable, `ensure_report.py` publishes a stub that
+says the pipeline failed — explicitly, so a blank sheet is never mistaken for
+"no good trades today" — and then **fails the workflow on purpose**. GitHub only
+emails you about red runs, so a green run publishing zero ideas would be the one
+morning you'd hear nothing about. The Sheet write and the commit both happen
+before that failure, so you keep the record either way.
 
 ## Scope
 
@@ -87,24 +100,41 @@ dry_run: true             # writes reports/ but not the Sheet
 
 ```
 .github/workflows/
-  daily-report.yml     the scheduled pipeline
-  keepalive.yml        stops GitHub disabling the cron after 60 idle days
+  daily-report.yml       the scheduled pipeline
+  keepalive.yml          stops GitHub disabling the cron after 60 idle days
+  data-sources-check.yml manual probe of every data source and the Sheet
 .claude/skills/
-  daily-research/      Phase 1 prompt contract
-  daily-synthesis/     Phase 2 prompt contract
+  daily-research/        Phase 1 prompt contract
+  daily-synthesis/       Phase 2 prompt contract
 config/
-  strategy.md          horizon, sizing, conviction, ranking rules
-  universe.md          Robinhood venue constraints
+  strategy.md            horizon, sizing, conviction, ranking rules
+  universe.md            Robinhood venue constraints
 scripts/
-  market_data.py       keyless-first data CLI Claude calls during research
-  publish_sheets.py    Sheets writer + performance grader
-  report_schema.json   the contract between synthesis and publishing
+  market_data.py         keyless-first data CLI Claude calls during research
+  build_context.py       prior picks and outcomes, so research has memory
+  ensure_report.py       guarantees a publishable report.json exists
+  publish_sheets.py      Sheets writer + performance grader
+  step_summary.py        the Actions run summary
+  check_sources.py       probes all nine data sources
+  check_sheets.py        write/read/delete test against the Sheet
+  report_schema.json     the contract between synthesis and publishing
 reports/<date>/
-  notes.md             raw research log (checkpointed)
-  report.json          final structured output
+  prior_context.md       what was recommended before and how it went
+  notes.md               raw research log (checkpointed)
+  report.json            final structured output
 state/
-  open_positions.json  picks still being tracked for performance
+  open_positions.json    picks still being tracked for performance
 ```
+
+## Tuning it
+
+Two files change behavior with no code edits, and both are read fresh on every
+run:
+
+- **`config/strategy.md`** — how many ideas, the swing/intraday split, minimum
+  reward-to-risk, position size caps, the conviction rubric, and how the
+  research budget is divided.
+- **`config/universe.md`** — what is tradeable and what is excluded.
 
 ## Disclaimer
 

@@ -28,8 +28,15 @@ traded on.
 
 ## Steps
 
-1. **Read the notes.** Extract every `CANDIDATE` block. Ignore `REJECTED`
-   entries except as evidence the field was considered.
+1. **Read the notes** and `reports/<date>/prior_context.md`. Extract every
+   `CANDIDATE` and `POSITION UPDATE` block. Ignore `REJECTED` entries except as
+   evidence the field was considered.
+
+   A `POSITION UPDATE` becomes a normal recommendation for that symbol, with the
+   revised levels and a `thesis` that opens by naming it as an update to an open
+   position — for example, *"Update to the 2026-08-05 long: thesis intact,
+   raising the stop to 176."* Position updates do not count against the 6–8 idea
+   target; they are position management, not new risk.
 2. **Filter.** Drop anything below conviction 3, anything missing a stop where
    `config/strategy.md` requires one, and anything under the reward-to-risk
    floor (2.0 swing, 1.5 intraday). Enforce the correlation cap: at most 3 ideas

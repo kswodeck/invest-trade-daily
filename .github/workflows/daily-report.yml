@@ -104,6 +104,13 @@ jobs:
           python scripts/market_data.py quote SPY || true
           python scripts/market_data.py crypto bitcoin || true
 
+      # Gives the research phase memory: open positions it must manage rather
+      # than re-pitch, its own hit rate by category, and which symbols it has
+      # been repeating.
+      - name: Build prior context
+        continue-on-error: true
+        run: python scripts/build_context.py "$REPORT_DATE" --days 10
+
       # Phase 1. The timeout is enforced by GitHub, not by asking the model to
       # watch a clock. continue-on-error lets the job carry on to synthesis when
       # the cap kills this step, which is the normal, expected outcome.
@@ -200,3 +207,22 @@ jobs:
           RESEARCH_OUTCOME: ${{ steps.research.outcome }}
           SYNTHESIS_OUTCOME: ${{ steps.synthesis.outcome }}
         run: python scripts/step_summary.py "$REPORT_DATE" >> "$GITHUB_STEP_SUMMARY"
+
+      # Deliberately last, and deliberately red. GitHub only emails the owner
+      # when a scheduled run fails, so a stub report has to fail the job or the
+      # one morning that produced nothing would be the one morning that looked
+      # fine. The Sheet and the commit have already happened by this point.
+      - name: Fail the run if the report is a stub
+        if: always()
+        run: |
+          python - "$REPORT_DATE" <<'PY'
+          import json, sys, pathlib
+          path = pathlib.Path("reports") / sys.argv[1] / "report.json"
+          report = json.loads(path.read_text())
+          if report.get("pipeline_failure"):
+              print("::error title=Report pipeline failed::"
+                    "Synthesis produced nothing usable; a stub was published. "
+                    "See the Data quality note in the run summary.")
+              sys.exit(1)
+          print(f"Report OK: {len(report['recommendations'])} recommendations.")
+          PY

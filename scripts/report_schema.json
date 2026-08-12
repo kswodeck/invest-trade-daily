@@ -22,6 +22,11 @@
       "type": "boolean",
       "description": "True when the research phase hit its hard timeout"
     },
+    "pipeline_failure": {
+      "type": "boolean",
+      "default": false,
+      "description": "Set only by ensure_report.py when synthesis produced nothing usable and this file is a stub. Fails the workflow so GitHub's default failure email fires, rather than a zero-idea day passing as green."
+    },
     "data_quality_notes": {
       "type": "string",
       "description": "Honest account of what could not be verified, which sources failed, and why the idea count is what it is"

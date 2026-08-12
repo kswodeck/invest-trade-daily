@@ -19,10 +19,12 @@ Google Sheet. Two Claude phases run in sequence inside one GitHub Actions job.
 
 ## Phase contract
 
-| Phase | Skill | Writes | Reads |
-| ----- | ----- | ------ | ----- |
-| 1 Research | `/daily-research` | `reports/<date>/notes.md`, `candidates.jsonl` | web, `scripts/market_data.py` |
+| Phase | Runs | Writes | Reads |
+| ----- | ---- | ------ | ----- |
+| 0 Context | `scripts/build_context.py` | `reports/<date>/prior_context.md` | `state/`, past reports |
+| 1 Research | `/daily-research` | `reports/<date>/notes.md` | web, `market_data.py`, prior context |
 | 2 Synthesis | `/daily-synthesis` | `reports/<date>/report.json` | the above |
+| 2b Guarantee | `scripts/ensure_report.py` | a stub `report.json` if needed | `report.json`, `notes.md` |
 | 3 Publish | `scripts/publish_sheets.py` | Google Sheet, `state/open_positions.json` | `report.json` |
 
 Phase 2 must produce a schema-valid `report.json` **even if `notes.md` is
