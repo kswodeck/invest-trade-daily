@@ -24,6 +24,7 @@ import csv
 import io
 import json
 import os
+import re
 import sys
 from datetime import date, datetime, timedelta, timezone
 from typing import Any, Iterable
@@ -71,9 +72,109 @@ def _num(value: Any) -> float | None:
     return None if f != f else f  # drop NaN
 
 
+# Robinhood futures codes look like /MESU6 (root + month letter + year digit).
+# Yahoo wants the continuous contract, MES=F. Strip the month code, and if the
+# micro root is not recognised fall back to the full-size root, which tracks the
+# same underlying at the same quoted level.
+_MONTH_CODE = re.compile(r"^([A-Z0-9]+?)([FGHJKMNQUVXZ]\d{1,2})$")
+
+_YAHOO_ALIASES = {
+    "SPX": "^GSPC", "NDX": "^NDX", "DJI": "^DJI", "RUT": "^RUT", "VIX": "^VIX",
+    "DXY": "DX-Y.NYB", "WTI": "CL=F", "GOLD": "GC=F",
+}
+
+
+def _yahoo_symbol(symbol: str) -> str:
+    s = symbol.strip().upper()
+    if s in _YAHOO_ALIASES:
+        return _YAHOO_ALIASES[s]
+    if s.startswith("^") or s.endswith("=F") or "-" in s or "." in s:
+        return s
+    if s.startswith("/"):  # futures
+        root = s[1:]
+        m = _MONTH_CODE.match(root)
+        if m:
+            root = m.group(1)
+        return f"{root}=F"
+    return s
+
+
+def _futures_fallback(symbol: str) -> str | None:
+    """MES=F -> ES=F, for micro roots Yahoo does not carry."""
+    s = _yahoo_symbol(symbol)
+    if s.endswith("=F") and len(s) > 3 and s[0] == "M":
+        return f"{s[1:]}"
+    return None
+
+
 # --------------------------------------------------------------------------
 # quotes
 # --------------------------------------------------------------------------
+
+# Yahoo's chart endpoint is the workhorse: keyless, no rate limit worth worrying
+# about, and it covers equities, ETFs, indices, futures, and crypto from one
+# shape. Stooq was the original primary but returns 404 from datacenter IPs,
+# which is every GitHub Actions runner.
+YAHOO_HEADERS = {
+    "User-Agent": (
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
+        "(KHTML, like Gecko) Chrome/124.0 Safari/537.36"
+    ),
+    "Accept": "application/json",
+}
+
+
+def _yahoo_chart(symbol: str, rng: str, interval: str) -> dict[str, Any]:
+    resp = _get(
+        f"https://query1.finance.yahoo.com/v8/finance/chart/{_yahoo_symbol(symbol)}",
+        params={"range": rng, "interval": interval, "includePrePost": "false"},
+        headers=YAHOO_HEADERS,
+    )
+    payload = resp.json()
+    err = (payload.get("chart") or {}).get("error")
+    if err:
+        raise ValueError(f"yahoo error for {symbol}: {err}")
+    results = (payload.get("chart") or {}).get("result") or []
+    if not results:
+        raise ValueError(f"yahoo returned no result for {symbol}")
+    return results[0]
+
+
+def quote_yahoo(symbol: str) -> dict[str, Any]:
+    for candidate in filter(None, [symbol, _futures_fallback(symbol)]):
+        try:
+            result = _yahoo_chart(candidate, "1d", "1d")
+            meta = result.get("meta", {})
+            price = _num(meta.get("regularMarketPrice"))
+            if price is None:  # fall back to the last non-null close
+                closes = [
+                    c for c in
+                    (result.get("indicators", {}).get("quote") or [{}])[0].get("close", [])
+                    if c is not None
+                ]
+                price = _num(closes[-1]) if closes else None
+            if price is None:
+                raise ValueError(f"no price in yahoo meta for {candidate}")
+            prev = _num(meta.get("previousClose")) or _num(meta.get("chartPreviousClose"))
+            ts = meta.get("regularMarketTime")
+            return {
+                "ok": True,
+                "source": "yahoo",
+                "symbol": symbol.upper(),
+                "resolved_symbol": _yahoo_symbol(candidate),
+                "price": price,
+                "high": _num(meta.get("regularMarketDayHigh")),
+                "low": _num(meta.get("regularMarketDayLow")),
+                "prev_close": prev,
+                "volume": _num(meta.get("regularMarketVolume")),
+                "change_pct": round((price - prev) / prev * 100, 2) if prev else None,
+                "currency": meta.get("currency"),
+                "instrument_type": meta.get("instrumentType"),
+                "asof": datetime.fromtimestamp(ts, tz=timezone.utc).isoformat() if ts else None,
+            }
+        except Exception as exc:  # noqa: BLE001
+            last = _fail("yahoo", exc)
+    return last
 
 def quote_finnhub(symbol: str) -> dict[str, Any]:
     if not FINNHUB_KEY:
@@ -105,10 +206,12 @@ def quote_finnhub(symbol: str) -> dict[str, Any]:
 
 
 def quote_stooq(symbol: str) -> dict[str, Any]:
+    """Fallback only. Stooq 404s from datacenter IPs, so this rarely fires in CI."""
     try:
+        # `h` is a bare flag requesting the header row; sending it as `h=` has
+        # been observed to 404, so the query string is built by hand.
         text = _get(
-            "https://stooq.com/q/l/",
-            params={"s": _stooq_symbol(symbol), "f": "sd2t2ohlcv", "h": "", "e": "csv"},
+            f"https://stooq.com/q/l/?s={_stooq_symbol(symbol)}&f=sd2t2ohlcv&h&e=csv"
         ).text
         row = next(csv.DictReader(io.StringIO(text)))
         close = _num(row.get("Close"))
@@ -163,7 +266,7 @@ def quote_alphavantage(symbol: str) -> dict[str, Any]:
 def quote(symbol: str) -> dict[str, Any]:
     """First source that returns a usable price wins."""
     attempts = []
-    for fn in (quote_finnhub, quote_stooq, quote_alphavantage):
+    for fn in (quote_yahoo, quote_finnhub, quote_stooq, quote_alphavantage):
         result = fn(symbol)
         if result.get("ok"):
             result["fallbacks_tried"] = [a["source"] for a in attempts]
@@ -208,15 +311,60 @@ def crypto(coin_ids: Iterable[str]) -> dict[str, Any]:
 # history + derived levels
 # --------------------------------------------------------------------------
 
+def _yahoo_range(days: int) -> str:
+    for limit, label in ((5, "5d"), (30, "1mo"), (90, "3mo"), (180, "6mo"), (365, "1y")):
+        if days <= limit:
+            return label
+    return "2y"
+
+
+def _bars_yahoo(symbol: str, days: int) -> list[dict[str, Any]]:
+    result = _yahoo_chart(symbol, _yahoo_range(days), "1d")
+    stamps = result.get("timestamp") or []
+    q = (result.get("indicators", {}).get("quote") or [{}])[0]
+    rows = []
+    for i, ts in enumerate(stamps):
+        close = _num((q.get("close") or [None] * len(stamps))[i])
+        if close is None:  # Yahoo pads holidays and halts with nulls
+            continue
+        rows.append({
+            "Date": datetime.fromtimestamp(ts, tz=timezone.utc).date().isoformat(),
+            "Open": _num((q.get("open") or [None] * len(stamps))[i]) or close,
+            "High": _num((q.get("high") or [None] * len(stamps))[i]) or close,
+            "Low": _num((q.get("low") or [None] * len(stamps))[i]) or close,
+            "Close": close,
+            "Volume": _num((q.get("volume") or [None] * len(stamps))[i]),
+        })
+    if not rows:
+        raise ValueError(f"yahoo returned no usable bars for {symbol}")
+    return rows
+
+
+def _bars_stooq(symbol: str) -> list[dict[str, Any]]:
+    text = _get("https://stooq.com/q/d/l/", params={"s": _stooq_symbol(symbol), "i": "d"}).text
+    rows = [r for r in csv.DictReader(io.StringIO(text)) if r.get("Close")]
+    if not rows:
+        raise ValueError(f"stooq returned no history for {symbol}")
+    return rows
+
+
 def history(symbol: str, days: int = 120) -> dict[str, Any]:
     """Daily OHLCV plus the levels needed to set entries, targets, and stops."""
+    errors = []
+    rows: list[dict[str, Any]] = []
+    source = ""
+    for name, loader in (("yahoo", lambda: _bars_yahoo(symbol, days)),
+                         ("stooq", lambda: _bars_stooq(symbol))):
+        try:
+            rows, source = loader(), name
+            break
+        except Exception as exc:  # noqa: BLE001
+            errors.append(f"{name}: {type(exc).__name__}: {exc}")
+
+    if not rows:
+        return {"ok": False, "symbol": symbol.upper(), "attempts": errors}
+
     try:
-        text = _get(
-            "https://stooq.com/q/d/l/", params={"s": _stooq_symbol(symbol), "i": "d"}
-        ).text
-        rows = [r for r in csv.DictReader(io.StringIO(text)) if r.get("Close")]
-        if not rows:
-            raise ValueError(f"stooq returned no history for {symbol}")
         rows = rows[-days:]
         closes = [float(r["Close"]) for r in rows]
         highs = [float(r["High"]) for r in rows]
@@ -234,7 +382,7 @@ def history(symbol: str, days: int = 120) -> dict[str, Any]:
 
         return {
             "ok": True,
-            "source": "stooq",
+            "source": source,
             "symbol": symbol.upper(),
             "bars": len(rows),
             "start": rows[0]["Date"],
@@ -262,7 +410,7 @@ def history(symbol: str, days: int = 120) -> dict[str, Any]:
             ],
         }
     except Exception as exc:  # noqa: BLE001
-        return _fail("stooq", exc)
+        return _fail(source or "history", exc)
 
 
 # --------------------------------------------------------------------------
@@ -278,15 +426,21 @@ FRED_SERIES = {
     "cpi_yoy": "CPIAUCSL",
 }
 
+# Yahoo symbols. Futures (=F) matter here: they are the only free source of a
+# price for the Robinhood Derivatives ideas, and they trade overnight, so at
+# 6am ET they are the honest read on where the session opens.
 MACRO_TICKERS = {
-    "spx": "^spx",
-    "ndx": "^ndq",
-    "dow": "^dji",
-    "russell2000": "^rut",
-    "vix": "^vix",
-    "gold_etf": "GLD",
-    "oil_etf": "USO",
-    "dollar_etf": "UUP",
+    "spx": "^GSPC",
+    "ndx": "^NDX",
+    "dow": "^DJI",
+    "russell2000": "^RUT",
+    "vix": "^VIX",
+    "es_futures": "ES=F",
+    "nq_futures": "NQ=F",
+    "dollar_index": "DX-Y.NYB",
+    "us10y_yield": "^TNX",
+    "gold": "GC=F",
+    "wti_crude": "CL=F",
     "bonds_20y": "TLT",
 }
 

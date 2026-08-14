@@ -185,6 +185,11 @@ def save_state(positions: list[dict]) -> None:
     STATE_PATH.write_text(json.dumps(positions, indent=2) + "\n")
 
 
+# Classes Yahoo can price, and therefore grade from daily bars. Event contracts
+# have no free quote source and stay ungraded.
+PRICEABLE = ("stock", "etf", "futures")
+
+
 def _current_price(pos: dict) -> float | None:
     """Best-effort current price. None is an acceptable answer."""
     import market_data
@@ -197,12 +202,12 @@ def _current_price(pos: dict) -> float | None:
                 prices = list(res.get("prices", {}).values())
                 return prices[0]["price"] if prices else None
             return None
-        if cls in ("stock", "etf"):
+        if cls in PRICEABLE:
             res = market_data.quote(symbol)
             return res.get("price") if res.get("ok") else None
     except Exception:  # noqa: BLE001 - grading must never break publishing
         return None
-    return None  # futures and event contracts have no free quote source
+    return None
 
 
 def grade_position(pos: dict, today: date) -> dict:
@@ -218,9 +223,9 @@ def grade_position(pos: dict, today: date) -> dict:
     stop = pos.get("stop")
     bullish = pos.get("direction") in BULLISH
 
-    # For equities, scan the bars since open so an intraday touch of the target
-    # or stop is caught rather than only the closing price.
-    if pos.get("asset_class") in ("stock", "etf"):
+    # Scan the bars since open so an intraday touch of the target or stop is
+    # caught rather than only the closing price.
+    if pos.get("asset_class") in PRICEABLE:
         try:
             import market_data
 
@@ -286,10 +291,15 @@ def positions_from_report(report: dict) -> list[dict]:
 
 
 def _price_note(pos: dict) -> str:
+    if pos.get("asset_class") == "futures":
+        # Yahoo quotes the continuous front-month, not the specific contract
+        # month that was recommended, so the grade carries a basis error.
+        base = "graded on continuous front-month; basis differs from the contract"
+        return base if pos.get("last_price") is not None else f"{base}; price fetch failed"
     if pos.get("last_price") is not None:
         return ""
-    if pos.get("asset_class") in ("futures", "event"):
-        return "no free quote source for this class"
+    if pos.get("asset_class") == "event":
+        return "no free quote source for event contracts"
     return "price fetch failed this run"
 
 

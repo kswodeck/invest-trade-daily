@@ -84,7 +84,12 @@ Quick version:
 | `ALPHAVANTAGE_API_KEY`      | no       | Free tier. Fallback quotes and fundamentals      |
 
 Everything degrades gracefully: with zero optional keys the pipeline still runs
-on Stooq, CoinGecko, SEC EDGAR, Kalshi, and Claude's own web search.
+on Yahoo Finance, CoinGecko, SEC EDGAR, Kalshi, and Claude's own web search.
+
+Yahoo's chart endpoint is the workhorse — it is keyless and covers equities,
+ETFs, indices, futures, and crypto from one response shape. Stooq was the
+original primary and is kept only as a fallback: it returns 404 to datacenter
+IPs, which is every GitHub Actions runner.
 
 ## Running it manually
 
