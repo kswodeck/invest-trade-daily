@@ -63,13 +63,15 @@ def main() -> int:
 
     # Providers: which individual source is up. Informational only.
     providers = [
-        ("Yahoo — quote", lambda: md.quote_yahoo("SPY"), None),
-        ("Yahoo — history", lambda: md._bars_yahoo("SPY", 90) and {"ok": True, "source": "yahoo"}, None),
-        ("Yahoo — futures (/MESU6)", lambda: md.quote_yahoo("/MESU6"), None),
+        ("Nasdaq — history", lambda: {"ok": bool(md._bars_nasdaq("SPY", 90)), "source": "nasdaq"}, None),
         ("Finnhub — quote", lambda: md.quote_finnhub("SPY"), "FINNHUB_API_KEY"),
         ("Finnhub — earnings", lambda: md.earnings(7), "FINNHUB_API_KEY"),
+        ("Yahoo — quote", lambda: md.quote_yahoo("SPY"), None),
+        ("Yahoo — history", lambda: {"ok": bool(md._bars_yahoo("SPY", 90)), "source": "yahoo"}, None),
+        ("Yahoo — futures (/MESU6)", lambda: md.quote_yahoo("/MESU6"), None),
+        ("Twelve Data — history", lambda: {"ok": bool(md._bars_twelvedata("SPY", 90)), "source": "twelvedata"}, "TWELVEDATA_API_KEY"),
+        ("Alpha Vantage — history", lambda: {"ok": bool(md._bars_alphavantage("SPY"))}, "ALPHAVANTAGE_API_KEY"),
         ("Stooq — quote", lambda: md.quote_stooq("SPY"), None),
-        ("Alpha Vantage — quote", lambda: md.quote_alphavantage("SPY"), "ALPHAVANTAGE_API_KEY"),
         ("CoinGecko — crypto", lambda: md.crypto(["bitcoin"]), None),
         ("Kalshi — event contracts", lambda: md.events("", 3), None),
         ("SEC EDGAR — filings", lambda: md.filings("AAPL", 3), "SEC_USER_AGENT"),

@@ -84,6 +84,7 @@ jobs:
       REPORT_DATE: ${{ needs.gate.outputs.date }}
       FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
       ALPHAVANTAGE_API_KEY: ${{ secrets.ALPHAVANTAGE_API_KEY }}
+      TWELVEDATA_API_KEY: ${{ secrets.TWELVEDATA_API_KEY }}
       FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
       SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
 
@@ -133,11 +134,21 @@ jobs:
         if: always()
         run: |
           echo "Research step outcome: ${{ steps.research.outcome }}"
-          if [ -f "reports/$REPORT_DATE/notes.md" ]; then
-            wc -l "reports/$REPORT_DATE/notes.md"
-            echo "Candidate blocks: $(grep -c 'CANDIDATE' "reports/$REPORT_DATE/notes.md" || echo 0)"
+          NOTES="reports/$REPORT_DATE/notes.md"
+          CANDIDATES="reports/$REPORT_DATE/candidates.jsonl"
+          [ -f "$NOTES" ] && wc -c "$NOTES" || echo "::warning::No research notes were produced."
+          if [ -f "$CANDIDATES" ]; then
+            N=$(grep -c . "$CANDIDATES" || echo 0)
+            echo "Candidates captured: $N"
+            python -c "
+          import json,sys
+          for line in open('$CANDIDATES'):
+              if line.strip():
+                  c = json.loads(line)
+                  print(f\"  {c['symbol']:<10} {c['direction']:<10} conv {c['conviction']}  {c['catalyst']['event'][:50]}\")
+          " || true
           else
-            echo "::warning::No research notes were produced."
+            echo "::warning::No candidates were captured — synthesis will have to reconstruct from notes."
           fi
 
       - name: Phase 2 — synthesis
