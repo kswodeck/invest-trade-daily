@@ -104,17 +104,29 @@ Any real name and reachable email is fine.
 ## 4. Optional free API keys
 
 All free, all optional. Each one measurably improves research quality. Without
-them the pipeline falls back to keyless sources (Stooq, CoinGecko, Kalshi, SEC,
+them the pipeline falls back to keyless sources (Yahoo Finance, CoinGecko, Kalshi, SEC,
 and Claude's web search).
 
-| Secret | Where | Free tier | Buys you |
-| ------ | ----- | --------- | -------- |
-| `FRED_API_KEY` | [fred.stlouisfed.org/docs/api/api_key.html](https://fred.stlouisfed.org/docs/api/api_key.html) | unlimited, instant | Rates, CPI, unemployment, yield curve |
-| `FINNHUB_API_KEY` | [finnhub.io/register](https://finnhub.io/register) | 60 calls/min | Real quotes, earnings calendar, company news |
-| `ALPHAVANTAGE_API_KEY` | [alphavantage.co/support/#api-key](https://www.alphavantage.co/support/#api-key) | 25 calls/day | Fallback quotes, fundamentals |
+| Secret | Where | Free tier | Buys you | Worth it? |
+| ------ | ----- | --------- | -------- | --------- |
+| `FINNHUB_API_KEY` | [finnhub.io/register](https://finnhub.io/register) | 60 calls/min | Earnings calendar, real quotes, company news | **Yes** |
+| `FRED_API_KEY` | [fred.stlouisfed.org/docs/api/api_key.html](https://fred.stlouisfed.org/docs/api/api_key.html) | unlimited, instant | Rates, CPI, unemployment, yield curve | **Yes** |
+| `ALPHAVANTAGE_API_KEY` | [alphavantage.co/support/#api-key](https://www.alphavantage.co/support/#api-key) | 25 calls/**day** | Fallback quotes | Marginal |
 
 Add whichever you want as repository secrets. The scripts detect what is present
 and skip what is not.
+
+Two of these are worth the two minutes each:
+
+- **Finnhub** gives a real earnings calendar. Catalyst hunting is 35% of the
+  research budget and earnings are the single richest source of dated
+  catalysts. Without it, Claude reconstructs the calendar from web search —
+  workable, but slower and easier to get wrong.
+- **FRED** gives authoritative rates and inflation series instead of whatever a
+  news article claims the 10-year is.
+
+Alpha Vantage's free tier is 25 calls per *day*, which one research run can
+exhaust on its own. Skip it unless the others are unavailable.
 
 ---
 
@@ -144,6 +156,8 @@ If it fails, the job log names the failing phase. Common causes:
 | `The caller does not have permission` | Skipped step 2c — share the Sheet with `client_email` |
 | `invalid_grant` / auth error on the Claude step | Token expired; rerun `claude setup-token` |
 | `Your Request Originates from an Undeclared Automated Tool` | `SEC_USER_AGENT` missing or not an email |
+| Stooq rows show ❌ in the source check | Expected. Stooq blocks datacenter IPs; it is a fallback only, and Yahoo covers the same ground |
+| A **critical** source is 🔴 | Do not trust a 6am run. Without price history the report cannot set real levels, and it will publish few or no ideas rather than invent them |
 | Workflow never fires at 6am | See "Scheduling" below |
 | Run is red but the Sheet updated | Intentional — see "Failure alerts" below |
 

@@ -172,6 +172,8 @@ jobs:
 
       - name: Phase 4 — commit the audit trail
         if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config user.name  "invest-trade-daily[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -182,8 +184,19 @@ jobs:
           fi
           IDEAS=$(python -c "import json;print(len(json.load(open('reports/$REPORT_DATE/report.json'))['recommendations']))" 2>/dev/null || echo "?")
           git commit -m "report: $REPORT_DATE ($IDEAS ideas)"
+
+          # Re-authenticate before pushing. actions/checkout leaves a credential
+          # behind, but the Claude action runs in between and reconfigures git
+          # auth, so by this step the stored credential no longer works. Drop the
+          # stale auth header and point the remote at a fresh token. The token is
+          # masked in logs by Actions.
+          git config --local --unset-all http.https://github.com/.extraheader || true
+          git remote set-url origin \
+            "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+
           for attempt in 1 2 3 4; do
             if git push origin HEAD:${{ github.ref_name }}; then
+              echo "Pushed on attempt $attempt."
               exit 0
             fi
             echo "Push failed (attempt $attempt); rebasing and retrying..."
