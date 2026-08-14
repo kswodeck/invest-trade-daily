@@ -124,20 +124,37 @@ YAHOO_HEADERS = {
 }
 
 
+YAHOO_HOSTS = ("query1.finance.yahoo.com", "query2.finance.yahoo.com")
+
+
 def _yahoo_chart(symbol: str, rng: str, interval: str) -> dict[str, Any]:
-    resp = _get(
-        f"https://query1.finance.yahoo.com/v8/finance/chart/{_yahoo_symbol(symbol)}",
-        params={"range": rng, "interval": interval, "includePrePost": "false"},
-        headers=YAHOO_HEADERS,
-    )
-    payload = resp.json()
-    err = (payload.get("chart") or {}).get("error")
-    if err:
-        raise ValueError(f"yahoo error for {symbol}: {err}")
-    results = (payload.get("chart") or {}).get("result") or []
-    if not results:
-        raise ValueError(f"yahoo returned no result for {symbol}")
-    return results[0]
+    """Fetch a chart, trying both Yahoo hosts.
+
+    query1 and query2 sit behind different edge configurations and do not rate
+    limit or block identically, so a 401/403/429 from one is often served fine
+    by the other.
+    """
+    errors = []
+    for host in YAHOO_HOSTS:
+        try:
+            payload = _get(
+                f"https://{host}/v8/finance/chart/{_yahoo_symbol(symbol)}",
+                params={"range": rng, "interval": interval, "includePrePost": "false"},
+                headers=YAHOO_HEADERS,
+            ).json()
+        except Exception as exc:  # noqa: BLE001
+            errors.append(f"{host}: {type(exc).__name__}: {exc}")
+            continue
+        err = (payload.get("chart") or {}).get("error")
+        if err:
+            errors.append(f"{host}: {err}")
+            continue
+        results = (payload.get("chart") or {}).get("result") or []
+        if not results:
+            errors.append(f"{host}: empty result")
+            continue
+        return results[0]
+    raise ValueError(f"yahoo failed for {symbol} — {' | '.join(errors)}")
 
 
 def quote_yahoo(symbol: str) -> dict[str, Any]:
@@ -348,13 +365,44 @@ def _bars_stooq(symbol: str) -> list[dict[str, Any]]:
     return rows
 
 
+def _bars_alphavantage(symbol: str) -> list[dict[str, Any]]:
+    """Last-resort history. 25 calls/day, so only reached when everything else is down."""
+    if not ALPHAVANTAGE_KEY:
+        raise ValueError("no api key")
+    payload = _get(
+        "https://www.alphavantage.co/query",
+        params={
+            "function": "TIME_SERIES_DAILY",
+            "symbol": symbol.upper(),
+            "outputsize": "compact",  # ~100 sessions
+            "apikey": ALPHAVANTAGE_KEY,
+        },
+    ).json()
+    series = payload.get("Time Series (Daily)")
+    if not series:
+        # Alpha Vantage reports quota exhaustion as a 200 with a Note/Information key.
+        raise ValueError(str(payload.get("Note") or payload.get("Information") or payload)[:160])
+    return [
+        {
+            "Date": day,
+            "Open": float(v["1. open"]),
+            "High": float(v["2. high"]),
+            "Low": float(v["3. low"]),
+            "Close": float(v["4. close"]),
+            "Volume": _num(v.get("5. volume")),
+        }
+        for day, v in sorted(series.items())
+    ]
+
+
 def history(symbol: str, days: int = 120) -> dict[str, Any]:
     """Daily OHLCV plus the levels needed to set entries, targets, and stops."""
     errors = []
     rows: list[dict[str, Any]] = []
     source = ""
     for name, loader in (("yahoo", lambda: _bars_yahoo(symbol, days)),
-                         ("stooq", lambda: _bars_stooq(symbol))):
+                         ("stooq", lambda: _bars_stooq(symbol)),
+                         ("alphavantage", lambda: _bars_alphavantage(symbol))):
         try:
             rows, source = loader(), name
             break
