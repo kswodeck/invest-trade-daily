@@ -3,73 +3,110 @@
 
     python scripts/check_sources.py
 
-Prints a markdown table. Exits non-zero only if every source is dead, which
-would mean a network or proxy problem rather than a missing key.
+Prints a markdown report to stdout. Exits non-zero only when a *capability* is
+unavailable — that is, when no provider can supply something the report needs.
+An individual provider being down is information, not a failure, as long as
+something else covers it.
 """
 
 from __future__ import annotations
 
 import sys
 from pathlib import Path
+from typing import Any, Callable
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import market_data as md  # noqa: E402
 
 
-def probe(name: str, fn, *, needs_key: str | None = None) -> tuple[str, bool, str]:
+def _render_error(result: dict[str, Any]) -> str:
+    """Turn a failed result into one readable line."""
+    if result.get("error"):
+        return str(result["error"])[:200]
+    attempts = result.get("attempts") or []
+    parts = []
+    for a in attempts:
+        if isinstance(a, dict):
+            parts.append(f"{a.get('source', '?')}: {str(a.get('error', ''))[:90]}")
+        else:
+            parts.append(str(a)[:90])
+    return " · ".join(parts)[:400] or "unknown failure"
+
+
+def probe(name: str, fn: Callable[[], dict], needs_key: str | None = None) -> tuple[str, bool, str]:
     try:
         result = fn()
     except Exception as exc:  # noqa: BLE001
         return name, False, f"{type(exc).__name__}: {exc}"
     if result.get("ok"):
-        return name, True, result.get("note") or "working"
-    err = result.get("error") or str(result.get("attempts", ""))[:160]
+        detail = result.get("note") or result.get("source") or "working"
+        if result.get("source") and result.get("note"):
+            detail = f"via {result['source']} — {result['note']}"
+        elif result.get("source"):
+            detail = f"via {result['source']}"
+        return name, True, str(detail)[:200]
+    err = _render_error(result)
     if needs_key and "no api key" in err:
         return name, False, f"optional — set `{needs_key}` to enable"
-    return name, False, err[:160]
+    return name, False, err
 
 
 def main() -> int:
-    # (label, probe, optional key, critical) — critical sources are the ones the
-    # report cannot produce entry/target/stop levels without.
-    checks = [
-        ("Yahoo (equity quotes)", lambda: md.quote_yahoo("SPY"), None, True),
-        ("Yahoo (history/levels)", lambda: md.history("SPY", 90), None, True),
-        ("Yahoo (futures)", lambda: md.quote_yahoo("/MESU6"), None, False),
-        ("CoinGecko (crypto)", lambda: md.crypto(["bitcoin"]), None, True),
-        ("Kalshi (event contracts)", lambda: md.events("", 3), None, False),
-        ("SEC EDGAR (filings)", lambda: md.filings("AAPL", 3), "SEC_USER_AGENT", False),
-        ("Stooq (quote fallback)", lambda: md.quote_stooq("SPY"), None, False),
-        ("Finnhub (quotes)", lambda: md.quote_finnhub("SPY"), "FINNHUB_API_KEY", False),
-        ("Finnhub (earnings)", lambda: md.earnings(7), "FINNHUB_API_KEY", False),
-        ("Alpha Vantage (quotes)", lambda: md.quote_alphavantage("SPY"), "ALPHAVANTAGE_API_KEY", False),
-        ("FRED (macro)", lambda: md.fred_series("DGS10"), "FRED_API_KEY", False),
+    # Capabilities: what the report actually needs. Each exercises the full
+    # provider fallback chain, so any one working source is enough.
+    capabilities = [
+        ("Equity/ETF quote", lambda: md.quote("SPY")),
+        ("Equity/ETF history + levels", lambda: md.history("SPY", 90)),
+        ("Crypto price", lambda: md.crypto(["bitcoin"])),
     ]
 
-    rows = [(probe(n, f, needs_key=k), crit) for n, f, k, crit in checks]
+    # Providers: which individual source is up. Informational only.
+    providers = [
+        ("Yahoo — quote", lambda: md.quote_yahoo("SPY"), None),
+        ("Yahoo — history", lambda: md._bars_yahoo("SPY", 90) and {"ok": True, "source": "yahoo"}, None),
+        ("Yahoo — futures (/MESU6)", lambda: md.quote_yahoo("/MESU6"), None),
+        ("Finnhub — quote", lambda: md.quote_finnhub("SPY"), "FINNHUB_API_KEY"),
+        ("Finnhub — earnings", lambda: md.earnings(7), "FINNHUB_API_KEY"),
+        ("Stooq — quote", lambda: md.quote_stooq("SPY"), None),
+        ("Alpha Vantage — quote", lambda: md.quote_alphavantage("SPY"), "ALPHAVANTAGE_API_KEY"),
+        ("CoinGecko — crypto", lambda: md.crypto(["bitcoin"]), None),
+        ("Kalshi — event contracts", lambda: md.events("", 3), None),
+        ("SEC EDGAR — filings", lambda: md.filings("AAPL", 3), "SEC_USER_AGENT"),
+        ("FRED — macro", lambda: md.fred_series("DGS10"), "FRED_API_KEY"),
+    ]
 
-    print("## Data source check\n")
-    print("| Source | Status | Detail |")
+    cap_rows = [probe(n, f) for n, f in capabilities]
+    prov_rows = [probe(n, f, k) for n, f, k in providers]
+
+    print("## Capabilities\n")
+    print("These are what the report needs. Each tries every provider in turn.\n")
+    print("| Capability | Status | Detail |")
     print("| --- | --- | --- |")
-    for (name, ok, detail), crit in rows:
-        mark = "✅" if ok else ("🔴" if crit else "❌")
-        print(f"| {name}{' **(critical)**' if crit else ''} | {mark} | {detail} |")
+    for name, ok, detail in cap_rows:
+        print(f"| **{name}** | {'✅' if ok else '🔴'} | {detail} |")
 
-    working = sum(1 for (_, ok, _), _ in rows if ok)
-    print(f"\n**{working} of {len(rows)} sources working.**")
+    print("\n## Providers\n")
+    print("Individual sources. A ❌ here is fine as long as the capability above is ✅.\n")
+    print("| Provider | Status | Detail |")
+    print("| --- | --- | --- |")
+    for name, ok, detail in prov_rows:
+        print(f"| {name} | {'✅' if ok else '❌'} | {detail} |")
 
-    broken_critical = [name for (name, ok, _), crit in rows if crit and not ok]
-    if broken_critical:
+    broken = [name for name, ok, _ in cap_rows if not ok]
+    working = sum(1 for _, ok, _ in prov_rows if ok)
+    print(f"\n**{working} of {len(prov_rows)} providers up.**")
+
+    if broken:
         print(
-            f"\n🔴 **Critical source(s) down: {', '.join(broken_critical)}.** "
-            "The report cannot set real entry, target, and stop levels without price "
-            "history, and will fall back to publishing few or no ideas rather than "
-            "inventing numbers. Fix before relying on a 6am run."
+            f"\n🔴 **Unavailable capability: {', '.join(broken)}.**\n\n"
+            "Every provider for this failed. The report cannot set real entry, target, "
+            "and stop levels without it, and will publish few or no ideas rather than "
+            "invent numbers. Check the provider table above for the specific errors."
         )
         return 1
 
-    print("\n✅ Every critical source is up. Optional keys above only improve depth.")
+    print("\n✅ Every capability is covered. Provider ❌ rows above are redundancy, not problems.")
     return 0
 
 

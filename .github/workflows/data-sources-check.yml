@@ -28,11 +28,18 @@ jobs:
 
       - run: pip install -r requirements.txt
 
+      # tee, not >>. Redirecting straight to the summary file leaves the step log
+      # empty, so a failure shows an exit code and nothing else.
       - name: Probe every data source
-        run: python scripts/check_sources.py >> "$GITHUB_STEP_SUMMARY"
+        run: |
+          set -o pipefail
+          python scripts/check_sources.py | tee -a "$GITHUB_STEP_SUMMARY"
 
       - name: Probe Google Sheets access
+        if: always()
         env:
           GCP_SERVICE_ACCOUNT_JSON: ${{ secrets.GCP_SERVICE_ACCOUNT_JSON }}
           GOOGLE_SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}
-        run: python scripts/check_sheets.py >> "$GITHUB_STEP_SUMMARY"
+        run: |
+          set -o pipefail
+          python scripts/check_sheets.py | tee -a "$GITHUB_STEP_SUMMARY"
