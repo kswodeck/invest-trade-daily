@@ -1,0 +1,228 @@
+name: Daily Trade Report
+
+on:
+  schedule:
+    # 06:00 America/New_York year-round. GitHub cron is UTC only and has no DST
+    # awareness, so both arms are declared and the gate job below drops whichever
+    # one is not 6am ET today.
+    - cron: "0 10 * * *"   # 06:00 EDT
+    - cron: "0 11 * * *"   # 06:00 EST
+  workflow_dispatch:
+    inputs:
+      research_minutes:
+        description: "Hard cap on the research phase, in minutes"
+        required: false
+        default: "60"
+      dry_run:
+        description: "Produce the report but do not write to Google Sheets"
+        type: boolean
+        required: false
+        default: false
+
+concurrency:
+  group: daily-report
+  cancel-in-progress: false
+
+jobs:
+  # Decides whether this invocation is the real 6am ET run. Kept separate so the
+  # skip costs a few seconds rather than spinning up the whole pipeline.
+  gate:
+    runs-on: ubuntu-latest
+    outputs:
+      proceed: ${{ steps.check.outputs.proceed }}
+      date: ${{ steps.check.outputs.date }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+
+      - id: check
+        name: Is this the 6am ET run?
+        run: |
+          set -euo pipefail
+          ET_HOUR=$(TZ=America/New_York date +%-H)
+          ET_DATE=$(TZ=America/New_York date +%F)
+          echo "date=$ET_DATE" >> "$GITHUB_OUTPUT"
+          echo "Now: $(TZ=America/New_York date) (hour $ET_HOUR)"
+
+          if [ "${{ github.event_name }}" != "schedule" ]; then
+            echo "Manual run — proceeding."
+            echo "proceed=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # Already have today's report? Then this is the second DST arm, or a
+          # duplicate delivery. Either way there is nothing to do.
+          if [ -f "reports/$ET_DATE/report.json" ]; then
+            echo "reports/$ET_DATE/report.json already exists — skipping."
+            echo "proceed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # GitHub's scheduler is best-effort and routinely runs late, so accept
+          # the 6, 7, and 8 o'clock hours rather than only 6.
+          if [ "$ET_HOUR" -ge 6 ] && [ "$ET_HOUR" -le 8 ]; then
+            echo "Within the 6-8am ET window — proceeding."
+            echo "proceed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Outside the window — this is the other DST arm. Skipping."
+            echo "proceed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  report:
+    needs: gate
+    if: needs.gate.outputs.proceed == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      contents: write
+      id-token: write
+    env:
+      REPORT_DATE: ${{ needs.gate.outputs.date }}
+      FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
+      ALPHAVANTAGE_API_KEY: ${{ secrets.ALPHAVANTAGE_API_KEY }}
+      FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+      SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
+
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Preflight — data sources
+        continue-on-error: true
+        run: |
+          echo "Checking which sources are reachable and keyed..."
+          python scripts/market_data.py quote SPY || true
+          python scripts/market_data.py crypto bitcoin || true
+
+      # Gives the research phase memory: open positions it must manage rather
+      # than re-pitch, its own hit rate by category, and which symbols it has
+      # been repeating.
+      - name: Build prior context
+        continue-on-error: true
+        run: python scripts/build_context.py "$REPORT_DATE" --days 10
+
+      # Phase 1. The timeout is enforced by GitHub, not by asking the model to
+      # watch a clock. continue-on-error lets the job carry on to synthesis when
+      # the cap kills this step, which is the normal, expected outcome.
+      - name: Phase 1 — research
+        id: research
+        continue-on-error: true
+        timeout-minutes: ${{ fromJSON(github.event.inputs.research_minutes || '60') }}
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: "/daily-research"
+          claude_args: |
+            --model claude-opus-5
+            --allowedTools "WebSearch,WebFetch,Bash,Read,Write,Edit,Glob,Grep"
+
+      - name: Checkpoint — what survived research
+        if: always()
+        run: |
+          echo "Research step outcome: ${{ steps.research.outcome }}"
+          if [ -f "reports/$REPORT_DATE/notes.md" ]; then
+            wc -l "reports/$REPORT_DATE/notes.md"
+            echo "Candidate blocks: $(grep -c 'CANDIDATE' "reports/$REPORT_DATE/notes.md" || echo 0)"
+          else
+            echo "::warning::No research notes were produced."
+          fi
+
+      - name: Phase 2 — synthesis
+        id: synthesis
+        continue-on-error: true
+        timeout-minutes: 15
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: "/daily-synthesis"
+          claude_args: |
+            --model claude-opus-5
+            --allowedTools "Bash,Read,Write,Edit,Glob,Grep"
+
+      - name: Guarantee a publishable report
+        if: always()
+        run: |
+          if [ "${{ steps.research.outcome }}" = "failure" ]; then
+            python scripts/ensure_report.py "$REPORT_DATE" --research-truncated
+          else
+            python scripts/ensure_report.py "$REPORT_DATE"
+          fi
+
+      - name: Phase 3 — publish to Google Sheets
+        if: always()
+        env:
+          GCP_SERVICE_ACCOUNT_JSON: ${{ secrets.GCP_SERVICE_ACCOUNT_JSON }}
+          GOOGLE_SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}
+        run: |
+          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+            python scripts/publish_sheets.py "reports/$REPORT_DATE/report.json" --dry-run
+          else
+            python scripts/publish_sheets.py "reports/$REPORT_DATE/report.json"
+          fi
+
+      - name: Phase 4 — commit the audit trail
+        if: always()
+        run: |
+          git config user.name  "invest-trade-daily[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports/ state/ || true
+          if git diff --staged --quiet; then
+            echo "Nothing to commit."
+            exit 0
+          fi
+          IDEAS=$(python -c "import json;print(len(json.load(open('reports/$REPORT_DATE/report.json'))['recommendations']))" 2>/dev/null || echo "?")
+          git commit -m "report: $REPORT_DATE ($IDEAS ideas)"
+          for attempt in 1 2 3 4; do
+            if git push origin HEAD:${{ github.ref_name }}; then
+              exit 0
+            fi
+            echo "Push failed (attempt $attempt); rebasing and retrying..."
+            sleep $((2 ** attempt))
+            git pull --rebase origin ${{ github.ref_name }} || true
+          done
+          echo "::error::Could not push the report after 4 attempts."
+          exit 1
+
+      - name: Upload report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: report-${{ needs.gate.outputs.date }}
+          path: reports/${{ needs.gate.outputs.date }}/
+          retention-days: 30
+
+      - name: Summary
+        if: always()
+        env:
+          RESEARCH_OUTCOME: ${{ steps.research.outcome }}
+          SYNTHESIS_OUTCOME: ${{ steps.synthesis.outcome }}
+        run: python scripts/step_summary.py "$REPORT_DATE" >> "$GITHUB_STEP_SUMMARY"
+
+      # Deliberately last, and deliberately red. GitHub only emails the owner
+      # when a scheduled run fails, so a stub report has to fail the job or the
+      # one morning that produced nothing would be the one morning that looked
+      # fine. The Sheet and the commit have already happened by this point.
+      - name: Fail the run if the report is a stub
+        if: always()
+        run: |
+          python - "$REPORT_DATE" <<'PY'
+          import json, sys, pathlib
+          path = pathlib.Path("reports") / sys.argv[1] / "report.json"
+          report = json.loads(path.read_text())
+          if report.get("pipeline_failure"):
+              print("::error title=Report pipeline failed::"
+                    "Synthesis produced nothing usable; a stub was published. "
+                    "See the Data quality note in the run summary.")
+              sys.exit(1)
+          print(f"Report OK: {len(report['recommendations'])} recommendations.")
+          PY

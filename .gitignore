@@ -1,0 +1,18 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+.env
+.env.*
+!.env.example
+
+# Never let a service-account key land in git
+*service-account*.json
+*credentials*.json
+gcp-key.json
+client_secret*.json
+
+.DS_Store
+.pytest_cache/
+*.egg-info/

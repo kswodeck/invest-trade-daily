@@ -1,0 +1,37 @@
+name: Keepalive
+
+# GitHub disables scheduled workflows on public repositories after 60 days
+# without repository activity. The daily report normally commits every morning,
+# which is activity enough — this exists to cover the case where the report
+# workflow is broken for weeks and its own silence is what kills the schedule.
+
+on:
+  schedule:
+    - cron: "17 13 * * 1"   # Mondays, off the hour to avoid the scheduler rush
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  touch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+
+      - name: Touch the heartbeat file
+        run: |
+          set -euo pipefail
+          mkdir -p state
+          date -u +"%Y-%m-%dT%H:%M:%SZ" > state/heartbeat.txt
+          git config user.name  "invest-trade-daily[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add state/heartbeat.txt
+          if git diff --staged --quiet; then
+            echo "No change."
+            exit 0
+          fi
+          git commit -m "chore: keepalive heartbeat"
+          git push origin HEAD:${{ github.ref_name }}
