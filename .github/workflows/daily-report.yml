@@ -73,7 +73,10 @@ jobs:
     needs: gate
     if: needs.gate.outputs.proceed == 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    # 60 research + 15 synthesis + two action cold starts + publish ran ~96 min
+    # on the first live schedule. 150 leaves room without risking a kill that
+    # would skip the Sheet write and the commit.
+    timeout-minutes: 150
     permissions:
       contents: write
       id-token: write

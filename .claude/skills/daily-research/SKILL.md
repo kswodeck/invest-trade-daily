@@ -37,10 +37,57 @@ symbols you have been repeating. Three obligations come out of it:
 grace period and no chance to write a summary at the end. Everything you have
 not already written to disk is lost.
 
-So: after *every* meaningful finding, append it to `notes.md`. Not after every
-section — after every finding. A run that dies at minute 58 with 40 findings on
-disk is a success. A run that dies at minute 58 holding everything in context is
-a total loss.
+A previous run learned this the hard way: it produced 38,000 characters of
+excellent research and **zero usable ideas**, because it spent the whole budget
+gathering and never converted anything into a candidate before it was killed.
+Rich notes that nobody can trade are a failed run.
+
+## Your deliverable is candidates.jsonl, not notes.md
+
+`notes.md` is your working log. **`candidates.jsonl` is the actual output.**
+Synthesis builds the report from it. A finding that never becomes a candidate
+does not reach the reader.
+
+Capture a candidate the moment it is fully specified — entry, target, stop,
+catalyst, sources:
+
+```bash
+python scripts/add_candidate.py '{
+  "symbol": "NVDA",
+  "instrument": "NVIDIA Corp",
+  "asset_class": "stock",
+  "venue": "Robinhood Stocks",
+  "direction": "buy",
+  "horizon": "swing",
+  "conviction": 4,
+  "entry": {"ideal": 178.50, "zone_low": 176.0, "zone_high": 180.0},
+  "exit": {"target": 205.0, "target_2": 218.0},
+  "stop": 168.0,
+  "position_size_pct": 3,
+  "catalyst": {"event": "Q2 earnings", "datetime_et": "2026-08-27T16:20",
+               "action": "enter before, trim half into the print", "wait": false},
+  "thesis": "Two specific sentences naming the mechanism.",
+  "key_risk": "The one thing most likely to break it.",
+  "counter_argument": "The strongest case against.",
+  "sources": ["https://...", "https://..."]
+}'
+```
+
+It validates on the spot and tells you what is wrong, so a malformed idea
+surfaces while you can still fix it. It rejects non-Robinhood venues outright.
+
+**Two hard deadlines. Neither is negotiable:**
+
+| By | You must have |
+| --- | --- |
+| **Minute 20** | At least one candidate captured, even a conviction-3 one |
+| **70% of budget** | Stopped all new research; converting findings to candidates |
+
+Check the clock with `date` rather than trusting your sense of elapsed time. If
+minute 20 arrives and you have nothing captured, you are researching too
+broadly — take your best current idea, set levels from real price history, and
+capture it. You can always capture an improved version later; the file is a log
+and synthesis takes the last entry per symbol.
 
 Set up first, before any research:
 
@@ -50,8 +97,9 @@ mkdir -p "reports/$DATE"
 echo "# Research log — $DATE" > "reports/$DATE/notes.md"
 ```
 
-Then append continuously. Use `Edit` or shell appends — never rewrite the file
-wholesale, and never buffer findings to write "in a moment".
+Then append to `notes.md` continuously for context, reasoning, and rejections.
+Use `Edit` or shell appends — never rewrite the file wholesale, and never
+buffer findings to write "in a moment".
 
 ## Time budget
 
@@ -62,14 +110,21 @@ Allocate roughly per `config/strategy.md`:
 | Phase | Share | Output |
 | --- | --- | --- |
 | Macro and calendar | 10% | Market regime, this week's dated events |
-| Catalyst hunting | 35% | Dated events in the next 10 sessions |
-| News and filings | 25% | Overnight moves, 8-Ks, guidance, analyst actions |
+| Catalyst hunting | 30% | Dated events in the next 10 sessions |
+| News and filings | 20% | Overnight moves, 8-Ks, guidance, analyst actions |
 | Level setting | 20% | Real entry/target/stop from price history |
 | Falsification | 10% | The case against each finalist |
+| Consolidation | 10% | Everything remaining captured as candidates |
 
-**At 75% of budget, stop opening new threads.** Spend the rest converting what
-you already have into fully specified candidates. A half-researched idea with no
-levels is unusable; six complete ideas beat fifteen fragments.
+Do not treat these as strict sequential stages. **Capture candidates as you go**
+— when catalyst hunting turns up a dated event and you can set levels on it, run
+`add_candidate.py` right then rather than saving it for a later pass. The
+falsification and consolidation phases refine what is already captured; they are
+not the first time anything gets written down.
+
+A half-researched idea with no levels is unusable, but so is a perfect idea that
+was never captured. Six complete candidates beat fifteen fragments, and both
+beat an empty file.
 
 ## Data access
 
@@ -97,23 +152,14 @@ it will be traded on.
 
 ## Note format
 
-Append entries in this shape. Consistency matters — the synthesis phase parses
-these, and it may be parsing a file that stops mid-sentence.
+Candidates go through `add_candidate.py`, so `notes.md` carries everything
+else: reasoning, context, evidence, and the work you did that did not become a
+recommendation. Timestamp every entry and cite sources. Headings are yours to
+choose — `MACRO`, `LEVELS`, `NEWS`, `VENUE CHECK` and similar are all useful —
+with three that carry specific meaning:
 
 ```markdown
-## [HH:MM ET] CANDIDATE — NVDA — Robinhood Stocks — buy — swing
-- last: 182.40 (stooq, delayed, 2026-08-12)
-- levels: sma20 178.2, sma50 171.5, atr14 6.1, range 120d 142.0–188.7
-- entry: 178.50 (retest of sma20 + prior breakout shelf)
-- target: 205.00 / stop: 168.00 / rr: 2.5
-- catalyst: Q2 earnings 2026-08-27 16:20 ET — enter before, trim half into print
-- thesis: <two sentences, specific>
-- risk: <the thing that breaks this>
-- against: <strongest counter-argument>
-- conviction: 4
-- sources: <url>, <url>
-
-## [HH:MM ET] MACRO
+## [HH:MM ET] MACRO — rates and policy
 - <finding> — source: <url>
 
 ## [HH:MM ET] REJECTED — TSLA — no dated catalyst inside horizon, R:R 1.2
@@ -121,11 +167,14 @@ these, and it may be parsing a file that stops mid-sentence.
 ## [HH:MM ET] POSITION UPDATE — NVDA — opened 2026-08-05, +6.2%
 - decision: hold, raise stop to 176 (now above entry)
 - why: earnings moved to 2026-08-27; thesis intact, first target within 2 ATR
-- action: emit as a recommendation flagged as an update, not a new entry
+- action: captured via add_candidate.py with the revised stop
 ```
 
-Log rejections too, in one line. They stop the synthesis phase from
-re-litigating ideas you already dismissed, and they show the work.
+Log rejections in one line each. They stop synthesis from re-litigating ideas
+you already dismissed, and they show the work.
+
+A `POSITION UPDATE` still needs `add_candidate.py` to reach the report — note
+the decision here, then capture it. Notes alone change nothing.
 
 ## Scope reminders
 

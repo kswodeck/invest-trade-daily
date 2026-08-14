@@ -15,14 +15,19 @@ Google Sheet. Two Claude phases run in sequence inside one GitHub Actions job.
 4. **Checkpoint constantly during research.** The research phase is killed at a
    hard wall clock limit with no warning. Append to `reports/<date>/notes.md`
    after *every* finding, not at the end. Unwritten research is lost research.
-5. **Never commit secrets.** Credentials arrive as environment variables only.
+5. **Capture candidates as you find them**, via
+   `python scripts/add_candidate.py '<json>'`. `candidates.jsonl` is what
+   synthesis builds the report from; `notes.md` is context. A run that gathers
+   brilliantly and captures nothing produces nothing — this has already
+   happened once.
+6. **Never commit secrets.** Credentials arrive as environment variables only.
 
 ## Phase contract
 
 | Phase | Runs | Writes | Reads |
 | ----- | ---- | ------ | ----- |
 | 0 Context | `scripts/build_context.py` | `reports/<date>/prior_context.md` | `state/`, past reports |
-| 1 Research | `/daily-research` | `reports/<date>/notes.md` | web, `market_data.py`, prior context |
+| 1 Research | `/daily-research` | `candidates.jsonl` (the deliverable), `notes.md` (context) | web, `market_data.py`, prior context |
 | 2 Synthesis | `/daily-synthesis` | `reports/<date>/report.json` | the above |
 | 2b Guarantee | `scripts/ensure_report.py` | a stub `report.json` if needed | `report.json`, `notes.md` |
 | 3 Publish | `scripts/publish_sheets.py` | Google Sheet, `state/open_positions.json` | `report.json` |
