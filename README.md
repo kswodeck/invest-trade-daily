@@ -81,15 +81,21 @@ Quick version:
 | `SEC_USER_AGENT`            | yes      | `Your Name your@email.com` — SEC requires it     |
 | `FRED_API_KEY`              | no       | Free. Unlocks macro series                       |
 | `FINNHUB_API_KEY`           | no       | Free tier. Better quotes, earnings calendar      |
-| `ALPHAVANTAGE_API_KEY`      | no       | Free tier. Fallback quotes and fundamentals      |
+| `TWELVEDATA_API_KEY`        | no       | Free tier. Backup daily OHLCV                    |
+| `ALPHAVANTAGE_API_KEY`      | no       | Free tier. Last-resort OHLCV                     |
 
 Everything degrades gracefully: with zero optional keys the pipeline still runs
-on Yahoo Finance, CoinGecko, SEC EDGAR, Kalshi, and Claude's own web search.
+on Nasdaq, CoinGecko, SEC EDGAR, Kalshi, and Claude's own web search.
 
-Yahoo's chart endpoint is the workhorse — it is keyless and covers equities,
-ETFs, indices, futures, and crypto from one response shape. Stooq was the
-original primary and is kept only as a fallback: it returns 404 to datacenter
-IPs, which is every GitHub Actions runner.
+Source choice is driven by what actually works from a GitHub Actions runner,
+which is a datacenter IP that many finance APIs treat differently from a
+browser:
+
+- **Quotes** come from Finnhub, **daily history** from Nasdaq — both work.
+- **Yahoo** rate limits runners with `429` and **Stooq** returns `404` to them.
+  Both are kept in the chain because they cost nothing to try and do sometimes
+  succeed, but neither can be relied on.
+- Twelve Data and Alpha Vantage sit behind those as keyed insurance.
 
 ## Running it manually
 
@@ -116,15 +122,17 @@ config/
   universe.md            Robinhood venue constraints
 scripts/
   market_data.py         keyless-first data CLI Claude calls during research
+  add_candidate.py       validates and captures a candidate during research
   build_context.py       prior picks and outcomes, so research has memory
   ensure_report.py       guarantees a publishable report.json exists
   publish_sheets.py      Sheets writer + performance grader
   step_summary.py        the Actions run summary
-  check_sources.py       probes all nine data sources
+  check_sources.py       probes every data source and capability
   check_sheets.py        write/read/delete test against the Sheet
   report_schema.json     the contract between synthesis and publishing
 reports/<date>/
   prior_context.md       what was recommended before and how it went
+  candidates.jsonl       captured candidates — the research deliverable
   notes.md               raw research log (checkpointed)
   report.json            final structured output
 state/

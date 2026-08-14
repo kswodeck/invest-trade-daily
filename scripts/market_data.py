@@ -14,7 +14,7 @@ each result before trusting the payload.
     python scripts/market_data.py earnings --days 14
 
 Optional environment variables unlock better sources; all are safe to omit:
-FINNHUB_API_KEY, ALPHAVANTAGE_API_KEY, FRED_API_KEY, SEC_USER_AGENT.
+FINNHUB_API_KEY, TWELVEDATA_API_KEY, ALPHAVANTAGE_API_KEY, FRED_API_KEY, SEC_USER_AGENT.
 """
 
 from __future__ import annotations
@@ -36,6 +36,7 @@ ET = timezone(timedelta(hours=-5))  # display only; exact offset resolved by cal
 
 FINNHUB_KEY = os.environ.get("FINNHUB_API_KEY", "").strip()
 ALPHAVANTAGE_KEY = os.environ.get("ALPHAVANTAGE_API_KEY", "").strip()
+TWELVEDATA_KEY = os.environ.get("TWELVEDATA_API_KEY", "").strip()
 FRED_KEY = os.environ.get("FRED_API_KEY", "").strip()
 SEC_UA = os.environ.get("SEC_USER_AGENT", "").strip()
 
@@ -111,10 +112,11 @@ def _futures_fallback(symbol: str) -> str | None:
 # quotes
 # --------------------------------------------------------------------------
 
-# Yahoo's chart endpoint is the workhorse: keyless, no rate limit worth worrying
-# about, and it covers equities, ETFs, indices, futures, and crypto from one
-# shape. Stooq was the original primary but returns 404 from datacenter IPs,
-# which is every GitHub Actions runner.
+# Yahoo covers equities, ETFs, indices, futures, and crypto from one response
+# shape, but rate limits GitHub Actions runners with 429 often enough that it
+# sits behind Finnhub for quotes and Nasdaq for history. Kept because it is
+# keyless and does sometimes succeed. These headers are reused for Nasdaq,
+# which 403s without a browser-ish User-Agent.
 YAHOO_HEADERS = {
     "User-Agent": (
         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
@@ -192,6 +194,7 @@ def quote_yahoo(symbol: str) -> dict[str, Any]:
         except Exception as exc:  # noqa: BLE001
             last = _fail("yahoo", exc)
     return last
+
 
 def quote_finnhub(symbol: str) -> dict[str, Any]:
     if not FINNHUB_KEY:
@@ -283,7 +286,7 @@ def quote_alphavantage(symbol: str) -> dict[str, Any]:
 def quote(symbol: str) -> dict[str, Any]:
     """First source that returns a usable price wins."""
     attempts = []
-    for fn in (quote_yahoo, quote_finnhub, quote_stooq, quote_alphavantage):
+    for fn in (quote_finnhub, quote_yahoo, quote_stooq, quote_alphavantage):
         result = fn(symbol)
         if result.get("ok"):
             result["fallbacks_tried"] = [a["source"] for a in attempts]
@@ -365,6 +368,98 @@ def _bars_stooq(symbol: str) -> list[dict[str, Any]]:
     return rows
 
 
+def _clean_money(value: Any) -> float | None:
+    """Nasdaq returns '$182.40' and '74,210,000'."""
+    if value is None:
+        return None
+    return _num(str(value).replace("$", "").replace(",", "").strip() or None)
+
+
+def _bars_nasdaq(symbol: str, days: int) -> list[dict[str, Any]]:
+    """Keyless daily OHLCV from Nasdaq.
+
+    Primary source: Yahoo rate limits datacenter IPs with 429 and Stooq blocks
+    them outright, but Nasdaq serves runners fine.
+    """
+    today = date.today()
+    params = {
+        "assetclass": "stocks",
+        "fromdate": (today - timedelta(days=max(days * 2, 30))).isoformat(),
+        "todate": today.isoformat(),
+        "limit": "9999",
+    }
+    errors = []
+    for asset_class in ("stocks", "etf"):
+        params["assetclass"] = asset_class
+        try:
+            payload = _get(
+                f"https://api.nasdaq.com/api/quote/{symbol.strip().upper()}/historical",
+                params=params,
+                headers=YAHOO_HEADERS,  # a browser-ish UA; Nasdaq 403s without one
+            ).json()
+        except Exception as exc:  # noqa: BLE001
+            errors.append(f"{asset_class}: {type(exc).__name__}: {exc}")
+            continue
+
+        rows = (((payload or {}).get("data") or {}).get("tradesTable") or {}).get("rows") or []
+        out = []
+        for r in rows:
+            close = _clean_money(r.get("close"))
+            if close is None:
+                continue
+            try:
+                month, day, year = r["date"].split("/")
+            except (KeyError, ValueError):
+                continue
+            out.append({
+                "Date": f"{year}-{month}-{day}",
+                "Open": _clean_money(r.get("open")) or close,
+                "High": _clean_money(r.get("high")) or close,
+                "Low": _clean_money(r.get("low")) or close,
+                "Close": close,
+                "Volume": _clean_money(r.get("volume")),
+            })
+        if out:
+            out.sort(key=lambda b: b["Date"])  # Nasdaq returns newest first
+            return out
+        errors.append(f"{asset_class}: no rows ({str(payload.get('message'))[:60]})")
+    raise ValueError(f"nasdaq returned no history for {symbol} — {'; '.join(errors)}")
+
+
+def _bars_twelvedata(symbol: str, days: int) -> list[dict[str, Any]]:
+    """800 calls/day on the free tier — the roomiest keyed fallback."""
+    if not TWELVEDATA_KEY:
+        raise ValueError("no api key")
+    payload = _get(
+        "https://api.twelvedata.com/time_series",
+        params={
+            "symbol": symbol.strip().upper(),
+            "interval": "1day",
+            "outputsize": max(days, 30),
+            "apikey": TWELVEDATA_KEY,
+        },
+    ).json()
+    if str(payload.get("status")) == "error":
+        raise ValueError(str(payload.get("message"))[:160])
+    values = payload.get("values") or []
+    if not values:
+        raise ValueError(f"twelvedata returned no values for {symbol}")
+    out = [
+        {
+            "Date": v["datetime"],
+            "Open": _num(v.get("open")),
+            "High": _num(v.get("high")),
+            "Low": _num(v.get("low")),
+            "Close": _num(v.get("close")),
+            "Volume": _num(v.get("volume")),
+        }
+        for v in values
+        if _num(v.get("close")) is not None
+    ]
+    out.sort(key=lambda b: b["Date"])  # returned newest first
+    return out
+
+
 def _bars_alphavantage(symbol: str) -> list[dict[str, Any]]:
     """Last-resort history. 25 calls/day, so only reached when everything else is down."""
     if not ALPHAVANTAGE_KEY:
@@ -400,9 +495,14 @@ def history(symbol: str, days: int = 120) -> dict[str, Any]:
     errors = []
     rows: list[dict[str, Any]] = []
     source = ""
-    for name, loader in (("yahoo", lambda: _bars_yahoo(symbol, days)),
-                         ("stooq", lambda: _bars_stooq(symbol)),
-                         ("alphavantage", lambda: _bars_alphavantage(symbol))):
+    # Ordered by what actually works from a GitHub Actions runner: Nasdaq is
+    # keyless and unblocked, Yahoo 429s, Stooq 404s. The keyed sources sit
+    # behind them as insurance.
+    for name, loader in (("nasdaq", lambda: _bars_nasdaq(symbol, days)),
+                         ("yahoo", lambda: _bars_yahoo(symbol, days)),
+                         ("twelvedata", lambda: _bars_twelvedata(symbol, days)),
+                         ("alphavantage", lambda: _bars_alphavantage(symbol)),
+                         ("stooq", lambda: _bars_stooq(symbol))):
         try:
             rows, source = loader(), name
             break

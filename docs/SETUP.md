@@ -104,14 +104,15 @@ Any real name and reachable email is fine.
 ## 4. Optional free API keys
 
 All free, all optional. Each one measurably improves research quality. Without
-them the pipeline falls back to keyless sources (Yahoo Finance, CoinGecko, Kalshi, SEC,
+them the pipeline falls back to keyless sources (Nasdaq, CoinGecko, Kalshi, SEC,
 and Claude's web search).
 
 | Secret | Where | Free tier | Buys you | Worth it? |
 | ------ | ----- | --------- | -------- | --------- |
 | `FINNHUB_API_KEY` | [finnhub.io/register](https://finnhub.io/register) | 60 calls/min | Earnings calendar, real quotes, company news | **Yes** |
 | `FRED_API_KEY` | [fred.stlouisfed.org/docs/api/api_key.html](https://fred.stlouisfed.org/docs/api/api_key.html) | unlimited, instant | Rates, CPI, unemployment, yield curve | **Yes** |
-| `ALPHAVANTAGE_API_KEY` | [alphavantage.co/support/#api-key](https://www.alphavantage.co/support/#api-key) | 25 calls/**day** | Fallback quotes | Marginal |
+| `TWELVEDATA_API_KEY` | [twelvedata.com/pricing](https://twelvedata.com/pricing) | 800 calls/day | Backup daily OHLCV if Nasdaq breaks | Insurance |
+| `ALPHAVANTAGE_API_KEY` | [alphavantage.co/support/#api-key](https://www.alphavantage.co/support/#api-key) | 25 calls/**day** | Last-resort OHLCV | Marginal |
 
 Add whichever you want as repository secrets. The scripts detect what is present
 and skip what is not.
@@ -125,15 +126,19 @@ Two of these are worth the two minutes each:
 - **FRED** gives authoritative rates and inflation series instead of whatever a
   news article claims the 10-year is.
 
-Alpha Vantage's free tier is 25 calls per *day*, which one research run can
-exhaust on its own. Skip it unless the others are unavailable.
+Twelve Data and Alpha Vantage are pure insurance on daily price history. The
+primary source is Nasdaq, which is keyless and works from Actions runners —
+unlike Yahoo, which rate limits them with 429, and Stooq, which blocks them
+outright. Add Twelve Data if you want a real backup; its 800 calls/day is
+roomy. Alpha Vantage's 25 calls per *day* can be exhausted by a single research
+run, so it is a last resort rather than a fallback.
 
 ---
 
 ## 5. Verify
 
-First run **Actions → Data Sources Check → Run workflow**. It probes all nine
-data sources and does a real write-read-delete against your Sheet, then prints
+First run **Actions → Data Sources Check → Run workflow**. It probes every
+data source and does a real write-read-delete against your Sheet, then prints
 a table of what works. This is the fastest way to catch a setup mistake, and it
 takes about a minute.
 
@@ -156,7 +161,7 @@ If it fails, the job log names the failing phase. Common causes:
 | `The caller does not have permission` | Skipped step 2c — share the Sheet with `client_email` |
 | `invalid_grant` / auth error on the Claude step | Token expired; rerun `claude setup-token` |
 | `Your Request Originates from an Undeclared Automated Tool` | `SEC_USER_AGENT` missing or not an email |
-| Stooq rows show ❌ in the source check | Expected. Stooq blocks datacenter IPs; it is a fallback only, and Yahoo covers the same ground |
+| Stooq or Yahoo rows show ❌ | Expected. Stooq 404s and Yahoo 429s from Actions runners. Finnhub covers quotes, Nasdaq covers history |
 | A **critical** source is 🔴 | Do not trust a 6am run. Without price history the report cannot set real levels, and it will publish few or no ideas rather than invent them |
 | Workflow never fires at 6am | See "Scheduling" below |
 | Run is red but the Sheet updated | Intentional — see "Failure alerts" below |
