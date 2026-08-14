@@ -42,22 +42,46 @@ def is_valid(path: Path) -> tuple[bool, str]:
     return True, f"valid, {len(report.get('recommendations', []))} recommendations"
 
 
-def notes_excerpt(notes_path: Path, limit: int = 600) -> str:
+def notes_excerpt(report_dir: Path, limit: int = 600) -> str:
+    """Describe what research left behind, and where the pipeline broke."""
+    notes_path = report_dir / "notes.md"
+    candidates_path = report_dir / "candidates.jsonl"
+
+    captured = 0
+    if candidates_path.exists():
+        captured = sum(1 for line in candidates_path.read_text().splitlines() if line.strip())
+
     if not notes_path.exists():
-        return "No research notes were produced."
+        return (
+            f"No research notes were produced and {captured} candidate(s) were captured. "
+            "The research phase likely failed at startup rather than running out of time."
+        )
     text = notes_path.read_text().strip()
     if not text:
         return "Research notes file was created but left empty."
-    candidates = text.count("CANDIDATE")
+
     head = text[-limit:] if len(text) > limit else text
+
+    if captured:
+        diagnosis = (
+            f"{captured} candidate(s) were captured but synthesis did not convert them, "
+            "so this is a synthesis failure, not a research failure — the material exists "
+            f"in reports/{report_dir.name}/candidates.jsonl and is worth reading directly."
+        )
+    else:
+        diagnosis = (
+            "No candidates were captured despite the research above, so the research phase "
+            "spent its budget gathering without converting anything into a tradeable idea "
+            "before the cap killed it."
+        )
+
     return (
-        f"Research notes contain {candidates} candidate block(s) and "
-        f"{len(text)} characters, but were not converted into a report. "
-        f"Tail of the log: ...{head}"
+        f"Research produced {len(text)} characters of notes and {captured} captured "
+        f"candidate(s). {diagnosis} Tail of the log: ...{head}"
     )
 
 
-def stub(date_str: str, reason: str, notes_path: Path, truncated: bool) -> dict:
+def stub(date_str: str, reason: str, report_dir: Path, truncated: bool) -> dict:
     return {
         "date": date_str,
         "generated_at_et": datetime.now(ET).isoformat(timespec="seconds"),
@@ -66,7 +90,7 @@ def stub(date_str: str, reason: str, notes_path: Path, truncated: bool) -> dict:
         "pipeline_failure": True,
         "data_quality_notes": (
             f"NO RECOMMENDATIONS PUBLISHED. The synthesis phase did not produce a usable "
-            f"report ({reason}). {notes_excerpt(notes_path)} "
+            f"report ({reason}). {notes_excerpt(report_dir)} "
             f"Treat today as a no-signal day rather than a neutral one — the pipeline "
             f"failed, it did not conclude that there was nothing to trade."
         ),
@@ -104,7 +128,7 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Preserved the unusable file at {broken.relative_to(REPO)}", file=sys.stderr)
 
     report_path.write_text(
-        json.dumps(stub(args.date, detail, report_dir / "notes.md", args.research_truncated), indent=2) + "\n"
+        json.dumps(stub(args.date, detail, report_dir, args.research_truncated), indent=2) + "\n"
     )
     return 0
 

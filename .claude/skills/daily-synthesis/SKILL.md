@@ -11,8 +11,42 @@ Convert the research log into `reports/<date>/report.json`, valid against
 
 ```bash
 DATE=$(TZ=America/New_York date +%F)
-cat "reports/$DATE/notes.md"
+cat "reports/$DATE/candidates.jsonl"   # the real input
+wc -c "reports/$DATE/notes.md"         # context and rejections
 ```
+
+## Step zero: write a valid report before anything else
+
+**Your first action is to write a schema-valid `report.json` with an empty
+`recommendations` array.** Then improve it in place as you work.
+
+You are on a timer too. A previous run read 38,000 characters of good research,
+started reasoning about it, and was cut off having written nothing — turning a
+strong research day into a total loss. A valid file on disk from minute one
+means the worst case is a thin report instead of no report.
+
+```bash
+DATE=$(TZ=America/New_York date +%F)
+python - <<PY
+import json, pathlib
+from datetime import datetime
+from zoneinfo import ZoneInfo
+p = pathlib.Path("reports/$DATE/report.json")
+p.write_text(json.dumps({
+    "date": "$DATE",
+    "generated_at_et": datetime.now(ZoneInfo("America/New_York")).isoformat(timespec="seconds"),
+    "truncated": True,
+    "data_quality_notes": "Synthesis in progress.",
+    "market_context": {"summary": "Synthesis in progress.", "regime": "unknown"},
+    "recommendations": [],
+}, indent=2))
+print("skeleton written")
+PY
+```
+
+Rewrite it with real content as soon as you have your first finished
+recommendation, and again as you add each one. Do not hold the finished report
+in your head until the end.
 
 ## Your job is to be a faithful editor, not a second researcher
 
@@ -28,9 +62,22 @@ traded on.
 
 ## Steps
 
-1. **Read the notes** and `reports/<date>/prior_context.md`. Extract every
-   `CANDIDATE` and `POSITION UPDATE` block. Ignore `REJECTED` entries except as
-   evidence the field was considered.
+1. **Read `candidates.jsonl` first.** Each line is a validated candidate,
+   already in report shape. Where a symbol appears more than once, the last
+   entry wins — research captures improved versions as it goes.
+
+   Then read `notes.md` and `prior_context.md` for context, rejections, and
+   position updates. **`notes.md` uses whatever headings the research phase
+   chose** — do not expect a fixed format, and do not skip material because it
+   is not laid out the way you expected.
+
+   If `candidates.jsonl` is missing or thin but `notes.md` is substantial, the
+   research phase was cut off before consolidating. Reconstruct what you can
+   from the notes: any finding with a symbol, a direction, a level, and a source
+   is a usable recommendation. Say in `data_quality_notes` that you
+   reconstructed it, and be honest that levels not set during research are
+   weaker. Reconstructing beats publishing nothing — a full page of researched
+   findings and an empty report is the one outcome to avoid.
 
    A `POSITION UPDATE` becomes a normal recommendation for that symbol, with the
    revised levels and a `thesis` that opens by naming it as an update to an open
