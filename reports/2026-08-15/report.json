@@ -1,0 +1,330 @@
+{
+  "date": "2026-08-15",
+  "generated_at_et": "2026-08-15T06:45:35-04:00",
+  "research_minutes": 24,
+  "truncated": false,
+  "data_quality_notes": "Research phase completed inside its budget (finished 06:48 ET against a 07:24 cap) and logged a RESEARCH COMPLETE block, so this report is not truncated. Five recommendations, not the 6-8 target, and zero intraday ideas \u2014 both deliberate. IDEA COUNT: research captured 14 candidates across 8 unique symbols; three were demoted to watchlist on their own evidence (TGT on an expected move larger than its stop, BTC on the correlation cap, IBB on having no dated catalyst) rather than published as filler. ZERO INTRADAY: this is a Saturday run. US equities and futures are closed, so every equity entry above is for the Monday 2026-08-17 open or later. The two asset classes that ARE live on a weekend both produced nothing publishable \u2014 ETH and SOL are sitting on braided moving averages with no trend to join, BTC is countertrend, and the event-contract feed is dead. PRICES: all five last_price values are Friday 2026-08-14 16:00 ET closes fetched from Finnhub, re-verified at synthesis. No price in this report is estimated. SOURCE FAILURES: no index, VIX, DXY, gold-futures or crude-futures quotes were obtainable \u2014 Yahoo returned HTTP 429, Finnhub index CFDs are paywalled, stooq 404'd on caret symbols and there is no AlphaVantage key; ETF proxies (SPY/QQQ/IWM/GLD/USO/UUP) were substituted throughout and the index levels in market_context.levels come from dated news reporting, not a live feed. NO EVENT CONTRACTS: the Kalshi feed via market_data.py returns only sports parlay shards for every macro query, so no market-implied probability could be read and no probability disagreement could be stated. This is a real loss on a weekend run, when event contracts are meant to carry more of the report. NO FUTURES: MES/MNQ/MCL/MBT are confirmed Robinhood-available via secondary sources, but robinhood.com's own futures-contract page returned HTTP 404, so no leveraged candidate was published on secondary sourcing alone. CONCENTRATION WARNING \u2014 read before sizing: all five ideas are long. There is no short and no hedge, three days after the S&P 500 set a record close of 7,798.99 and the Russell 2000 a record 3,067. A research pass specifically looking for a short found only downtrends that either report inside the window (BIDU, TJX, WMT) or ARE the steepener in disguise (TLT, at its 120-day low), so none was published. Separately, four of the five resolve materially on Wednesday 8/19: KRE, GLD and IWM on the 14:00 ET FOMC minutes \u2014 exactly at the correlation cap of three \u2014 and XLE on the 10:30 ET EIA report. KRE and IWM are close to the same domestic-steepener trade; treat their combined 5% as one position. Practically, this book is roughly three independent bets, not five. CONVICTION: nothing above 4. With the event feed dead, index/VIX/DXY quotes failing and crypto history rate-limited, this run has less confirming evidence than a clean one, and conviction is evidence quality rather than expected return. One research-log caveat: heading timestamps in notes.md drift 4-6 minutes ahead of the true clock and the log says so itself; all prices, levels and dates under those headings are fetched values.",
+  "market_context": {
+    "summary": "Record-high US indices with breadth broadening into the parts of the market that had lagged. The S&P 500 set a record close of 7,798.99 on 8/13 and the Russell 2000 a record 3,067, +23% YTD. Friday's tape was a clean reflation rotation: IWM +0.52%, XLE +1.39%, GLD +0.63%, SLV +0.55% against SPY -0.20%, QQQ -0.14%, TLT -0.67% and UUP -0.25% \u2014 money leaving duration and mega-cap growth for commodities and domestic small caps, with the 10y-2y steepening from +0.48 to +0.51. Macro supports it: July PPI came in unchanged versus +0.1% consensus, unemployment ticked down to 4.1%, and a 4.63% 10y against a 3.63% effective funds rate says the market is not pricing deep cuts. The tension is that a live US-Iran war is setting a floor under crude (Brent $87.07, WTI $81.25) \u2014 the same energy bid that supports XLE is the most plausible route to re-igniting inflation and ending the steepener. Cross-asset the picture is not uniformly risk-on: crypto is in a drawdown regime with BTC below its 20/50/100-day averages, and gold is only recovering from a six-month crash that took it 26% off its January peak. The week's hinge is Wednesday 8/19 \u2014 FOMC minutes at 14:00 ET, EIA at 10:30 ET, and TGT, LOW and TJX reporting before the open.",
+    "regime": "mixed",
+    "levels": {
+      "spx": 7798.99,
+      "spx_asof": "2026-08-13 record close (news-sourced; no live index feed this run)",
+      "ndx_proxy_qqq": 731.07,
+      "spy": 776.34,
+      "iwm": 305.09,
+      "smh": 587.82,
+      "rut": 3067,
+      "rut_asof": "2026-08-13 record high (news-sourced)",
+      "us10y": 4.63,
+      "us2y": 4.15,
+      "t10y2y": 0.51,
+      "fed_funds_effective": 3.63,
+      "tlt": 82.04,
+      "vix": null,
+      "dxy": null,
+      "dxy_proxy_uup": 28.11,
+      "gold_proxy_gld": 401.48,
+      "silver_proxy_slv": 58.48,
+      "oil_proxy_uso": 126.6,
+      "brent": 87.07,
+      "wti": 81.25,
+      "btc": 62958.81,
+      "eth": 1877.39,
+      "sol": 75.28,
+      "unemployment_rate": 4.1,
+      "note": "Equity/ETF levels are 2026-08-14 closes. VIX, DXY and cash index quotes were unobtainable this run \u2014 see data_quality_notes."
+    },
+    "econ_calendar": [
+      {
+        "event": "Industrial Production",
+        "datetime_et": "2026-08-18T09:15",
+        "importance": "medium",
+        "consensus": null
+      },
+      {
+        "event": "HD Q2 earnings, before the open",
+        "datetime_et": "2026-08-18T07:00",
+        "importance": "medium",
+        "consensus": "revenue $48.7B"
+      },
+      {
+        "event": "TGT / LOW / TJX Q2 earnings, before the open",
+        "datetime_et": "2026-08-19T07:00",
+        "importance": "high",
+        "consensus": "TGT EPS $2.32, revenue $26.12B; options price a 7.08% TGT move"
+      },
+      {
+        "event": "EIA Weekly Petroleum Status Report",
+        "datetime_et": "2026-08-19T10:30",
+        "importance": "medium",
+        "consensus": null
+      },
+      {
+        "event": "FOMC minutes, July 28-29 meeting",
+        "datetime_et": "2026-08-19T14:00",
+        "importance": "high",
+        "consensus": null
+      },
+      {
+        "event": "WMT / BABA / DE Q2 earnings, before the open",
+        "datetime_et": "2026-08-20T07:00",
+        "importance": "high",
+        "consensus": "WMT revenue $188.8B"
+      },
+      {
+        "event": "NVDA Q2 FY27 earnings, after the close (call 17:00 ET)",
+        "datetime_et": "2026-08-26T16:20",
+        "importance": "high",
+        "consensus": "EPS $2.13, revenue $93.6B"
+      },
+      {
+        "event": "Jackson Hole Economic Policy Symposium (Powell appearance unconfirmed on the Fed Board calendar)",
+        "datetime_et": "2026-08-27T00:00",
+        "importance": "medium",
+        "consensus": null
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "rank": 1,
+      "symbol": "KRE",
+      "instrument": "SPDR S&P Regional Banking ETF",
+      "asset_class": "etf",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 4,
+      "unit": "usd",
+      "last_price": 77.93,
+      "last_price_asof": "2026-08-14T16:00:00-04:00",
+      "entry": {
+        "ideal": 76.8,
+        "zone_low": 76.2,
+        "zone_high": 78.0,
+        "order_type": "limit",
+        "condition": "Entry is for the Monday 2026-08-17 open or later \u2014 US equities were closed when this was written. Buy the 76.20-78.00 zone; do not pay above 78.00, which is the 120-day high."
+      },
+      "exit": {
+        "target": 82.5,
+        "target_2": 85.0,
+        "scale_plan": "trim half at 82.50, trail the rest under the rising SMA20",
+        "time_stop": "2026-09-19"
+      },
+      "stop": 74.2,
+      "risk_reward": 2.19,
+      "position_size_pct": 3,
+      "catalyst": {
+        "event": "FOMC minutes from the July 28-29 meeting, 14:00 ET; the curve reaction is the trade",
+        "datetime_et": "2026-08-19T14:00",
+        "wait": false,
+        "action": "build the position before the 8/19 release; add on a dovish steepening reaction, cut on a hawkish flattening. Exit immediately on any single-name CRE credit event in the sector regardless of level."
+      },
+      "thesis": "The 10y-2y spread widened to +0.51 on 8/14 from +0.48, with the 2y at 4.15% against a 3.63% effective funds rate \u2014 a bull steepener, which mechanically widens regional-bank net interest margin because these banks fund short and lend long. Sector reporting independently corroborates both the level and the mechanism: a 2s/10s spread of +0.52% and NIMs widening as deposit costs roll over, with KRE up 28% year on year. KRE closed 77.93, only 0.54% below its 120-day high of 78.35, with SMA20 76.48 and SMA50 74.81 stacked rising beneath it, so the balance sheet and the tape agree.",
+      "key_risk": "Commercial real estate credit is the sector-specific tail and it arrives without warning at the single-name level \u2014 the October 2025 loan problems at Zions and Western Alliance repriced the whole group in days. A CRE credit event does not care about the yield curve and bypasses the entire NIM thesis.",
+      "counter_argument": "One day of spread widening (0.48 to 0.51) is inside the noise band for the 10y-2y, and KRE is buying at the top of a 120-day range rather than at support, so the entry is close to the worst price in three months if the steepener is a head-fake. KRE also fell roughly 3% over a recent 30-day stretch on exactly the opposite narrative \u2014 that persistently high rates pressure NIM \u2014 which shows the sector will trade both readings of the same rate backdrop.",
+      "sources": [
+        "https://fred.stlouisfed.org/series/T10Y2Y",
+        "https://fred.stlouisfed.org/series/DGS2",
+        "https://www.federalreserve.gov/newsevents/2026-august.htm",
+        "https://www.benzinga.com/news/financing/26/07/60543055/regional-banks-are-emerging-as-sleeper-trade-of-q3",
+        "https://www.nasdaq.com/market-activity/funds-and-etfs/kre/historical"
+      ]
+    },
+    {
+      "rank": 2,
+      "symbol": "GLD",
+      "instrument": "SPDR Gold Shares",
+      "asset_class": "etf",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 4,
+      "unit": "usd",
+      "last_price": 401.48,
+      "last_price_asof": "2026-08-14T16:00:00-04:00",
+      "entry": {
+        "ideal": 393.0,
+        "zone_low": 390.0,
+        "zone_high": 397.0,
+        "order_type": "limit",
+        "condition": "WAIT \u2014 GLD closed 401.48, above the zone. Rest a bid at 390-397 for the Monday 2026-08-17 open onward; do not chase at 401."
+      },
+      "exit": {
+        "target": 425.0,
+        "target_2": 450.0,
+        "scale_plan": "trim half into the 423-427 shelf, hold the rest for 450",
+        "time_stop": "2026-10-16"
+      },
+      "stop": 378.0,
+      "risk_reward": 2.13,
+      "position_size_pct": 3,
+      "catalyst": {
+        "event": "FOMC minutes from the July 28-29 meeting, 14:00 ET \u2014 gold trades the real-rate path and this is the week's read on it",
+        "datetime_et": "2026-08-19T14:00",
+        "wait": true,
+        "action": "rest a bid in the 390-397 zone ahead of the release rather than entering at spot; a dovish read is the add, a hawkish real-rate repricing that closes GLD under 378 ends it."
+      },
+      "thesis": "GLD and SLV both bottomed on the same session, 2026-07-16, at 364.96 and 50.39 \u2014 a joint capitulation low across two separately traded metals is far harder to dismiss as single-instrument flow than either chart alone. GLD has since recovered to 401.48 and now sits above a rising SMA20 of 383.06 and SMA50 of 381.30. GDX confirms: at 89.97 it is 11.9% above its own SMA20 versus GLD's 4.8%, and miners leading bullion is the tell that the July low is being bought by people expressing a view rather than drifting.",
+      "key_risk": "This is a countertrend recovery inside a larger downtrend: GLD is still 19% below its 2026-01-29 peak of 495.90, and the 423-427 shelf that sets the first target is exactly where the January and May supply sits.",
+      "counter_argument": "The strongest case against is that this is a bear-market rally in an asset that has fallen for six straight months, and that a joint bottom is just two correlated metals doing the same correlated thing. It also shares its rate-path direction with the KRE and IWM ideas \u2014 a hawkish 8/19 hurts all three together, so gold here is a hedge against equity risk-off but NOT against the rate-path bet this book is already making.",
+      "sources": [
+        "https://api.nasdaq.com/api/quote/GLD/historical",
+        "https://www.nasdaq.com/market-activity/funds-and-etfs/gld/historical",
+        "https://www.federalreserve.gov/newsevents/2026-august.htm"
+      ]
+    },
+    {
+      "rank": 3,
+      "symbol": "IWM",
+      "instrument": "iShares Russell 2000 ETF",
+      "asset_class": "etf",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 3,
+      "unit": "usd",
+      "last_price": 305.09,
+      "last_price_asof": "2026-08-14T16:00:00-04:00",
+      "entry": {
+        "ideal": 301.0,
+        "zone_low": 299.0,
+        "zone_high": 304.0,
+        "order_type": "limit",
+        "condition": "Buy the pullback into 299-304, not the breakout. IWM closed 305.09, above the zone, so this does not trigger at Friday's price."
+      },
+      "exit": {
+        "target": 318.0,
+        "target_2": 330.0,
+        "scale_plan": "trim half at 318, trail the rest under the 295 moving-average cluster",
+        "time_stop": "2026-09-30"
+      },
+      "stop": 294.0,
+      "risk_reward": 2.43,
+      "position_size_pct": 2,
+      "catalyst": {
+        "event": "FOMC minutes from the July 28-29 meeting, 14:00 ET",
+        "datetime_et": "2026-08-19T14:00",
+        "wait": true,
+        "action": "wait for a pullback into 299-304 rather than buying 1.6% under a record high; if the minutes read hawkish and IWM loses 294 on a closing basis, the thesis is done."
+      },
+      "thesis": "The Russell 2000 set a record high of 3,067 on 8/13 and is up over 23% year to date, and IWM confirmed it by closing 305.09 on 8/14 \u2014 0.03% from its own 120-day high \u2014 on a day SPY fell 0.20%. Small caps outperforming on a down tape while the 10y-2y steepens to +0.51 is the textbook domestic-reflation rotation, and IWM has SMA20 296.72 and SMA50 295.10 tightly stacked just below as a defined failure point.",
+      "key_risk": "Entry is within 1.6% of a record high, so there is no overhead reference to lean on \u2014 a failed breakout has nothing but air and the 295 moving-average cluster beneath it.",
+      "counter_argument": "This shares its driver with the KRE idea: both are long the same steepener and the same domestic small-cap tape, so they will lose together on hawkish 8/19 minutes. Treat the combined 5% as one position for sizing, not two independent ones.",
+      "sources": [
+        "https://www.nasdaq.com/market-activity/funds-and-etfs/iwm/historical",
+        "https://finance.yahoo.com/markets/stocks/articles/stock-market-news-aug-14-103100309.html",
+        "https://fred.stlouisfed.org/series/T10Y2Y"
+      ]
+    },
+    {
+      "rank": 4,
+      "symbol": "NVDA",
+      "instrument": "NVIDIA Corp",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 3,
+      "unit": "usd",
+      "last_price": 225.16,
+      "last_price_asof": "2026-08-14T16:00:00-04:00",
+      "entry": {
+        "ideal": 213.0,
+        "zone_low": 209.0,
+        "zone_high": 217.0,
+        "order_type": "limit",
+        "condition": "DO NOT BUY AT 225.16. Only a resting limit in the 209-217 pullback zone triggers this \u2014 at Friday's close the reward-to-risk to 236.50 is 1.3, which fails the 2.0 swing minimum."
+      },
+      "exit": {
+        "target": 236.5,
+        "target_2": 248.0,
+        "scale_plan": "trim half into the 8/26 print, hold the rest through the call",
+        "time_stop": "2026-09-11"
+      },
+      "stop": 202.0,
+      "risk_reward": 2.14,
+      "position_size_pct": 3,
+      "catalyst": {
+        "event": "Q2 FY27 earnings (quarter ended 2026-07-26). Company-confirmed: results ~16:20 ET, analyst call 17:00 ET. Consensus EPS 2.13, revenue $93.6B",
+        "datetime_et": "2026-08-26T16:20",
+        "wait": true,
+        "action": "accumulate only on a pullback into 209-217 ahead of the print; trim half into the 8/26 release and hold the remainder through the call."
+      },
+      "thesis": "NVDA closed 225.16 on 8/14, consolidating in a 216-227 range beneath its 120-day high of 236.54, with SMA20 210.40 and SMA50 206.52 both rising underneath it. The mechanism is pre-earnings drift into the company-confirmed 8/26 print, but only from a better cost basis. The SEC filing record is clean \u2014 no 8-K and no guidance revision, only routine Form 4 insider activity \u2014 so nothing in the disclosure trail contradicts the setup.",
+      "key_risk": "Earnings gap risk is uncapped and ATR14 is 6.84 (3.04% daily). A guidance miss on 8/26 can gap through the 202 stop overnight, so the stop is an intent, not a guarantee.",
+      "counter_argument": "The pullback may never come: if NVDA breaks 236.54 before earnings the idea simply does not trigger and the trade is missed. That is the accepted cost of the structure \u2014 chasing strength above the range high would put the stop more than 4 ATR away, which is a worse trade than no trade.",
+      "sources": [
+        "https://www.stocktitan.net/news/NVDA/nvidia-sets-conference-call-for-second-quarter-financial-t2wo8k69dark.html",
+        "https://www.nasdaq.com/market-activity/stocks/nvda/historical",
+        "https://finnhub.io/api/v1/calendar/earnings",
+        "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001045810"
+      ]
+    },
+    {
+      "rank": 5,
+      "symbol": "XLE",
+      "instrument": "Energy Select Sector SPDR Fund",
+      "asset_class": "etf",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 3,
+      "unit": "usd",
+      "last_price": 61.91,
+      "last_price_asof": "2026-08-14T16:00:00-04:00",
+      "entry": {
+        "ideal": 60.8,
+        "zone_low": 60.0,
+        "zone_high": 62.2,
+        "order_type": "limit",
+        "condition": "Enter on a pullback into 60.00-62.20 before Wednesday's EIA report. Size is the risk control here, not the stop."
+      },
+      "exit": {
+        "target": 67.0,
+        "target_2": 70.0,
+        "scale_plan": "trim half at 67.00; do not hold the balance through a de-escalation headline",
+        "time_stop": "2026-09-19"
+      },
+      "stop": 57.8,
+      "risk_reward": 2.07,
+      "position_size_pct": 1,
+      "catalyst": {
+        "event": "EIA Weekly Petroleum Status Report, 10:30 ET Wednesday",
+        "datetime_et": "2026-08-19T10:30",
+        "wait": false,
+        "action": "enter on a pullback into the zone before Wednesday's 10:30 ET report. Treat any US-Iran ceasefire or de-escalation headline as an immediate market-order exit regardless of level."
+      },
+      "thesis": "Energy was the strongest sector into the weekend \u2014 XLE +1.39% and USO +1.26% on 8/14 \u2014 and it rallied the day AFTER Brent and WTI each fell more than 2% on 8/13 to $87.07 and $81.25, meaning equity buyers stepped in against a lower crude tape. XLE closed 61.91 with SMA20 59.16 above SMA50 56.97 and price 2.44% under its 120-day high of 63.46. Trump has declared the Iran ceasefire over and called negotiation a waste of time, which removes the near-term path to a supply-premium unwind.",
+      "key_risk": "Sized at 1% because the stop cannot be trusted. On 2026-04-08 a US-Iran ceasefire agreement crashed global crude by up to 20% in a single session \u2014 a dated precedent in this exact conflict this year, not a hypothetical. A repeat gaps XLE straight through the 57.80 stop, which is only 4.9% below entry, with no opportunity to exit at it.",
+      "counter_argument": "Crude fell 2% on 8/13 specifically on falling demand, not supply \u2014 if the demand signal is the real one, the war premium is the only thing holding energy up, and premiums decay. A sector whose bull case requires a war to continue has a short and unpleasant tail, and the April 8 session is proof of how fast that tail arrives.",
+      "sources": [
+        "https://www.nasdaq.com/market-activity/funds-and-etfs/xle/historical",
+        "https://thehill.com/policy/energy-environment/5960020-iran-ceasefire-gas-prices-strait-of-hormuz/",
+        "https://www.newsonair.gov.in/global-oil-prices-crash-upto-20-per-cent-amid-us-iran-ceasefire-agreement",
+        "https://www.eia.gov/petroleum/supply/weekly/"
+      ]
+    }
+  ],
+  "watchlist": [
+    {
+      "symbol": "TGT",
+      "instrument": "Target Corp",
+      "note": "Demoted from recommendation on falsification. The relative-strength read stands \u2014 TGT closed 154.48, 1.27% off its 120-day high, while HD is 14.07% off, LOW 22.30%, WMT 14.71% and TJX 10.52% off theirs \u2014 but the options market prices a 7.08% move on the 8/19 print, larger than the 5.65% distance to a 142 stop. Widening the stop to 138 drops reward-to-risk to 1.40, below the 2.0 floor. Mean analyst target is $143.15, roughly 8% BELOW the current price.",
+      "trigger": "Do not hold through the print. Wait for the 8/19 gap to resolve, then trade the retest of the gap in whichever direction it establishes."
+    },
+    {
+      "symbol": "BTC",
+      "instrument": "Bitcoin",
+      "note": "Demoted on the correlation cap. BTC closed 62,958.81 below its SMA20 63,837.75, SMA50 63,514.36 and SMA100 66,876.46, printing the low of its own 14-day range, with an average daily move of 0.53% \u2014 extreme volatility compression that usually resolves in an expansion, but compression is directionless and the MA stack biases it down. The only catalyst available is the 8/19 FOMC minutes, which is borrowed macro, and KRE, GLD and IWM already fill the three rate-path slots with better evidence.",
+      "trigger": "Revisit only if BTC trades into 58,200-60,000 at the 120-day low of 58,566 for a risk-defined bounce, or reclaims and closes above SMA20 63,838. Do not buy the middle."
+    },
+    {
+      "symbol": "IBB",
+      "instrument": "iShares Biotechnology ETF",
+      "note": "The cleanest trend structure found after KRE and GLD, held back purely on catalyst grounds: IBB closed 198.26, 1.72% below its 120-day high of 201.72, with SMA20 192.00 above SMA50 186.28 both rising and ATR14 of only 1.79%. But no single dated event moves a diversified biotech index \u2014 '412 FDA catalysts in August' is an aggregate, not a specific thing at a specific time, and the BIC/LEN PDUFA on 2026-08-27 is single-name.",
+      "trigger": "Promote only if a sector-level dated event appears. Levels if it does: entry 192-197, target 214, stop 185 (R:R 2.22) \u2014 note 214 requires a breakout to a new 120-day high that has not happened yet."
+    }
+  ]
+}
