@@ -261,7 +261,9 @@ def grade_position(pos: dict, today: date) -> dict:
             pos.update(status="stopped", closed=today.isoformat(), exit_price=last)
 
     # Time-box stale ideas so the tracker does not fill with zombies.
-    max_days = 5 if pos.get("horizon") == "intraday" else 45
+    # Long-term positions are meant to sit open for quarters, so expiring them
+    # on a swing timetable would score every buy-and-hold thesis as a failure.
+    max_days = {"intraday": 5, "swing": 45, "long_term": 730}.get(pos.get("horizon"), 45)
     if pos.get("status") in (None, "open") and pos["days_open"] > max_days:
         pos.update(status="expired", closed=today.isoformat())
 

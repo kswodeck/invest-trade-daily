@@ -62,8 +62,15 @@ Only instruments you can actually trade in Robinhood are recommended:
 | Futures           | Robinhood Derivatives        | long / short         |
 | Event contracts   | Robinhood Prediction Markets | yes / no             |
 
-Horizons: **intraday** and **swing** (days to weeks). See
-[`config/strategy.md`](config/strategy.md) and
+Three horizons, all treated as first-class: **intraday** (same session),
+**swing** (days to weeks), and **long_term** (months to years, buy and hold).
+
+**There are no per-horizon quotas.** The report surfaces the best opportunities
+it finds and the mix falls where it falls — if the strongest eight ideas on a
+given day are all long-term accumulations, that is what it publishes. Forcing
+variety would mean dropping a good idea to make room for a worse one.
+
+See [`config/strategy.md`](config/strategy.md) and
 [`config/universe.md`](config/universe.md) to tune this.
 
 ## Setup
@@ -144,9 +151,9 @@ state/
 Two files change behavior with no code edits, and both are read fresh on every
 run:
 
-- **`config/strategy.md`** — how many ideas, the swing/intraday split, minimum
-  reward-to-risk, position size caps, the conviction rubric, and how the
-  research budget is divided.
+- **`config/strategy.md`** — how many ideas, the reward-to-risk floors per
+  horizon, position size caps, the conviction rubric, and how the research
+  budget is divided.
 - **`config/universe.md`** — what is tradeable and what is excluded.
 
 ## Disclaimer

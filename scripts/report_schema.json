@@ -107,7 +107,7 @@
           "type": "string",
           "enum": ["buy", "sell", "sell_short", "long", "short", "yes", "no"]
         },
-        "horizon": { "type": "string", "enum": ["intraday", "swing"] },
+        "horizon": { "type": "string", "enum": ["intraday", "swing", "long_term"] },
         "conviction": { "type": "integer", "minimum": 1, "maximum": 5 },
         "unit": {
           "type": "string",
