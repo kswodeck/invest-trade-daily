@@ -20,7 +20,9 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import sys
+import time
 from datetime import date, datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -346,6 +348,39 @@ def summarize(positions: list[dict]) -> list[Any]:
 # sheets io
 # --------------------------------------------------------------------------
 
+# Google's Sheets API returns these intermittently under load. They say nothing
+# about credentials and clear on their own, so they are worth retrying rather
+# than failing a morning over.
+TRANSIENT_STATUS = {429, 500, 502, 503, 504}
+AUTH_STATUS = {401, 403, 404}
+
+
+def _status_code(exc: Exception) -> int | None:
+    """Pull an HTTP status out of a gspread APIError, however it is carried."""
+    code = getattr(getattr(exc, "response", None), "status_code", None)
+    if code:
+        return int(code)
+    match = re.search(r"\[(\d{3})\]", str(exc))
+    return int(match.group(1)) if match else None
+
+
+def with_retry(fn: Any, what: str, attempts: int = 5) -> Any:
+    """Retry `fn` through transient Google errors with exponential backoff."""
+    delay = 2.0
+    for attempt in range(1, attempts + 1):
+        try:
+            return fn()
+        except Exception as exc:  # noqa: BLE001
+            code = _status_code(exc)
+            if code not in TRANSIENT_STATUS or attempt == attempts:
+                raise
+            print(f"  {what}: HTTP {code}, retrying in {delay:.0f}s "
+                  f"(attempt {attempt}/{attempts})", file=sys.stderr)
+            time.sleep(delay)
+            delay *= 2
+    raise RuntimeError("unreachable")
+
+
 def open_spreadsheet():
     import gspread
     from google.oauth2.service_account import Credentials
@@ -364,12 +399,23 @@ def open_spreadsheet():
     creds = Credentials.from_service_account_info(
         info, scopes=["https://www.googleapis.com/auth/spreadsheets"]
     )
+    client = gspread.authorize(creds)
+    email = info.get("client_email")
     try:
-        return gspread.authorize(creds).open_by_key(sheet_id), info.get("client_email")
+        sheet = with_retry(lambda: client.open_by_key(sheet_id), "opening the spreadsheet")
+        return sheet, email
     except Exception as exc:  # noqa: BLE001
+        code = _status_code(exc)
+        if code in AUTH_STATUS:
+            raise SystemExit(
+                f"Could not open sheet {sheet_id}: {exc}\n"
+                f"HTTP {code} means the service account cannot reach this Sheet. "
+                f"Share it with {email} as an Editor."
+            ) from exc
         raise SystemExit(
-            f"Could not open sheet {sheet_id}: {exc}\n"
-            f"Share the Sheet with {info.get('client_email')} as an Editor."
+            f"Could not open sheet {sheet_id} after retries: {exc}\n"
+            f"HTTP {code} is a transient Google API failure, not a permissions problem — "
+            f"the credentials and sharing are almost certainly fine. Re-run the workflow."
         ) from exc
 
 
@@ -479,9 +525,10 @@ def style_grid(ws, header_row: int, n_cols: int, n_rows: int, ideas: list[dict])
 
 def write_tab(spreadsheet, title: str, values: list[list[Any]], header_row: int, ideas: list[dict]):
     n_cols = max(len(r) for r in values)
-    ws = get_or_create(spreadsheet, title, len(values) + 10, n_cols + 2)
+    ws = with_retry(lambda: get_or_create(spreadsheet, title, len(values) + 10, n_cols + 2),
+                    f"creating/clearing '{title}'")
     padded = [row + [""] * (n_cols - len(row)) for row in values]
-    ws.update(padded, "A1", value_input_option="RAW")
+    with_retry(lambda: ws.update(padded, "A1", value_input_option="RAW"), f"writing '{title}'")
     try:
         style_grid(ws, header_row, n_cols, len(values), ideas)
     except Exception as exc:  # noqa: BLE001 - content matters more than styling
@@ -550,6 +597,12 @@ def main(argv: list[str] | None = None) -> int:
         print(f"\nState written to {STATE_PATH.relative_to(REPO)}. Sheet not touched.")
         return 0
 
+    # Persist before touching Sheets. Grading and capture are already done and do
+    # not depend on the Sheet, so a Google outage should not also cost us the
+    # position tracking — that would silently orphan a day of picks.
+    save_state(positions)
+    print(f"State saved to {STATE_PATH.relative_to(REPO)} ({len(positions)} positions).")
+
     spreadsheet, client_email = open_spreadsheet()
     print(f"Opened spreadsheet as {client_email}")
 
@@ -572,7 +625,6 @@ def main(argv: list[str] | None = None) -> int:
     except Exception as exc:  # noqa: BLE001
         print(f"  warning: could not reorder tabs: {exc}", file=sys.stderr)
 
-    save_state(positions)
     print(f"Done. {len(ideas)} ideas published for {report['date']}.")
     return 0
 
