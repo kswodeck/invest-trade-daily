@@ -1,0 +1,477 @@
+{
+  "date": "2026-08-16",
+  "generated_at_et": "2026-08-16T06:39:46-04:00",
+  "research_minutes": 42,
+  "truncated": false,
+  "data_quality_notes": "Research phase ran to completion (06:25-07:07 ET) and logged a RESEARCH COMPLETE block, so nothing here is a mid-sentence salvage. Eight recommendations = six new ideas plus two position updates (XLE, KRE), which are position management and do not count against the 6-8 new-idea target.\n\nZERO INTRADAY IDEAS against a 2-3 target. This is a Sunday run: US equities and futures are closed, and config/strategy.md directs weekend runs to treat equities as week-ahead prep. Every equity entry here is for Monday's open or later. All eight are swing.\n\nZERO EVENT CONTRACTS. The Kalshi feed answered every query (Fed, CPI, Bitcoin, recession) with ok:true and count:0 markets. Robinhood prediction markets are demonstrably live - research verified an RH WTI event page - so this is a data gap on our side, not a venue absence. Publishing a probability disagreement against a cents price we never fetched would fabricate a number, so we published none.\n\nZERO FUTURES, and that one is a choice rather than a gap. The obvious micro contracts (/M2K, /MGC) would each have been a fourth idea keyed to the Fed path, and the correlation cap is three per driver. KRE, BTC and GLD already occupy those three slots.\n\nPRICES: every equity/ETF last_price is the Friday 2026-08-14 16:00 ET close, re-fetched from Finnhub at synthesis time and unchanged - the market has not traded since. BTC re-fetched live from CoinGecko at synthesis ($62,953, flat). Failed sources: Yahoo Finance returned HTTP 429 on every symbol (no live VIX, index levels, DXY, spot gold or WTI), Finnhub will not serve indices without a CFD subscription, Stooq 404s on ^-prefixed symbols, AlphaVantage has no API key configured. Consequence worth flagging: the $82.40 WTI settle underpinning the XLE thesis is news-sourced, not fetched from a price feed.\n\nFIVE OF EIGHT SAY WAIT (HD, TJX, BABA, ADI, GLD). That is the honest answer to a week that is one long earnings gauntlet plus a Fed-minutes release, but it means this report is largely a set of resting orders and preconditions rather than same-day trades. Read entry.condition before acting on any of them.\n\nSIZING CAVEATS from the falsification pass. (1) The book is 7-of-8 long; the only bearish expression is trimming BTC. A hawkish read of Wednesday's minutes hurts five of these at once regardless of their individual merits. (2) XLE and GLD are deliberately contradictory - XLE needs Hormuz supply fear to persist, GLD needs the cooler-CPI/no-hike premise to hold, and sustained $82 crude is inflationary. They hedge each other; do not size them as if they reinforce. (3) HD and TJX are more correlated than their sector labels suggest - both are 'buy a de-rated retailer after its print' and they report within 24 hours of each other. Treat them as roughly 1.5 positions, not 2. (4) Conviction is capped at 4, once (XLE). Seven ideas are 3s. No setup this week had multiple independent confirmations plus a clean level plus no serious counter-argument, and publishing seven honest 3s beat inventing 4s.\n\nEARNINGS-GAP MECHANICS, not a formality: HD (ATR 8.52), ADI (12.68), BABA (3.93 with an 8% gap history) and TJX (3.33) all have typical earnings gaps larger than their ATRs. Every one of these entries is post-print by construction, and their stops will fill at the opening auction rather than at the stated level.\n\nNOT REACHED: WMT/TGT/LOW/ROST level work, NVDA (Aug 26, outside the horizon), insider Form 4 detail, sector breadth, and crypto beyond the top eight coins.\n\nREJECTED WITH REASONS (recorded so they are not silently missing): AVB/EQR merger arb - the spread is 0.10% on a multi-month hold, inside transaction cost. RDDT short into the post-S&P-inclusion fade - thesis and dating are sound, but a 12.25-point ATR caps the best defensible construction at R:R 1.37, under the 2.0 swing floor, and it needs margin against a retail-favourite squeeze. DE - pinned between its own 20- and 50-day mid-range, no level to lean a stop on. AVB index-deletion dislocation - needs a live EQR quote to price parity, unavailable on a Sunday.",
+  "market_context": {
+    "summary": "Two independent shocks drove last week and they partly contradict each other. A cooler-than-expected CPI around Aug 12 cut the odds of a Fed HIKE - 2026's regime is hike-risk, not cut-hope - which ended a five-month gold correction and gave gold miners their best week in years (+20%+). Then on Friday Aug 14 the Strait of Hormuz re-escalated with fresh tanker attacks, taking NYMEX WTI September to an $82.40 settle, +5% on the week. Sustained $82 crude is inflationary and undercuts the very no-hike premise gold just rallied on; that tension is the most important thing in this week's tape. Note Hormuz is a two-sided headline generator - earlier in the same week the market traded a prospective US-Iran agreement and oil fell on it.\n\nFriday's tape was rotation within risk, not de-risking: precious metals and energy led (GDX +1.9%, USO +1.3%, GLD +0.6%) while long duration and high-beta growth lagged (TLT -0.67%, ARKK -1.8%), with IWM +0.5% against QQQ -0.14%. That is a reflation/inflation-hedge rotation.\n\nRates eased at both ends with the curve steepening (10y 4.63% from 4.68%, 2y 4.15% from 4.20%, 10y-2y +0.51 from +0.48). But effective fed funds at 3.63% against a 2y at 4.15% means the front end prices no near-term cuts and some hike premium - a hawkish-repricing tape.\n\nThe week ahead has three genuinely independent drivers: a concentrated US-consumer verdict Aug 18-20 (HD and LOW on housing, WMT/TGT/TJX/ROST on the staples-discretionary split), Wednesday's FOMC minutes from the July 28-29 meeting where THREE officials dissented in favour of a hike, and RDDT's S&P 500 inclusion before Tuesday's open. Jackson Hole follows Aug 27-29, Chair Warsh's first keynote there, which is why positioning stays tight.",
+    "regime": "mixed",
+    "levels": {
+      "spy": 776.34,
+      "qqq": 731.07,
+      "iwm": 305.09,
+      "tlt": 82.04,
+      "gld": 401.48,
+      "gdx": 89.97,
+      "slv": 58.48,
+      "uso": 126.6,
+      "smh": 587.82,
+      "us10y": 4.63,
+      "us2y": 4.15,
+      "curve_10y2y": 0.51,
+      "fed_funds_effective": 3.63,
+      "btc": 62953.0,
+      "eth": 1878.65,
+      "sol": 75.17,
+      "vix": null,
+      "dxy": null,
+      "spx": null,
+      "ndx": null,
+      "wti": "82.40 (NYMEX Sep settle 2026-08-14, news-sourced - not fetched from a price feed)",
+      "levels_asof": "equities/ETFs 2026-08-14 16:00 ET close; crypto 2026-08-16 ~06:30 ET; rates FRED 2026-08-13/14"
+    },
+    "econ_calendar": [
+      {
+        "event": "NAHB Housing Market Index",
+        "datetime_et": "2026-08-17T10:00",
+        "importance": "medium",
+        "consensus": null
+      },
+      {
+        "event": "Empire State Manufacturing",
+        "datetime_et": "2026-08-17T08:30",
+        "importance": "low",
+        "consensus": null
+      },
+      {
+        "event": "RDDT replaces AVB in the S&P 500, effective prior to the open; index funds execute at Monday's close",
+        "datetime_et": "2026-08-18T09:30",
+        "importance": "medium",
+        "consensus": null
+      },
+      {
+        "event": "Housing Starts",
+        "datetime_et": "2026-08-18T08:30",
+        "importance": "medium",
+        "consensus": null
+      },
+      {
+        "event": "Home Depot Q2 earnings, before the open",
+        "datetime_et": "2026-08-18T06:00",
+        "importance": "high",
+        "consensus": "rev ~$48.7B, EPS ~4.88"
+      },
+      {
+        "event": "Toll Brothers earnings, after the close",
+        "datetime_et": "2026-08-18T16:05",
+        "importance": "medium",
+        "consensus": "rev ~$2.6B, EPS ~2.94"
+      },
+      {
+        "event": "TGT, LOW, TJX, ADI, ROST, EL earnings, before the open",
+        "datetime_et": "2026-08-19T06:00",
+        "importance": "high",
+        "consensus": "TGT ~$26.3B, LOW ~$26.5B, TJX ~$15.3B, ADI ~$4.0B"
+      },
+      {
+        "event": "EIA Weekly Petroleum Status Report - first inventory print after the Hormuz tanker attacks",
+        "datetime_et": "2026-08-19T10:30",
+        "importance": "high",
+        "consensus": null
+      },
+      {
+        "event": "FOMC minutes, July 28-29 meeting - three officials dissented in favour of a rate hike",
+        "datetime_et": "2026-08-19T14:00",
+        "importance": "high",
+        "consensus": null
+      },
+      {
+        "event": "WMT, BABA, DE, NTES earnings, before the open",
+        "datetime_et": "2026-08-20T06:00",
+        "importance": "high",
+        "consensus": "WMT ~$188.8B, BABA ~RMB 274.3B"
+      },
+      {
+        "event": "NVDA Q2 earnings, after the close - outside this report's entry horizon",
+        "datetime_et": "2026-08-26T16:20",
+        "importance": "high",
+        "consensus": "rev ~$93.6B, EPS ~2.13"
+      },
+      {
+        "event": "Jackson Hole symposium - Chair Warsh's first keynote there",
+        "datetime_et": "2026-08-27T10:00",
+        "importance": "high",
+        "consensus": null
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "symbol": "XLE",
+      "instrument": "Energy Select Sector SPDR Fund",
+      "asset_class": "etf",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 4,
+      "last_price": 61.91,
+      "last_price_asof": "2026-08-14T16:00:00-04:00",
+      "entry": {
+        "ideal": 60.5,
+        "zone_low": 60.0,
+        "zone_high": 61.2,
+        "order_type": "limit",
+        "condition": "UPDATE to an open position (entered 60.80 on 2026-08-15, now +1.8%). Holders: do not add here \u2014 XLE closed 4.6% above its 20-day at 61.91 after a 7.7% five-session run. Only add on a pullback into the zone."
+      },
+      "exit": {
+        "target": 64.5,
+        "target_2": 67.0,
+        "scale_plan": "trim half at 64.50 (just above the 120-day range high of 63.46), trail the balance under the rising 20-day toward 67",
+        "time_stop": "2026-09-12"
+      },
+      "stop": 58.6,
+      "risk_reward": 2.11,
+      "position_size_pct": 3,
+      "catalyst": {
+        "event": "EIA Weekly Petroleum Status Report \u2014 the first inventory print after the Hormuz tanker attacks, so it is the first hard read on whether supply fear is showing up in barrels",
+        "datetime_et": "2026-08-19T10:30",
+        "action": "hold through it; do not add ahead of it",
+        "wait": false
+      },
+      "thesis": "UPDATE \u2014 raise the stop from 57.80 to 58.60 and cap the first target at 64.50; otherwise hold. Fresh tanker attacks in the Strait of Hormuz on Aug 14 and sharper Washington/Tehran rhetoric took NYMEX WTI September to a $82.40 settle, +5% on the week, and XLE closed at 61.91, its highest since the 63.46 range high. The original 57.80 stop now sits 2.4 ATR below spot and gives back the entire breakout, so it is doing no work.",
+      "key_risk": "Hormuz is a two-sided headline machine, not a one-way bid \u2014 earlier in the same week the market was pricing a prospective US-Iran agreement and oil fell on it. A de-escalation headline can gap XLE back through the 20-day at 59.16 overnight, and the stop will not protect against a gap.",
+      "counter_argument": "The oil bid and the cooler-CPI trade are mutually inconsistent: an $82 crude sustained is inflationary and revives the Fed hike risk that three FOMC members already dissented for. If Wednesday minutes read hawkish, energy equities can fall even while crude holds, because the multiple compresses. XLE is also extended \u2014 4.6% above the 20-day with a 2.24% ATR is the wrong place to press.",
+      "sources": [
+        "https://www.dtnpf.com/agriculture/web/ag/news/world-policy/article/2026/08/14/oil-prices-rise-tanker-attacks",
+        "https://www.tradingkey.com/news/market-movers/262104960-market-movers-usoil-20260814",
+        "https://www.capitalstreetfx.com/market-analysis/week-ahead-1721-august-2026-fomc-minutes/"
+      ],
+      "rank": 1
+    },
+    {
+      "symbol": "KRE",
+      "instrument": "SPDR S&P Regional Banking ETF",
+      "asset_class": "etf",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 3,
+      "last_price": 77.93,
+      "last_price_asof": "2026-08-14T16:00:00-04:00",
+      "entry": {
+        "ideal": 76.9,
+        "zone_low": 76.4,
+        "zone_high": 77.6,
+        "order_type": "limit",
+        "condition": "UPDATE to an open position (entered 76.80 on 2026-08-15, now +1.5%). Holders hold. NEW money should NOT enter before the FOMC minutes on Wednesday 2026-08-19 14:00 ET \u2014 enter only after them, and only on a pullback into the 20-day at 76.48."
+      },
+      "exit": {
+        "target": 81.2,
+        "target_2": 82.5,
+        "scale_plan": "trim half at 81.20, leave the balance for 82.50 with the stop trailed to breakeven once 79.50 trades",
+        "time_stop": "2026-09-18"
+      },
+      "stop": 75.3,
+      "risk_reward": 2.69,
+      "position_size_pct": 2,
+      "catalyst": {
+        "event": "FOMC minutes of the July 28-29 meeting \u2014 three officials dissented in favour of a rate hike, and the minutes show how close the committee came. This is the direct input to the front end, and therefore to regional-bank net interest margin",
+        "datetime_et": "2026-08-19T14:00",
+        "action": "hold existing; new entries wait for the release, do not front-run it",
+        "wait": true
+      },
+      "thesis": "UPDATE \u2014 hold, and raise the stop from 74.20 to 75.30, below both the 20-day (76.48) and the Aug 10 swing low (75.48). The 10y-2y curve steepened to +0.51 from +0.48 while the 10y fell to 4.63% from 4.68%, which is the bull-steepening regional banks need for margin. KRE closed at 77.93, within 0.5% of its 120-day high of 78.35, so the position is working and the original stop 3.6 ATR below spot is far too loose.",
+      "key_risk": "The 2-year at 4.15% sits 52bp above effective fed funds at 3.63%, so the front end is already pricing no cuts and some hike premium. If Wednesday minutes confirm three serious hike dissents, the front end backs up further, the curve flattens, and the entire NIM thesis inverts inside one afternoon.",
+      "counter_argument": "KRE is up 26% off its 120-day low at the top of its range, which is where a mean-reverting sector ETF fails, not breaks out. The 81.20 target requires a clean break to new highs on a week whose only real macro event is a hawkish risk. Buying the top of a range ahead of the one event that can invalidate it is the reason new entries are told to wait.",
+      "sources": [
+        "https://www.capitalstreetfx.com/market-analysis/week-ahead-1721-august-2026-fomc-minutes/",
+        "https://fred.stlouisfed.org/series/T10Y2Y",
+        "https://www.cnbc.com/2026/08/12/gold-prices-metals-fed-rate-hike-inflation.html"
+      ],
+      "rank": 2
+    },
+    {
+      "symbol": "BTC",
+      "instrument": "Bitcoin",
+      "asset_class": "crypto",
+      "venue": "Robinhood Crypto",
+      "direction": "sell",
+      "horizon": "swing",
+      "conviction": 3,
+      "last_price": 62953.0,
+      "last_price_asof": "2026-08-16T06:30:00-04:00",
+      "entry": {
+        "ideal": 62950.0,
+        "zone_low": 62500.0,
+        "zone_high": 64900.0,
+        "order_type": "limit",
+        "condition": "This is a REDUCE-EXPOSURE recommendation, not a short \u2014 Robinhood Crypto spot cannot be shorted. Trim an existing BTC position into any bounce inside 62,500-64,900. Crypto trades all weekend, so this is actionable today rather than at Monday open. If you hold no BTC, the instruction is simply do not initiate here."
+      },
+      "exit": {
+        "target": 57000.0,
+        "target_2": 60000.0,
+        "scale_plan": "sell half now, the balance on a confirmed hourly close below 62,000; look to re-accumulate at 57,000-60,000",
+        "time_stop": "2026-09-16"
+      },
+      "stop": 65200.0,
+      "risk_reward": 2.64,
+      "position_size_pct": 3,
+      "catalyst": {
+        "event": "FOMC minutes of the July 28-29 meeting, which recorded three dissents in favour of a rate hike \u2014 Fed uncertainty is the named driver pinning bitcoin, and this is the week it gets priced",
+        "datetime_et": "2026-08-19T14:00",
+        "action": "reduce ahead of it; the compressed range is unlikely to survive the release intact",
+        "wait": false
+      },
+      "thesis": "Bitcoin is at $62,953, below both its 20-day and 50-day EMAs, down from above $93,000 at the start of 2026, and pinned on $62,500 support with $65,000-70,000 resistance overhead. The three majors moved less than 0.15% over the past 24 hours, which is volatility compression that resolves into expansion rather than persisting \u2014 and with ETF demand weakening and the Fed minutes landing Wednesday, the expansion has a downhill path. A confirmed break of $62,000 opens $60,000 and then $57,000.",
+      "key_risk": "You are selling directly on support. $62,500 has held repeatedly, which is exactly what makes it support, and a reclaim of $65,150 would flip the structure and leave this recommendation selling the low of the range. The 65,200 stop is deliberately just above that reclaim level.",
+      "counter_argument": "The cooler CPI that broke gold out of a five-month correction is the same disinflationary impulse that historically supports bitcoin, and BTC has conspicuously not responded to it yet. If the Wednesday minutes read dovish rather than hawkish, the compressed range breaks upward and the whole $57,000 objective is wrong. Spot is also inside a declared no-trade chop zone, where both directions get whipsawed.",
+      "sources": [
+        "https://www.investing.com/news/cryptocurrency-news/bitcoin-tests-62k-support-with-breakout-looming-live-levels-93CH-4829888",
+        "https://www.thecoinrepublic.com/2026/08/14/bitcoin-price-usd-could-fall-to-57k-if-62k-support-breaks-now/",
+        "https://blog.bitfinex.com/bitfinex-alpha/strong-resistance-continues-long-term-holder-supply-declines/"
+      ],
+      "rank": 3
+    },
+    {
+      "symbol": "BABA",
+      "instrument": "Alibaba Group Holding Ltd (ADR)",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 3,
+      "last_price": 123.81,
+      "last_price_asof": "2026-08-14T16:00:00-04:00",
+      "entry": {
+        "ideal": 122.0,
+        "zone_low": 119.5,
+        "zone_high": 124.5,
+        "order_type": "limit",
+        "condition": "WAIT for the Thursday 2026-08-20 pre-market print. Enter only afterwards, and only if BABA is holding above the 20-day at 121.81 or reclaiming it within the first session. A print that leaves it below 119.22 (the Jul 31 low) cancels the idea."
+      },
+      "exit": {
+        "target": 132.5,
+        "target_2": 135.89,
+        "scale_plan": "trim half at 132.50 into the Aug 10 high of 132.57, leave the balance for the 60-day high at 135.89",
+        "time_stop": "2026-09-25"
+      },
+      "stop": 117.5,
+      "risk_reward": 2.33,
+      "position_size_pct": 2,
+      "catalyst": {
+        "event": "Alibaba quarterly earnings before the open \u2014 consensus revenue around RMB 274B and EPS around 10.62",
+        "datetime_et": "2026-08-20T06:00",
+        "action": "wait for the print, then buy the hold of the 20-day; do not carry the gap",
+        "wait": true
+      },
+      "thesis": "BABA closed at 123.81, up 35% off its 60-day low of 91.99 and holding comfortably above a rising 50-day at 113.76 after backing off the 132.32 high, with the Aug 3 breakout gap at 119-126 as support underneath. It was one of the few names green on a mixed Friday, up 1.35%. This is a genuinely independent driver \u2014 China internet and cloud demand \u2014 in a book otherwise dominated by the Fed path, oil, and the US consumer.",
+      "key_risk": "BABA gaps on earnings far beyond its 3.17% ATR \u2014 an 8% move on a print is normal for this name, which is why the entry is explicitly post-print. Chinese ADR results also carry policy and regulatory overhang that has nothing to do with the reported numbers and cannot be stopped out of.",
+      "counter_argument": "A 35% run into a print is the definition of expectations already reset upward, and the stock has been distributing since Aug 10, losing 6.4% in four sessions while the 20-day flattens. The uptrend that makes the 50-day support argument work is only about six weeks old, and prior BABA rallies of this size have round-tripped entirely on a single guidance disappointment.",
+      "sources": [
+        "https://finnhub.io/api/v1/calendar/earnings",
+        "https://www.capitalstreetfx.com/market-analysis/week-ahead-1721-august-2026-fomc-minutes/"
+      ],
+      "rank": 4
+    },
+    {
+      "symbol": "ADI",
+      "instrument": "Analog Devices, Inc.",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 3,
+      "last_price": 389.39,
+      "last_price_asof": "2026-08-14T16:00:00-04:00",
+      "entry": {
+        "ideal": 384.0,
+        "zone_low": 379.0,
+        "zone_high": 390.0,
+        "order_type": "limit",
+        "condition": "WAIT for the Wednesday 2026-08-19 pre-market print. Enter afterwards only if the 380-384 shelf holds. A close back below 371 means the six-session coil resolved downward and the idea is void."
+      },
+      "exit": {
+        "target": 412.0,
+        "target_2": 430.0,
+        "scale_plan": "trim half at 412, trail the balance under the 20-day toward 430 and the 60-day high at 445.91",
+        "time_stop": "2026-09-25"
+      },
+      "stop": 371.0,
+      "risk_reward": 2.15,
+      "position_size_pct": 2,
+      "catalyst": {
+        "event": "Analog Devices quarterly earnings before the open \u2014 consensus revenue around $4.0B and EPS around 3.37. Analog is the broadest read on industrial and auto semiconductor demand, so it prices the part of the cycle that AI capex headlines do not cover",
+        "datetime_et": "2026-08-19T06:00",
+        "action": "wait for the print, then buy the hold of the shelf",
+        "wait": true
+      },
+      "thesis": "ADI has coiled into a tight 380-396 range for six sessions directly beneath its 50-day at 391.57, with the 380-384 floor tested four times and holding, and it closed Friday up 2.16% at 389.39 \u2014 the strongest large-cap move on my screen on a day the broad tape was flat. A six-session compression into a dated catalyst resolves on the catalyst, and the floor gives a stop that is a real level rather than a round number.",
+      "key_risk": "ADI carries a 12.68-point ATR and earnings gaps routinely exceed it, so the 371 stop is a level the stock can open beneath rather than trade through. Analog end-markets are industrial and automotive, both of which are directly exposed to the same rate path that three FOMC members wanted to tighten.",
+      "counter_argument": "The stock is still 12.7% below its 120-day high of 445.91 and is coiling UNDER its 50-day, not above it \u2014 in a downtrend that is a bear flag, not a base. Six sessions is also a short compression to draw a conclusion from, and the 412 target sits in an air pocket with no tested resistance to define it, which means the reward half of the 2.15 ratio is the weaker half.",
+      "sources": [
+        "https://finnhub.io/api/v1/calendar/earnings",
+        "https://www.capitalstreetfx.com/market-analysis/week-ahead-1721-august-2026-fomc-minutes/"
+      ],
+      "rank": 5
+    },
+    {
+      "symbol": "GLD",
+      "instrument": "SPDR Gold Shares",
+      "asset_class": "etf",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 3,
+      "last_price": 401.48,
+      "last_price_asof": "2026-08-14T16:00:00-04:00",
+      "entry": {
+        "ideal": 388.0,
+        "zone_low": 384.0,
+        "zone_high": 393.0,
+        "order_type": "limit",
+        "condition": "Do NOT buy at 401.48. Rest a limit in the 384-393 pullback zone, into the 20-day (383.06) and 50-day (381.30) confluence. Accept that this may never fill \u2014 chasing an extended move is the more expensive mistake."
+      },
+      "exit": {
+        "target": 418.0,
+        "target_2": 440.0,
+        "scale_plan": "trim half at 418, just under the 60-day high of 421.82; trail the balance for 440",
+        "time_stop": "2026-09-30"
+      },
+      "stop": 374.0,
+      "risk_reward": 2.14,
+      "position_size_pct": 3,
+      "catalyst": {
+        "event": "Jackson Hole symposium \u2014 Fed Chair Warsh delivers his first keynote there, immediately after Wednesday minutes reveal how close the July committee came to hiking with three dissents. Gold is currently a pure Fed-path instrument",
+        "datetime_et": "2026-08-27T10:00",
+        "action": "accumulate on the pullback before it; do not chase into it",
+        "wait": true
+      },
+      "thesis": "The cooler CPI print around Aug 12 cut Fed hike odds and ended a five-month gold correction, driving benchmark gold-miner funds up more than 20% in a single week \u2014 one of their strongest on record. Gold itself ran 9% from 371.54 to 404.92 and has since consolidated in a tight 398-407 range for five sessions, which is a continuation flag rather than a top, with central-bank buying from China and Hormuz geopolitics as secondary bids.",
+      "key_risk": "The entry never fills. GLD is 4.8% above its 20-day after a 9% run and momentum buyers may simply take it to 421.82 without offering the 384-393 zone. That is a missed trade, not a loss \u2014 but the opposite risk is real too: if 383/381 fails, the five-month downtrend that produced the 120-day high of 492.15 and the crash beneath it is still the dominant structure.",
+      "counter_argument": "Gold just rallied on the premise that inflation is cooling and the Fed will not hike. Friday Hormuz tanker attacks put WTI at $82.40 and up 5% on the week, which is directly inflationary and revives exactly the hike risk that three FOMC members already dissented for. The gold trade and the oil trade cannot both be right, and analysts covering the miner surge are already flagging a pullback.",
+      "sources": [
+        "https://www.mining.com/gold-miners-surge-more-than-20-in-breakout-week/",
+        "https://www.cnbc.com/2026/08/12/gold-prices-metals-fed-rate-hike-inflation.html",
+        "https://primexbt.com/news/gold-silver-rally-resumes-after-five-month-correction-as-analysts-eye-pullback/",
+        "https://www.fxstreet.com/analysis/forecasting-the-upcoming-week-focus-shifts-to-the-fomc-minutes-and-the-jackson-hole-symposium-202508151843"
+      ],
+      "rank": 6
+    },
+    {
+      "symbol": "TJX",
+      "instrument": "The TJX Companies, Inc.",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 3,
+      "last_price": 152.11,
+      "last_price_asof": "2026-08-14T16:00:00-04:00",
+      "entry": {
+        "ideal": 150.5,
+        "zone_low": 147.5,
+        "zone_high": 153.0,
+        "order_type": "limit",
+        "condition": "WAIT for the Wednesday 2026-08-19 pre-market print. Enter only afterwards and only while the 60-day low at 148.27 is holding. Two consecutive closes below 147 means the support broke and the idea is dead \u2014 do not average down."
+      },
+      "exit": {
+        "target": 162.0,
+        "target_2": 170.0,
+        "scale_plan": "trim half at 162.00 into the Aug 6 high, trail the balance toward the 60-day high at 170.00",
+        "time_stop": "2026-09-25"
+      },
+      "stop": 145.0,
+      "risk_reward": 2.09,
+      "position_size_pct": 2,
+      "catalyst": {
+        "event": "TJX Q2 earnings before the open \u2014 consensus revenue around $15.3B and EPS around 1.20. It reports the same morning as Target and Lowe, so the off-price-versus-full-price consumer read lands in one session",
+        "datetime_et": "2026-08-19T06:00",
+        "action": "wait for the print, then buy the hold of the 60-day low; do not carry the gap",
+        "wait": true
+      },
+      "thesis": "TJX has been sold hard into its own print \u2014 down 6.1% from 162.06 on Aug 6 to 152.11, straight through both the 20-day (157.04) and 50-day (157.70), and now sits 2.6% above the 60-day low of 148.27. Off-price retail is the structural beneficiary when the consumer trades down, so the setup is a stock priced for a bad quarter in the one format that benefits if the quarter is bad for everyone else. The asymmetry sits in the pre-positioning, not the forecast.",
+      "key_risk": "Support at 148.27 is only six sessions old and has been tested once, not held repeatedly, so it is a thin level to hang a 5.50-point stop on. If the print is genuinely weak, TJX gaps below it pre-market and the 145.00 stop fills wherever the opening auction clears.",
+      "counter_argument": "Six straight sessions of distribution through two moving averages is a downtrend, and buying it is calling a bottom against the tape on the basis that the selling is overdone rather than informed. The mirror-image setup in Target \u2014 up 39% off its low and 1.3% from its 120-day high into the same morning \u2014 shows the market is making a deliberate relative call on these two, not indiscriminately dumping retail.",
+      "sources": [
+        "https://www.capitalstreetfx.com/market-analysis/week-ahead-1721-august-2026-fomc-minutes/",
+        "https://finnhub.io/api/v1/calendar/earnings"
+      ],
+      "rank": 7
+    },
+    {
+      "symbol": "HD",
+      "instrument": "The Home Depot, Inc.",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 3,
+      "last_price": 338.86,
+      "last_price_asof": "2026-08-14T16:00:00-04:00",
+      "entry": {
+        "ideal": 333.5,
+        "zone_low": 330.0,
+        "zone_high": 338.0,
+        "order_type": "limit",
+        "condition": "DO NOT enter before the Tuesday 2026-08-18 pre-market print. Enter only after it, and only if HD is holding the 330-334 shelf (the Jul 30-31 lows of 330.25/328.80 and the Aug 3 low of 333.72). A gap that opens and stays below 328 cancels the idea entirely \u2014 do not average into it."
+      },
+      "exit": {
+        "target": 358.0,
+        "target_2": 372.0,
+        "scale_plan": "trim half at 358.00 into the Aug 7/Aug 11 highs (356.83 and 358.36), trail the balance under the 20-day toward 372",
+        "time_stop": "2026-09-18"
+      },
+      "stop": 321.5,
+      "risk_reward": 2.04,
+      "position_size_pct": 2,
+      "catalyst": {
+        "event": "Home Depot Q2 earnings before the open, landing inside a 36-hour housing cluster: NAHB Housing Market Index Monday, Housing Starts Tuesday 08:30 ET, HD Tuesday pre-market, Toll Brothers Tuesday after the close",
+        "datetime_et": "2026-08-18T06:00",
+        "action": "wait for the print, then buy the hold of support \u2014 do not front-run it",
+        "wait": true
+      },
+      "thesis": "HD has already been de-rated into its own print: down 4.7% in five sessions from 355.62 to 338.86, 14% off the 120-day high, and resting on its 50-day at 337.70 with the Jul 30-31 support shelf at 330 just underneath. Meanwhile the 10-year fell to 4.63% from 4.68% on the cooler CPI, which is the direct transmission channel into mortgage rates and home-improvement demand, so the macro moved in HD favour during the same week the stock sold off.",
+      "key_risk": "This is an earnings-gap trade and HD carries an 8.52-point ATR. A guidance cut gaps the stock straight through the 321.50 stop overnight, and the stop will fill wherever the opening auction clears, not at 321.50. The wait condition and the 2% size exist because of this, not in spite of it.",
+      "counter_argument": "A stock that falls five sessions straight into a print is usually being sold by people who know the channel, and HD is the single most rate-and-housing-sensitive megacap there is. If NAHB on Monday and Housing Starts on Tuesday both come in soft, HD loses the 330 shelf before the earnings reaction even matters, and the whole 2.04 reward-to-risk is computed off a level that never holds.",
+      "sources": [
+        "https://www.capitalstreetfx.com/market-analysis/week-ahead-1721-august-2026-fomc-minutes/",
+        "https://fred.stlouisfed.org/series/DGS10",
+        "https://www.cnbc.com/2026/08/12/gold-prices-metals-fed-rate-hike-inflation.html"
+      ],
+      "rank": 8
+    }
+  ],
+  "watchlist": [
+    {
+      "symbol": "RDDT",
+      "instrument": "Reddit, Inc.",
+      "note": "Short-the-inclusion-fade thesis is sound and precisely dated - index funds must own RDDT at Tuesday's open, so their forced buying executes at Monday 2026-08-17's close, after which the marginal buyer disappears. Rejected only on sizing: a 12.25-point ATR (6.88%) caps the best defensible construction at R:R 1.37 against a 2.0 floor. It also requires margin against a retail-favourite squeeze.",
+      "trigger": "A post-inclusion failure that tightens the range enough for a stop under ~1 ATR to clear R:R 2.0 - practically, a break below the 50-day at 175.03 with realised vol contracting. Fade waypoints: 175.03, 165.84, then the 158.12 pre-announcement close."
+    },
+    {
+      "symbol": "TGT",
+      "instrument": "Target Corporation",
+      "note": "The mirror image of the TJX and HD setups: bought hard INTO its Wednesday print, 1.3% off its 120-day high, 12% above its 50-day and +39% off the low. Priced for a beat where the others are priced for a miss. No level work was done, so it is not tradeable as specified.",
+      "trigger": "A post-print gap down that returns it toward the 145.85 20-day, which would give a real level to lean on."
+    },
+    {
+      "symbol": "NVDA",
+      "instrument": "NVIDIA Corporation",
+      "note": "The megacap AI print of the cycle, but Aug 26 after the close sits eight sessions out - too far for a swing entered off this report. It will dominate the tape in the back half of the month.",
+      "trigger": "Revisit in the 2026-08-24 or 2026-08-25 run, when the print is inside a tradeable window."
+    },
+    {
+      "symbol": "AVB",
+      "instrument": "AvalonBay Communities, Inc.",
+      "note": "Merging into EQR all-stock at a fixed 2.793 EQR per AVB share. On Friday's closes the implied value was $184.25 against a $184.06 close - a 0.10% spread on a 2H-2026 close, well inside transaction cost. AVB is now a levered EQR proxy with no independent thesis. This merger is also why the S&P 500 vacancy exists at all.",
+      "trigger": "A spread above roughly 1.5%, or a credible headline threatening the deal."
+    },
+    {
+      "symbol": "DE",
+      "instrument": "Deere & Company",
+      "note": "Reports Thursday 2026-08-20 bmo, but price is pinned between its own 20-day (611.23) and 50-day (602.23) in the middle of a 515.15-643.99 range. No support to lean a stop on and no proximate resistance to target.",
+      "trigger": "A move to either range extreme before the print, which would supply the level the setup currently lacks."
+    }
+  ]
+}
