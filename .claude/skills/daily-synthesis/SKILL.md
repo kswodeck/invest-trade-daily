@@ -82,19 +82,35 @@ traded on.
    A `POSITION UPDATE` becomes a normal recommendation for that symbol, with the
    revised levels and a `thesis` that opens by naming it as an update to an open
    position — for example, *"Update to the 2026-08-05 long: thesis intact,
-   raising the stop to 176."* Position updates do not count against the 6–8 idea
-   target; they are position management, not new risk.
-2. **Filter.** Drop anything below conviction 3, anything missing a stop where
-   `config/strategy.md` requires one, and anything under the reward-to-risk
-   floor (2.0 swing, 1.5 intraday). Enforce the correlation cap: at most 3 ideas
-   depending on the same driver.
-3. **Rank** by conviction, then reward-to-risk, then catalyst proximity.
+   raising the stop to 176."* Position updates do not count against the idea
+   count; they are position management, not new risk.
+2. **Filter.** Drop anything below conviction 3, anything missing the downside
+   `config/strategy.md` requires for its horizon, and anything under its
+   reward-to-risk floor — **1.5 intraday, 2.0 swing, 2.5 long_term**, where
+   long-term risk is measured against a stated bear-case price rather than a
+   stop. Enforce the correlation cap: at most 3 ideas depending on the same
+   driver.
+
+   **Do not filter or pad for horizon balance.** There are no per-horizon
+   quotas. Whatever mix survives the bar is the correct mix, even if it is all
+   one horizon. Never drop a qualifying idea to make room for variety, and
+   never promote a weak one to supply it.
+
+3. **Rank** by conviction, then reward-to-risk, using catalyst proximity only to
+   break ties between ideas of the same horizon — a long-term thesis has no near
+   catalyst by construction and must not be ranked down for it. If the best idea
+   today is a multi-year hold, it ranks first.
 4. **Refresh prices** for the finalists with
    `python scripts/market_data.py quote <symbols>` so `last_price` is as current
    as the run allows. Set `last_price: null` if it cannot be fetched.
-5. **Recompute `risk_reward`** from the final entry/target/stop rather than
-   trusting the number in the notes. Drop any idea whose recomputed ratio falls
-   below the floor.
+5. **Recompute `risk_reward`** from the final entry, target, and downside rather
+   than trusting the number in the notes — the stop for intraday and swing, the
+   bear-case price for long-term. Drop any idea whose recomputed ratio falls
+   below its floor.
+
+   If several ratios land just above their floor, be suspicious: that is the
+   signature of targets fitted to clear the bar rather than levels derived from
+   the chart or a valuation. Say so in `data_quality_notes` if you see it.
 6. **Write `report.json`** and validate it.
 7. **Verify** before finishing:
 

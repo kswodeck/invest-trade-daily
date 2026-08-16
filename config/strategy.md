@@ -8,34 +8,86 @@ it, so a change here takes effect on the next run with no code change.
 
 | Setting | Value |
 | --- | --- |
-| Total recommendations | **6–8** |
-| Swing ideas (days to weeks) | 4–5 |
-| Intraday ideas (same session) | 2–3 |
+| Total recommendations | **5–10**, however many clear the bar |
+| Horizon mix | **no quotas — whatever the opportunities actually are** |
 | Watchlist (not yet actionable) | up to 5 |
 | Minimum conviction to publish | 3 of 5 |
 
-If a genuinely good idea count comes up short, **publish fewer**. Padding the
-list with filler to hit 8 is worse than shipping 4 strong ideas and saying the
-tape was thin. Record that judgement in `data_quality_notes`.
+**There are no per-horizon targets, and you must not manufacture variety.** The
+report's job is to surface the genuinely best opportunities available today, in
+whatever form they take. If the best eight ideas are all long-term
+accumulations, publish eight long-term ideas. If the tape offers three sharp
+intraday setups and nothing else, publish three.
+
+A balanced-looking report assembled by forcing a mix is worse than an honest
+lopsided one, because the filler crowds out the real ideas and reads with the
+same authority. Note the skew in `data_quality_notes` when it is pronounced —
+"nothing intraday cleared the bar today, the tape was directionless" is useful
+context, not an apology.
+
+Likewise, if the count comes up short, **publish fewer**. Four strong ideas and
+a note that the tape was thin beats ten with six of filler.
 
 ## Horizon definitions
 
-**Intraday** — entered and exited within the same US session. Levels must be
+Three horizons, all first-class. None is preferred over the others; the right
+horizon is whichever one the opportunity actually fits.
+
+**`intraday`** — entered and exited within the same US session. Levels must be
 precise and are expected to be live only for the first few hours after the
 open. Requires a specific intraday catalyst: an earnings reaction, an economic
 print at 8:30 ET, a gap to fill, an overnight futures move. Not a general lean.
 
-**Swing** — held days to weeks. Entry may be a zone rather than a single price.
-Thesis must survive an overnight gap, so a swing idea whose entire edge is one
-scheduled event needs the event risk called out explicitly.
+**`swing`** — held days to weeks. Entry may be a zone rather than a single
+price. Thesis must survive an overnight gap, so a swing idea whose entire edge
+is one scheduled event needs the event risk called out explicitly.
+
+**`long_term`** — months to years. Buy and hold. This is a different kind of
+claim from the other two and is judged differently:
+
+- The thesis is about **the business or the asset**, not about a catalyst:
+  earnings power, competitive position, balance sheet, secular demand,
+  structural supply, monetary debasement. A dated event may inform the entry,
+  but it is not the reason to own the thing.
+- **Entry is a zone or an accumulation rule**, not a single tick —
+  "accumulate below $118, add under $105" is a legitimate entry.
+- **The exit target is a valuation anchor**, not a technical level: state what
+  the asset is worth and why, and over roughly what period.
+- `catalyst.datetime_et` may be `null`. Use `catalyst.event` to name the driver
+  and `catalyst.action` to say how to build the position over time.
+- **A hard stop is not required, but an explicit invalidation condition is
+  mandatory** — the specific development that would mean the thesis is wrong,
+  such as "gross margin below 40% for two consecutive quarters" or "the capex
+  cycle rolls over". "The price fell" is not an invalidation.
+
+Long-term ideas legitimately repeat across days while accumulation is
+unfinished. That is not the anchoring problem the repetition guard is aimed at
+— but say plainly that it is a continuing position rather than a new one.
 
 ## Risk parameters
 
-- **Minimum reward-to-risk: 2.0** on swing, **1.5** on intraday. Compute from
-  entry, target, and stop. An idea that cannot clear this does not publish.
-- **Every idea carries a stop.** Futures and short equity: mandatory, no
-  exceptions. Long equity, crypto, and event contracts: a stop or an explicit
-  invalidation condition in prose.
+- **Minimum reward-to-risk**, computed from entry, target, and the downside
+  level. An idea that cannot clear its floor does not publish.
+
+  | Horizon | Floor | Risk measured against |
+  | --- | --- | --- |
+  | `intraday` | 1.5 | the stop |
+  | `swing` | 2.0 | the stop |
+  | `long_term` | 2.5 | an explicit downside case with a price |
+
+  Long-term risk is not a stop — it is what the asset is plausibly worth if the
+  thesis is wrong. State that number. A long-term idea whose downside you cannot
+  put a price on is not researched enough to publish.
+
+  **Do not reverse-engineer levels to clear the floor.** The floor exists to
+  reject ideas, not to calibrate targets. If a target only works by being
+  optimistic, the idea failed the test.
+
+- **Every idea carries a downside.** Futures and short equity: a hard stop,
+  mandatory, no exceptions. Long equity, crypto, and event contracts: a stop or
+  an explicit invalidation condition. Long-term: an invalidation condition is
+  required and a stop is optional, since a hard stop on a multi-year thesis
+  usually just sells the bottom.
 - **Position sizing** is expressed as a percentage of trading capital, not a
   dollar amount: `1%` (speculative), `2-3%` (standard), `5%` (high conviction).
   Never suggest more than 5% in a single idea, or more than 2% in a futures
@@ -59,20 +111,38 @@ modest, high-probability move. A lottery ticket is never above a 2.
 
 ## Ranking
 
-Rank by conviction first, then by reward-to-risk, then by catalyst proximity.
-An idea whose catalyst is tomorrow outranks an equivalent idea whose catalyst is
-in three weeks, because the capital turns over faster.
+Rank by **conviction** first, then by **reward-to-risk**. Break remaining ties
+with catalyst proximity — but only between ideas of the same horizon, since a
+long-term thesis has no near catalyst by construction and would otherwise be
+penalised for being what it is.
+
+Rank on merit alone. Do not interleave horizons to make the list look balanced,
+and do not push a long-term idea down because it is slower. If the strongest
+idea today is a five-year hold, it ranks first.
 
 ## What makes a catalyst
 
-The `catalyst` field is the most valuable part of the report and the hardest to
-fake. It must name **a specific thing that happens at a specific time**:
+For `intraday` and `swing`, the `catalyst` field is the most valuable part of
+the report and the hardest to fake. It must name **a specific thing that
+happens at a specific time**:
 
 - Good: `Q3 earnings, Aug 27 after close ET — enter before, trim half into print`
 - Good: `CPI release Aug 13 08:30 ET — wait for the print, do not front-run`
 - Good: `Fed decision Sep 17 14:00 ET — position after the statement, not before`
 - Bad: `continued AI momentum`
 - Bad: `technical breakout` (that is a trigger, not a catalyst — put it in entry)
+
+For `long_term`, the same field carries **the driver and the accumulation
+plan** instead, and a dated event is optional:
+
+- Good: `Datacenter power demand outrunning generation capacity through 2029 —
+  accumulate below $118 in thirds, add on any macro-driven drawdown under $105`
+- Good: `Post-patent-cliff pipeline maturing 2027-2029; buy the de-rating —
+  build over the next two quarters, no need to rush`
+- Bad: `long-term growth story` (that is a category, not a driver)
+
+The test is the same in both cases: could a reader act on this without
+guessing what you meant?
 
 Where the right action is to **wait**, say so and give the condition to wait
 for. "Do not enter until X" is a legitimate and often correct recommendation.
@@ -83,17 +153,29 @@ Spend the research budget roughly like this:
 
 1. **Macro and calendar first (~10%).** What prints this week, what the tape did
    overnight, where rates and the dollar are. This frames everything else.
-2. **Catalyst hunting (~35%).** Earnings in the next 10 sessions, scheduled
+2. **Catalyst hunting (~30%).** Earnings in the next 10 sessions, scheduled
    economic releases, FDA dates, product launches, index rebalances, unlocks,
    court dates, regulatory deadlines. Dated events beat vibes.
-3. **News and filings sweep (~25%).** Overnight news, 8-Ks, guidance changes,
+3. **News and filings sweep (~20%).** Overnight news, 8-Ks, guidance changes,
    insider transactions, analyst moves that actually move price.
-4. **Level-setting (~20%).** For each surviving candidate, pull real price
-   history and set entry, target, and stop on actual support/resistance and
-   ATR — not round numbers.
-5. **Falsification (~10%).** For each finalist, argue the other side. Anything
+4. **Durable mispricings (~15%).** The long-term lane, and the one most easily
+   crowded out by the day's noise — so give it real time rather than whatever
+   is left. What is structurally cheap or structurally favoured and likely to
+   stay that way: a quality business de-rated on a temporary problem, a secular
+   demand or supply imbalance with years to run, an asset repricing to a new
+   monetary or regulatory regime. Read the actual filings. A holding you would
+   be content to own through a 30% drawdown is worth more than a clever trade.
+5. **Level-setting (~15%).** For each surviving candidate, pull real price
+   history and set entry, target, and downside on actual support/resistance and
+   ATR — not round numbers. For long-term ideas, anchor the target to a
+   valuation you can defend and the downside to a stated bear case.
+6. **Falsification (~10%).** For each finalist, argue the other side. Anything
    that does not survive gets demoted or cut. This step is not optional and is
    the first thing people skip.
+
+These are proportions, not a schedule — a day with no earnings and a quiet
+calendar should shift time from catalyst hunting into durable mispricings
+rather than padding the trade lane with weak setups.
 
 ## Weekend behavior
 

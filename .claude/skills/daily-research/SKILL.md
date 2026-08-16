@@ -184,8 +184,34 @@ the decision here, then capture it. Notes alone change nothing.
 - Event contract prices are cents and mean implied probability. Your edge must
   be a stated probability disagreement, not a hunch.
 - Options are out of scope entirely.
-- Aim for 6–8 publishable candidates plus rejections. Diversify the driver —
+- Aim for 5–10 publishable candidates plus rejections. Diversify the driver —
   eight ideas that all depend on one CPI print is one idea.
+
+## Horizons carry no quotas
+
+`intraday`, `swing`, and `long_term` are all first-class, and there is no target
+number for any of them. **Do not manufacture a mix.** Capture the best
+opportunities you actually find; if that is seven long-term accumulations and
+one day trade, capture exactly that.
+
+`long_term` is the lane most easily crowded out by the day's news, because
+nothing about it is urgent. Give it deliberate time rather than the leftovers:
+a quality business de-rated on a fixable problem, a secular supply or demand
+imbalance with years to run, an asset repricing to a new regime. These often
+turn out to be the highest-conviction ideas of the day precisely because they
+do not depend on guessing a reaction to a print.
+
+Long-term candidates are shaped differently, and that is expected:
+
+- `catalyst.datetime_et` may be `null`; use `catalyst.event` for the driver and
+  `catalyst.action` for the accumulation plan
+- `entry.zone_low` / `zone_high` matter more than `entry.ideal`
+- `exit.target` is a defended valuation, not a chart level
+- `stop` may be `null`, but `key_risk` must then state the concrete
+  invalidation — the development that proves the thesis wrong, not a price move
+- reward-to-risk floor is 2.5, measured against a stated bear-case price
+
+See `config/strategy.md` for the full definitions.
 
 ## Finishing
 
