@@ -1,0 +1,627 @@
+{
+  "date": "2026-08-17",
+  "generated_at_et": "2026-08-17T06:59:27-04:00",
+  "research_minutes": 40,
+  "truncated": false,
+  "data_quality_notes": "Research phase ran to completion (06:36-07:16 ET) and logged a RESEARCH COMPLETE block, so nothing here is a mid-sentence salvage. All 8 captured candidates survived filtering; none were dropped and none were padded in. Eight ideas = five new (NKE, CCJ, VIXY, TJX, RDDT) plus three position-management updates (KRE, BTC, XLE), which do not count as new risk.\n\nPRICES: equity and ETF quotes are the Friday 2026-08-14 close (finnhub) \u2014 this run finished before Monday's open, so no live Monday prints exist yet. BTC was refreshed live at 63,549 (CoinGecko, ~11:00 UTC Mon). Treat every equity 'last_price' as a Friday close, not a live quote.\n\nFAILED SOURCES: index and futures quotes (^GSPC/^NDX/^DJI/^RUT/VIX/DXY/ES/NQ/gold/WTI) failed for the whole run \u2014 finnhub requires a CFD subscription and Yahoo returned HTTP 429 on every call. Market-context levels therefore use ETF proxies (SPY/QQQ/IWM/VIXY/GLD/TLT) rather than the indices themselves. Kalshi event markets returned zero results for every query tried (Fed, CPI, oil, Bitcoin, recession, inflation), so event contracts are entirely uncovered this run \u2014 an empty source, not a venue restriction.\n\nNO INTRADAY IDEA. The only same-day catalyst is the Iran 60-day deadline, whose direction is a headline coin flip. None was manufactured to fill the lane. The mix (6 swing, 2 long-term) is what cleared the bar.\n\nARITHMETIC CAVEATS, in order of how much they should reduce size:\n1. KRE's 4.07 holds ONLY from the existing 76.80 cost basis. From Friday's 77.93 close a fresh entry is 1.81 and FAILS the 2.0 swing floor. The action is hold-and-raise-the-stop; anyone not already in must wait for 76.20-77.20. If the validation phase flags KRE against spot, that flag is correct.\n2. NKE's 3.12 rests on a $32 bear anchor that is judgment, not a fetched figure \u2014 it is where research argued a failed-turnaround Nike trades. At a $30 anchor the ratio is 2.50, exactly at the long-term floor. Treat the clearance as marginal.\n3. CCJ clears 2.5 at 2.67 \u2014 real but not comfortable.\nRatios are NOT clustered at their floors (2.39/2.67/2.70/2.79/2.89/3.04/3.12/4.07 against floors of 2.0 and 2.5), and the research log shows two ideas (GLD at 0.81, EQT/AR/RRC at 1.67-1.79) killed rather than adjusted to clear. No target appears fitted to the bar.\n\nREPETITION: XLE is a 3rd appearance in 10 days and KRE a 3rd \u2014 both are open positions the report is obliged to manage, and XLE's recommendation has reversed from buy-the-zone to cancel-and-wait. GLD would have been a 3rd appearance and was killed on arithmetic instead of re-pitched.\n\nTWO IDEAS ARE MARKED WAIT (XLE, RDDT) \u2014 the correct action today is not to enter. Correlation cap respected: eight distinct drivers, with the consumer complex appearing twice (TJX, NKE) against a cap of three.\n\nTRACK RECORD: 0 closed trades of 4 tracked. No bar was raised or lowered on past performance because there is no sample to learn from. UNH, LULU and EL were identified as materially de-rated but left unresearched for lack of time and routed to the watchlist rather than half-worked into recommendations.\n\n=== RED TEAM (phase 2c, 07:02-07:20 ET) ===\nTwo ideas cut, four downgraded, nothing left at its original conviction. Six ideas remain, all at conviction 3 \u2014 that flattening is the honest finding, not a failure to differentiate: every single idea in this report had a verifiable defect, and none had a clean enough evidence base to justify being sized larger than the others.\n\nCUT (moved to watchlist with reasons, nothing deleted):\n- VIXY (was rank 6). Killed on its own arithmetic. The 2.79 needs the 24.00 target that validation already flagged at 6.82 ATR against a 6.0 guide \u2014 but the idea's own scale plan sells HALF above 22, and at 22 it is 1.74:1, below the 2.0 floor. The ratio that cleared the bar depends on a target the plan abandons. VIXY is also below its 20/50/200 SMAs (20.37/21.41/27.17), so the 18.50 'floor' is where contango decayed it to, not support.\n- RDDT (was rank 8). Killed on a stop the report misjudged by 60%. key_risk says the 197 stop is '1.5 ATR above the entry'; it is 0.94 ATR (197.00-185.50 = 11.50 against ATR14 12.25). A sub-one-ATR stop on a 6.88%-ATR name sits inside one normal session's range. The DAU-stall thesis is sound and sourced; the stop is not workable.\n\nDOWNGRADED 4 -> 3:\n- KRE (rank 1). Two false specifics in the highest-ranked idea. (a) 'Closed higher eight of the last nine sessions' is wrong: it closed up five of nine (down 08-05, 08-06, 08-07, 08-10), with four consecutive up days. (b) The stated mechanism \u2014 2y fell while the 10y held \u2014 does not exist in the source: FRED shows DGS10 4.68->4.63 and DGS2 4.20->4.15 on 08-13, equal 5bp falls, which widen nothing. The thesis was rewritten around what IS verifiable and is stronger for it: T10Y2Y has gone 0.34-0.36 in late July to 0.51, +15bp over three weeks and a series high. Also restored the risk the report dropped but its own research log flagged \u2014 priced hike odds FLATTEN the curve, so Wednesday's FOMC minutes cut against this position. The research concluded 'HOLD, not an add' and the report graded it 4 anyway.\n- CCJ (rank 3), the only idea that passed validation clean. The claim 'at $80 the stock is back to its 200-day low' is false: the 200-day low is 77.70, so the bear anchor sits 2.9% above the level it claims to be. On the real low the ratio is (135-95)/(95-77.70) = 2.31 and FAILS the 2.5 long-term floor. The 2.67 that passed is a function of an anchor placed just high enough to clear the bar \u2014 exactly the pattern this phase exists to catch.\n- NKE (rank 4). Insider data verified exactly against finnhub ($3.73M / $1.37M, 4 distinct buyers, Hill twice at 42.27, Cook 25,000 at 42.43) \u2014 but all five buys fall in ONE WEEK, Apr 7-13, which is a trading window opening, not a six-month accumulation. Four people transacting in the one week they are permitted to is not four independent convictions, and the signal is four months old and 4% underwater, so it did not mark a low. The regional-not-structural fundamental case is unaffected and carries the idea; the insider framing was oversold.\n- BTC (rank 5). The report raised conviction 3 -> 4 while the price moved AGAINST the view. Red team refreshed it live: 63,619 at ~11:05 UTC, +1.05% on 24h, further offside. The only new evidence was one more day of outflows, which the idea's own counter_argument calls a sentiment reading rather than a supply shock. Reverted to 3. Also made explicit that per config/universe.md this is a spot SELL (no crypto shorting on Robinhood), so the 2.89 ratio is not P&L a spot holder can earn \u2014 it measures whether staying out is worth it.\n\nFIXED WITHOUT DOWNGRADE:\n- XLE (rank 6). Named the contradiction the report left unstated: the entry trigger and the thesis invalidation are the same event. Only a ceasefire produces the 57.50-59.00 gap fill, and a ceasefire is what removes the shut-in and the IEA deficit that are the thesis. Buying the gap fill is buying a broken thesis cheaper. Kept as a wait because cancelling the two stale unfilled orders (60.80, 60.50) is real and necessary housekeeping.\n- TJX (now rank 1) survives UNCHANGED and was promoted on merit, not by default. Every level re-verified: -6.14% from 162.06 over six sessions, below its 20/50/200 SMAs (157.04/157.70/155.14, so the 155 reclaim level IS the 200-day), target 165 sits under the 170 range high rather than beyond it, ratio 2.70, and the Aug 19 earnings date is confirmed on the fetched calendar. It also discloses the insider selling against itself. It is the best-evidenced idea here.\n\nNO LEVEL WAS MOVED TO RESCUE A RATIO. Where a ratio failed on corrected inputs (CCJ 2.31, VIXY 1.74, KRE 1.81 fresh), the failure is stated and the idea was cut or marked marginal.\n\nCORRELATION DISCLOSURE: cutting VIXY and RDDT removed both positions that pay in a risk-off, leaving the bearish BTC view as the only hedge in a book that is otherwise net long risk (KRE, NKE, CCJ, TJX long; XLE waiting to be long). That is a real concentration and the reader should size for it \u2014 but it is not a reason to keep a trade that fails its own floor. Fresh risk today is narrow in practice: KRE is a hold, XLE and BTC are non-entries, NKE and CCJ are multi-quarter tranche accumulations, and only TJX is a new entry \u2014 at half size, ahead of a dated print.\nPRICES: equity/ETF levels remain the 2026-08-14 close (verified unchanged at 07:02 ET; Monday has not opened). BTC refreshed live to 63,619.",
+  "market_context": {
+    "summary": "A risk-on tape sitting on top of a hawkish macro setup, and the tension between those two is the story of this report. The tape: SPX printed a record last week and the Russell 2000 touched all-time highs three times, small caps are outperforming large, energy is leading, and volatility is at a 200-day low (VIXY 18.63 vs a 18.50 low). The macro: the July FOMC split 9-3 with three members dissenting in favour of a HIKE, roughly 63% odds of at least one hike by year-end are priced, and the effective funds rate at 3.63 sits below a 2y at 4.15 \u2014 the market is pricing tightening, not easing. The 10y-2y curve steepened to +0.51 from +0.48 on a bull steepener (2y 4.20->4.15) rather than a term-premium one, which supports the KRE NIM thesis but only at the margin. Driving all of it is an energy shock: the Strait of Hormuz is effectively closed with 8.3 mb/d shut in, the IEA more than doubled its Q3-26 deficit estimate to 1.8 mb/d, and the 60-day Iran peace-deal deadline expires today \u2014 a binary that reprices oil, gold and equity vol together. Gold is the tell that this is an inflation shock and not a growth scare: it made a record $5,626.80 in January, then fell 29.7% as the oil-driven inflation impulse lifted real yields and unwound the safe-haven bid. This is the densest catalyst window of the quarter \u2014 the Iran deadline today, FOMC minutes Wednesday, the HD/LOW/TGT/TJX/WMT consumer cluster Aug 18-20, NVDA on Aug 26, and Kevin Warsh's first Jackson Hole keynote as Fed chair Aug 27-29.",
+    "regime": "mixed",
+    "levels": {
+      "spy": 776.34,
+      "qqq": 731.07,
+      "iwm": 305.09,
+      "xle": 61.91,
+      "gld": 401.48,
+      "tlt": 82.04,
+      "vixy": 18.63,
+      "us10y": 4.63,
+      "us2y": 4.15,
+      "curve_10y_2y": 0.51,
+      "fed_funds_eff": 3.63,
+      "unemployment_pct": 4.1,
+      "btc": 63549.0,
+      "eth": 1898.56,
+      "sol": 75.48,
+      "note": "Index, VIX, DXY and futures quotes all failed this run (finnhub CFD subscription required; Yahoo HTTP 429). ETF proxies shown instead. Equity/ETF levels are the 2026-08-14 close; crypto is live 2026-08-17 ~11:00 UTC."
+    },
+    "econ_calendar": [
+      {
+        "event": "Iran 60-day peace-deal deadline expires; Strait of Hormuz still effectively closed",
+        "datetime_et": "2026-08-17T23:59",
+        "importance": "high",
+        "consensus": null
+      },
+      {
+        "event": "RDDT added to the S&P 500, replacing AvalonBay \u2014 trackers must own it at the Mon Aug 17 close",
+        "datetime_et": "2026-08-18 (before the open)",
+        "importance": "high",
+        "consensus": null
+      },
+      {
+        "event": "Home Depot Q2 earnings (before open) \u2014 opens the consumer read-through cluster",
+        "datetime_et": "2026-08-18 (before the open)",
+        "importance": "medium",
+        "consensus": "EPS $4.71 on ~$47.5B"
+      },
+      {
+        "event": "FOMC minutes for the 9-3 July meeting where three members dissented to HIKE",
+        "datetime_et": "2026-08-19T14:00",
+        "importance": "high",
+        "consensus": null
+      },
+      {
+        "event": "TJX Q2 FY27 earnings (before open), call 11:00 ET; also TGT, LOW, EL",
+        "datetime_et": "2026-08-19T08:00",
+        "importance": "high",
+        "consensus": "EPS $1.18-1.19 on revenue $15.1B"
+      },
+      {
+        "event": "Walmart Q2 earnings (before open) \u2014 closes the consumer cluster",
+        "datetime_et": "2026-08-20 (before the open)",
+        "importance": "medium",
+        "consensus": "revenue ~$188.8B"
+      },
+      {
+        "event": "NVDA Q2 earnings (after close) \u2014 the most crowded print of the quarter",
+        "datetime_et": "2026-08-26 (after the close)",
+        "importance": "high",
+        "consensus": "EPS $2.13 on revenue $93.6B"
+      },
+      {
+        "event": "Jackson Hole \u2014 Kevin Warsh's first keynote as Fed chair",
+        "datetime_et": "2026-08-27",
+        "importance": "high",
+        "consensus": null
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "symbol": "TJX",
+      "instrument": "The TJX Companies Inc",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 3,
+      "last_price": 152.11,
+      "last_price_asof": "2026-08-14T20:00:00+00:00",
+      "entry": {
+        "ideal": 151.5,
+        "zone_low": 150.0,
+        "zone_high": 153.5,
+        "order_type": "limit",
+        "condition": "HALF SIZE ONLY before the Aug 19 print. Add the second half after the report, and only if TJX reclaims and holds 155 (the 200-day SMA)."
+      },
+      "exit": {
+        "target": 165.0,
+        "target_2": 170.0,
+        "scale_plan": "trim half at 162 (the pre-selloff level from Aug 6), let the rest run at 170",
+        "time_stop": "2026-09-19 \u2014 exit if neither level hits within a month of the print"
+      },
+      "stop": 146.5,
+      "position_size_pct": 2,
+      "catalyst": {
+        "event": "Q2 FY27 earnings, Wed Aug 19 before the open ET, call 11:00 ET. Consensus EPS $1.18-1.19 (+7.3% YoY) on revenue of $15.1B (+5.1% YoY), with the EPS consensus having RISEN a penny over the past 30 days.",
+        "datetime_et": "2026-08-19T08:00",
+        "action": "Enter HALF size at 150.00-153.50 before the print, accepting the gap. Add the other half only after the report and only on a reclaim of 155. Do not put full size on ahead of a binary.",
+        "wait": false
+      },
+      "thesis": "The market sold off-price apparel as an oil-shock consumer casualty when it is the structural beneficiary of exactly that shock. TJX fell 6.1% in six sessions from 162.06 on Aug 6 to 152.11 on Aug 14, tracking the Aug 10 crude spike tick for tick, and broke its 20-, 50- and 200-day SMAs in the process. But the selling came on lower volume than the advance that preceded it (3.9-5.4M a day versus 6.9-7.4M on the up days), which is sector beta rather than distribution, and the sell-side raised its EPS estimate into the print. The mechanism runs the other way from the price: a squeezed consumer trades down into off-price, and full-price retailers who over-ordered dump inventory into the channel on better buying terms, so an energy shock widens TJX merchandise margin rather than compressing it. Unlike the dollar stores, TJX customer is not the sub-$35k household that gasoline actually crushes.",
+      "key_risk": "The 146.50 stop is 1.5 ATR below entry and does NOT protect against an earnings gap \u2014 TJX can open 5% lower on a guidance cut and the stop fills wherever it fills. That is the entire reason for half size before the print. A cautious full-year comp guide, which is what Home Depot and Target are also at risk of on Aug 18-19, would validate the market read rather than mine.",
+      "counter_argument": "Six down sessions through three moving averages is not usually noise, and the market has repeatedly been early rather than wrong on retail. Insiders offer no support: zero open-market purchases against nine sales worth $32.5M over six months. The trade-down mechanism is also a lagging one \u2014 it shows up over two to four quarters, not in a July quarter reported in August, so the Aug 19 catalyst may simply not contain the evidence the thesis needs. And the whole consumer cluster reports within 48 hours (HD Aug 18, LOW/TGT Aug 19, WMT Aug 20), so a single bad read-through drags TJX regardless of its own numbers.",
+      "sources": [
+        "https://www.businesswire.com/news/home/20260805879566/en/The-TJX-Companies-Inc.-to-Report-Q2-FY27-Results-August-19-2026",
+        "https://finance.yahoo.com/markets/stocks/articles/tjx-companies-positioned-beat-q2-132300440.html",
+        "https://www.credaily.com/briefs/dollar-stores-face-margin-squeeze-as-gas-prices-climb/",
+        "https://www.aljazeera.com/economy/2026/8/10/oil-prices-stocks-surge-as-hormuz-closure-drags-on"
+      ],
+      "rank": 1,
+      "risk_reward": 2.7,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.7,
+        "claimed_risk_reward": 2.7,
+        "live_price": 152.11,
+        "atr14": 3.3304,
+        "checked_at_et": "2026-08-17T07:09:01-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.7:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 151.5 is -0.4% from live 152.11"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-08-19 is ahead of us"
+          },
+          {
+            "check": "earnings_date",
+            "status": "pass",
+            "detail": "earnings date 2026-08-19 confirmed against the calendar"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 4.05 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "1 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "KRE",
+      "instrument": "SPDR S&P Regional Banking ETF",
+      "asset_class": "etf",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 3,
+      "entry": {
+        "ideal": 76.8,
+        "zone_low": 76.2,
+        "zone_high": 77.2
+      },
+      "exit": {
+        "target": 82.5,
+        "target_2": 85.0
+      },
+      "stop": 75.4,
+      "position_size_pct": 3,
+      "catalyst": {
+        "event": "2y-10y curve steepening (spread widened to +0.51 on 2026-08-14 from +0.48; US2Y fell 4.15 from 4.20 while US10Y held 4.63) \u2014 net interest margin expansion flows straight to regional bank earnings",
+        "datetime_et": null,
+        "action": "EXISTING POSITION opened 2026-08-15 at 76.80, now 77.93 (+1.5%). HOLD and raise stop from 74.20 to 75.40. Do NOT chase at 78 \u2014 only add on a pullback into 76.20-77.20 (the 20-day SMA at 76.48).",
+        "wait": false
+      },
+      "thesis": "Update to the 2026-08-15 long at 76.80: hold, raise the stop from 74.20 to 75.40, do not add. The mechanism is the PERSISTENCE of the steepening, not last week's move. FRED T10Y2Y has widened from 0.34-0.36 in late July to 0.51 on 2026-08-14 \u2014 15bp over three weeks and the highest reading in the series since at least 2026-06-01 \u2014 which widens regional-bank net interest margin on the next repricing cycle. Red team rewrote this paragraph: the prior version attributed the widening to the 2y falling while the 10y held, but FRED shows DGS10 4.68->4.63 and DGS2 4.20->4.15 on 2026-08-13, equal 5bp falls that widen nothing. The three-week trend claim survives verification; the one-day mechanism did not. Tape: 77.93, 0.5% off the 200-day range high of 78.35, up four consecutive sessions (five of the last nine, not eight of nine as first written), with the 20/50/200 SMAs at 76.48/74.81/68.73 stacked bullishly.",
+      "key_risk": "The curve re-flattens and there are two ways it happens, only one of which the idea originally named. (1) A bull flattener on a growth scare kills the NIM thesis with the price still near its highs, and KRE gives the breakout back fast (ATR 1.04, so 78 to 75.40 is 2.5 ATR). (2) The one the research phase flagged and the report dropped: roughly 63% odds of a HIKE by year-end are priced and three July FOMC members dissented in favour of one. A hike lifts the front end and FLATTENS the curve \u2014 the same hawkish setup this report leans on elsewhere argues directly against this position. Wednesday's FOMC minutes are the near-term test and they cut against, not for.",
+      "counter_argument": "The easy money is gone and the headline 4.07 ratio is a legacy artefact, not an opportunity. It holds ONLY from the existing 76.80 basis; a fresh entry at Friday's 77.93 close is (82.50-77.93)/(77.93-75.40) = 1.81:1 and FAILS the 2.0 swing floor. Anyone not already in must wait for the 76.20-77.20 zone (the 20-day SMA at 76.48) or take no trade at all \u2014 there is no version of buying this at 78 that clears the bar. The research log itself concluded 'KRE stays a HOLD, not an add'; conviction was cut from 4 to 3 to match that, because the report had it graded above what its own research supported.",
+      "sources": [
+        "https://fred.stlouisfed.org/series/T10Y2Y",
+        "https://fred.stlouisfed.org/series/DGS2",
+        "https://www.ssga.com/us/en/intermediary/etfs/spdr-sp-regional-banking-etf-kre"
+      ],
+      "rank": 2,
+      "risk_reward": 4.07,
+      "last_price": 77.93,
+      "last_price_asof": "2026-08-14T20:00:00+00:00",
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 4.07,
+        "claimed_risk_reward": 4.07,
+        "live_price": 77.93,
+        "atr14": 1.0407,
+        "checked_at_et": "2026-08-17T07:09:21-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 4.07:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 76.8 is -1.5% from live 77.93"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "warn",
+            "detail": "no date given for a timed idea"
+          },
+          {
+            "check": "earnings_date",
+            "status": "warn",
+            "detail": "claims an earnings catalyst but KRE is not on the fetched calendar"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 5.48 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "2 of 3 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "CCJ",
+      "instrument": "Cameco Corp",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "long_term",
+      "conviction": 3,
+      "last_price": 97.74,
+      "last_price_asof": "2026-08-14T20:00:00+00:00",
+      "entry": {
+        "ideal": 95.0,
+        "zone_low": 90.0,
+        "zone_high": 99.0,
+        "order_type": "limit",
+        "condition": "Accumulate in thirds. First third at market under 99; second third under 92; final third only if a broad risk-off takes it under 85."
+      },
+      "exit": {
+        "target": 135.0,
+        "target_2": 160.0,
+        "scale_plan": "no scale plan for the first 12 months \u2014 this is an accumulation, not a trade. Reassess at 135 against the then-current term price."
+      },
+      "stop": null,
+      "bear_case_price": 80.0,
+      "position_size_pct": 4,
+      "catalyst": {
+        "event": "Utilities re-contracting into a structurally tight fuel cycle: the long-term contract price is $95.50/lb (top of its 12-month range) even as spot cooled to $86.38 from a $94.28 January peak, and new market-related contracts carry escalated floors in the high $70s with ceilings near $160. Westinghouse (49% owned) has a 91-reactor AP1000 pipeline behind a conditional $17.5B DOE commitment.",
+        "datetime_et": null,
+        "action": "Build over the next two quarters in thirds, per the entry zones. There is no date to trade around and no reason to rush \u2014 the re-rating runs on utility contracting cycles, not on a print.",
+        "wait": false
+      },
+      "thesis": "Uranium is the only energy-security asset that de-rated during an actual energy-security crisis, and it de-rated on the wrong price. CCJ is 27.7% off its 200-day high of 135.24 and below its 200-day SMA, while the long-term contract price that actually sets Cameco realised revenue sits at $95.50/lb, the top of its 12-month range. The selloff traces to spot cooling from January, sector risk-off in high-beta uranium names, and a company-specific growth pause \u2014 2026 deliveries guided to 29-32 Mlbs against 33 Mlbs in 2025 \u2014 plus a Q2 optically weak only because 2025 contained a one-time Westinghouse contribution. Underneath, adjusted EBITDA was $391M, five-year contract coverage averages over 28 Mlbs a year, and new contracts are being written with escalated floors in the high $70s, which puts a contractual floor under the realised price that did not exist in the last cycle.",
+      "key_risk": "Cameco is a mining company and the near-term repricing is about mining risk, not uranium risk: the northern Saskatchewan operations (McArthur River, Cigar Lake) carry real operating and logistics uncertainty, and a genuine production problem there would cut deliveries below the contracted book and force Cameco to buy in the spot market to fill contracts \u2014 the one scenario where a high uranium price actively hurts the company.",
+      "counter_argument": "INVALIDATION (this is the required condition, not a price move): the thesis is wrong if the long-term contract price prints below $80/lb for two consecutive quarterly readings, or if Cameco guides 2027 deliveries below 28 Mlbs and breaks its own five-year coverage average. Either would mean utilities have stopped locking in supply and the tight-balance story is over. RED TEAM CORRECTION, and it is the reason conviction came down from 4 to 3: the report claimed 'at $80 the stock is back to its 200-day low.' It is not \u2014 the 200-day low is 77.70, so the $80 anchor sits 2.9% ABOVE the level it claims to be. Re-run the ratio on the real low and it is (135.00-95.00)/(95.00-77.70) = 2.31:1, which FAILS the 2.5 long-term floor. The 2.67 that passed validation is entirely a function of an anchor placed just far enough above actual support to clear the bar. That is the pattern this phase exists to catch. Treat the clearance as failed-to-marginal, and size the first tranche as if the floor were not met. Beyond that, the honest bear case: the DOE $17.5B commitment is conditional and AP1000 pipelines have slipped for two decades, so paying up for 91 reactors of optionality is paying for a schedule that has never once been met.",
+      "sources": [
+        "https://www.cameco.com/invest/markets/uranium-price",
+        "https://www.cameco.com/media/news/cameco-reports-2026-second-quarter-results",
+        "https://www.theglobeandmail.com/investing/markets/stocks/CCJ/pressreleases/3592704/cameco-q2-2026-results-underscore-nuclear-upside-despite-operational-disruptions/",
+        "https://www.fool.com/investing/2026/07/30/uranium-energy-is-down-sharply-in-2026-heres-what/",
+        "https://www.investing.com/news/transcripts/earnings-call-transcript-cameco-q2-2026-misses-estimates-but-shares-rise-93CH-4828432"
+      ],
+      "rank": 3,
+      "risk_reward": 2.67,
+      "validation": {
+        "verdict": "pass",
+        "computed_risk_reward": 2.67,
+        "claimed_risk_reward": 2.67,
+        "live_price": 97.74,
+        "atr14": 3.7261,
+        "checked_at_et": "2026-08-17T07:09:22-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.67:1 clears the 2.5:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 95.0 is -2.8% from live 97.74"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "long-term idea, no dated event expected"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "long-term target is valuation-anchored, not ATR-bound"
+          },
+          {
+            "check": "sources",
+            "status": "pass",
+            "detail": "all 4 checked source(s) resolve"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "NKE",
+      "instrument": "NIKE Inc Class B",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "long_term",
+      "conviction": 3,
+      "last_price": 40.73,
+      "last_price_asof": "2026-08-14T20:00:00+00:00",
+      "entry": {
+        "ideal": 40.0,
+        "zone_low": 36.0,
+        "zone_high": 42.0,
+        "order_type": "limit",
+        "condition": "Accumulate in thirds and expect to be early. First third at market under 42; second third under 38; final third under 36. The stock is 1.8% off its 200-day low and may well make lower ones."
+      },
+      "exit": {
+        "target": 65.0,
+        "target_2": 80.0,
+        "scale_plan": "none for the first 18 months. Reassess at 65 against the Greater China revenue line, not against the chart."
+      },
+      "stop": null,
+      "bear_case_price": 32.0,
+      "position_size_pct": 4,
+      "catalyst": {
+        "event": "The Sport Offense reorganisation (about 8,000 employees moved into vertically integrated sport teams) working through to product, with CEO Elliott Hill guiding that the full restructuring impact shows up in early 2027 as new product rolls out. The drag is one region: Greater China at -16% while North America runs +9%, wholesale +24% and Running +20% for a second consecutive quarter.",
+        "datetime_et": null,
+        "action": "Build in thirds over the next two to three quarters per the entry zones. There is no date to trade around; the evidence to watch is the Greater China revenue line turning less negative on each quarterly report.",
+        "wait": false
+      },
+      "thesis": "Five open-market purchases by four distinct insiders, verified line by line against finnhub: CEO Elliott Hill twice on 2026-04-13 at 42.27/42.265 (23,660 shares each), board member Tim Cook 25,000 shares on 2026-04-10 at 42.43, John W Rogers Jr 4,000 at 43.34 on 04-09, and Robert Swan 11,781 at 42.44 on 04-07 \u2014 $3.73M bought against $1.37M sold, net +$2.37M. The stock now trades 40.73, roughly 4% BELOW what they paid. Red team's correction to the framing: all five buys fall inside one week (Apr 7-13), which is one trading window, not a six-month accumulation \u2014 see counter_argument, it matters. The fundamental case is the stronger half and does not depend on the insiders. The de-rating is regional rather than structural: Greater China -16% is the entire drag while North America grew 9%, wholesale 24% and Running 20% for a second consecutive quarter, and fiscal Q4 earnings beat on revenue down only 1.1%. The market is pricing a permanently impaired brand; the segment data describes one broken region attached to a core that has already turned. Entry ideal 40.00 is the 200-day low exactly, so the first tranche sits on the only support the chart has.",
+      "key_risk": "The turnaround is behind its own schedule and management says so \u2014 Hill has publicly admitted the restructuring is not moving as fast as planned and that full impact waits until early 2027. Greater China is not an inventory problem that clears in a quarter; it is a promotional cycle plus local competition, and a second year of double-digit declines there would mean the brand issue is structural after all, not regional.",
+      "counter_argument": "INVALIDATION (required condition, not a price move): the thesis is wrong if North America revenue growth turns negative for two consecutive quarters, or if Greater China is still declining double digits four quarters from now \u2014 either would mean the problem was never regional. The honest weaknesses, two of which red team added: (1) The insider cluster is weaker evidence than the report implied. All five buys land in a single week, Apr 7-13, which is what a post-earnings trading window opening looks like; four people transacting in the one week they are permitted to is not four independent expressions of conviction. And the signal has already failed once \u2014 it is four months old and 4% underwater, so it did not mark the low. (2) The stock is 1.8% off its 200-day low of 40.00 and below its 20-, 50- and 200-day SMAs (42.00/42.84/53.23); this is a knife-catch, and buying a falling name because insiders bought it higher has destroyed a great deal of capital in genuinely declining businesses. (3) The softest number is the $32 bear anchor \u2014 judgment about where a failed-turnaround Nike trades, not a fetched figure. At a $30 anchor the ratio is 2.50, exactly at the long-term floor. Treat the 2.5 clearance as marginal and size accordingly; conviction cut from 4 to 3 for the insider-framing correction.",
+      "sources": [
+        "https://www.benzinga.com/markets/equities/26/06/60007561/nike-ceo-elliott-hill-admits-turnaround-is-taking-longer-than-expected-we-still-have-work-to-do",
+        "https://finance.yahoo.com/markets/stocks/articles/nike-ceo-outlines-transformation-strategy-145605087.html",
+        "https://www.tikr.com/blog/down-65-from-all-time-highs-can-nike-nyse-nke-stock-finally-recover-in-2026",
+        "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=NKE&type=4&dateb=&owner=include&count=40"
+      ],
+      "rank": 4,
+      "risk_reward": 3.12,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 3.12,
+        "claimed_risk_reward": 3.12,
+        "live_price": 40.73,
+        "atr14": 1.1399,
+        "checked_at_et": "2026-08-17T07:09:23-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 3.12:1 clears the 2.5:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 40.0 is -1.8% from live 40.73"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "long-term idea, no dated event expected"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "long-term target is valuation-anchored, not ATR-bound"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "1 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "BTC",
+      "instrument": "Bitcoin",
+      "asset_class": "crypto",
+      "venue": "Robinhood Crypto",
+      "direction": "sell",
+      "horizon": "swing",
+      "conviction": 3,
+      "last_price": 63619.0,
+      "last_price_asof": "2026-08-17T11:05:00+00:00",
+      "entry": {
+        "ideal": 63400.0,
+        "zone_low": 63000.0,
+        "zone_high": 64500.0,
+        "condition": "Stay flat or keep reducing on any bounce into 63,000-64,500. Do not sell into a break below 62,000 \u2014 that is the move, not the entry."
+      },
+      "exit": {
+        "target": 58200.0,
+        "target_2": 57000.0,
+        "scale_plan": "buy back half at 58,200 (just above the late-June 21-month low near 58,000), the rest at 57,000",
+        "time_stop": "2026-09-16 \u2014 the FOMC decision resolves the macro leg either way; flatten the view by then"
+      },
+      "stop": 65200.0,
+      "position_size_pct": 3,
+      "catalyst": {
+        "event": "Four consecutive sessions of US spot Bitcoin ETF net outflows totalling ~$385M (Aug 12 -$61M, Aug 13 -$131M, Aug 14 -$56M), erasing ~38% of the prior week inflow rebound, into a Fed that three FOMC members dissented to HIKE in July. Jackson Hole (Warsh first keynote) Aug 27-29 and FOMC Sep 16 are the resolution points.",
+        "datetime_et": "2026-08-27T10:00",
+        "action": "EXISTING VIEW opened 2026-08-16 at 62,950 (a spot SELL, i.e. flat/reduced, not a short). Red team refreshed the price: BTC is 63,619 as of ~11:05 UTC Monday, +1.05% on 24h \u2014 the view is further offside than the report showed, not less. STAY FLAT, keep the 65,200 invalidation level unchanged, and keep the first re-entry at 58,200 rather than holding out for a clean break of a well-defended low. Conviction cut from 4 back to the 3 it was opened at.",
+        "wait": false
+      },
+      "thesis": "Update to the 2026-08-16 spot sell at 62,950: bearish view intact but NOT strengthening, invalidation unchanged at 65,200, first re-entry raised from 57,000 to 58,200. Red team reversed the report's upgrade here. The report raised conviction from 3 to 4 while the price moved AGAINST the view (62,950 -> 63,619, +1.05% in the last 24h) on the strength of one additional day of ETF outflows \u2014 and its own counter_argument concedes that $385M across four sessions is 'a sentiment reading, not a supply shock' against a multi-hundred-billion asset. Raising conviction on a losing view with immaterial new evidence is the wrong direction. What does hold: BTC has spent a week failing to reclaim 64,500 with no leadership anywhere in the complex (ETH +1.4%, SOL +0.7% on 24h), and the macro leg is real \u2014 with three July FOMC dissents for a HIKE and an oil-driven inflation impulse, the marginal dollar is not going into a zero-yield asset. Late-June printed a 21-month low near 58,000 on the same combination, so the path to the target is one the tape has recently walked.",
+      "key_risk": "Coiled ranges resolve violently in whichever direction they resolve. Sellers have not managed sub-60,000 and buyers will not lift 64,500, and that equilibrium usually breaks with a volatility spike \u2014 the 65,200 stop is only 2.8% above spot, so a single risk-on headline out of the Iran deadline takes it out before the thesis gets a chance.",
+      "counter_argument": "Two things to be clear about. First, per config/universe.md there is no shorting in a Robinhood Crypto spot account, so this is correctly typed as a SELL \u2014 an exit-and-avoid. That means the 2.89 reward-to-risk is NOT money a Robinhood spot holder can earn; it describes a short's P&L. What a flat holder actually gets is avoided drawdown and a re-entry plan. Read the ratio as a measure of whether staying out is worth it, not as an expected return. Second, the strongest case against is the tape everywhere else: SPX and the Russell 2000 are at all-time highs and the bull market is broadening. Being bearish the highest-beta risk asset in a broadening bull market is fighting the dominant trend, and the 65,200 invalidation is only 2.5% above spot \u2014 a single risk-on headline out of today's Iran deadline takes it out before the thesis gets a chance. If Jackson Hole lands dovish, 58,000 will not print.",
+      "sources": [
+        "https://crypto.news/bitcoin-price-tests-63k-as-etf-outflows-hit-265m/",
+        "https://cryptoslate.com/bitcoins-etf-rebound-just-lost-38-of-its-gains-in-four-sessions-as-btc-fell-below-63000/",
+        "https://www.cryptotimes.io/2026/08/17/bitcoin-holds-near-63k-amid-uncertainty-make-or-break-week-ahead/",
+        "https://www.chase.com/personal/investments/learning-and-insights/article/september-2026-rate-hike-now-expected-amid-energy-shocks"
+      ],
+      "rank": 5,
+      "risk_reward": 2.89,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.89,
+        "claimed_risk_reward": 2.89,
+        "live_price": null,
+        "atr14": null,
+        "checked_at_et": "2026-08-17T07:09:24-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.89:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "warn",
+            "detail": "no live price available to compare against"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-08-27 is ahead of us"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "warn",
+            "detail": "no ATR available to size the move against"
+          },
+          {
+            "check": "sources",
+            "status": "pass",
+            "detail": "all 4 checked source(s) resolve"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "XLE",
+      "instrument": "Energy Select Sector SPDR Fund",
+      "asset_class": "etf",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 3,
+      "last_price": 61.91,
+      "last_price_asof": "2026-08-14T20:00:00+00:00",
+      "entry": {
+        "ideal": 58.2,
+        "zone_low": 57.5,
+        "zone_high": 59.0,
+        "order_type": "limit",
+        "condition": "Only on a gap-fill back into the pre-Aug-10 consolidation. Do not enter above 59.00."
+      },
+      "exit": {
+        "target": 65.5,
+        "target_2": 68.0,
+        "scale_plan": "trim half at 63.46 (the 200-day range high), let the rest run to 65.50"
+      },
+      "stop": 55.8,
+      "position_size_pct": 3,
+      "catalyst": {
+        "event": "The 60-day Versailles deadline for an Iran peace deal expires TODAY, Mon Aug 17. Strait of Hormuz still effectively closed with 8.3 mb/d of Gulf output shut in; IEA more than doubled its Q3-26 deficit estimate to 1.8 mb/d. Then EIA weeklies Aug 19 and Aug 26, and the UN nuclear snapback deadline at end-August.",
+        "datetime_et": "2026-08-17T23:59",
+        "action": "STAND DOWN. This is an UPDATE to the two open XLE entries (60.80 from 08-15 and 60.50 from 08-16) \u2014 neither filled; Friday low was 61.25. CANCEL both working orders. Do not chase 61.91. Re-engage only on the gap fill at 57.50-59.00 if a ceasefire extension or reopening framework knocks the risk premium out.",
+        "wait": true
+      },
+      "thesis": "Update to the two open XLE entries (60.80 from 08-15, 60.50 from 08-16): cancel both working orders \u2014 neither filled and the entry no longer exists. The thesis is intact but the price ran away from the order and the entry no longer exists. XLE gapped from 57.50 to 60.18 on Aug 10 when Hormuz reopening talks collapsed and has closed higher every session since to 61.91 \u2014 the two open entries at 60.50/60.80 sat below that and never filled. What is left is a headline-driven risk premium, +21.6% YTD, sitting 2.4% under its 200-day range high of 63.46, hostage to a binary that resolves today. The underlying physical tightness is real (IEA Q3 deficit 1.8 mb/d, US commercial crude below the 5-year low through end-2026), which is why this is a wait rather than a cancel-and-forget.",
+      "key_risk": "Chasing here is the risk. A credible ceasefire extension or reopening framework out of today deadline gaps XLE back toward 57.50-58.50 as fast as it gapped up, and every major sell-side house already forecasts Brent BELOW spot by Q4 \u2014 Goldman ~80, JPMorgan ~80, EIA STEO 69 for 2027.",
+      "counter_argument": "RED TEAM: the entry trigger and the thesis invalidation are the SAME EVENT, and the report does not say so. The plan is to re-engage on a gap fill into 57.50-59.00 \u2014 but the only thing that produces that gap fill is a ceasefire extension or reopening framework, which is precisely what removes the 8.3 mb/d shut-in and the IEA's 1.8 mb/d Q3 deficit that ARE the thesis. So buying the gap fill means buying a broken thesis at a better price, and the entry never arrives while the thesis is intact. Whoever acts on this must decide in advance which parts of the bull case survive a reopening \u2014 the answer is the structural piece (US commercial crude below the 5-year low through end-2026) and not the risk premium. Beyond that: waiting may mean never getting filled. Capital Economics argues a strait closed through Q4 takes crude to 120-140 as OECD buffers exhaust, and in that path XLE reaches 68 without revisiting 59 and this update costs the whole move. The counter to the counter, and the reason it is still a wait: a fresh entry at 61.91 against a 58.60 stop and a 64.50 target is 0.78 reward-to-risk, and even the 67.00 target is only 1.54. No version of buying here clears the 2.0 swing floor.",
+      "sources": [
+        "https://www.iea.org/reports/oil-market-report-august-2026",
+        "https://thehill.com/homenews/ap/ap-international/ap-the-60-day-deadline-for-an-iran-peace-deal-is-expiring-heres-where-things-stand/",
+        "https://www.aljazeera.com/economy/2026/8/10/oil-prices-stocks-surge-as-hormuz-closure-drags-on",
+        "https://priceofoil.com/articles/oil-price-forecast-2026-2027",
+        "https://www.eia.gov/outlooks/steo/"
+      ],
+      "rank": 6,
+      "risk_reward": 3.04,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 3.04,
+        "claimed_risk_reward": 3.04,
+        "live_price": 61.91,
+        "atr14": 1.3875,
+        "checked_at_et": "2026-08-17T07:09:24-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 3.04:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 58.2 is -6.0% from live 61.91"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-08-17 is ahead of us"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 5.26 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "2 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    }
+  ],
+  "watchlist": [
+    {
+      "symbol": "LULU",
+      "instrument": "Lululemon Athletica Inc",
+      "note": "Deepest de-rating in the large-cap scan at -47.1% off its 200-day high of 225.98, trading 119.55 far below its 200-day SMA of 156.58. Genuinely interesting and deliberately NOT recommended: research ran out of time to establish whether the brand problem is cyclical or structural, and would not anchor a valuation target it had not defended.",
+      "trigger": "Establish whether the decline is cyclical or structural, then set a defended bear-case anchor before any long-term entry."
+    },
+    {
+      "symbol": "UNH",
+      "instrument": "UnitedHealth Group Inc",
+      "note": "401.73, -13.0% off its high and drifting below the 20- and 50-day. No catalyst identified and the medical-cost-ratio question was not researched. A half-researched long-term idea is worse than none.",
+      "trigger": "A dated catalyst plus a worked view on the medical cost ratio."
+    },
+    {
+      "symbol": "EL",
+      "instrument": "The Estee Lauder Companies Inc",
+      "note": "86.10, -29.2% off its high and below its 200-day SMA of 91.68, with a dated catalyst \u2014 Q4 earnings Aug 19 before the open, consensus EPS $0.33 on $3.6B revenue. Ran out of research time to work it.",
+      "trigger": "Aug 19 earnings; needs a worked thesis before the print, not after."
+    },
+    {
+      "symbol": "VIXY",
+      "instrument": "ProShares VIX Short-Term Futures ETF",
+      "note": "CUT by red team on its own arithmetic. The 2.79 reward-to-risk requires holding to the 24.00 target, which validation flagged at 6.82 ATR against a 6.0 swing guide. But the idea's own scale plan says to sell HALF into any spike above 22 \u2014 and at 22 the trade is (22.00-18.70)/(18.70-16.80) = 1.74:1, BELOW the 2.0 swing floor. The ratio that cleared the bar depends on a target the plan itself abandons. Compounding it: VIXY sits below its 20-, 50- and 200-day SMAs (20.37/21.41/27.17), so the 18.50 'floor' is a level it decayed down to, not support, and the report concedes the 16.80 stop is reachable by contango decay alone even if volatility never falls. A position that loses by construction unless a spike arrives, and whose realistic exit fails the floor, is not a hedge worth paying for.",
+      "trigger": "A target inside the 6.0 ATR guide that still clears 2.0 from a defensible entry, or an outright long-vol entry after a spike has already reset the futures curve out of steep contango.",
+      "demoted_from_rank": 6,
+      "demotion_reason": "Reward-to-risk clears 2.0 only at a 6.82-ATR target the idea's own scale plan exits before reaching; at the stated 22 scale-out it is 1.74:1."
+    },
+    {
+      "symbol": "RDDT",
+      "instrument": "Reddit Inc Class A",
+      "note": "CUT by red team on stop placement the report misjudged. key_risk claims 'the stop at 197 is only 1.5 ATR above the entry' \u2014 it is 0.94 ATR: (197.00-185.50)=11.50 against an ATR14 of 12.25. On a name whose average daily range is 6.88% of price, a sub-one-ATR stop sits INSIDE a single normal session's range and gets taken out by noise irrespective of whether the thesis is right. Understating that by 60% is the difference between a small-size short and a coin flip with a fee. The thesis itself is fine and sourced (US daily actives went backwards sequentially, 53.5M to 53.2M, and Google referrals are choppy on AI Overviews), and the entry discipline is honest \u2014 it requires 183+ into the Monday close, 4.2% above Friday's 178.09, and may never trigger. But the report also concedes the index-effect fade is the most front-run trade in the market and that Friday's +12.6% may already BE the front-running. Right idea, unworkable stop.",
+      "trigger": "A stop at or beyond 2 ATR (roughly 210+) that still clears 2.0 from an entry the tape actually offers \u2014 or wait for the post-add drift to begin and short a failed retest of the 200-day SMA at 177.86 with room.",
+      "demoted_from_rank": 8,
+      "demotion_reason": "Stop is 0.94 ATR above entry on a 6.88%-ATR name, not the 1.5 ATR claimed \u2014 inside the noise band."
+    }
+  ],
+  "validation_summary": {
+    "checked": 6,
+    "passed": 1,
+    "warned": 5,
+    "failed": 0,
+    "enforced": true
+  }
+}
