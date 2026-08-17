@@ -84,17 +84,23 @@ traded on.
    position — for example, *"Update to the 2026-08-05 long: thesis intact,
    raising the stop to 176."* Position updates do not count against the idea
    count; they are position management, not new risk.
-2. **Filter.** Drop anything below conviction 3, anything missing the downside
+2. **Filter.** Drop anything below conviction 2, anything missing the downside
    `config/strategy.md` requires for its horizon, and anything under its
    reward-to-risk floor — **1.5 intraday, 2.0 swing, 2.5 long_term**, where
    long-term risk is measured against a stated bear-case price rather than a
    stop. Enforce the correlation cap: at most 3 ideas depending on the same
    driver.
 
-   **Do not filter or pad for horizon balance.** There are no per-horizon
-   quotas. Whatever mix survives the bar is the correct mix, even if it is all
-   one horizon. Never drop a qualifying idea to make room for variety, and
-   never promote a weak one to supply it.
+   **Do not filter or pad for horizon balance, and do not trim to a tidy
+   count.** There are no per-horizon quotas and no target number — publish
+   everything that clears the bar, up to the schema's 50. Whatever mix survives
+   is the correct mix. Never drop a qualifying idea to make room for variety,
+   and never promote a weak one to supply it.
+
+   Conviction 2 ideas are published, marked as speculative and sized as lottery
+   tickets. Check that each one's `key_risk` is honest about its thinness, and
+   that `position_size_pct` respects the caps in `config/strategy.md` — 1% for
+   conviction 2 or sub-$300M market caps, 2% for futures, 5% otherwise.
 
 3. **Rank** by conviction, then reward-to-risk, using catalyst proximity only to
    break ties between ideas of the same horizon — a long-term thesis has no near

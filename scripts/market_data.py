@@ -746,6 +746,28 @@ def filings(symbol: str, limit: int = 15) -> dict[str, Any]:
 # earnings calendar
 # --------------------------------------------------------------------------
 
+def profile(symbol: str) -> dict[str, Any]:
+    """Sector, industry, and market cap — used for concentration and sizing rules."""
+    if not FINNHUB_KEY:
+        return {"ok": False, "source": "finnhub", "error": "no api key"}
+    try:
+        d = _get("https://finnhub.io/api/v1/stock/profile2",
+                 params={"symbol": symbol.upper(), "token": FINNHUB_KEY}).json()
+        if not d:
+            raise ValueError(f"no profile for {symbol}")
+        cap_m = _num(d.get("marketCapitalization"))  # Finnhub reports millions
+        return {
+            "ok": True, "source": "finnhub", "symbol": symbol.upper(),
+            "name": d.get("name"),
+            "sector": d.get("finnhubIndustry"),
+            "exchange": d.get("exchange"),
+            "market_cap_usd": cap_m * 1e6 if cap_m else None,
+            "shares_outstanding": _num(d.get("shareOutstanding")),
+        }
+    except Exception as exc:  # noqa: BLE001
+        return _fail("finnhub", exc)
+
+
 def insiders(symbol: str, months: int = 6) -> dict[str, Any]:
     """Insider transactions, weighted toward open-market buys.
 
@@ -891,6 +913,9 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("symbol")
     p.add_argument("--months", type=int, default=6)
 
+    p = sub.add_parser("profile", help="sector, industry, and market cap")
+    p.add_argument("symbol")
+
     args = parser.parse_args(argv)
 
     if args.cmd == "quote":
@@ -909,6 +934,8 @@ def main(argv: list[str] | None = None) -> int:
         result = earnings(args.days)
     elif args.cmd == "insiders":
         result = insiders(args.symbol, args.months)
+    elif args.cmd == "profile":
+        result = profile(args.symbol)
     else:  # pragma: no cover - argparse enforces the choices
         parser.error(f"unknown command {args.cmd}")
 

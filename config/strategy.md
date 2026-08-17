@@ -8,10 +8,15 @@ it, so a change here takes effect on the next run with no code change.
 
 | Setting | Value |
 | --- | --- |
-| Total recommendations | **5–10**, however many clear the bar |
+| Total recommendations | **no target — publish everything that clears the bar, up to 50** |
 | Horizon mix | **no quotas — whatever the opportunities actually are** |
-| Watchlist (not yet actionable) | up to 5 |
-| Minimum conviction to publish | 3 of 5 |
+| Watchlist (not yet actionable) | up to 25 |
+| Minimum conviction to publish | **2 of 5** |
+
+There is no quota and no ideal count. Fifty is a hard ceiling to keep the sheet
+readable, not a goal. Six genuinely good ideas is a good day; so is twenty-five
+when the tape is rich. **Never cut a qualifying idea to hit a tidy number, and
+never invent one to fill space.**
 
 **There are no per-horizon targets, and you must not manufacture variety.** The
 report's job is to surface the genuinely best opportunities available today, in
@@ -88,26 +93,45 @@ unfinished. That is not the anchoring problem the repetition guard is aimed at
   an explicit invalidation condition. Long-term: an invalidation condition is
   required and a stop is optional, since a hard stop on a multi-year thesis
   usually just sells the bottom.
-- **Position sizing** is expressed as a percentage of trading capital, not a
-  dollar amount: `1%` (speculative), `2-3%` (standard), `5%` (high conviction).
-  Never suggest more than 5% in a single idea, or more than 2% in a futures
-  contract.
+- **Position sizing** is a percentage of trading capital, not a dollar amount,
+  and it falls out of conviction and risk tier rather than enthusiasm:
+
+  | Tier | Size | Applies to |
+  | --- | --- | --- |
+  | Lottery ticket | 0.5–1% | conviction 2, micro caps, binary outcomes |
+  | Speculative | 1–2% | small caps, futures, event contracts |
+  | Standard | 2–3% | conviction 3–4 in liquid names |
+  | High conviction | 4–5% | conviction 5, or a long-term core holding |
+
+  Never more than 5% in a single idea, never more than 2% in a futures contract,
+  and never more than 1% in anything below a $300M market cap.
+
+  Small position sizing is what makes speculative ideas safe to publish. A
+  conviction-2 micro cap at 1% is a sensible bet; the same idea at 5% is how
+  accounts get damaged.
 - **Correlation cap.** No more than 3 ideas whose outcome depends on the same
   driver — the same sector, the same macro print, the same rate path. Eight
   ideas that are all one bet on semis is one idea with extra steps.
 
 ## Conviction scale
 
-| Score | Meaning |
-| --- | --- |
-| 5 | Multiple independent confirmations, clear catalyst with a known date, clean technical level, no obvious counter-argument |
-| 4 | Strong thesis with a dated catalyst; one meaningful counter-argument, addressed |
-| 3 | Reasonable setup, thinner evidence or a vaguer catalyst window |
-| 2 | Speculative — do not publish as a recommendation, route to watchlist |
-| 1 | Noise |
+| Score | Meaning | Published? |
+| --- | --- | --- |
+| 5 | Multiple independent confirmations, clear catalyst with a known date, clean technical level, no obvious counter-argument | yes |
+| 4 | Strong thesis with a dated catalyst; one meaningful counter-argument, addressed | yes |
+| 3 | Reasonable setup, thinner evidence or a vaguer catalyst window | yes |
+| 2 | **Speculative** — real thesis, thin or one-sided evidence, wide range of outcomes | yes, clearly marked |
+| 1 | Noise, or a hunch with no evidence behind it | no |
 
 Conviction is about **evidence quality**, not expected return. A 5 can be a
-modest, high-probability move. A lottery ticket is never above a 2.
+modest, high-probability move; a moonshot with one source is a 2 no matter how
+large the upside.
+
+**Conviction 2 is publishable and useful** — that is where asymmetric, small-cap
+and early-thesis ideas live, and cutting them would remove exactly the
+high-risk/high-return lane worth having. But it must be honest about what it is:
+a 2 needs its thinness stated in `key_risk`, and it is sized like a lottery
+ticket, not a position. Never inflate a 2 to a 3 to make it look sturdier.
 
 ## Ranking
 

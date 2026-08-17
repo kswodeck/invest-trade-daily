@@ -108,14 +108,14 @@
     },
     "recommendations": {
       "type": "array",
-      "maxItems": 12,
+      "maxItems": 50,
       "items": {
         "$ref": "#/definitions/idea"
       }
     },
     "watchlist": {
       "type": "array",
-      "maxItems": 8,
+      "maxItems": 25,
       "items": {
         "type": "object",
         "required": [
@@ -404,6 +404,30 @@
             "type": "string",
             "format": "uri"
           }
+        },
+        "market_cap_usd": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Used to apply the small-cap sizing cap and liquidity warnings."
+        },
+        "avg_dollar_volume": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Average daily dollar volume. The exit test for small caps."
+        },
+        "risk_tier": {
+          "type": "string",
+          "enum": [
+            "lottery",
+            "speculative",
+            "standard",
+            "high_conviction"
+          ],
+          "description": "Drives position sizing; see config/strategy.md."
         }
       }
     }
