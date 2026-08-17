@@ -12,6 +12,7 @@ each result before trusting the payload.
     python scripts/market_data.py events "CPI"
     python scripts/market_data.py filings NVDA
     python scripts/market_data.py earnings --days 14
+    python scripts/market_data.py insiders NVDA
 
 Optional environment variables unlock better sources; all are safe to omit:
 FINNHUB_API_KEY, TWELVEDATA_API_KEY, ALPHAVANTAGE_API_KEY, FRED_API_KEY, SEC_USER_AGENT.
@@ -745,6 +746,79 @@ def filings(symbol: str, limit: int = 15) -> dict[str, Any]:
 # earnings calendar
 # --------------------------------------------------------------------------
 
+def insiders(symbol: str, months: int = 6) -> dict[str, Any]:
+    """Insider transactions, weighted toward open-market buys.
+
+    Executives sell for a hundred reasons — diversification, taxes, a house.
+    They buy for one. A cluster of open-market purchases (transaction code P) by
+    several officers is among the few genuinely predictive public signals, so
+    that is what this surfaces rather than raw transaction counts.
+    """
+    today = date.today()
+    since = today - timedelta(days=months * 31)
+
+    if FINNHUB_KEY:
+        try:
+            data = _get(
+                "https://finnhub.io/api/v1/stock/insider-transactions",
+                params={"symbol": symbol.upper(), "token": FINNHUB_KEY,
+                        "from": since.isoformat(), "to": today.isoformat()},
+            ).json()
+            rows = data.get("data") or []
+            buys = [r for r in rows if (r.get("transactionCode") or "").upper() == "P"]
+            sells = [r for r in rows if (r.get("transactionCode") or "").upper() == "S"]
+            buy_value = sum(abs(_num(r.get("change")) or 0) * (_num(r.get("transactionPrice")) or 0)
+                            for r in buys)
+            sell_value = sum(abs(_num(r.get("change")) or 0) * (_num(r.get("transactionPrice")) or 0)
+                             for r in sells)
+            buyers = {r.get("name") for r in buys if r.get("name")}
+            return {
+                "ok": True,
+                "source": "finnhub",
+                "symbol": symbol.upper(),
+                "window_months": months,
+                "open_market_buys": len(buys),
+                "distinct_buyers": len(buyers),
+                "buy_value_usd": round(buy_value, 2),
+                "sells": len(sells),
+                "sell_value_usd": round(sell_value, 2),
+                "net_value_usd": round(buy_value - sell_value, 2),
+                "recent_buys": [
+                    {"name": r.get("name"), "date": r.get("transactionDate"),
+                     "shares": _num(r.get("change")), "price": _num(r.get("transactionPrice"))}
+                    for r in sorted(buys, key=lambda r: r.get("transactionDate") or "", reverse=True)[:8]
+                ],
+                "note": (
+                    "Code P is an open-market purchase and is the signal worth weighting. "
+                    "Sales are reported for completeness but are weak evidence on their own."
+                ),
+            }
+        except Exception as exc:  # noqa: BLE001
+            finnhub_error = f"{type(exc).__name__}: {exc}"
+    else:
+        finnhub_error = "no api key"
+
+    # Fallback: SEC gives the filing stream but not parsed amounts. A burst of
+    # Form 4s still tells you something; you just have to open them.
+    sec = filings(symbol, limit=60)
+    if sec.get("ok"):
+        form4s = [f for f in sec.get("filings", []) if f.get("form") == "4"
+                  and (f.get("filed") or "") >= since.isoformat()]
+        return {
+            "ok": True,
+            "source": "sec",
+            "symbol": symbol.upper(),
+            "window_months": months,
+            "form4_filings": len(form4s),
+            "recent": form4s[:8],
+            "note": (
+                f"Finnhub unavailable ({finnhub_error}); this is the raw Form 4 stream with no "
+                "buy/sell breakdown. Open the filings to see direction and size."
+            ),
+        }
+    return {"ok": False, "source": "insiders", "error": f"finnhub: {finnhub_error}; sec: {sec.get('error')}"}
+
+
 def earnings(days: int = 14) -> dict[str, Any]:
     if not FINNHUB_KEY:
         return {
@@ -813,6 +887,10 @@ def main(argv: list[str] | None = None) -> int:
     p = sub.add_parser("earnings", help="upcoming earnings calendar")
     p.add_argument("--days", type=int, default=14)
 
+    p = sub.add_parser("insiders", help="insider transactions, weighted to open-market buys")
+    p.add_argument("symbol")
+    p.add_argument("--months", type=int, default=6)
+
     args = parser.parse_args(argv)
 
     if args.cmd == "quote":
@@ -829,6 +907,8 @@ def main(argv: list[str] | None = None) -> int:
         result = filings(args.symbol, args.limit)
     elif args.cmd == "earnings":
         result = earnings(args.days)
+    elif args.cmd == "insiders":
+        result = insiders(args.symbol, args.months)
     else:  # pragma: no cover - argparse enforces the choices
         parser.error(f"unknown command {args.cmd}")
 

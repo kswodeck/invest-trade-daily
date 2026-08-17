@@ -25,12 +25,14 @@ def main() -> int:
 
     research = os.environ.get("RESEARCH_OUTCOME", "unknown")
     synthesis = os.environ.get("SYNTHESIS_OUTCOME", "unknown")
+    redteam = os.environ.get("REDTEAM_OUTCOME", "unknown")
     note = " (hit the time cap — expected)" if research == "failure" else ""
     out += [
         "| Phase | Outcome |",
         "| --- | --- |",
         f"| Research | `{research}`{note} |",
         f"| Synthesis | `{synthesis}` |",
+        f"| Red team | `{redteam}` |",
         "",
     ]
 
@@ -66,6 +68,24 @@ def main() -> int:
         out.append("")
     else:
         out += ["_No recommendations published._", ""]
+
+    vs = report.get("validation_summary")
+    if vs:
+        out += [
+            f"**Validation:** {vs.get('passed', 0)} clean · {vs.get('warned', 0)} warned · "
+            f"{vs.get('demoted', vs.get('failed', 0))} demoted to watchlist",
+            "",
+        ]
+        flagged = [
+            (i.get("symbol", ""), c["detail"])
+            for i in ideas
+            for c in (i.get("validation") or {}).get("checks", [])
+            if c.get("status") in ("warn", "fail")
+        ]
+        if flagged:
+            out += ["<details><summary>Validation findings</summary>", ""]
+            out += [f"- `{sym}` — {detail}" for sym, detail in flagged[:25]]
+            out += ["", "</details>", ""]
 
     if report.get("data_quality_notes"):
         out += ["> **Data quality:** " + report["data_quality_notes"], ""]

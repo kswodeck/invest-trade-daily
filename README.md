@@ -23,8 +23,21 @@ to a Google Sheet.
    │    Appends every finding to reports/<date>/notes.md as it goes,
    │    so a mid-thought timeout still leaves usable material.
    │
-   ├─ Phase 2 — SYNTHESIS  (Opus, ~12 min, always runs)
-   │    Reads whatever notes exist and emits strict-schema report.json.
+   ├─ Phase 2 — SYNTHESIS  (Opus, ~15 min, always runs)
+   │    Reads whatever candidates exist and emits strict-schema report.json.
+   │
+   ├─ Phase 2b — VALIDATE  (code, not a model)
+   │    Recomputes R:R, checks direction consistency, compares entries to
+   │    live prices, verifies earnings dates against the real calendar,
+   │    sizes targets in ATR, and resolves every cited URL.
+   │
+   ├─ Phase 2c — RED TEAM  (Opus, ~12 min)
+   │    A separate pass whose only job is to attack the ideas and kill
+   │    the weak ones, starting from the validation flags.
+   │
+   ├─ Phase 2d — ENFORCE
+   │    Anything still failing a hard check moves to the watchlist with
+   │    its reason attached, rather than publishing as a live idea.
    │
    ├─ Phase 3 — PUBLISH
    │    Grades yesterday's open picks, then writes:
@@ -124,12 +137,14 @@ dry_run: true             # writes reports/ but not the Sheet
 .claude/skills/
   daily-research/        Phase 1 prompt contract
   daily-synthesis/       Phase 2 prompt contract
+  daily-redteam/         Phase 2c adversarial review
 config/
   strategy.md            horizon, sizing, conviction, ranking rules
   universe.md            Robinhood venue constraints
 scripts/
   market_data.py         keyless-first data CLI Claude calls during research
   add_candidate.py       validates and captures a candidate during research
+  validate_report.py     recomputes and checks every number before publishing
   build_context.py       prior picks and outcomes, so research has memory
   ensure_report.py       guarantees a publishable report.json exists
   publish_sheets.py      Sheets writer + performance grader

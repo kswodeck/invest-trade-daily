@@ -2,7 +2,13 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Daily trade report",
   "type": "object",
-  "required": ["date", "generated_at_et", "truncated", "market_context", "recommendations"],
+  "required": [
+    "date",
+    "generated_at_et",
+    "truncated",
+    "market_context",
+    "recommendations"
+  ],
   "additionalProperties": false,
   "properties": {
     "date": {
@@ -15,7 +21,10 @@
       "description": "ISO-8601 timestamp with ET offset"
     },
     "research_minutes": {
-      "type": ["number", "null"],
+      "type": [
+        "number",
+        "null"
+      ],
       "description": "Wall-clock minutes the research phase actually got"
     },
     "truncated": {
@@ -33,27 +42,65 @@
     },
     "market_context": {
       "type": "object",
-      "required": ["summary", "regime"],
+      "required": [
+        "summary",
+        "regime"
+      ],
       "additionalProperties": false,
       "properties": {
-        "summary": { "type": "string" },
-        "regime": { "type": "string", "enum": ["risk-on", "risk-off", "mixed", "unknown"] },
+        "summary": {
+          "type": "string"
+        },
+        "regime": {
+          "type": "string",
+          "enum": [
+            "risk-on",
+            "risk-off",
+            "mixed",
+            "unknown"
+          ]
+        },
         "levels": {
           "type": "object",
-          "additionalProperties": { "type": ["string", "number", "null"] },
+          "additionalProperties": {
+            "type": [
+              "string",
+              "number",
+              "null"
+            ]
+          },
           "description": "e.g. spx, ndx, vix, us10y, dxy, btc, wti, gold"
         },
         "econ_calendar": {
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["event", "datetime_et"],
+            "required": [
+              "event",
+              "datetime_et"
+            ],
             "additionalProperties": false,
             "properties": {
-              "event": { "type": "string" },
-              "datetime_et": { "type": "string" },
-              "importance": { "type": "string", "enum": ["high", "medium", "low"] },
-              "consensus": { "type": ["string", "null"] }
+              "event": {
+                "type": "string"
+              },
+              "datetime_et": {
+                "type": "string"
+              },
+              "importance": {
+                "type": "string",
+                "enum": [
+                  "high",
+                  "medium",
+                  "low"
+                ]
+              },
+              "consensus": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
             }
           }
         }
@@ -62,38 +109,95 @@
     "recommendations": {
       "type": "array",
       "maxItems": 12,
-      "items": { "$ref": "#/definitions/idea" }
+      "items": {
+        "$ref": "#/definitions/idea"
+      }
     },
     "watchlist": {
       "type": "array",
       "maxItems": 8,
       "items": {
         "type": "object",
-        "required": ["symbol", "note"],
+        "required": [
+          "symbol",
+          "note"
+        ],
         "additionalProperties": false,
         "properties": {
-          "symbol": { "type": "string" },
-          "instrument": { "type": "string" },
-          "note": { "type": "string", "description": "What must happen before this becomes actionable" },
-          "trigger": { "type": "string" }
+          "symbol": {
+            "type": "string"
+          },
+          "instrument": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string",
+            "description": "What must happen before this becomes actionable"
+          },
+          "trigger": {
+            "type": "string"
+          },
+          "demoted_from_rank": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "demotion_reason": {
+            "type": "string"
+          }
         }
       }
+    },
+    "validation_summary": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Written by validate_report.py: counts of passed, warned, and demoted ideas."
     }
   },
   "definitions": {
     "idea": {
       "type": "object",
       "required": [
-        "rank", "instrument", "symbol", "asset_class", "venue", "direction",
-        "horizon", "conviction", "entry", "exit", "catalyst", "thesis",
-        "key_risk", "sources"
+        "rank",
+        "instrument",
+        "symbol",
+        "asset_class",
+        "venue",
+        "direction",
+        "horizon",
+        "conviction",
+        "entry",
+        "exit",
+        "catalyst",
+        "thesis",
+        "key_risk",
+        "sources"
       ],
       "additionalProperties": false,
       "properties": {
-        "rank": { "type": "integer", "minimum": 1 },
-        "instrument": { "type": "string", "description": "Human-readable name" },
-        "symbol": { "type": "string", "description": "Ticker, coin id, contract code, or event contract ticker" },
-        "asset_class": { "type": "string", "enum": ["stock", "etf", "crypto", "futures", "event"] },
+        "rank": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "instrument": {
+          "type": "string",
+          "description": "Human-readable name"
+        },
+        "symbol": {
+          "type": "string",
+          "description": "Ticker, coin id, contract code, or event contract ticker"
+        },
+        "asset_class": {
+          "type": "string",
+          "enum": [
+            "stock",
+            "etf",
+            "crypto",
+            "futures",
+            "event"
+          ]
+        },
         "venue": {
           "type": "string",
           "enum": [
@@ -105,52 +209,173 @@
         },
         "direction": {
           "type": "string",
-          "enum": ["buy", "sell", "sell_short", "long", "short", "yes", "no"]
+          "enum": [
+            "buy",
+            "sell",
+            "sell_short",
+            "long",
+            "short",
+            "yes",
+            "no"
+          ]
         },
-        "horizon": { "type": "string", "enum": ["intraday", "swing", "long_term"] },
-        "conviction": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "horizon": {
+          "type": "string",
+          "enum": [
+            "intraday",
+            "swing",
+            "long_term"
+          ]
+        },
+        "conviction": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
         "unit": {
           "type": "string",
-          "enum": ["usd", "cents", "index_points"],
+          "enum": [
+            "usd",
+            "cents",
+            "index_points"
+          ],
           "default": "usd",
           "description": "cents for event contracts, index_points for index futures"
         },
-        "last_price": { "type": ["number", "null"] },
-        "last_price_asof": { "type": ["string", "null"] },
+        "last_price": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "last_price_asof": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
         "entry": {
           "type": "object",
-          "required": ["ideal"],
+          "required": [
+            "ideal"
+          ],
           "additionalProperties": false,
           "properties": {
-            "ideal": { "type": ["number", "null"] },
-            "zone_low": { "type": ["number", "null"] },
-            "zone_high": { "type": ["number", "null"] },
-            "order_type": { "type": "string", "enum": ["limit", "market", "stop_limit", "on_open"] },
-            "condition": { "type": "string", "description": "e.g. only after CPI prints below consensus" }
+            "ideal": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "zone_low": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "zone_high": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "order_type": {
+              "type": "string",
+              "enum": [
+                "limit",
+                "market",
+                "stop_limit",
+                "on_open"
+              ]
+            },
+            "condition": {
+              "type": "string",
+              "description": "e.g. only after CPI prints below consensus"
+            }
           }
         },
         "exit": {
           "type": "object",
-          "required": ["target"],
+          "required": [
+            "target"
+          ],
           "additionalProperties": false,
           "properties": {
-            "target": { "type": ["number", "null"] },
-            "target_2": { "type": ["number", "null"] },
-            "scale_plan": { "type": "string", "description": "e.g. trim 50% at target, trail the rest" },
-            "time_stop": { "type": "string", "description": "Exit unconditionally by this date if neither level hits" }
+            "target": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "target_2": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "scale_plan": {
+              "type": "string",
+              "description": "e.g. trim 50% at target, trail the rest"
+            },
+            "time_stop": {
+              "type": "string",
+              "description": "Exit unconditionally by this date if neither level hits"
+            }
           }
         },
-        "stop": { "type": ["number", "null"] },
-        "risk_reward": { "type": ["number", "null"] },
-        "position_size_pct": { "type": ["number", "null"], "maximum": 5 },
-        "requires_margin": { "type": "boolean", "default": false },
+        "stop": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "bear_case_price": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Long-term downside anchor: what the asset is plausibly worth if the thesis is wrong. Required for long_term, where a hard stop is optional. Not an order to place."
+        },
+        "risk_reward": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "validation": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Written by validate_report.py. Recomputed figures and check results; never authored by the model."
+        },
+        "position_size_pct": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "maximum": 5
+        },
+        "requires_margin": {
+          "type": "boolean",
+          "default": false
+        },
         "catalyst": {
           "type": "object",
-          "required": ["event", "action"],
+          "required": [
+            "event",
+            "action"
+          ],
           "additionalProperties": false,
           "properties": {
-            "event": { "type": "string", "description": "The specific dated thing that happens" },
-            "datetime_et": { "type": ["string", "null"] },
+            "event": {
+              "type": "string",
+              "description": "The specific dated thing that happens"
+            },
+            "datetime_et": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
             "action": {
               "type": "string",
               "description": "How to orchestrate around it: enter before, wait for, trim into, avoid until"
@@ -162,13 +387,23 @@
             }
           }
         },
-        "thesis": { "type": "string" },
-        "key_risk": { "type": "string" },
-        "counter_argument": { "type": "string", "description": "The strongest case against, from the falsification pass" },
+        "thesis": {
+          "type": "string"
+        },
+        "key_risk": {
+          "type": "string"
+        },
+        "counter_argument": {
+          "type": "string",
+          "description": "The strongest case against, from the falsification pass"
+        },
         "sources": {
           "type": "array",
           "minItems": 1,
-          "items": { "type": "string", "format": "uri" }
+          "items": {
+            "type": "string",
+            "format": "uri"
+          }
         }
       }
     }
