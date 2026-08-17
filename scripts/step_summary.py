@@ -15,6 +15,7 @@ import sys
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(REPO / "scripts"))
 
 ARROW = {"buy": "▲", "long": "▲", "yes": "▲", "sell": "▼", "sell_short": "▼", "short": "▼", "no": "▼"}
 
@@ -68,6 +69,18 @@ def main() -> int:
         out.append("")
     else:
         out += ["_No recommendations published._", ""]
+
+    try:
+        import exposure as _exposure
+        summary = _exposure.summarize(report)
+        if summary.get("count"):
+            out.append(
+                f"**Exposure:** {summary['long_count']} long / {summary['short_count']} short · "
+                f"gross {summary['gross_exposure_pct']:g}% · net {summary['net_exposure_pct']:+g}%")
+            out += [f"- ⚠ {w}" for w in summary.get("warnings", [])]
+            out.append("")
+    except Exception:  # noqa: BLE001 - summary decoration, never a blocker
+        pass
 
     vs = report.get("validation_summary")
     if vs:

@@ -40,7 +40,8 @@ to a Google Sheet.
    │    its reason attached, rather than publishing as a live idea.
    │
    ├─ Phase 3 — PUBLISH
-   │    Grades yesterday's open picks, then writes:
+   │    Computes portfolio exposure, grades yesterday's open picks,
+   │    then writes:
    │      • "Today" tab      — this morning's ranked ideas
    │      • "<date>" tab     — dated archive of the same
    │      • "Performance"    — running scorecard of every past call
@@ -78,10 +79,21 @@ Only instruments you can actually trade in Robinhood are recommended:
 Three horizons, all treated as first-class: **intraday** (same session),
 **swing** (days to weeks), and **long_term** (months to years, buy and hold).
 
-**There are no per-horizon quotas.** The report surfaces the best opportunities
-it finds and the mix falls where it falls — if the strongest eight ideas on a
-given day are all long-term accumulations, that is what it publishes. Forcing
-variety would mean dropping a good idea to make room for a worse one.
+**There are no quotas and no target count.** The report surfaces every idea
+that clears the bar, up to 50, and the mix falls where it falls. Forcing variety
+would mean dropping a good idea to make room for a worse one.
+
+Conviction runs 2–5, and **2 is published** — that is where asymmetric,
+small-cap and early-thesis ideas live. They are marked speculative and sized as
+lottery tickets (1% max), which is what makes them safe to carry.
+
+**Small and micro caps are in scope**, subject to a liquidity floor of $500K
+average daily dollar volume, because a position you cannot exit is worth nothing.
+
+**Futures are preferred over spot** when the same underlying trades as a
+Robinhood contract. This is not stylistic — Robinhood Crypto cannot short, so a
+bearish crypto `sell` cannot profit if the thesis is right, while a short `/MBT`
+can. Validation fails that case outright.
 
 See [`config/strategy.md`](config/strategy.md) and
 [`config/universe.md`](config/universe.md) to tune this.
@@ -132,6 +144,7 @@ dry_run: true             # writes reports/ but not the Sheet
 ```
 .github/workflows/
   daily-report.yml       the scheduled pipeline
+  weekly-digest.yml      Sunday scorecard: hit rate by conviction and horizon
   keepalive.yml          stops GitHub disabling the cron after 60 idle days
   data-sources-check.yml manual probe of every data source and the Sheet
 .claude/skills/
@@ -145,6 +158,8 @@ scripts/
   market_data.py         keyless-first data CLI Claude calls during research
   add_candidate.py       validates and captures a candidate during research
   validate_report.py     recomputes and checks every number before publishing
+  exposure.py            portfolio-level net/gross and concentration warnings
+  weekly_digest.py       weekly scorecard and conviction calibration
   build_context.py       prior picks and outcomes, so research has memory
   ensure_report.py       guarantees a publishable report.json exists
   publish_sheets.py      Sheets writer + performance grader

@@ -80,7 +80,7 @@ surfaces while you can still fix it. It rejects non-Robinhood venues outright.
 
 | By | You must have |
 | --- | --- |
-| **Minute 20** | At least one candidate captured, even a conviction-3 one |
+| **Minute 20** | At least one candidate captured, even a conviction-2 one |
 | **70% of budget** | Stopped all new research; converting findings to candidates |
 
 Check the clock with `date` rather than trusting your sense of elapsed time. If
@@ -193,8 +193,38 @@ the decision here, then capture it. Notes alone change nothing.
 - Event contract prices are cents and mean implied probability. Your edge must
   be a stated probability disagreement, not a hunch.
 - Options are out of scope entirely.
-- Aim for 5–10 publishable candidates plus rejections. Diversify the driver —
-  eight ideas that all depend on one CPI print is one idea.
+- **There is no target count.** Capture everything that clears the bar, up to
+  50. Twenty good candidates is a good day; so is six. Never stop early to hit a
+  tidy number, and never pad. Diversify the driver — twenty ideas that all
+  depend on one CPI print is one idea.
+- **The conviction floor is 2, not 3.** Conviction 2 is where asymmetric,
+  small-cap and early-thesis ideas live and it is explicitly wanted — but it is
+  sized as a lottery ticket and its thinness must be stated in `key_risk`.
+
+## Reach beyond the obvious names
+
+Three things this report should hunt harder than a generic screen would:
+
+**Small and micro caps.** The asymmetric ideas are below the mega-cap tier, and
+a report full of names everyone already owns is not worth much. Check liquidity
+first — average daily dollar volume must clear $500K and your position must be a
+small fraction of it — then size it as a lottery ticket, widen the stop to the
+instrument's real volatility, and name the dilution and halt risk. State the
+market cap and dollar volume in the thesis for anything under $2B.
+
+**Futures over spot.** When the same underlying trades as a Robinhood futures
+contract, prefer the contract. This is not stylistic: Robinhood Crypto cannot
+short at all, so a bearish crypto `sell` makes no money if you are right. A
+short `/MBT` does. The same applies to index views — `/MES` over shorting SPY,
+which needs margin. See the substitution table in `config/universe.md`. The
+exception is long-term holds, where roll costs make spot cleaner.
+
+**Event contracts.** Actively hunt Robinhood's prediction markets rather than
+treating them as a curiosity. A mispriced probability is often a cleaner
+expression than the equivalent equity trade, because the payoff is defined and
+the thesis is one falsifiable claim rather than a price path that can be right
+and still stop you out. Use `market_data.py events "<topic>"` and state the
+market's implied probability against your own estimate.
 
 ## Horizons carry no quotas
 

@@ -203,6 +203,78 @@ def check_target_feasibility(idea: dict, atr: float | None) -> list[dict]:
     return [_check("target_feasibility", PASS, detail)]
 
 
+# Underlyings where a Robinhood futures contract exists, so a spot expression —
+# especially a bearish one — is the wrong instrument. See config/universe.md.
+FUTURES_EQUIVALENT = {
+    "BTC": "/MBT or /BTC", "BTC-USD": "/MBT or /BTC", "BITCOIN": "/MBT or /BTC",
+    "ETH": "/MET or /ETH", "ETH-USD": "/MET or /ETH", "ETHEREUM": "/MET or /ETH",
+    "SPY": "/MES", "VOO": "/MES", "IVV": "/MES",
+    "QQQ": "/MNQ", "IWM": "/M2K", "DIA": "/MYM",
+    "GLD": "/MGC", "IAU": "/MGC", "SLV": "/SIL",
+    "USO": "/MCL", "UNG": "/NG",
+}
+
+
+def check_instrument_choice(idea: dict) -> list[dict]:
+    """Flag a spot expression where a futures contract would serve better.
+
+    Robinhood Crypto cannot short at all, so a bearish crypto `sell` makes no
+    money if the thesis is right — it only means "exit or avoid". Short equity
+    needs margin. Futures express both directly.
+    """
+    symbol = (idea.get("symbol") or "").upper()
+    equivalent = FUTURES_EQUIVALENT.get(symbol)
+    if not equivalent or idea.get("asset_class") == "futures":
+        return []
+
+    bearish = idea.get("direction") in BEARISH
+    if bearish and idea.get("asset_class") == "crypto":
+        return [_check("instrument_choice", FAIL,
+                       f"bearish crypto expressed as spot `{idea.get('direction')}` — Robinhood "
+                       f"Crypto cannot short, so this cannot profit if correct. Use {equivalent}")]
+    if bearish:
+        return [_check("instrument_choice", WARN,
+                       f"short {symbol} needs margin; {equivalent} expresses the same view "
+                       "with defined sizing and near-24h trading")]
+    if idea.get("horizon") != "long_term":
+        return [_check("instrument_choice", WARN,
+                       f"{symbol} spot for a {idea.get('horizon')} view — {equivalent} is the "
+                       "preferred expression per config/universe.md")]
+    return [_check("instrument_choice", PASS,
+                   f"{symbol} spot is correct for a long-term hold; futures roll costs make "
+                   "multi-year contract exposure awkward")]
+
+
+def check_conviction_and_size(idea: dict) -> list[dict]:
+    """Conviction floor, and the sizing caps that make speculative ideas safe."""
+    out = []
+    conviction = idea.get("conviction")
+    if conviction is None or conviction < 2:
+        out.append(_check("conviction", FAIL,
+                          f"conviction {conviction} is below the floor of 2"))
+    else:
+        out.append(_check("conviction", PASS, f"conviction {conviction} clears the floor of 2"))
+
+    size = idea.get("position_size_pct")
+    cap = 5.0
+    reason = "the 5% per-idea ceiling"
+    mcap = idea.get("market_cap_usd")
+    if idea.get("asset_class") == "futures":
+        cap, reason = 2.0, "the 2% futures ceiling"
+    elif mcap is not None and mcap < 300e6:
+        cap, reason = 1.0, "the 1% ceiling for sub-$300M market caps"
+    elif conviction == 2:
+        cap, reason = 1.0, "the 1% lottery-ticket ceiling for conviction 2"
+
+    if size is None:
+        out.append(_check("position_size", WARN, "no position size given"))
+    elif size > cap:
+        out.append(_check("position_size", FAIL, f"{size}% exceeds {reason}"))
+    else:
+        out.append(_check("position_size", PASS, f"{size}% is within {reason}"))
+    return out
+
+
 def check_sources(idea: dict, session: Any) -> list[dict]:
     """Catch hallucinated URLs.
 
@@ -290,6 +362,8 @@ def validate_idea(idea: dict, prices: dict, atrs: dict, calendar: dict,
     checks += check_catalyst_date(idea, today)
     checks += check_earnings_date(idea, calendar)
     checks += check_target_feasibility(idea, atr)
+    checks += check_instrument_choice(idea)
+    checks += check_conviction_and_size(idea)
     checks += check_sources(idea, session)
 
     verdict = FAIL if any(c["status"] == FAIL for c in checks) else (

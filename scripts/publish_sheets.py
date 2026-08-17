@@ -125,7 +125,7 @@ def idea_row(idea: dict) -> list[Any]:
     ]
 
 
-def build_today_values(report: dict) -> tuple[list[list[Any]], int, dict[str, Any]]:
+def build_today_values(report: dict, sectors: dict[str, str] | None = None) -> tuple[list[list[Any]], int, dict[str, Any]]:
     """Returns (rows, header_row_1based, style_spec).
 
     style_spec carries the 0-based row index of every idea and section banner,
@@ -142,6 +142,12 @@ def build_today_values(report: dict) -> tuple[list[list[Any]], int, dict[str, An
         [ctx.get("summary", "")],
         [level_str] if level_str else [""],
     ]
+
+    try:
+        import exposure as _exposure
+        rows.extend([[""]] + _exposure.render_rows(_exposure.summarize(report, sectors or {})))
+    except Exception as exc:  # noqa: BLE001 - a nicety, never a blocker
+        print(f"  warning: exposure summary failed: {exc}", file=sys.stderr)
 
     cal = ctx.get("econ_calendar") or []
     if cal:
@@ -597,7 +603,14 @@ def main(argv: list[str] | None = None) -> int:
     report_date = date.fromisoformat(report["date"])
 
     ideas = sorted(report.get("recommendations", []), key=lambda i: i.get("rank", 99))
-    today_values, header_row, style_spec = build_today_values(report)
+    sectors = {}
+    if not args.dry_run:
+        try:
+            import exposure as _exposure
+            sectors = _exposure.fetch_sectors(ideas)
+        except Exception as exc:  # noqa: BLE001
+            print(f"  note: sector lookup unavailable: {exc}", file=sys.stderr)
+    today_values, header_row, style_spec = build_today_values(report, sectors)
 
     # Grade prior calls before appending today's, so a repeat idea does not
     # get graded against itself on the same run.
