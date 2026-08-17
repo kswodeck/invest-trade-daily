@@ -172,6 +172,49 @@ jobs:
             python scripts/ensure_report.py "$REPORT_DATE"
           fi
 
+      # Deterministic checks on every number the model wrote: recomputed
+      # reward-to-risk, direction consistency, entry against the live price,
+      # catalyst dates against the real earnings calendar, target reachability
+      # in ATR, and whether the cited URLs resolve. Annotates only here so the
+      # red team can see the flags before anything is cut.
+      - name: Phase 2b — validate the numbers
+        id: validate
+        if: always()
+        continue-on-error: true
+        run: |
+          python scripts/validate_report.py "reports/$REPORT_DATE/report.json"
+          COUNT=$(python -c "import json;print(len(json.load(open('reports/$REPORT_DATE/report.json'))['recommendations']))" 2>/dev/null || echo 0)
+          echo "count=$COUNT" >> "$GITHUB_OUTPUT"
+
+      # A separate pass that only attacks. Generating and critiquing in one
+      # phase means falsification is the first thing squeezed by the clock, and
+      # an author is a poor judge of their own idea.
+      - name: Phase 2c — red team
+        id: redteam
+        if: always() && steps.validate.outputs.count != '0'
+        continue-on-error: true
+        timeout-minutes: 12
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: "/daily-redteam"
+          claude_args: |
+            --model claude-opus-5
+            --allowedTools "Bash,Read,Write,Edit,Glob,Grep,WebSearch,WebFetch"
+
+      # The red team edits report.json by hand, so re-guarantee it parses before
+      # anything downstream depends on it.
+      - name: Re-guarantee the report after red team
+        if: always()
+        run: python scripts/ensure_report.py "$REPORT_DATE"
+
+      # Now enforce: anything still failing a hard check moves to the watchlist
+      # with its reason attached, rather than being published as a live idea.
+      - name: Phase 2d — enforce validation
+        if: always()
+        continue-on-error: true
+        run: python scripts/validate_report.py "reports/$REPORT_DATE/report.json" --enforce
+
       - name: Phase 3 — publish to Google Sheets
         if: always()
         env:
@@ -233,6 +276,7 @@ jobs:
         env:
           RESEARCH_OUTCOME: ${{ steps.research.outcome }}
           SYNTHESIS_OUTCOME: ${{ steps.synthesis.outcome }}
+          REDTEAM_OUTCOME: ${{ steps.redteam.outcome }}
         run: python scripts/step_summary.py "$REPORT_DATE" >> "$GITHUB_STEP_SUMMARY"
 
       # Deliberately last, and deliberately red. GitHub only emails the owner

@@ -125,8 +125,12 @@ def idea_row(idea: dict) -> list[Any]:
     ]
 
 
-def build_today_values(report: dict) -> tuple[list[list[Any]], int]:
-    """Returns (rows, header_row_index_1based)."""
+def build_today_values(report: dict) -> tuple[list[list[Any]], int, dict[str, Any]]:
+    """Returns (rows, header_row_1based, style_spec).
+
+    style_spec carries the 0-based row index of every idea and section banner,
+    since section headers make the layout non-contiguous.
+    """
     ctx = report.get("market_context", {})
     levels = ctx.get("levels") or {}
     level_str = "  ·  ".join(f"{k.upper()} {v}" for k, v in levels.items() if v is not None)
@@ -153,8 +157,24 @@ def build_today_values(report: dict) -> tuple[list[list[Any]], int]:
     header_row = len(rows) + 1
     rows.append(HEADERS)
 
+    # Grouped by what you have to do this morning, not by rank. The first
+    # question on opening this is "what do I act on now", and that is a
+    # different set from "what is ranked highest" — six of eight ideas on a
+    # typical day are waiting on a catalyst.
     ideas = sorted(report.get("recommendations", []), key=lambda i: i.get("rank", 99))
-    rows.extend(idea_row(i) for i in ideas)
+    act_now = [i for i in ideas if not (i.get("catalyst") or {}).get("wait")]
+    waiting = [i for i in ideas if (i.get("catalyst") or {}).get("wait")]
+
+    section_rows: list[int] = []          # 0-based row indices of section banners
+    idea_rows: list[tuple[int, dict]] = []  # (0-based row index, idea)
+    for label, group in (("▶ ACT TODAY", act_now), ("⏸ WAIT FOR THE CATALYST", waiting)):
+        if not group:
+            continue
+        section_rows.append(len(rows))
+        rows.append([f"{label}  ({len(group)})"])
+        for idea in group:
+            idea_rows.append((len(rows), idea))
+            rows.append(idea_row(idea))
 
     watch = report.get("watchlist") or []
     if watch:
@@ -169,7 +189,7 @@ def build_today_values(report: dict) -> tuple[list[list[Any]], int]:
     if notes:
         rows.extend([[""], [f"DATA QUALITY: {notes}"]])
     rows.extend([[""], [DISCLAIMER]])
-    return rows, header_row
+    return rows, header_row, {"ideas": idea_rows, "sections": section_rows}
 
 
 # --------------------------------------------------------------------------
@@ -441,7 +461,7 @@ def get_or_create(spreadsheet, title: str, rows: int, cols: int):
     return ws
 
 
-def style_grid(ws, header_row: int, n_cols: int, n_rows: int, ideas: list[dict]) -> None:
+def style_grid(ws, header_row: int, n_cols: int, n_rows: int, spec: dict[str, Any]) -> None:
     """Header banding, direction tinting, and column widths in one batch."""
     sid = ws.id
     reqs: list[dict] = [
@@ -491,9 +511,22 @@ def style_grid(ws, header_row: int, n_cols: int, n_rows: int, ideas: list[dict])
         }},
     ]
 
+    # Section banners: dark bar across the width so the eye finds them.
+    for row in spec.get("sections", []):
+        reqs.append({
+            "repeatCell": {
+                "range": {"sheetId": sid, "startRowIndex": row, "endRowIndex": row + 1,
+                          "startColumnIndex": 0, "endColumnIndex": n_cols},
+                "cell": {"userEnteredFormat": {
+                    "backgroundColor": HEADER_BG,
+                    "textFormat": {"bold": True, "foregroundColor": WHITE, "fontSize": 11},
+                }},
+                "fields": "userEnteredFormat(backgroundColor,textFormat)",
+            }
+        })
+
     # Tint the direction cell by side so the sheet is readable at a glance.
-    for offset, idea in enumerate(ideas):
-        row = header_row + offset
+    for row, idea in spec.get("ideas", []):
         d = idea.get("direction", "")
         bg = GREEN if d in BULLISH else RED if d in BEARISH else GREY
         reqs.append({
@@ -525,14 +558,15 @@ def style_grid(ws, header_row: int, n_cols: int, n_rows: int, ideas: list[dict])
     ws.spreadsheet.batch_update({"requests": reqs})
 
 
-def write_tab(spreadsheet, title: str, values: list[list[Any]], header_row: int, ideas: list[dict]):
+def write_tab(spreadsheet, title: str, values: list[list[Any]], header_row: int,
+              spec: dict[str, Any] | None = None):
     n_cols = max(len(r) for r in values)
     ws = with_retry(lambda: get_or_create(spreadsheet, title, len(values) + 10, n_cols + 2),
                     f"creating/clearing '{title}'")
     padded = [row + [""] * (n_cols - len(row)) for row in values]
     with_retry(lambda: ws.update(padded, "A1", value_input_option="RAW"), f"writing '{title}'")
     try:
-        style_grid(ws, header_row, n_cols, len(values), ideas)
+        style_grid(ws, header_row, n_cols, len(values), spec or {})
     except Exception as exc:  # noqa: BLE001 - content matters more than styling
         print(f"  warning: formatting failed on '{title}': {exc}", file=sys.stderr)
     return ws
@@ -563,7 +597,7 @@ def main(argv: list[str] | None = None) -> int:
     report_date = date.fromisoformat(report["date"])
 
     ideas = sorted(report.get("recommendations", []), key=lambda i: i.get("rank", 99))
-    today_values, header_row = build_today_values(report)
+    today_values, header_row, style_spec = build_today_values(report)
 
     # Grade prior calls before appending today's, so a repeat idea does not
     # get graded against itself on the same run.
@@ -608,13 +642,13 @@ def main(argv: list[str] | None = None) -> int:
     spreadsheet, client_email = open_spreadsheet()
     print(f"Opened spreadsheet as {client_email}")
 
-    write_tab(spreadsheet, "Today", today_values, header_row, ideas)
+    write_tab(spreadsheet, "Today", today_values, header_row, style_spec)
     print("  wrote 'Today'")
 
-    write_tab(spreadsheet, report["date"], today_values, header_row, ideas)
+    write_tab(spreadsheet, report["date"], today_values, header_row, style_spec)
     print(f"  wrote archive '{report['date']}'")
 
-    write_tab(spreadsheet, "Performance", perf_values, 4, [])
+    write_tab(spreadsheet, "Performance", perf_values, 4)
     print("  wrote 'Performance'")
 
     # Keep Today and Performance at the front, archives behind them.

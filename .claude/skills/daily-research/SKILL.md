@@ -139,7 +139,16 @@ python scripts/market_data.py history NVDA --days 120  # ATR, SMAs, range
 python scripts/market_data.py crypto bitcoin solana
 python scripts/market_data.py events "Fed"
 python scripts/market_data.py filings NVDA
+python scripts/market_data.py insiders NVDA         # open-market insider buying
 ```
+
+**Check insiders on every equity finalist.** Executives sell for a hundred
+reasons — taxes, diversification, a house — but they buy for one. A cluster of
+open-market purchases (`open_market_buys` with several `distinct_buyers`) is one
+of the few genuinely predictive public signals, and it is strongest exactly
+where this report is weakest: confirming that a de-rated name is cheap rather
+than broken. Cite it in the thesis when it is there. Its absence is not a
+negative, so do not treat it as one.
 
 When a source returns `ok: false`, note it and move on — record the gap so the
 synthesis phase can report it honestly in `data_quality_notes`. Use WebSearch

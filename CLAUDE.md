@@ -29,8 +29,17 @@ Google Sheet. Two Claude phases run in sequence inside one GitHub Actions job.
 | 0 Context | `scripts/build_context.py` | `reports/<date>/prior_context.md` | `state/`, past reports |
 | 1 Research | `/daily-research` | `candidates.jsonl` (the deliverable), `notes.md` (context) | web, `market_data.py`, prior context |
 | 2 Synthesis | `/daily-synthesis` | `reports/<date>/report.json` | the above |
-| 2b Guarantee | `scripts/ensure_report.py` | a stub `report.json` if needed | `report.json`, `notes.md` |
+| 2a Guarantee | `scripts/ensure_report.py` | a stub `report.json` if needed | `report.json`, `notes.md` |
+| 2b Validate | `scripts/validate_report.py` | a `validation` block per idea | live prices, ATR, earnings calendar |
+| 2c Red team | `/daily-redteam` | edits `report.json` | validation flags, sources |
+| 2d Enforce | `scripts/validate_report.py --enforce` | demotes failures to the watchlist | `report.json` |
 | 3 Publish | `scripts/publish_sheets.py` | Google Sheet, `state/open_positions.json` | `report.json` |
+
+Phases 2b–2d exist because the model is strong at research and undisciplined
+about its own arithmetic. A live report once shipped eight reward-to-risk ratios
+clustered at 2.04–2.33 against a 2.0 floor: targets nudged until they passed.
+**Every number in `validation` is recomputed from source — never trust a figure
+the model wrote about its own idea.**
 
 Phase 2 must produce a schema-valid `report.json` **even if `notes.md` is
 short, truncated, or nearly empty**. A thin report that says so honestly is the
