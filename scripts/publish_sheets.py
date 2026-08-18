@@ -239,9 +239,26 @@ def save_state(positions: list[dict]) -> None:
     STATE_PATH.write_text(json.dumps(positions, indent=2) + "\n")
 
 
-# Classes Yahoo can price, and therefore grade from daily bars. Event contracts
-# have no free quote source and stay ungraded.
+# Classes that can be priced, and therefore graded from daily bars. Event
+# contracts have no free quote source and stay ungraded.
 PRICEABLE = ("stock", "etf", "futures")
+
+# CoinGecko is addressed by slug, not ticker. Looking up "btc" returns nothing,
+# which is why every crypto position used to report a failed price fetch.
+CRYPTO_SLUGS = {
+    "BTC": "bitcoin", "XBT": "bitcoin", "ETH": "ethereum", "SOL": "solana",
+    "XRP": "ripple", "DOGE": "dogecoin", "ADA": "cardano", "AVAX": "avalanche-2",
+    "LINK": "chainlink", "DOT": "polkadot", "LTC": "litecoin", "BCH": "bitcoin-cash",
+    "UNI": "uniswap", "SHIB": "shiba-inu", "AAVE": "aave", "XLM": "stellar",
+    "ETC": "ethereum-classic", "USDC": "usd-coin", "MATIC": "matic-network",
+    "PEPE": "pepe", "TRX": "tron", "NEAR": "near", "XTZ": "tezos",
+}
+
+
+def coingecko_id(symbol: str) -> str:
+    """Ticker to CoinGecko slug, falling back to the lowercased ticker."""
+    clean = (symbol or "").upper().replace("-USD", "").strip()
+    return CRYPTO_SLUGS.get(clean, clean.lower())
 
 
 def _current_price(pos: dict) -> float | None:
@@ -251,7 +268,7 @@ def _current_price(pos: dict) -> float | None:
     cls, symbol = pos.get("asset_class"), pos.get("symbol", "")
     try:
         if cls == "crypto":
-            res = market_data.crypto([pos.get("coingecko_id") or symbol.lower()])
+            res = market_data.crypto([pos.get("coingecko_id") or coingecko_id(symbol)])
             if res.get("ok"):
                 prices = list(res.get("prices", {}).values())
                 return prices[0]["price"] if prices else None
@@ -341,12 +358,23 @@ def positions_from_report(report: dict) -> list[dict]:
             "target": (idea.get("exit") or {}).get("target"),
             "stop": idea.get("stop"),
             "conviction": idea.get("conviction"),
+            "position_size_pct": idea.get("position_size_pct"),
+            "asset_class_note": None,
+            # The report already priced this idea minutes ago. Carrying it over
+            # means a position is marked to market from the day it opens rather
+            # than showing an empty row until the next run.
+            "last_price": idea.get("last_price"),
+            "last_price_asof": idea.get("last_price_asof"),
+            "days_open": 0,
             "status": "open",
         })
     return out
 
 
 def _price_note(pos: dict) -> str:
+    if pos.get("last_price") is None and pos.get("days_open") in (0, None) \
+            and pos.get("status") == "open":
+        return "opened today; priced at the next run"
     if pos.get("asset_class") == "futures":
         # Yahoo quotes the continuous front-month, not the specific contract
         # month that was recommended, so the grade carries a basis error.
@@ -383,6 +411,109 @@ def perf_row(pos: dict) -> list[Any]:
         pos.get("closed", ""),
         pos.get("note") or _price_note(pos),
     ]
+
+
+def _pct(rows: list[dict]) -> list[float]:
+    return [r["pct_vs_entry"] for r in rows if r.get("pct_vs_entry") is not None]
+
+
+def _agg(rows: list[dict]) -> dict[str, Any]:
+    """Realized, unrealized and combined figures for a set of positions."""
+    closed = [r for r in rows if r.get("status") in ("target_hit", "stopped", "expired")]
+    open_ = [r for r in rows if r.get("status") == "open"]
+    wins = [r for r in closed if r.get("status") == "target_hit"]
+    cp, op = _pct(closed), _pct(open_)
+    return {
+        "n": len(rows), "closed": len(closed), "open": len(open_),
+        "wins": len(wins),
+        "hit_rate": len(wins) / len(closed) * 100 if closed else None,
+        "realized_sum": sum(cp) if cp else 0.0,
+        "realized_avg": sum(cp) / len(cp) if cp else None,
+        "unrealized_sum": sum(op) if op else 0.0,
+        "unrealized_avg": sum(op) / len(op) if op else None,
+        "priced_open": len(op),
+        "green": len([x for x in op if x > 0]),
+        "red": len([x for x in op if x < 0]),
+        "best": max(cp + op) if (cp + op) else None,
+        "worst": min(cp + op) if (cp + op) else None,
+        "avg_days": (sum(r.get("days_open") or 0 for r in rows) / len(rows)) if rows else None,
+    }
+
+
+def _num(value: float | None, suffix: str = "%", signed: bool = True) -> str:
+    if value is None:
+        return "—"
+    return f"{value:+.2f}{suffix}" if signed else f"{value:.2f}{suffix}"
+
+
+def cumulative_rows(positions: list[dict]) -> list[list[Any]]:
+    """Portfolio-level totals: is this process actually making money?
+
+    Every figure is equal-weighted — one unit per published idea — because the
+    report does not know what size anyone actually traded. It measures the
+    quality of the calls, not any account's P&L.
+    """
+    if not positions:
+        return []
+    a = _agg(positions)
+    combined = a["realized_sum"] + a["unrealized_sum"]
+    unpriced = a["open"] - a["priced_open"]
+
+    rows: list[list[Any]] = [
+        [""],
+        ["CUMULATIVE PERFORMANCE — equal weight, one unit per published idea"],
+        [f"Ideas tracked: {a['n']}   ·   closed: {a['closed']}   ·   open: {a['open']}"
+         + (f"   ·   {unpriced} open idea(s) not yet priced" if unpriced else "")],
+        [""],
+        ["", "Realized (closed)", "Unrealized (open)", "Combined"],
+        ["Total return, summed",
+         _num(a["realized_sum"]), _num(a["unrealized_sum"]), _num(combined)],
+        ["Average per idea",
+         _num(a["realized_avg"]), _num(a["unrealized_avg"]),
+         _num(combined / a["n"] if a["n"] else None)],
+        [""],
+        [f"Hit rate: {_num(a['hit_rate'], signed=False) if a['hit_rate'] is not None else '—'}"
+         f"  ({a['wins']} of {a['closed']} closed reached target)"],
+        [f"Open positions in profit: {a['green']} up / {a['red']} down"],
+        [f"Best idea so far: {_num(a['best'])}   ·   worst: {_num(a['worst'])}"],
+        [f"Average days held: {a['avg_days']:.1f}" if a["avg_days"] is not None else "Average days held: —"],
+        [""],
+    ]
+
+    if a["closed"] == 0:
+        rows.append([
+            "⚠ Nothing has closed yet, so hit rate and realized return are undefined. "
+            "The combined figure above is entirely mark-to-market on open ideas and will "
+            "move a lot. Treat it as a running tally, not a result."
+        ])
+        rows.append([""])
+
+    # Breakdowns — where the process is and is not working.
+    for label, key in (("horizon", "horizon"), ("asset class", "asset_class"),
+                       ("conviction", "conviction"), ("direction", "direction")):
+        buckets: dict[Any, list[dict]] = {}
+        for pos in positions:
+            buckets.setdefault(pos.get(key) if pos.get(key) is not None else "unknown", []).append(pos)
+        if len(buckets) < 2:
+            continue
+        rows.append([f"BY {label.upper()}"])
+        rows.append(["", "Ideas", "Closed", "Hit rate", "Avg realized", "Avg unrealized", "Combined"])
+        for name, group in sorted(buckets.items(), key=lambda kv: str(kv[0])):
+            g = _agg(group)
+            rows.append([
+                str(name), g["n"], g["closed"],
+                _num(g["hit_rate"], signed=False) if g["hit_rate"] is not None else "—",
+                _num(g["realized_avg"]), _num(g["unrealized_avg"]),
+                _num(g["realized_sum"] + g["unrealized_sum"]),
+            ])
+        rows.append([""])
+
+    rows.append([
+        "Figures are equal-weighted percentage moves against each idea's published entry, "
+        "graded from daily bars. They measure the calls, not any account — no sizing, "
+        "no slippage, no fills, no fees."
+    ])
+    return rows
 
 
 def summarize(positions: list[dict]) -> list[Any]:
@@ -591,12 +722,13 @@ def style_grid(ws, header_row: int, n_cols: int, n_rows: int, spec: dict[str, An
 
 
 def write_tab(spreadsheet, title: str, values: list[list[Any]], header_row: int,
-              spec: dict[str, Any] | None = None):
+              spec: dict[str, Any] | None = None, value_input_option: str = "RAW"):
     n_cols = max(len(r) for r in values)
     ws = with_retry(lambda: get_or_create(spreadsheet, title, len(values) + 10, n_cols + 2),
                     f"creating/clearing '{title}'")
     padded = [row + [""] * (n_cols - len(row)) for row in values]
-    with_retry(lambda: ws.update(padded, "A1", value_input_option="RAW"), f"writing '{title}'")
+    with_retry(lambda: ws.update(padded, "A1", value_input_option=value_input_option),
+               f"writing '{title}'")
     try:
         style_grid(ws, header_row, n_cols, len(values), spec or {})
     except Exception as exc:  # noqa: BLE001 - content matters more than styling
@@ -654,9 +786,9 @@ def main(argv: list[str] | None = None) -> int:
     perf_values = [
         ["PERFORMANCE TRACKER"],
         summarize(positions),
-        [""],
-        PERF_HEADERS,
     ]
+    perf_values.extend(cumulative_rows(positions))
+    perf_values.extend([[""], ["POSITION DETAIL"], PERF_HEADERS])
     perf_values.extend(
         perf_row(p) for p in sorted(positions, key=lambda p: p.get("opened", ""), reverse=True)
     )
@@ -690,9 +822,21 @@ def main(argv: list[str] | None = None) -> int:
     write_tab(spreadsheet, "Performance", perf_values, 4)
     print("  wrote 'Performance'")
 
+    # Conviction 4+ ideas with tap-to-open Robinhood links. USER_ENTERED so the
+    # HYPERLINK formulas render as links rather than literal text.
+    try:
+        import watchlist as _watchlist
+        entries = _watchlist.collect(report_date)
+        write_tab(spreadsheet, "Watchlist",
+                  _watchlist.render_rows(entries, report_date), 5,
+                  value_input_option="USER_ENTERED")
+        print(f"  wrote 'Watchlist' ({len(entries)} conviction 4+ instruments)")
+    except Exception as exc:  # noqa: BLE001 - never block the main publish
+        print(f"  warning: watchlist tab failed: {exc}", file=sys.stderr)
+
     # Keep Today and Performance at the front, archives behind them.
     try:
-        order = ["Today", "Performance"]
+        order = ["Today", "Watchlist", "Performance"]
         spreadsheet.reorder_worksheets(
             [spreadsheet.worksheet(t) for t in order]
             + [ws for ws in spreadsheet.worksheets() if ws.title not in order]
