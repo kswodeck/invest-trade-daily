@@ -46,9 +46,25 @@ to a Google Sheet.
    │      • "<date>" tab     — dated archive of the same
    │      • "Performance"    — running scorecard of every past call
    │
-   └─ Phase 4 — COMMIT
-        reports/<date>/ lands in git as the durable audit trail.
+   ├─ Phase 4 — COMMIT
+   │    reports/<date>/ lands in git as the durable audit trail.
+   │
+   └─ 09:35 & 12:30 ET — REFRESH PRICES  (separate workflow)
+        Re-quotes every idea and updates the Sheet's Last price,
+        As-of stamp and Dist-to-Entry. Prices only — the morning's
+        entries, targets, stops and theses are never touched.
 ```
+
+### Why prices are refreshed separately
+
+The report is researched at 6am ET, three and a half hours before the US open.
+**No data provider changes that** — at 6am the freshest honest equity price is
+the previous close, and a report generated on a Sunday will legitimately carry
+Friday's 4pm prices. Every quote therefore records its `as of` timestamp and the
+session it was taken in, so a *closed market* is never mistaken for *stale data*.
+
+The refresh runs are what make the sheet current at the moment you would place
+an order.
 
 The 60-minute cap is enforced by GitHub at the step level, not by asking Claude
 to watch a clock. When the research step is killed, `continue-on-error` lets the
@@ -144,6 +160,7 @@ dry_run: true             # writes reports/ but not the Sheet
 ```
 .github/workflows/
   daily-report.yml       the scheduled pipeline
+  refresh-prices.yml     re-quotes today's ideas after the open and at midday
   weekly-digest.yml      Sunday scorecard: hit rate by conviction and horizon
   keepalive.yml          stops GitHub disabling the cron after 60 idle days
   data-sources-check.yml manual probe of every data source and the Sheet
@@ -159,6 +176,7 @@ scripts/
   add_candidate.py       validates and captures a candidate during research
   validate_report.py     recomputes and checks every number before publishing
   exposure.py            portfolio-level net/gross and concentration warnings
+  refresh_prices.py      post-open re-quote and distance-to-entry
   weekly_digest.py       weekly scorecard and conviction calibration
   build_context.py       prior picks and outcomes, so research has memory
   ensure_report.py       guarantees a publishable report.json exists

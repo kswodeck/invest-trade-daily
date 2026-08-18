@@ -35,10 +35,15 @@ sys.path.insert(0, str(REPO / "scripts"))
 
 HEADERS = [
     "#", "Instrument", "Symbol", "Class", "Venue", "Direction", "Horizon",
-    "Conv", "Last", "Entry", "Entry Zone", "Target", "Target 2", "Stop",
-    "R:R", "Size %", "Catalyst", "When (ET)", "Action / Timing", "Thesis",
-    "Key Risk", "Sources",
+    "Conv", "Last", "As of", "Entry", "Dist to Entry", "Entry Zone", "Target",
+    "Target 2", "Stop", "R:R", "Size %", "Spread", "Catalyst", "When (ET)",
+    "Action / Timing", "Thesis", "Key Risk", "Sources",
 ]
+
+# Column indices that shift when HEADERS changes. Kept named so the styling
+# below does not silently point at the wrong column after an edit.
+COL_DIRECTION, COL_CONVICTION = 5, 7
+COL_PROSE_START, COL_PROSE_END = 19, 25
 
 PERF_HEADERS = [
     "Opened", "Instrument", "Symbol", "Venue", "Direction", "Horizon",
@@ -93,6 +98,23 @@ def direction_label(direction: str) -> str:
     }.get(direction, direction.upper())
 
 
+def _short_asof(raw: Any) -> str:
+    """`2026-08-17T09:41:00-04:00` -> `08-17 09:41`. Empty when unknown."""
+    if not raw:
+        return ""
+    text = str(raw)
+    try:
+        stamp = datetime.fromisoformat(text.replace("Z", "+00:00"))
+        return stamp.strftime("%m-%d %H:%M")
+    except ValueError:
+        return text[:16]
+
+
+def _spread_label(idea: dict) -> str:
+    spread = (idea.get("validation") or {}).get("spread_pct")
+    return f"{spread:.2f}%" if isinstance(spread, (int, float)) else ""
+
+
 def idea_row(idea: dict) -> list[Any]:
     unit = idea.get("unit", "usd")
     entry, exit_, cat = idea.get("entry", {}), idea.get("exit", {}), idea.get("catalyst", {})
@@ -109,13 +131,16 @@ def idea_row(idea: dict) -> list[Any]:
         idea.get("horizon", ""),
         idea.get("conviction", ""),
         fmt_price(idea.get("last_price"), unit),
+        _short_asof(idea.get("last_price_asof")),
         fmt_price(entry.get("ideal"), unit),
+        f"{idea['distance_to_entry_pct']:+.2f}%" if idea.get("distance_to_entry_pct") is not None else "",
         fmt_zone(entry, unit),
         fmt_price(exit_.get("target"), unit),
         fmt_price(exit_.get("target_2"), unit),
         fmt_price(idea.get("stop"), unit),
         f"{idea['risk_reward']:.1f}:1" if idea.get("risk_reward") else "",
         f"{idea['position_size_pct']:g}%" if idea.get("position_size_pct") else "",
+        _spread_label(idea),
         cat.get("event", ""),
         cat.get("datetime_et") or "",
         action,
@@ -187,8 +212,9 @@ def build_today_values(report: dict, sectors: dict[str, str] | None = None) -> t
         rows.extend([[""], ["WATCHLIST — not yet actionable"]])
         for w in watch:
             rows.append([
-                "", w.get("instrument", ""), w.get("symbol", ""), "", "", "", "", "", "", "", "",
-                "", "", "", "", "", w.get("trigger", ""), "", "", w.get("note", ""), "", "",
+                "", w.get("instrument", ""), w.get("symbol", ""), "", "", "", "", "", "", "",
+                "", "", "", "", "", "", "", "", "", w.get("trigger", ""), "", "",
+                w.get("note", ""), "", "",
             ])
 
     notes = report.get("data_quality_notes")
@@ -500,7 +526,7 @@ def style_grid(ws, header_row: int, n_cols: int, n_rows: int, spec: dict[str, An
             "fields": "gridProperties.frozenRowCount",
         }},
         {"updateDimensionProperties": {  # wrap the prose columns
-            "range": {"sheetId": sid, "dimension": "COLUMNS", "startIndex": 18, "endIndex": 22},
+            "range": {"sheetId": sid, "dimension": "COLUMNS", "startIndex": COL_PROSE_START + 2, "endIndex": COL_PROSE_END},
             "properties": {"pixelSize": 320},
             "fields": "pixelSize",
         }},
@@ -511,7 +537,7 @@ def style_grid(ws, header_row: int, n_cols: int, n_rows: int, spec: dict[str, An
         }},
         {"repeatCell": {
             "range": {"sheetId": sid, "startRowIndex": header_row, "endRowIndex": n_rows,
-                      "startColumnIndex": 16, "endColumnIndex": 22},
+                      "startColumnIndex": COL_PROSE_START, "endColumnIndex": COL_PROSE_END},
             "cell": {"userEnteredFormat": {"wrapStrategy": "WRAP", "verticalAlignment": "TOP"}},
             "fields": "userEnteredFormat(wrapStrategy,verticalAlignment)",
         }},
@@ -538,7 +564,7 @@ def style_grid(ws, header_row: int, n_cols: int, n_rows: int, spec: dict[str, An
         reqs.append({
             "repeatCell": {
                 "range": {"sheetId": sid, "startRowIndex": row, "endRowIndex": row + 1,
-                          "startColumnIndex": 5, "endColumnIndex": 6},
+                          "startColumnIndex": COL_DIRECTION, "endColumnIndex": COL_DIRECTION + 1},
                 "cell": {"userEnteredFormat": {
                     "backgroundColor": bg,
                     "textFormat": {"bold": True},
@@ -551,7 +577,7 @@ def style_grid(ws, header_row: int, n_cols: int, n_rows: int, spec: dict[str, An
         reqs.append({
             "repeatCell": {
                 "range": {"sheetId": sid, "startRowIndex": row, "endRowIndex": row + 1,
-                          "startColumnIndex": 7, "endColumnIndex": 8},
+                          "startColumnIndex": COL_CONVICTION, "endColumnIndex": COL_CONVICTION + 1},
                 "cell": {"userEnteredFormat": {
                     "backgroundColor": GREEN if conv >= 5 else AMBER if conv >= 4 else GREY,
                     "horizontalAlignment": "CENTER",

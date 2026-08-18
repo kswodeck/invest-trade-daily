@@ -1,0 +1,111 @@
+name: Refresh Prices
+
+# The report is researched at 6am ET, three and a half hours before the US open.
+# No provider fixes that — at 6am the freshest honest equity price is the prior
+# close. These runs re-quote after the open instead, so the Sheet shows what
+# things cost when you would actually place an order.
+#
+# Prices only. Entries, targets, stops and theses are the morning's analysis and
+# are never touched here.
+
+on:
+  schedule:
+    - cron: "35 13 * * 1-5"   # 09:35 EDT — just after the open
+    - cron: "35 14 * * 1-5"   # 09:35 EST
+    - cron: "30 16 * * 1-5"   # 12:30 EDT — midday
+    - cron: "30 17 * * 1-5"   # 12:30 EST
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Refresh even if it ran recently"
+        type: boolean
+        default: false
+
+concurrency:
+  group: refresh-prices
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
+      ALPHAVANTAGE_API_KEY: ${{ secrets.ALPHAVANTAGE_API_KEY }}
+      TWELVEDATA_API_KEY: ${{ secrets.TWELVEDATA_API_KEY }}
+      FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+      SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
+
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+
+      # Each slot is declared twice for DST, so one of the pair is always the
+      # wrong hour. The window is wide because GitHub's scheduler runs late; the
+      # 90-minute guard inside refresh_prices.py stops a double refresh.
+      - id: gate
+        name: Is this a refresh slot?
+        run: |
+          set -euo pipefail
+          ET_HOUR=$(TZ=America/New_York date +%-H)
+          ET_DATE=$(TZ=America/New_York date +%F)
+          echo "date=$ET_DATE" >> "$GITHUB_OUTPUT"
+          echo "Now $(TZ=America/New_York date) (hour $ET_HOUR)"
+          if [ "${{ github.event_name }}" != "schedule" ]; then
+            echo "proceed=true" >> "$GITHUB_OUTPUT"
+          elif [ "$ET_HOUR" -ge 9 ] && [ "$ET_HOUR" -le 13 ]; then
+            echo "proceed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Not a refresh window — skipping."
+            echo "proceed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/setup-python@v5
+        if: steps.gate.outputs.proceed == 'true'
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - if: steps.gate.outputs.proceed == 'true'
+        run: pip install -r requirements.txt
+
+      - name: Re-quote today's ideas
+        if: steps.gate.outputs.proceed == 'true'
+        env:
+          GCP_SERVICE_ACCOUNT_JSON: ${{ secrets.GCP_SERVICE_ACCOUNT_JSON }}
+          GOOGLE_SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}
+          REPORT_DATE: ${{ steps.gate.outputs.date }}
+        run: |
+          FORCE=""
+          if [ "${{ github.event.inputs.force }}" = "true" ]; then FORCE="--force"; fi
+          python scripts/refresh_prices.py "reports/$REPORT_DATE/report.json" $FORCE \
+            | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Commit refreshed prices
+        if: steps.gate.outputs.proceed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPORT_DATE: ${{ steps.gate.outputs.date }}
+        run: |
+          git config user.name  "invest-trade-daily[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "reports/$REPORT_DATE" || true
+          if git diff --staged --quiet; then
+            echo "Nothing changed."
+            exit 0
+          fi
+          git commit -m "prices: refresh $REPORT_DATE"
+          git config --local --unset-all http.https://github.com/.extraheader || true
+          git remote set-url origin \
+            "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          for attempt in 1 2 3; do
+            git push origin HEAD:${{ github.ref_name }} && exit 0
+            sleep $((2 ** attempt))
+            git pull --rebase origin ${{ github.ref_name }} || true
+          done
+          echo "::error::Could not push refreshed prices."
+          exit 1

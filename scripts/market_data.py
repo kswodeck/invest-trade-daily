@@ -13,6 +13,7 @@ each result before trusting the payload.
     python scripts/market_data.py filings NVDA
     python scripts/market_data.py earnings --days 14
     python scripts/market_data.py insiders NVDA
+    python scripts/market_data.py depth NVDA          # bid/ask spread
 
 Optional environment variables unlock better sources; all are safe to omit:
 FINNHUB_API_KEY, TWELVEDATA_API_KEY, ALPHAVANTAGE_API_KEY, FRED_API_KEY, SEC_USER_AGENT.
@@ -27,13 +28,20 @@ import json
 import os
 import re
 import sys
-from datetime import date, datetime, timedelta, timezone
+from datetime import date, datetime, time as dtime, timedelta, timezone
 from typing import Any, Iterable
+from zoneinfo import ZoneInfo
 
 import requests
 
 TIMEOUT = 20
-ET = timezone(timedelta(hours=-5))  # display only; exact offset resolved by caller
+ET = ZoneInfo("America/New_York")
+
+# US equity session boundaries, ET. Outside regular hours the freshest honest
+# equity price is the last close, and that is not a data-quality problem — it is
+# what the market is doing. Callers use this to tell "stale" from "closed".
+PRE_OPEN, REGULAR_OPEN = dtime(4, 0), dtime(9, 30)
+REGULAR_CLOSE, POST_CLOSE = dtime(16, 0), dtime(20, 0)
 
 FINNHUB_KEY = os.environ.get("FINNHUB_API_KEY", "").strip()
 ALPHAVANTAGE_KEY = os.environ.get("ALPHAVANTAGE_API_KEY", "").strip()
@@ -57,6 +65,34 @@ def _get(url: str, *, params: dict | None = None, headers: dict | None = None) -
 
 def _fail(source: str, exc: Exception) -> dict[str, Any]:
     return {"ok": False, "source": source, "error": f"{type(exc).__name__}: {exc}"}
+
+
+def market_session(now: datetime | None = None) -> str:
+    """Which US equity session we are in: pre, regular, post, or closed."""
+    now = (now or datetime.now(ET)).astimezone(ET)
+    if now.weekday() >= 5:
+        return "closed"
+    t = now.time()
+    if REGULAR_OPEN <= t < REGULAR_CLOSE:
+        return "regular"
+    if PRE_OPEN <= t < REGULAR_OPEN:
+        return "pre"
+    if REGULAR_CLOSE <= t < POST_CLOSE:
+        return "post"
+    return "closed"
+
+
+def age_minutes(asof: str | None, now: datetime | None = None) -> float | None:
+    """Minutes since a quote timestamp. None when it cannot be parsed."""
+    if not asof:
+        return None
+    try:
+        stamp = datetime.fromisoformat(str(asof).replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    if stamp.tzinfo is None:
+        stamp = stamp.replace(tzinfo=ET)
+    return round(((now or datetime.now(ET)) - stamp).total_seconds() / 60, 1)
 
 
 def _stooq_symbol(symbol: str) -> str:
@@ -142,7 +178,7 @@ def _yahoo_chart(symbol: str, rng: str, interval: str) -> dict[str, Any]:
         try:
             payload = _get(
                 f"https://{host}/v8/finance/chart/{_yahoo_symbol(symbol)}",
-                params={"range": rng, "interval": interval, "includePrePost": "false"},
+                params={"range": rng, "interval": interval, "includePrePost": "true"},
                 headers=YAHOO_HEADERS,
             ).json()
         except Exception as exc:  # noqa: BLE001
@@ -284,16 +320,71 @@ def quote_alphavantage(symbol: str) -> dict[str, Any]:
         return _fail("alphavantage", exc)
 
 
+def quote_depth(symbol: str) -> dict[str, Any]:
+    """Bid, ask, and spread from Nasdaq.
+
+    The spread matters more than the last price on thin names: a 3% spread eats
+    the edge before the thesis has a chance to play out. Nasdaq is used because
+    it already serves GitHub runners reliably; the free quote APIs that give a
+    last price mostly do not publish depth.
+
+    Returns bid/ask as None outside regular hours, which is normal, not a fault.
+    """
+    try:
+        payload = _get(
+            f"https://api.nasdaq.com/api/quote/{symbol.strip().upper()}/info",
+            params={"assetclass": "stocks"},
+            headers=YAHOO_HEADERS,
+        ).json()
+        data = (payload or {}).get("data") or {}
+        primary = data.get("primaryData") or {}
+
+        def money(key: str) -> float | None:
+            raw = primary.get(key)
+            if not raw or str(raw).strip().upper() in ("N/A", "", "--"):
+                return None
+            return _num(str(raw).replace("$", "").replace(",", "").strip())
+
+        last = money("lastSalePrice")
+        bid, ask = money("bidPrice"), money("askPrice")
+        spread_pct = None
+        if bid and ask and ask > bid:
+            mid = (bid + ask) / 2
+            spread_pct = round((ask - bid) / mid * 100, 3) if mid else None
+        return {
+            "ok": last is not None or bid is not None,
+            "source": "nasdaq",
+            "symbol": symbol.upper(),
+            "price": last,
+            "bid": bid,
+            "ask": ask,
+            "spread_pct": spread_pct,
+            "is_real_time": bool(primary.get("isRealTime")),
+            "asof": primary.get("lastTradeTimestamp"),
+            "session": market_session(),
+        }
+    except Exception as exc:  # noqa: BLE001
+        return _fail("nasdaq", exc)
+
+
 def quote(symbol: str) -> dict[str, Any]:
-    """First source that returns a usable price wins."""
+    """First source that returns a usable price wins.
+
+    Every result carries `session` and `age_minutes` so callers can tell a stale
+    quote from a market that is simply shut. At 6am ET on a weekday the freshest
+    honest equity price is yesterday's close, and that is not a failure.
+    """
     attempts = []
     for fn in (quote_finnhub, quote_yahoo, quote_stooq, quote_alphavantage):
         result = fn(symbol)
         if result.get("ok"):
             result["fallbacks_tried"] = [a["source"] for a in attempts]
+            result["session"] = market_session()
+            result["age_minutes"] = age_minutes(result.get("asof"))
             return result
         attempts.append(result)
-    return {"ok": False, "symbol": symbol.upper(), "attempts": attempts}
+    return {"ok": False, "symbol": symbol.upper(), "attempts": attempts,
+            "session": market_session()}
 
 
 def crypto(coin_ids: Iterable[str]) -> dict[str, Any]:
@@ -916,6 +1007,9 @@ def main(argv: list[str] | None = None) -> int:
     p = sub.add_parser("profile", help="sector, industry, and market cap")
     p.add_argument("symbol")
 
+    p = sub.add_parser("depth", help="bid, ask, and spread for an equity")
+    p.add_argument("symbol")
+
     args = parser.parse_args(argv)
 
     if args.cmd == "quote":
@@ -936,6 +1030,8 @@ def main(argv: list[str] | None = None) -> int:
         result = insiders(args.symbol, args.months)
     elif args.cmd == "profile":
         result = profile(args.symbol)
+    elif args.cmd == "depth":
+        result = quote_depth(args.symbol)
     else:  # pragma: no cover - argparse enforces the choices
         parser.error(f"unknown command {args.cmd}")
 
