@@ -275,6 +275,70 @@ def check_conviction_and_size(idea: dict) -> list[dict]:
     return out
 
 
+# During regular hours a quote older than this is genuinely stale. Outside
+# them, the last close is the freshest honest price and no warning is due.
+STALE_MINUTES = 30
+
+# Spread as a share of mid. Above the warn level the entry limit needs to
+# account for it; above the fail level the round trip eats a swing target.
+SPREAD_WARN_PCT, SPREAD_FAIL_PCT = 1.0, 4.0
+
+
+def check_price_freshness(idea: dict, quote: dict | None) -> list[dict]:
+    """Distinguish a stale quote from a closed market — only one is a problem."""
+    if idea.get("asset_class") == "event":
+        return []
+    if not quote or not quote.get("ok"):
+        return [_check("price_freshness", WARN, "no quote fetched, so freshness is unknown")]
+
+    session = quote.get("session", "unknown")
+    age = quote.get("age_minutes")
+    asof = quote.get("asof") or "unknown time"
+
+    # Crypto trades continuously, so staleness always means a data problem.
+    continuous = idea.get("asset_class") in ("crypto", "futures")
+    if age is None:
+        return [_check("price_freshness", WARN, f"quote carries no timestamp (source {quote.get('source')})")]
+    if continuous:
+        if age > 60:
+            return [_check("price_freshness", WARN,
+                           f"{idea.get('asset_class')} price is {age:.0f} min old ({asof}) — "
+                           "this market trades continuously, so that is a data gap")]
+        return [_check("price_freshness", PASS, f"price {age:.0f} min old, market trades continuously")]
+
+    if session == "regular" and age > STALE_MINUTES:
+        return [_check("price_freshness", WARN,
+                       f"market is open but the quote is {age:.0f} min old ({asof})")]
+    if session != "regular":
+        return [_check("price_freshness", PASS,
+                       f"market is {session}; last price {asof} is the freshest available")]
+    return [_check("price_freshness", PASS, f"quote is {age:.0f} min old during regular hours")]
+
+
+def check_spread(idea: dict, depth: dict | None) -> list[dict]:
+    """A wide spread can eat the whole edge, especially on the small-cap lane."""
+    if idea.get("asset_class") not in ("stock", "etf"):
+        return []
+    if not depth or depth.get("spread_pct") is None:
+        return [_check("spread", WARN, "no bid/ask available (normal outside regular hours)")]
+
+    spread = depth["spread_pct"]
+    target = (idea.get("exit") or {}).get("target")
+    entry = (idea.get("entry") or {}).get("ideal")
+    context = ""
+    if entry and target:
+        move_pct = abs(target - entry) / entry * 100
+        if move_pct:
+            context = f"; the round trip costs {spread / move_pct * 100:.0f}% of the target move"
+
+    detail = f"bid/ask spread {spread:.2f}%{context}"
+    if spread >= SPREAD_FAIL_PCT:
+        return [_check("spread", FAIL, detail + " — too wide to trade this thesis")]
+    if spread >= SPREAD_WARN_PCT:
+        return [_check("spread", WARN, detail + " — set the entry as a limit, never market")]
+    return [_check("spread", PASS, detail)]
+
+
 def check_sources(idea: dict, session: Any) -> list[dict]:
     """Catch hallucinated URLs.
 
@@ -308,12 +372,14 @@ def check_sources(idea: dict, session: Any) -> list[dict]:
 # orchestration
 # --------------------------------------------------------------------------
 
-def fetch_context(ideas: list[dict]) -> tuple[dict[str, float], dict[str, float], dict[str, str]]:
+def fetch_context(ideas: list[dict]) -> tuple[dict, dict, dict, dict, dict]:
     """Live prices, ATRs, and the earnings calendar — fetched once, shared."""
     import market_data as md
 
     prices: dict[str, float] = {}
     atrs: dict[str, float] = {}
+    quotes: dict[str, dict] = {}
+    depths: dict[str, dict] = {}
     for idea in ideas:
         symbol = idea.get("symbol", "")
         cls = idea.get("asset_class")
@@ -327,8 +393,11 @@ def fetch_context(ideas: list[dict]) -> tuple[dict[str, float], dict[str, float]
                     prices[symbol] = vals[0]["price"]
                 continue
             q = md.quote(symbol)
+            quotes[symbol] = q
             if q.get("ok") and q.get("price"):
                 prices[symbol] = q["price"]
+            if cls in ("stock", "etf"):
+                depths[symbol] = md.quote_depth(symbol)
             h = md.history(symbol, 90)
             if h.get("ok") and h.get("atr14"):
                 atrs[symbol] = h["atr14"]
@@ -346,11 +415,12 @@ def fetch_context(ideas: list[dict]) -> tuple[dict[str, float], dict[str, float]
     except Exception as exc:  # noqa: BLE001
         print(f"  note: earnings calendar unavailable: {exc}", file=sys.stderr)
 
-    return prices, atrs, calendar
+    return prices, atrs, calendar, quotes, depths
 
 
 def validate_idea(idea: dict, prices: dict, atrs: dict, calendar: dict,
-                  today: date, session: Any) -> dict:
+                  today: date, session: Any,
+                  quotes: dict | None = None, depths: dict | None = None) -> dict:
     symbol = idea.get("symbol", "")
     live, atr = prices.get(symbol), atrs.get(symbol)
 
@@ -362,6 +432,8 @@ def validate_idea(idea: dict, prices: dict, atrs: dict, calendar: dict,
     checks += check_catalyst_date(idea, today)
     checks += check_earnings_date(idea, calendar)
     checks += check_target_feasibility(idea, atr)
+    checks += check_price_freshness(idea, (quotes or {}).get(symbol))
+    checks += check_spread(idea, (depths or {}).get(symbol))
     checks += check_instrument_choice(idea)
     checks += check_conviction_and_size(idea)
     checks += check_sources(idea, session)
@@ -374,6 +446,12 @@ def validate_idea(idea: dict, prices: dict, atrs: dict, calendar: dict,
         "computed_risk_reward": computed_rr,
         "claimed_risk_reward": idea.get("risk_reward"),
         "live_price": live,
+        "live_price_asof": ((quotes or {}).get(symbol) or {}).get("asof"),
+        "market_session": ((quotes or {}).get(symbol) or {}).get("session"),
+        "price_age_minutes": ((quotes or {}).get(symbol) or {}).get("age_minutes"),
+        "bid": ((depths or {}).get(symbol) or {}).get("bid"),
+        "ask": ((depths or {}).get(symbol) or {}).get("ask"),
+        "spread_pct": ((depths or {}).get(symbol) or {}).get("spread_pct"),
         "atr14": atr,
         "checked_at_et": datetime.now(ET).isoformat(timespec="seconds"),
         "checks": checks,
@@ -399,11 +477,11 @@ def main(argv: list[str] | None = None) -> int:
 
     today = date.fromisoformat(report["date"])
     print(f"Validating {len(ideas)} recommendations for {report['date']}...")
-    prices, atrs, calendar = fetch_context(ideas)
+    prices, atrs, calendar, quotes, depths = fetch_context(ideas)
     print(f"  live prices: {len(prices)}  ATRs: {len(atrs)}  earnings calendar: {len(calendar)} symbols")
 
     for idea in ideas:
-        idea["validation"] = validate_idea(idea, prices, atrs, calendar, today, session)
+        idea["validation"] = validate_idea(idea, prices, atrs, calendar, today, session, quotes, depths)
 
     failed = [i for i in ideas if i["validation"]["verdict"] == FAIL]
     warned = [i for i in ideas if i["validation"]["verdict"] == WARN]

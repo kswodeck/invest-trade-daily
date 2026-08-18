@@ -34,6 +34,12 @@ Google Sheet. Two Claude phases run in sequence inside one GitHub Actions job.
 | 2c Red team | `/daily-redteam` | edits `report.json` | validation flags, sources |
 | 2d Enforce | `scripts/validate_report.py --enforce` | demotes failures to the watchlist | `report.json` |
 | 3 Publish | `scripts/publish_sheets.py` | Google Sheet, `state/open_positions.json` | `report.json` |
+| 4 Refresh | `scripts/refresh_prices.py` | fresh `last_price`, `distance_to_entry_pct` | live quotes |
+
+Prices carry `as of` and the market session they were taken in. At 6am ET the
+freshest honest equity price is the previous close — that is a closed market,
+not stale data, and the two must never be conflated. `market_data.market_session()`
+and `age_minutes()` are how you tell them apart.
 
 Phases 2b–2d exist because the model is strong at research and undisciplined
 about its own arithmetic. A live report once shipped eight reward-to-risk ratios

@@ -153,6 +153,14 @@
       "type": "object",
       "additionalProperties": true,
       "description": "Written by validate_report.py: counts of passed, warned, and demoted ideas."
+    },
+    "last_refreshed_et": {
+      "type": "string",
+      "description": "When refresh_prices.py last re-quoted this report."
+    },
+    "last_refresh_session": {
+      "type": "string",
+      "description": "US equity session at the time of the last refresh."
     }
   },
   "definitions": {
@@ -428,6 +436,19 @@
             "high_conviction"
           ],
           "description": "Drives position sizing; see config/strategy.md."
+        },
+        "price_source": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "distance_to_entry_pct": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "How far the live price sits from the ideal entry, as of the last refresh."
         }
       }
     }
