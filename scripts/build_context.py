@@ -23,6 +23,7 @@ REPO = Path(__file__).resolve().parent.parent
 STATE_PATH = REPO / "state" / "open_positions.json"
 
 CLOSED = ("target_hit", "stopped", "expired")
+UNFILLED = ("pending", "not_filled")
 
 
 def load_positions() -> list[dict]:
@@ -47,6 +48,7 @@ def load_recent_reports(today: date, days: int) -> list[dict]:
 
 
 def rate(subset: list[dict]) -> str:
+    subset = [p for p in subset if p.get("status") not in UNFILLED]
     closed = [p for p in subset if p.get("status") in CLOSED]
     if not closed:
         return "no closed trades yet"
@@ -67,6 +69,7 @@ def build(today: date, days: int) -> str:
     positions = load_positions()
     reports = load_recent_reports(today, days)
     open_pos = [p for p in positions if p.get("status") == "open"]
+    pending = [p for p in positions if p.get("status") == "pending"]
     closed = [p for p in positions if p.get("status") in CLOSED]
 
     lines = [
@@ -103,6 +106,16 @@ def build(today: date, days: int) -> str:
         lines.append("")
     else:
         lines += ["_None open._", ""]
+
+    if pending:
+        lines += [
+            f"## Awaiting entry ({len(pending)})", "",
+            "These were published but the market never reached the entry, so they are "
+            "not positions. Re-pitching one is fine — say the level is unchanged.", "",
+        ]
+        lines += [f"- `{p.get('symbol')}` {(p.get('direction') or '').upper()} "
+                  f"@ {p.get('entry')} (published {p.get('opened')})" for p in pending]
+        lines.append("")
 
     # ---- track record ---------------------------------------------------
     lines += [f"## Track record ({len(closed)} closed of {len(positions)} tracked)", ""]
