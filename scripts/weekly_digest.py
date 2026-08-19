@@ -28,7 +28,10 @@ sys.path.insert(0, str(REPO / "scripts"))
 STATE_PATH = REPO / "state" / "open_positions.json"
 OUT_DIR = REPO / "reports" / "weekly"
 
+# Terminal states that produced a P&L. `pending` and `not_filled` never became
+# positions, so they are excluded from every rate and average below.
 CLOSED = ("target_hit", "stopped", "expired")
+UNFILLED = ("pending", "not_filled")
 MIN_SAMPLE = 15  # below this, a bucket's hit rate is noise
 
 
@@ -42,6 +45,7 @@ def load_positions() -> list[dict]:
 
 
 def stats(rows: list[dict]) -> dict[str, Any]:
+    rows = [p for p in rows if p.get("status") not in UNFILLED]
     closed = [p for p in rows if p.get("status") in CLOSED]
     wins = [p for p in closed if p.get("status") == "target_hit"]
     pcts = [p["pct_vs_entry"] for p in closed if p.get("pct_vs_entry") is not None]
