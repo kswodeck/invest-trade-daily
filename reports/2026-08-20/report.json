@@ -1,0 +1,552 @@
+{
+  "date": "2026-08-20",
+  "generated_at_et": "2026-08-20T06:58:47-04:00",
+  "research_minutes": 22,
+  "truncated": false,
+  "data_quality_notes": "Research phase ran to completion (06:32:47-06:55 ET, ~22 minutes) and logged a RESEARCH COMPLETE block, so this is a full synthesis, not a salvage. All 5 unique candidates in candidates.jsonl are published; none were dropped. TLT appears twice in candidates.jsonl and the later entry (primary-source Treasury detail) was taken. REWARD-TO-RISK was recomputed here from the final entry/target/downside of every idea and matches the research log: PFE 2.97, GDX 3.00, PPLT 2.75, TLT 2.18, LULU 3.00 - against floors of 2.5 long-term and 2.0 swing. The spread is wide rather than clustered just above the floors, and where research moved a level it moved the ENTRY DOWN rather than the target up; every target sits below the instrument's own 120-day high. TLT at 2.18 is the tightest and was flagged as such at capture time, before the ratio was computed. EDITORIAL CHANGE, disclosed: research captured PPLT and PFE with wait:false, but the action text it wrote for both explicitly forbids entering at the current price (PPLT 'do not chase the Aug 19 +5.8% day' with price 16.46 above the 16.00 zone high; PFE 'do not add at 28.24' with price above the 25.60-27.20 add zone). Both are therefore published as wait:true so they are not presented as buy-now. Only TLT is actionable at today's price. That is the honest shape of a day when the hard-asset complex had already ripped: four of five ideas need a pullback that may never come. HORIZON SKEW: 4 long-term, 1 swing, 0 intraday. Nothing intraday cleared the bar - the only same-day catalysts were WMT and DE reporting bmo, and research had no differentiated view on either number. The mix was not manufactured. CORRELATION: TLT, PPLT and GDX all benefit from a weaker dollar - exactly 3 on one broad driver, at the cap and not over it. PFE and LULU are independent single-name theses. Total proposed new exposure is 12.5%, deliberately modest given 12 open lines need closing this morning. PPLT DATA WARNING: Aberdeen executed a 10-for-1 FORWARD SPLIT of PPLT, which is why it prints ~$16 rather than ~$160. Any price comparison against pre-split quotes will be wrong by 10x. The levels used here are split-adjusted and agree with the independently sourced NAV of 15.82 on 2026-08-07. No live platinum spot price could be fetched, so the 20.50 target is anchored to PPLT's own 120-day range (high 21.54), not to a claimed ounce conversion. PRICES: all quotes are the 2026-08-19 16:00 ET close, taken during the pre-market session roughly 15 hours later - a closed market, not stale data. No live intraday price was available at synthesis time. COVERAGE GAPS: event contracts unusable (six Kalshi queries returned count 0 or irrelevant markets - a 'gold' query returned Korean baseball parlays), so no event candidate was invented; no ticker-level PDUFA dates were retrievable within budget, so biotech/FDA is uncovered; ALL INDEX QUOTES FAILED, so every index figure here is an ETF proxy rather than the index itself. SOURCES THAT FAILED: finnhub index quotes (CFD subscription required), yahoo (HTTP 429 on every index symbol), stooq (404 on ^-prefixed symbols), alphavantage (no API key), Kalshi events search. SOURCES THAT WORKED: home.treasury.gov (primary, sb0607), FRED, nasdaq OHLCV, finnhub (equity quotes, earnings calendar, insider transactions), SEC EDGAR, coingecko. REJECTED WITH REASONS LOGGED, not skipped: the whole precious-metals miner complex for a swing entry (GDX +17% over its 20-day after a single +9.4% session), SLV, ITB/XHB (R:R 1.90, fails the swing floor, plus HD already open on 3 lines), the Aug 26-27 earnings cohort including DG and ULTA (US-consumer correlation cap), CRWD/OKTA/NVDA/DE (no differentiated view into a print), ETON (0 insider buys against $13.95M sold and a Form 144 filed into the highs), the entire crude-tanker complex (peak-cycle war-driven rates, insiders distributing), ELV (real insider cluster but the entry is 8.8% gone), and BTC in either direction. === RED TEAM (phase 2c) === CUT 1, DOWNGRADED 1, RESTRUCTURED 1, LEFT 2 ALONE. Four ideas remain, renumbered 1-4. CUT GDX to the watchlist: its load-bearing number (producers at 7.83x NTM cash flow vs a 5-year average of 8.86x) is sourced only to two promotional content sites and to VanEck, which issues the ETF, and all three URLs returned 403 or a redirect loop on re-fetch, so nothing could be checked; its 115.00 target is the 120-day high rounded down rather than the +12% an 11.6% multiple discount actually implies; and it was the most extended and weakest-evidenced leg of the three-idea weak-dollar cluster. DOWNGRADED PFE to conviction 3 from 4. The insider cluster was re-verified independently this morning and holds exactly as claimed (3 open-market buys, 3 distinct buyers, $2.96M bought against $0.135M sold), but the 38.00 target has no anchor anywhere in the research - no multiple, no EPS, no sum-of-parts - and it alone produces the 2.97 reward-to-risk. Conviction 4 was being paid for the signal and spent on the magnitude. RESTRUCTURED TLT rather than cutting it: the catalyst is the best-evidenced thing in this report (primary source, home.treasury.gov sb0607, dated and mechanical), but the original plan entered full size today and trimmed half before the Aug 28 Warsh keynote, which takes a binary six sessions before the Sept 9 programme even starts. Changed to half now, half after Aug 28 - same final exposure, same levels, the second half bought with the answer known. Also disclosed in key_risk that the 80.95 stop sits 0.22 below the 120-day low where every other stop is parked, and that reclaiming the 50-day SMA at 84.28 only gets the trade to about 1.0:1, so nearly all of the 2.18 reward sits beyond a level TLT has not touched since Jul 28. LEFT PPLT AND LULU ALONE on the merits. PPLT's sources are the primary authority (WPIC, via Kitco and platinuminvestment.com), it is genuinely de-rated at -23.6% off its 120-day high rather than extended, and its central weakness - the deficit contracting >70% - is already stated in its own key_risk rather than buried. LULU is a self-flagged conviction-2 lottery ticket at 1% with both cases argued in the research; the only change is tightening its entry zone_high from 118.00 to 117.00 so the zone stops matching the 'only below the chairman's 117.05 print' rule instead of contradicting it. No levels were widened anywhere and no target was moved out. CORRECTION to the synthesis note above: the claim that 'every target sits below the instrument's own 120-day high' is FALSE for PFE, whose 38.00 target is 32% ABOVE its 120-day high of 28.745. It is true of the other three. CORRELATION AFTER THE CUT: TLT and PPLT remain the only two on the weak-dollar driver, down from three; PFE and LULU are independent single-name theses. Total proposed new exposure falls from 12.5% to 9.5%, and only TLT is actionable today - at half size.",
+  "market_context": {
+    "summary": "Hard-asset repricing, not an equity rally. After Treasury said on Aug 19 it will double long-dated liquidity-support buybacks to at least $4B per operation (Sept 9 - Nov 4), the dollar hit a 3-month low, gold rose 3.5% to $4,487, silver 3.9%, and BTC 11.8% to $71,905 with a record $1.44B of shorts liquidated, while TLT gained just 1.7% and SPY 0.2%; premarket today is flat. POSITION ACTIONS COME FIRST TODAY \u2014 12 of 22 open lines are through their stops: CLOSE KRE (4 lines, last 75.00 vs stops 75.40/75.20/74.20); CLOSE TJX (4 lines, 144.50 vs 146.50/145.50); CLOSE both /MBTU6 shorts and both BTC spot sells (BTC gapped through the 66,600 stops, thesis dead \u2014 do not re-short). DHT: hold but trim roughly half and raise the stop from 17.60 to 18.85, as tanker day rates are 2-2.5x cycle-peak on a war premium. LCII: +14.6% and unprotected \u2014 add a trailing stop near 99.00. NKE x2 and PFE: hold, add to neither. The single largest risk to every idea below is Kevin Warsh's first Jackson Hole keynote as Fed Chair on Fri Aug 28, delivered days after he said publicly that the Fed is 'not constrained by market prices'.",
+    "regime": "mixed",
+    "levels": {
+      "spy": 769.06,
+      "qqq": 716.08,
+      "iwm": 301.72,
+      "vxx": 19.05,
+      "tlt": 83.02,
+      "gld": 413.84,
+      "slv": 60.01,
+      "uup": 27.88,
+      "btc": 71905,
+      "us10y": 4.71,
+      "us2y": 4.19,
+      "10y2y": 0.46,
+      "fed_funds": 3.63,
+      "note": "All equity/vol/dollar figures are ETF proxies (SPY/QQQ/IWM/VXX/UUP) - every index quote failed this run. Rates from FRED."
+    },
+    "econ_calendar": [
+      {
+        "event": "Walmart Q2 earnings, before open",
+        "datetime_et": "2026-08-20T07:00",
+        "importance": "medium",
+        "consensus": "EPS 0.749, revenue $188.8B"
+      },
+      {
+        "event": "NVDA Q2 earnings, after close - the index-level event",
+        "datetime_et": "2026-08-26T16:20",
+        "importance": "high",
+        "consensus": "EPS 2.128, revenue $93.6B"
+      },
+      {
+        "event": "Jackson Hole: Kevin Warsh's first keynote as Fed Chair",
+        "datetime_et": "2026-08-28T10:00",
+        "importance": "high",
+        "consensus": null
+      },
+      {
+        "event": "Treasury upsized long-dated buyback program begins (>=$4B/operation, through Nov 4)",
+        "datetime_et": "2026-09-09T10:00",
+        "importance": "high",
+        "consensus": null
+      },
+      {
+        "event": "FOMC decision with updated projections (SEP)",
+        "datetime_et": "2026-09-16T14:00",
+        "importance": "high",
+        "consensus": null
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "rank": 1,
+      "instrument": "iShares 20+ Year Treasury Bond ETF",
+      "symbol": "TLT",
+      "asset_class": "etf",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 3,
+      "last_price": 83.02,
+      "last_price_asof": "2026-08-19T16:00:00-04:00",
+      "price_source": "finnhub",
+      "entry": {
+        "ideal": 82.6,
+        "zone_low": 82.2,
+        "zone_high": 83.1,
+        "order_type": "limit",
+        "condition": "Accumulate inside 82.20-83.10. Do not pay above 83.10."
+      },
+      "exit": {
+        "target": 86.2,
+        "target_2": 88.0,
+        "scale_plan": "Half size now inside 82.20-83.10. Hold the second half back until AFTER Warsh's Jackson Hole keynote on Fri Aug 28, then add only if the long end has not broken - this is the same final exposure the original plan reached, but it takes the binary with half the risk and buys the second half with the answer already known. Reassess into the Sept 15-16 FOMC. Trim into 86.20; let a residual run at 88.00.",
+        "time_stop": "2026-11-04"
+      },
+      "stop": 80.95,
+      "risk_reward": 2.18,
+      "position_size_pct": 3,
+      "risk_tier": "standard",
+      "catalyst": {
+        "event": "Treasury press release sb0607: liquidity-support buybacks in the 10y-20y AND 20y-30y sectors rise from a $2B per-operation cap to at least $4B, effective Sept 9 through Nov 4 2026.",
+        "datetime_et": "2026-09-09T10:00",
+        "action": "Enter HALF size now in the 82.20-83.10 zone. Do NOT complete the position before Warsh's keynote on Fri Aug 28 - the buyback programme does not start until Sept 9, so there is no cost to waiting through the event and adding the second half after it.",
+        "wait": false
+      },
+      "thesis": "Treasury release sb0607 raises liquidity-support buybacks in the 20y-30y sector \u2014 precisely the maturity bucket TLT holds \u2014 from a $2B per-operation cap to at least $4B, running Sept 9 to Nov 4. That is a scheduled, published, mechanical bid for TLT's own collateral. TLT printed a 120-day low of 81.17 on Aug 18, the day before the release, and reversed to 83.02 on 51M shares against a roughly 30M average, so the turn off the low carried real participation rather than drift.",
+      "key_risk": "Warsh delivers his first keynote as Chair on Aug 28 having just said publicly that the Fed is 'not constrained by market prices' - a direct warning he may decline to validate this week's dovish repricing. The structural problem the original plan understated: the binary lands Aug 28 but the buyback programme does not begin until Sept 9, so a full-size entry today takes the event risk six sessions before any of the catalyst arrives. Hence half now, half after. Two further specifics: the 80.95 stop sits just 0.22 below the 120-day low of 81.17, which is where every other stop in this trade is parked, so a liquidity sweep of that low takes the whole risk without the thesis being wrong; and the 86.20 target sits above the 50-day SMA of 84.28, a level TLT has not touched since Jul 28 - reclaiming the 50-day only gets the trade to roughly break-even on risk (about 1.0:1), so essentially all of the stated 2.18 reward sits beyond it.",
+      "counter_argument": "Treasury's own release calls this liquidity support in sectors with 'consistent strong sponsorship', not stimulus. Buybacks are funded by issuing elsewhere, so net duration removed is far smaller than a $2B-to-$4B headline implies, and the programme is only eight weeks. TLT also remains below its 50-day SMA of 84.28 and has made lower highs since late July, so this is a counter-trend entry. Telling detail: TLT gained only 1.67% on the news while gold rose 3.5% \u2014 the bond market gave this the smallest vote of any asset.",
+      "sources": [
+        "https://home.treasury.gov/news/press-releases/sb0607",
+        "https://www.cnbc.com/2026/08/19/treasury-announces-upscaled-buyback-operation-for-longer-term-debt-sending-yields-lower.html",
+        "https://finance.biggo.com/news/5199dcdf-716b-4f74-81f1-60f5a3b95518",
+        "https://kalkine.com/news/premium/jackson-hole-2026-can-warshs-debut-signal-where-rates-go-next",
+        "https://www.regardsofwallstreet.com/news/jackson-hole-2026-dates-schedule-warsh-first-speech"
+      ],
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.18,
+        "claimed_risk_reward": 2.18,
+        "live_price": 83.02,
+        "live_price_asof": "2026-08-19T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 906.4,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": 0.653,
+        "checked_at_et": "2026-08-20T07:06:49-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.18:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 82.6 is -0.5% from live 83.02"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-09-09 is ahead of us"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 5.51 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-08-19T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "no bid/ask available (normal outside regular hours)"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "3% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "sources",
+            "status": "pass",
+            "detail": "all 4 checked source(s) resolve"
+          }
+        ]
+      }
+    },
+    {
+      "rank": 2,
+      "instrument": "Pfizer Inc",
+      "symbol": "PFE",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "long_term",
+      "conviction": 3,
+      "last_price": 28.24,
+      "last_price_asof": "2026-08-19T16:00:00-04:00",
+      "price_source": "finnhub",
+      "entry": {
+        "ideal": 26.4,
+        "zone_low": 25.6,
+        "zone_high": 27.2,
+        "order_type": "limit",
+        "condition": "Add only on a pullback into 25.60-27.20. Do NOT add at 28.24 \u2014 that is above every insider print."
+      },
+      "exit": {
+        "target": 38.0,
+        "scale_plan": "Build in two tranches inside the zone; hold the existing 25.80 line. No trim planned before 38."
+      },
+      "stop": null,
+      "bear_case_price": 22.5,
+      "risk_reward": 2.97,
+      "position_size_pct": 3,
+      "risk_tier": "standard",
+      "catalyst": {
+        "event": "CEO-led open-market insider buying cluster into a post-patent-cliff de-rating. Continuing position opened 2026-08-18 at 25.80, now +9.5%.",
+        "datetime_et": null,
+        "action": "CONTINUING POSITION, not a new idea \u2014 hold the existing line from 25.80 and add nothing here. Wait for a pullback into 25.60-27.20 for the second tranche.",
+        "wait": true
+      },
+      "thesis": "Update to the 2026-08-18 long at 25.80: thesis intact and strengthened, but the add-on zone is now behind the price, so this is a hold rather than an add. Three distinct insiders bought Pfizer on the open market inside three weeks, led by CEO Albert Bourla taking 38,000 shares at $26.34 on Aug 12, with directors Mortimer Buckley and Ronald Blaylock buying 37,632 and 39,231 shares at $25.52 and $25.46 on Aug 5 \u2014 $2.96M bought against $0.13M sold, a 23:1 ratio. A sitting CEO and two directors committing roughly $3M of their own money at a single price cluster is the narrow case where insider buying is genuinely predictive.",
+      "key_risk": "Two separate problems. First, the entry is gone: insiders paid 25.46-26.34 and the stock is 28.24, now only 1.8% off its 120-day high after a three-session run, so anyone buying today pays 7% more than the CEO did - a different trade from the one the signal argues for. Second, and the reason conviction was cut from 4 to 3: the 38.00 target is unsupported. It appears in the research with no multiple, no EPS estimate and no sum-of-parts behind it, and it sits 32% above the 120-day high of 28.745. It is also load-bearing - it alone produces the 2.97 reward-to-risk, and no lower defensible target clears the 2.5 long-term floor. The insider evidence is real and was re-verified independently this morning; the size of the move it is being asked to justify is not evidenced at all. INVALIDATION: insiders turning net sellers, or two consecutive quarters in which pipeline and new-product revenue fails to offset the patent-cliff decline - not a lower share price.",
+      "counter_argument": "Directors buy for optics as well as returns, and $1M is small relative to Bourla's compensation; a cheap-looking multiple on declining post-cliff earnings is the textbook value trap, and the three-session pop may simply be the defensive-pharma leg of a rotation out of the dollar - macro noise wearing an insider costume. Note also what insider buying can and cannot tell you: at best it says a de-rated name is cheap, which supports owning it. It says nothing about a 34% move, and the target here was written as though it did.",
+      "sources": [
+        "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=PFE&type=4&dateb=&owner=include&count=40",
+        "https://finnhub.io/api/v1/stock/insider-transactions?symbol=PFE"
+      ],
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.97,
+        "claimed_risk_reward": 2.97,
+        "live_price": 28.24,
+        "live_price_asof": "2026-08-19T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 906.6,
+        "bid": 28.05,
+        "ask": 28.1,
+        "spread_pct": 0.178,
+        "atr14": 0.6243,
+        "checked_at_et": "2026-08-20T07:06:49-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.97:1 clears the 2.5:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 26.4 is -6.5% from live 28.24"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "long-term idea, no dated event expected"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "long-term target is valuation-anchored, not ATR-bound"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-08-19T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "pass",
+            "detail": "bid/ask spread 0.18%; the round trip costs 0% of the target move"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "3% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "2 of 2 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    },
+    {
+      "rank": 3,
+      "instrument": "abrdn Physical Platinum Shares ETF",
+      "symbol": "PPLT",
+      "asset_class": "etf",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "long_term",
+      "conviction": 3,
+      "last_price": 16.46,
+      "last_price_asof": "2026-08-19T16:00:00-04:00",
+      "price_source": "finnhub",
+      "avg_dollar_volume": 40000000,
+      "entry": {
+        "ideal": 15.0,
+        "zone_low": 14.2,
+        "zone_high": 16.0,
+        "order_type": "limit",
+        "condition": "Only at or below the 50-day SMA of 15.11. Do not chase the Aug 19 +5.8% session at 16.46."
+      },
+      "exit": {
+        "target": 20.5,
+        "scale_plan": "Accumulate in thirds at or below 15.11; add a third under 14.20. No hard stop \u2014 exit on the stated invalidation, not on price."
+      },
+      "stop": null,
+      "bear_case_price": 13.0,
+      "risk_reward": 2.75,
+      "position_size_pct": 2.5,
+      "risk_tier": "standard",
+      "catalyst": {
+        "event": "Fourth consecutive annual platinum deficit with zero mine-supply growth, and above-ground stocks falling to under three months of demand cover by end-2026.",
+        "datetime_et": null,
+        "action": "WAIT for a pullback to the 50-day at 15.11 or below, then accumulate in thirds. Do not chase at 16.46.",
+        "wait": true
+      },
+      "thesis": "The WPIC forecasts 2026 as a fourth straight platinum deficit and projects above-ground stocks falling to just under three months of global demand cover, while total supply grows only 2% to 7,377 koz with every incremental ounce coming from recycling and mine guidance flat despite a greater-than-90% price surge off Q2 2025. Roughly 90% of primary PGM supply sits in South Africa, Russia and Zimbabwe, and Q1 2026 brought production declines at both Norilsk Nickel and Zimplats, so the supply side cannot respond to price even when it wants to.",
+      "key_risk": "The deficit is narrowing sharply, not widening: WPIC cut it from roughly 1.1 Moz in 2025 to 297 koz in 2026, a greater-than-70% contraction, and Kitco headlined the WPIC view as a balanced 2026 market. One more year of that contraction takes the market into surplus and the thesis is simply wrong. Forecasts also disagree materially, with Metals Focus at $2,190/oz against a competing case of only $1,750. Note also the 0.60% expense ratio, a real drag on a multi-year hold. INVALIDATION: a WPIC or Metals Focus 2027 balance showing surplus rather than deficit, or above-ground stocks ceasing to fall.",
+      "counter_argument": "If the deficit is closing because recycling supply is structurally rising and autocatalyst demand is being eroded by EV adoption, then the 2026 balance is the new normal rather than a pause, and the 21.54 high was a squeeze that will not be revisited.",
+      "sources": [
+        "https://www.kitco.com/news/article/2025-11-19/balanced-platinum-market-2026-wont-fix-fundamental-long-term-issues-wpic",
+        "https://platinuminvestment.com/supply-and-demand/2-to-5-year-view",
+        "https://investingnews.com/platinum-forecast/",
+        "https://www.cruxinvestor.com/posts/persistent-platinum-deficits-90-supply-concentration-increase-global-pgm-risk-premiums",
+        "https://www.aberdeeninvestments.com/en-us/institutional/funds/view-all-funds/abrdn-physical-platinum-shares-etf-us0032601066",
+        "https://www.prnewswire.com/news-releases/aberdeen-investments-announces-10-for-1-forward-share-split-of-abrdn-physical-platinum-shares-etf-pplt-and-5-for-1-forward-share-split-of-abrdn-physical-palladium-shares-etf-pall-302750450.html"
+      ],
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.75,
+        "claimed_risk_reward": 2.75,
+        "live_price": 16.46,
+        "live_price_asof": "2026-08-19T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 906.6,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": 0.4471,
+        "checked_at_et": "2026-08-20T07:06:49-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.75:1 clears the 2.5:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 15.0 is -8.9% from live 16.46"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "long-term idea, no dated event expected"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "long-term target is valuation-anchored, not ATR-bound"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-08-19T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "no bid/ask available (normal outside regular hours)"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "2.5% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "sources",
+            "status": "pass",
+            "detail": "all 4 checked source(s) resolve"
+          }
+        ]
+      }
+    },
+    {
+      "rank": 4,
+      "instrument": "lululemon athletica inc.",
+      "symbol": "LULU",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "long_term",
+      "conviction": 2,
+      "last_price": 119.45,
+      "last_price_asof": "2026-08-19T16:00:00-04:00",
+      "price_source": "finnhub",
+      "avg_dollar_volume": 308000000,
+      "entry": {
+        "ideal": 112.0,
+        "zone_low": 104.0,
+        "zone_high": 117.0,
+        "order_type": "limit",
+        "condition": "Accumulate only BELOW the chairman's $117.05 June print - the zone now stops at 117.00 to match that rule rather than contradicting it. Do not chase."
+      },
+      "exit": {
+        "target": 160.0,
+        "scale_plan": "First third at 112.00, second under 106.00. Reassess on the early-September Q2 print rather than adding into it."
+      },
+      "stop": null,
+      "bear_case_price": 96.0,
+      "risk_reward": 3.0,
+      "position_size_pct": 1,
+      "risk_tier": "lottery",
+      "catalyst": {
+        "event": "Chairman Charles Bergh accumulating personally into a 43% de-rating, with a live proxy battle, while China compounds at 20%+ and North America is guided down.",
+        "datetime_et": null,
+        "action": "SPECULATIVE \u2014 size as a lottery ticket. WAIT for a print below 117.05; first third at 112.00, second under 106.00. Next earnings is early September, outside the current window \u2014 reassess on that print rather than adding into it.",
+        "wait": true
+      },
+      "thesis": "Lululemon trades near 10.8x its guided FY26 EPS of $10.95-11.15 after falling roughly 43% in 2026, a multiple that prices a structurally broken brand rather than a cyclically impaired one, while China Mainland revenue still grew 30% with comps up 20% in Q1. Chairman Charles Bergh, the former Levi Strauss CEO who has personally executed a heritage-apparel turnaround, bought 6,090 shares at $164.20 in March and then averaged down with 4,275 more at $117.05 in June, within 2% of the current price, against just $0.10M of total insider selling.",
+      "key_risk": "This is a conviction-2 idea and the evidence is genuinely thin and two-sided \u2014 it is sized as a lottery ticket for that reason. Americas comparable sales fell 5% in Q1, the fifth consecutive quarterly decline, and management has cut FY guidance twice, taking sales from $12.10-12.30B to $11.00-11.15B and EPS from $13.26 in FY25 to a guided $10.95-11.15. Competition from Alo and Vuori is structural rather than cyclical, so a cheap multiple on still-falling earnings is the textbook value trap, and China, the only growing segment, is already showing strain. INVALIDATION: China Mainland comps turning negative, or a third cut to FY guidance.",
+      "counter_argument": "Five straight quarters of declining domestic comps is a demand signal, not a valuation problem, and a lower multiple does not fix it. Bergh already bought once at $164.20 and is down 29% on that lot, so his June purchase is as easily read as an anchored chairman defending a call as it is a fresh insight, and directors of falling brands routinely buy visibly during proxy fights.",
+      "sources": [
+        "https://www.barchart.com/story/news/3324156/lululemon-stock-is-down-43-in-2026-a-lower-valuation-doesnt-fix-its-problems",
+        "https://www.cnbc.com/2026/06/04/lululemon-lulu-earnings-q1-2026.html",
+        "https://www.tikr.com/blog/lululemon-is-down-46-in-2026-and-its-china-engine-just-hit-a-wall-where-lulu-stock-could-go-next",
+        "https://www.tikr.com/blog/lululemon-stock-is-down-38-in-2026-heres-what-the-proxy-battle-mean-going-forward"
+      ],
+      "validation": {
+        "verdict": "pass",
+        "computed_risk_reward": 3.0,
+        "claimed_risk_reward": 3.0,
+        "live_price": 119.45,
+        "live_price_asof": "2026-08-19T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 906.7,
+        "bid": 119.01,
+        "ask": 119.5,
+        "spread_pct": 0.411,
+        "atr14": 4.0021,
+        "checked_at_et": "2026-08-20T07:06:50-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 3.0:1 clears the 2.5:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 112.0 is -6.2% from live 119.45"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "long-term idea, no dated event expected"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "long-term target is valuation-anchored, not ATR-bound"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-08-19T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "pass",
+            "detail": "bid/ask spread 0.41%; the round trip costs 1% of the target move"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 2 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "1% is within the 1% lottery-ticket ceiling for conviction 2"
+          },
+          {
+            "check": "sources",
+            "status": "pass",
+            "detail": "all 4 checked source(s) resolve"
+          }
+        ]
+      }
+    }
+  ],
+  "watchlist": [
+    {
+      "symbol": "GDX",
+      "instrument": "VanEck Gold Miners ETF",
+      "note": "Red team cut. The load-bearing number in the thesis - large-cap producers at 7.83x NTM cash flow against a 5-year average of 8.86x - is sourced only to discoveryalert.com.au, nai500.com and VanEck's own blog. VanEck issues GDX, and the other two are promotional content sites; none is an independent data provider, and all three returned 403 or a redirect loop on re-fetch this morning, so the claim could not be checked against anything. The validator's 'all 4 sources resolve' was recorded before those failures and overstates what is verified. Separately the target does not follow from the thesis: an 11.6% multiple discount closing is worth about +12%, but 115.00 from an 85.00 entry is +35%, and 115.00 is simply the 120-day high of 117.18 rounded down - price memory standing in for the valuation case the thesis actually argues. It is also the most extended leg of the weak-dollar cluster (+39.6% off its 120-day low, 17% above its 20-day SMA and 23% above its 50-day after a single +9.4% session), and the third of three ideas on that one driver. Finally the research phase rejected the entire miner complex outright ('GDX / GDXJ / SIL / SILJ - no entry, not a view') and reversed itself later in the same run by relabelling the horizon from swing to long-term, without adding a single new data point. The direction may well be right; the specific edge claimed here is not evidenced.",
+      "trigger": "An independently sourced producer cash-flow multiple (a bank or data provider, not an aggregator or the fund sponsor), or a pullback into the 78.00-90.00 zone that lets the idea be re-underwritten on price rather than on the multiple",
+      "demoted_from_rank": 2,
+      "demotion_reason": "Load-bearing valuation multiple unverifiable and sourced to promotional sites plus the ETF's own issuer; target anchored to the 120-day high rather than to the multiple the thesis argues; weakest-evidenced leg of the three-idea weak-dollar cluster."
+    },
+    {
+      "symbol": "DG",
+      "instrument": "Dollar General",
+      "note": "De-rated consumer name (-22.1% off its 120-day high) coiled on a flat base at the 20/50 SMAs with a low 2.80% ATR - the right shape, rejected today only on the US-consumer correlation cap. Revisit once the TJX lines are closed.",
+      "trigger": "Aug 27 earnings reaction, plus consumer exposure falling below the 3-line cap"
+    },
+    {
+      "symbol": "ULTA",
+      "instrument": "Ulta Beauty",
+      "note": "Same shape as DG: -24.9% off the 120-day high into a dated catalyst, rejected on correlation rather than merit.",
+      "trigger": "Aug 27 earnings reaction"
+    },
+    {
+      "symbol": "DE",
+      "instrument": "Deere & Co",
+      "note": "-9.8% off its 120-day high and below both the 20- and 50-day going into the print, but zero insider buying and no differentiated view on the number. An ag-equipment downcycle name at -10% is the right shape for this report.",
+      "trigger": "The Aug 20 earnings reaction - revisit after the print, not before"
+    },
+    {
+      "symbol": "KRE",
+      "instrument": "SPDR S&P Regional Banking ETF",
+      "note": "Closing the four long lines today on breached stops. Worth noting the mechanism cuts the other way: the Treasury buyback flattened the 10y-2y spread from 0.52 to 0.46, which compresses regional-bank NIM directly, and that pressure is scheduled to continue through Nov 4. Deliberately NOT flipped to a short today - reversing a name the morning its long stops out is whipsaw, and a short needs margin.",
+      "trigger": "A future session, with fresh evidence - logged as an observation, not a trade"
+    },
+    {
+      "symbol": "ITB",
+      "instrument": "iShares U.S. Home Construction ETF",
+      "note": "The least-extended rates-geared equity in the complex (+1.2% over its 20-day, -8.3% off its high) and genuinely wanted. Killed on R:R of ~1.90 from 98.00 to a 107.50 target with an honest 2-ATR stop at 93.00, which fails the 2.0 swing floor, and on HD already holding 3 lines of housing/rates exposure.",
+      "trigger": "A better entry that lifts R:R above 2.0, or housing exposure falling below the cap"
+    }
+  ],
+  "validation_summary": {
+    "checked": 4,
+    "passed": 1,
+    "warned": 3,
+    "failed": 0,
+    "enforced": true
+  }
+}
