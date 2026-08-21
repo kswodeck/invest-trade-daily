@@ -1,0 +1,644 @@
+{
+  "date": "2026-08-21",
+  "generated_at_et": "2026-08-21T07:01:49-04:00",
+  "research_minutes": 37,
+  "truncated": false,
+  "data_quality_notes": "Research ran 06:32-07:09 ET (~37 min) and logged a RESEARCH COMPLETE block plus two addenda, so this is a full synthesis, not a salvage. Eight unique candidates were captured; seven are published and one (NKE) was moved to the watchlist rather than the recommendation list - see below.\n\nREWARD-TO-RISK: all seven ratios were recomputed here from the final entry, target and downside rather than trusting the captured field. Spread: 2.27, 2.29, 2.51, 2.59, 2.68, 2.90, 3.21 against floors of 2.0 (swing) and 2.5 (long_term). Two of these - EVTC at 2.51 and CEG at 2.59 - sit close to the 2.5 long-term floor and deserve the scrutiny that implies, but the research log shows both targets were set from valuation anchors (EVTC 48 on a re-rating from 7.15x forward; CEG 385 on the prior high) before the ratio was measured, and the research phase's own audit caught and corrected two arithmetic errors in the conservative direction. This is not the clustered-just-above-the-floor signature that indicates fitted targets.\n\nNKE IS ON THE WATCHLIST, NOT IN THE RECOMMENDATIONS, AND THIS IS AN EDITORIAL CALL. Research captured it deliberately at a 1.50 reward-to-risk against a 2.5 long-term floor, intending it as a downgrade notice for holders of the 08-17 and 08-18 positions and expecting enforcement to demote it. Publishing a failing ratio as a 'buy' row would misread to anyone who does not already own it, so it is carried as a watchlist entry with the full revised levels instead. The substance is unchanged: hold existing size, add nothing, target cut from 65/62 to 52, exit in full on a close below 38.60.\n\nSINGLE POINT OF FAILURE - AUG 28. Three ideas (GLD 4%, EEM 2.5%, EVTC 2%) all require the dollar to keep falling. That is exactly at the correlation cap of 3, but it is also the three largest sizes in the report, and they die on the same morning if Kevin Warsh's first Jackson Hole keynote as Fed chair (Fri Aug 28) is hawkish and DXY bounces off its three-month low. Mitigation is built into the entries rather than asserted: GLD is wait:true with staged accumulation below spot, and EEM is explicitly half-size before the speech.\n\nDIRECTION SKEW: 7 of 7 are long, in a tape that fell 0.87% on the discount rate. There is no short and no hedge. Research considered a short /MES and declined it for having no differentiated index view rather than manufacturing balance. The consequence for the reader is real: if the 30y keeps rising, essentially every idea here marks down together, and the fiscal-dominance thesis that makes gold work is the same one that de-rates equities.\n\nHORIZON SKEW: 4 swing, 3 long_term, 0 intraday. Nothing intraday was manufactured - the equity session was closed throughout the run and the one intraday-grade dated event is seven days out.\n\nTRACK-RECORD CAVEAT WORTH READING: the closed record is 0/3, all conviction 3, and both stop-outs (TJX, KRE) were 'buy the de-rated thing because the macro should help it'. DG, CEG and EVTC are structurally that same trade. At n=3 that is noise and the bar was not raised on it, but the mechanism is informative: in both losses the factor beta overwhelmed the idiosyncratic story. What differs today is that each of the three carries a company-specific confirmation the losers lacked - Bernstein traffic data, a net-positive insider tape, and a verified five-buyer insider cluster respectively.\n\nPRICES: every last_price is the 2026-08-20 regular-session close, re-quoted at synthesis time and unchanged. Equities are pre-market, so a prior close is the freshest honest price, not a stale one. No price in this report is estimated.\n\nSOURCES THAT FAILED. (1) Event contracts: market_data.py events returned count 0 for CPI, inflation, interest rates, Bitcoin, S&P 500, unemployment, recession and government shutdown; the only 'Fed' hit was a mis-indexed soccer parlay with null pricing. Robinhood Prediction Markets went unchecked today - a source failure, not a judgement that nothing was attractive. (2) Index and commodity quotes: SPX, NDX, DJI, RUT, VIX, DXY, gold, WTI, ES and NQ all failed (Yahoo HTTP 429 throughout, Finnhub index subscription required, stooq 404). Worked around with ETF proxies and sourced press figures; no index level here came from a failed fetch. There is no VIX reading at all, so nothing in this report is calibrated to implied volatility. (3) Robinhood's own futures-availability support page returned 404, so the venue check leaned on secondary sources - weaker evidence than wanted, though no futures idea is published today. (4) Third-party insider-cluster screeners disagreed with Finnhub Form 4 data on 3 of 5 names checked (VRCA and EDAP showed essentially no filings; ORN omitted five offsetting sales worth 5x the purchases). The one insider claim independently verified is EVTC's - 7 buys, 5 distinct buyers, $2.25M against $1.4M of sales - and it is why EVTC carries conviction 4.\n\nNOT REACHED: ag/fertiliser, defence, REITs, Japan/Europe single names, and a systematic small-cap screen beyond the insider-cluster list. Crypto prices were fetched but no crypto candidate was taken, by choice, after the /MBTU6 short was closed.\n\nSTALE-CALENDAR WARNING: the earnings calendar was found to be wrong on one name (PRAX's PDUFA had moved from Sept 27 to Dec 27; only a direct search caught it). Any dated catalyst here that came from a calendar rather than a company filing should be treated as provisional. DG's Aug 27 date is confirmed from the company's own webcast announcement.\n\n--- RED TEAM (phase 2c, 07:03-07:13 ET) ---\n\nCUT 2, DOWNGRADED 1, FIXED LEVELS ON 3. Five of seven ideas survive.\n\nRed team cut DHT (the entire crude-tanker thesis is unsourced - the two cited URLs are a generic market wrap and a precious-metals report, neither of which mentions tankers; and the 22.50 target sits 9.5% above the 52-week high of 20.55, so re-anchored to real resistance the trade gives 0.63:1 against a 2.0 floor) and cut BCC (its own counter_argument already concluded it should be closed, its only remaining argument was \"it has not broken yet,\" and it closed 81.77 BELOW the 20-day at 81.99 that the thesis cites as intact - plus neither source concerns Boise Cascade or lumber). Both are open positions and both watchlist entries preserve the full management instruction rather than telling holders to dump.\n\nDowngraded EVTC to conviction 3. Its conviction 4 rested on the insider cluster, and the Form 4s do not read the way the pitch claimed. The thesis stated \"the stock still trades below where several of them bought\" - that is FALSE: every disclosed purchase was struck between $23.37 and $26.42 (May 8 - Jun 12) against a $29.73 last price, so no insider paid today's price and a buyer here pays 13-27% more than all of them. The \"$2.25M of buys against $1.4M of sales\" framing also hid the ordering: the buys are May-June at $23-26, and the sales are Aug 11-14 at $29.50-$31.56 (Perez-Surillo $552k, Viglianco $836k, Polak $30k, all open-market code S), with the stock down 6.1% on that news around Aug 17. Insiders bought the lows and are selling the recovery. The valuation case (7.4x forward, 20% revenue growth, $150M buyback) is untouched and is why this is a downgrade rather than a cut.\n\nLOOKBACK-WINDOW ERROR FOUND, AND IT IS SYSTEMATIC. The research phase pulled history with a 200-session window (~9.5 months) and then described the results as 52-week highs. Two ideas were affected. CEG: stated \"-29.1% below its high\" and anchored the 385 target to \"the 384.98 prior high\" - but 384.98 is the 200-session high; the true 52-week high is 412.70 and the real drawdown is -33.9%. The target is therefore conservative (7% below actual overhead) but the level was described wrongly and the de-rating understated. EVTC: the \"34.41 prior high\" in the scale plan is likewise the 200-session high; the 52-week high is 37.71. Both are corrected in place. GLD (509.70), DG (158.23), EEM (71.57) and BCC (91.97) were checked and their cited highs are genuine 52-week figures.\n\nDG entry zone narrowed from 117.0-121.5 to 117.0-119.5 and size cut from 2.5% to 2.0%. The published 2.29 R:R holds only at the 119.00 ideal; a fill at the old 121.50 top of zone returned 1.42:1, below the 2.0 swing floor, so the zone as written permitted a fill that failed the report's own standard. At 119.50 the worst fill still returns 2.07:1. The size cut follows the idea's own admission that a guidance gap goes through the 112 stop rather than filling it - when the stop cannot be relied on, size is the only remaining control. The Bernstein store-visit claim WAS independently verified against the cited tradingpedia article (08-13), as were the Aug 27 8:00 CT/9:00 ET call and the Vasos/Lau hosts against the company webcast release; the March 2026 announcement that JJ Fleeman succeeds Vasos takes effect Jan 1, 2027 and does not touch this print.\n\nGLD kept at conviction 4 - the numbers all reconcile (509.70 high, -18.53% off it, 200-day 413.21, 20-day 390.07, +14.9% off the 361.39 correction low, all refetched) and the entry is staged below spot, so this is not a crowded or extended entry. Two fixes rather than a downgrade. First, the 520 target implies roughly $5,600/oz and 557 implies ~$6,000, both ABOVE every forecast in the report's own evidence base (Goldman $4,900, HSBC $4,560, JPM $4,500); the R:R does not depend on them - anchored to the 509.70 prior high the trade still gives 2.94:1 against a 2.5 floor - so the scale plan now treats 509.70 as the evidenced level and 520/557 as aspiration. Second, the stated invalidation \"central bank net purchases negative for two consecutive quarters\" is unusable in any tradeable horizon because that series reports with a quarter or more of lag; the operative invalidation is the 361.39 close, 13.0% below spot.\n\nTHE SPREAD FAILURES ARE PRE-MARKET ARTIFACTS, NOT LIQUIDITY VERDICTS. validate_report.py failed EVTC (26.49%), BCC (24.04%) and DHT (6.22%) on bid/ask spread. Those quotes were pulled from Nasdaq at 4:00-7:00 ET and are placeholder pre-market books, not tradeable markets: BCC showed bid 66.76 / ask 85.00 at 4:00 ET on an $81.77 stock, EVTC bid 26.63 / ask 34.76 at 4:09 ET. All three trade with normal spreads in the regular session. Neither cut here was made on spread, and if the enforcement pass in phase 2d demotes EVTC on the same artifact the reader should understand that as a data problem, not a judgement that EVTC is untradeable. The two names quoted closest to the open - DG at 7:02 ET (1.48%) and CEG at 7:01 ET (0.57%) - show what the real books look like.\n\nWHAT SURVIVES, AND WHAT IT STILL IS. Five ideas, 13.5% of capital, all long, no hedge, no short - the direction skew the synthesis phase flagged is unchanged and cutting two longs did not fix it. The dollar-down cluster (GLD 4%, EEM 2.5%, EVTC 2% = 8.5%) still dies together if Warsh's Jackson Hole debut on Fri Aug 28 is hawkish, and that is now 63% of the book's capital rather than 55%. One book-level contradiction the original report never stated and cutting BCC has now mostly resolved: GLD's thesis REQUIRES the long end to keep selling off, while BCC's key_risk named exactly that move as fatal - the report held both. A residual version survives in that CEG (capital-intensive, needs multiple expansion) and DG (consumer, discount-rate sensitive) are both hurt by the long-end move the top idea needs. Read GLD as the hedge against the other four rather than as an addition to them.\n\nNOT RE-EXAMINED. EEM was left untouched - its 71.50 target is anchored to the genuine 71.57 52-week high, the half-size-before-Aug-28 staging is the correct mitigation, and its counter_argument already states the strongest objection (a real US term-premium shock historically takes EM down harder than the US, not less). The nine pre-existing watchlist entries and the NKE downgrade notice were not reviewed; the clock went to the top-ranked ideas as instructed.\n\nvalidation_summary was re-run against the five surviving ideas after these edits (07:11 ET): all five reward-to-risk ratios reconcile claimed-to-computed exactly, no idea fails on arithmetic, and the only remaining FAIL is the EVTC pre-market spread artifact described above. Validation demoted 1 idea(s) whose numbers did not check out. 4 more carry warnings \u2014 see the validation block on each.",
+  "market_context": {
+    "summary": "The single fact that organises today: the Treasury more than doubled its long-bond buyback to at least $4B (effective Sep 9-Nov 4) and the long end sold off anyway - the 10y rose 4.7bp to 4.70% and the 30y rose 5.5bp to 5.249%, a two-decade high, the very next session. When the sovereign issuer's own bid cannot hold its own long end, and Bessent is simultaneously pressuring Warsh's Fed to ease, that is a fiscal-dominance signature rather than a policy-tightening one. The confirming tell is that the dollar fell with yields rising: DXY at 98.558, its lowest since May 14. Higher yields normally pull a currency up - yields up and currency down means investors are demanding more compensation to hold the debt and leaving the currency anyway.\n\nThat one fact explains three tapes that otherwise look unrelated. Equities de-rated on the discount rate (S&P -0.87% to 7,641.16, Nasdaq -1.0%, Dow -1.32%, small caps worst at -1.34%); gold held bid; and bitcoin ran roughly $64k to $77.9k in three sessions, +8.3% on the day, with over $1B of shorts liquidated in a single hour through $69k.\n\nThe second driver is the US consumer cracking. Walmart fell 9% on 2.6% same-store sales, with management explicitly blaming $4 gasoline for a psychological hit to spending. That is one trade, not two: $4 gas is simultaneously the bull case for energy and the bear case for discretionary retail, and XLE closed green on a red tape. The next fortnight is a consumer referendum - nearly every dated earnings event through Sep 2 is a retailer - which argues for expressing the consumer view where trade-down helps rather than where it hurts.\n\nThe dated event that matters most is not an earnings print. Kevin Warsh delivers his first Jackson Hole keynote as Fed chair on the morning of Fri Aug 28, 19 days before the Sep 16 FOMC, with no track record as this speaker to price against. It sits on top of the dollar, the long end and gold at once, and it is why the dollar-sensitive entries in this report are staged or explicitly half-size rather than full positions today.",
+    "regime": "mixed",
+    "levels": {
+      "spx": 7641.16,
+      "nasdaq_composite": 26067.17,
+      "dji": 52759.21,
+      "spy": 762.6,
+      "qqq": 710.93,
+      "iwm": 297.67,
+      "gld": 415.26,
+      "tlt": 82.34,
+      "us2y": 4.19,
+      "us10y": 4.7,
+      "us30y": 5.249,
+      "fed_funds_effective": 3.63,
+      "curve_10y_2y": 0.5,
+      "dxy": 98.558,
+      "gold_spot_usd_oz": 4475.46,
+      "btc": 77894,
+      "eth": 2399,
+      "sol": 91.23,
+      "vix": null,
+      "unemployment_rate_jul_2026": 4.1,
+      "note": "Index levels are 2026-08-20 closes from sourced press; SPY/QQQ/IWM/GLD/TLT are fetched prior closes. VIX, DXY, WTI and index futures could not be fetched this run - DXY shown is a sourced press figure, VIX is null."
+    },
+    "econ_calendar": [
+      {
+        "event": "NVDA Q2 earnings (after close) - the index-level event of the window",
+        "datetime_et": "2026-08-26T16:20",
+        "importance": "high",
+        "consensus": "$93.6B revenue, ~$2.06 EPS"
+      },
+      {
+        "event": "Dollar General Q2 earnings before the open, call 9:00 ET",
+        "datetime_et": "2026-08-27T09:00",
+        "importance": "high",
+        "consensus": "$2.01 EPS on $11.19B revenue"
+      },
+      {
+        "event": "Jackson Hole symposium opens (Aug 27-29); theme is financial innovation",
+        "datetime_et": "2026-08-27T00:00",
+        "importance": "high",
+        "consensus": null
+      },
+      {
+        "event": "Kevin Warsh's first Jackson Hole keynote as Fed chair - highest-variance scheduled macro event in the window",
+        "datetime_et": "2026-08-28T10:00",
+        "importance": "high",
+        "consensus": "no track record as this speaker; hawkish prior record"
+      },
+      {
+        "event": "AVGO Q3 earnings (after close)",
+        "datetime_et": "2026-09-02T16:20",
+        "importance": "medium",
+        "consensus": "$29.9B revenue"
+      },
+      {
+        "event": "Treasury upsized long-bond buyback operations begin (>=$4B, through Nov 4)",
+        "datetime_et": "2026-09-09T00:00",
+        "importance": "medium",
+        "consensus": null
+      },
+      {
+        "event": "FOMC decision",
+        "datetime_et": "2026-09-16T14:00",
+        "importance": "high",
+        "consensus": null
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "symbol": "GLD",
+      "instrument": "SPDR Gold Shares",
+      "asset_class": "etf",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "long_term",
+      "conviction": 4,
+      "unit": "usd",
+      "last_price": 415.26,
+      "last_price_asof": "2026-08-20T20:00:00+00:00",
+      "price_source": "nasdaq via market_data.py (prior close); gold spot $4,475.46/oz on 2026-08-20 via USAGOLD",
+      "entry": {
+        "ideal": 398.0,
+        "zone_low": 380.0,
+        "zone_high": 406.0,
+        "order_type": "limit",
+        "condition": "Accumulate in thirds on a pullback toward the 20-day (390) \u2014 do NOT chase 415 here. Add under 380."
+      },
+      "exit": {
+        "target": 520.0,
+        "target_2": 557.0,
+        "scale_plan": "Trim nothing below 509.70, the prior high and the level the sourced evidence supports; the 520 and 557 targets are extrapolations beyond every cited forecast and should be treated as aspiration, not plan. This is a core holding, not a trade."
+      },
+      "stop": null,
+      "bear_case_price": 360.0,
+      "risk_reward": 3.21,
+      "position_size_pct": 4,
+      "risk_tier": "high_conviction",
+      "catalyst": {
+        "event": "Fiscal dominance: the Treasury doubled its long-bond buyback to $4B (effective Sep 9-Nov 4) and the 30y still made a two-decade high at 5.249% the next session, while Bessent publicly pressures Warsh Fed to ease. Central banks absorbing ~755 tonnes/yr as price-insensitive buyers.",
+        "datetime_et": null,
+        "action": "Accumulate in thirds: first tranche near 398, second under 390, third under 380. No urgency - the driver is measured in years and the entry is a pullback, not a breakout.",
+        "wait": true
+      },
+      "thesis": "When the sovereign issuer doubles its own bond buyback and the long end sells off anyway, the marginal buyer of duration is gone and the debasement bid is the residual - that is precisely the 2026 tape, with the deficit set to exceed 2025, inflation persistently above target and corporate issuance crowding Treasurys. Gold is 18.5% below its 509.70 high after a positioning washout and is only now reclaiming its 200-day (413.21) from below, so the structural thesis is intact while the price still carries correction damage. Central banks bought ~755t and, unlike ETFs, do not sell on bad days.",
+      "key_risk": "Gold is a real-rate asset and the 10y is at 4.70%. If the long-end selloff turns out to be a growth/term-premium story that ends with the Fed staying restrictive and real yields grinding higher, gold falls with bonds rather than hedging them - the January silver washout showed how violently this complex unwinds when leveraged longs are forced out. OPERATIVE INVALIDATION: a close below 361.39 (the correction low, ~$3,890/oz), 13.0% below spot. The central-bank invalidation carried in the original write-up - net purchases negative for two consecutive quarters - is real but is NOT usable inside any tradeable horizon: that data is reported with a quarter or more of lag, so it can confirm a loss but cannot prevent one. Judge this position on the price level, not on the tonnage series.",
+      "counter_argument": "The banks that ran gold up are marking it down: Goldman cut its end-2026 target from $5,400 to $4,900, JPMorgan to $4,500 for Q4, HSBC to $4,560 - all clustered at or barely above the current $4,475 spot. Red team's sharpening of that point: the 520 target implies roughly $5,600/oz, about 14% ABOVE the most bullish forecast cited in this report's own evidence base, and 557 implies ~$6,000. Nothing sourced here supports those levels; they are the analyst's extrapolation past every source he assembled. The ratio does not depend on it - re-anchored to the 509.70 prior high the trade still gives 2.94:1 against the 2.5 long-term floor - so read 520 as an aspiration and 509.70 as the level the evidence actually reaches. Gold has also already rallied 15% off 361.39, so much of the easy repair is done.",
+      "sources": [
+        "https://www.usagold.com/daily-precious-metals-market-report-august-20-2026/",
+        "https://www.cnbc.com/2026/08/20/treasury-bond-buybacks-long-term-yields.html",
+        "https://www.cnbc.com/2026/08/19/bessent-treasury-buybacks-yields-warsh-fed.html",
+        "https://www.kitco.com/news/article/2026-05-19/central-banks-are-buying-more-gold-expected-and-purchases-will-increase",
+        "https://www.goldrepublic.com/en-us/gold-price/forecast"
+      ],
+      "rank": 1,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 3.21,
+        "claimed_risk_reward": 3.21,
+        "live_price": 415.26,
+        "live_price_asof": "2026-08-20T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 913.5,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": 7.4909,
+        "checked_at_et": "2026-08-21T07:13:56-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 3.21:1 clears the 2.5:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 398.0 is -4.2% from live 415.26"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "long-term idea, no dated event expected"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "long-term target is valuation-anchored, not ATR-bound"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-08-20T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "no bid/ask available (normal outside regular hours)"
+          },
+          {
+            "check": "instrument_choice",
+            "status": "pass",
+            "detail": "GLD spot is correct for a long-term hold; futures roll costs make multi-year contract exposure awkward"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 4 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "4% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "sources",
+            "status": "pass",
+            "detail": "all 4 checked source(s) resolve"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "CEG",
+      "instrument": "Constellation Energy Corp",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "long_term",
+      "conviction": 3,
+      "unit": "usd",
+      "last_price": 272.92,
+      "last_price_asof": "2026-08-20T20:00:00+00:00",
+      "price_source": "nasdaq via market_data.py (prior close)",
+      "entry": {
+        "ideal": 266.0,
+        "zone_low": 255.0,
+        "zone_high": 276.0,
+        "order_type": "limit",
+        "condition": "Accumulate in thirds: 276, 262 (the 50-day), and 240 on any capitulation toward the 228.63 low. Do not commit full size before the mid-Atlantic rate-cap proposal has a defined shape."
+      },
+      "exit": {
+        "target": 385.0,
+        "scale_plan": "Trim a third at 340; hold the balance toward 385. Red team correction to the original write-up: 385 is NOT the prior high - it is the 200-session high (384.98), an artifact of the lookback window used in research. The actual 52-week high is 412.70, so 385 sits ~7% below real overhead resistance. That makes the target conservative rather than stretched, but the level was described wrongly and the drawdown was understated at -29.1% when it is -33.9%."
+      },
+      "stop": null,
+      "bear_case_price": 220.0,
+      "risk_reward": 2.59,
+      "position_size_pct": 3,
+      "risk_tier": "standard",
+      "avg_dollar_volume": 753000000,
+      "catalyst": {
+        "event": "US grid scarcity repricing: PJM capacity cleared at $329.17/MW-day for 2026/27 versus $28.92 for 2024/25, and the 2027/28 auction failed to procure enough supply for the first time in PJM history. PJM plans a reliability backstop procurement auction in Autumn 2026.",
+        "datetime_et": null,
+        "action": "Accumulate in thirds on weakness over the next two quarters. The driver runs to 2030; there is no reason to pay up for a single entry.",
+        "wait": false
+      },
+      "thesis": "The physical fact and the share price are pointing in opposite directions, which is the whole idea. PJM capacity prices went from $28.92 to $329.17 per MW-day in two delivery years - more than tenfold - and the 2027/28 auction failed to secure enough supply for the first time ever, with data centers set to add over 30GW of peak demand by 2030. Constellation owns the nuclear baseload that hyperscalers specifically need for 24/7 carbon-free power, yet it trades 33.9% below its 52-week high of 412.70, having been de-rated on political headlines rather than on power economics. One director bought $417,931 on the open market and there have been zero insider sales in six months.",
+      "key_risk": "The de-rating is not irrational and the political risk is concrete, not hypothetical: the Trump Administration and mid-Atlantic governors have floated capping electricity rates in exactly the region where these assets sit, and New York has a one-year moratorium on environmental permits for large data centers. A rate cap converts a scarcity windfall into a regulated return and would break this thesis outright. Management also guided 2026 adjusted earnings below consensus and is still digesting the Calpine acquisition, so the earnings bridge to a 385 share price is not yet visible. Invalidation: mid-Atlantic rate caps being enacted in law, or PJM capacity clearing materially lower in the Autumn 2026 backstop auction.",
+      "counter_argument": "The market has seen the same PJM numbers I have and sold the stock anyway, which is usually a sign the constraint is not the scarcity but who is allowed to collect on it. Political backlash tends to arrive precisely when a windfall becomes large and visible enough to be worth legislating against - so the very datapoint I am calling the bull case ($329/MW-day) is what makes a rate cap likely. Red team adds: the drawdown is deeper than the write-up stated - 33.9% off 412.70, not 29.1% - so the argument that the de-rating is finished is weaker, not stronger, than it was presented. The stock hit a 52-week low and drew a Citi downgrade; buying an AI-power darling that has already lost 35% of its value in the first half on the argument that it is cheap assumes the de-rating is over, and nothing in the tape says that yet. Note also that the PJM auction results are a year old and among the most written-up datapoints in US power - the scarcity is not the differentiated part of this idea; the willingness to underwrite the political risk is.",
+      "sources": [
+        "https://ieefa.org/resources/projected-data-center-growth-spurs-pjm-capacity-prices-factor-10",
+        "https://pro.edgex.exchange/en-US/news/article/pjm-first-capacity-shortfall-data-centers",
+        "https://www.thestreet.com/investing/stocks/ceg-constellation-energy-downgrade-by-citi",
+        "https://www.foreignpolicyjournal.com/2026/07/19/constellation-energy-nasdaq-ceg-stock-price-trades-at-deep-discount-as-new-york-moratorium-tightens-power-outlook/",
+        "https://thehill.com/policy/technology/5970522-data-center-power-costs-pjm/"
+      ],
+      "rank": 2,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.59,
+        "claimed_risk_reward": 2.59,
+        "live_price": 272.92,
+        "live_price_asof": "2026-08-20T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 913.6,
+        "bid": 273.82,
+        "ask": 275.38,
+        "spread_pct": 0.568,
+        "atr14": 10.563,
+        "checked_at_et": "2026-08-21T07:13:58-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.59:1 clears the 2.5:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 266.0 is -2.5% from live 272.92"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "long-term idea, no dated event expected"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "long-term target is valuation-anchored, not ATR-bound"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-08-20T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "pass",
+            "detail": "bid/ask spread 0.57%; the round trip costs 1% of the target move"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "3% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "1 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "EEM",
+      "instrument": "iShares MSCI Emerging Markets ETF",
+      "asset_class": "etf",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 3,
+      "unit": "usd",
+      "last_price": 66.62,
+      "last_price_asof": "2026-08-20T20:00:00+00:00",
+      "price_source": "nasdaq via market_data.py (prior close)",
+      "entry": {
+        "ideal": 65.6,
+        "zone_low": 64.8,
+        "zone_high": 66.2,
+        "order_type": "limit",
+        "condition": "Enter HALF size in the zone before Aug 28. Add the second half only after Warsh has spoken and the dollar has confirmed direction."
+      },
+      "exit": {
+        "target": 71.5,
+        "scale_plan": "trim half at 69.8, trail the balance toward the 71.57 prior high",
+        "time_stop": "2026-10-02"
+      },
+      "stop": 63.0,
+      "risk_reward": 2.27,
+      "position_size_pct": 2.5,
+      "risk_tier": "standard",
+      "avg_dollar_volume": 1424600000,
+      "catalyst": {
+        "event": "Warsh first Jackson Hole keynote as Fed chair, Fri Aug 28 morning ET - sets the dollar path 19 days ahead of the Sept 16 FOMC",
+        "datetime_et": "2026-08-28T10:00",
+        "action": "enter half before the speech, add the second half only after it; do not put full size on ahead of an unpriceable debut",
+        "wait": false
+      },
+      "thesis": "The dollar index is at 98.558, its lowest since May 14, and it is falling for the specific reason that helps emerging markets most - foreign capital demanding term premium to hold US debt rather than the Fed tightening - while flows into the two largest EM equity ETFs run at their strongest in over a decade. EEM is the one major EM vehicle with both room and structure: 6.92% below its 71.57 high with the price above its 200-day at 61.07, where VWO has only 2.4% of room and FXI and EWZ are both still below their 200-days.",
+      "key_risk": "The entire thesis is one variable - the dollar - and one man reprices it on Aug 28. Warsh has a hawkish record and no Jackson Hole track record as chair, so a firm debut asserting Fed independence against Bessent public pressure would bounce DXY off a three-month low and take EM down hard through the 63.00 stop in a session. EEM is also a basket, so it dilutes any single-country catalyst into beta.",
+      "counter_argument": "EEM sits exactly on its 50-day at 66.04 having gone nowhere for two months, which says the record inflows are being absorbed by supply rather than driving price - flows are a coincident indicator, not a leading one. And buying EM because the US long end is broken assumes contagion runs one way; historically a genuine US term-premium shock takes emerging markets down harder than the US, not less.",
+      "sources": [
+        "https://www.investing.com/news/economy-news/dollar-hugs-threemonth-lows-as-treasury-seeks-to-sooth-the-bond-market-4868503",
+        "https://www.alliancebernstein.com/corporate/en/insights/investment-insights/how-us-dollar-weakness-could-buoy-emerging-markets.html",
+        "https://www.regardsofwallstreet.com/news/jackson-hole-2026-dates-schedule-warsh-first-speech",
+        "https://www.morningstar.com/economy/what-weaker-us-dollar-means-investors-2026-beyond"
+      ],
+      "rank": 3,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.27,
+        "claimed_risk_reward": 2.27,
+        "live_price": 66.62,
+        "live_price_asof": "2026-08-20T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 913.7,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": 1.0581,
+        "checked_at_et": "2026-08-21T07:13:58-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.27:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 65.6 is -1.5% from live 66.62"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-08-28 is ahead of us"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 5.58 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-08-20T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "no bid/ask available (normal outside regular hours)"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "2.5% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "1 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "DG",
+      "instrument": "Dollar General Corp",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 3,
+      "unit": "usd",
+      "last_price": 120.58,
+      "last_price_asof": "2026-08-20T20:00:00+00:00",
+      "price_source": "nasdaq via market_data.py (prior close, equities shut); market cap verified via stockanalysis.com 2026-08-21",
+      "entry": {
+        "ideal": 119.0,
+        "zone_low": 117.0,
+        "zone_high": 119.5,
+        "order_type": "limit",
+        "condition": "Red team narrowed the zone from 117.0-121.5 to 117.0-119.5. The published 2.29 R:R holds only at the 119.00 ideal; a fill at the old 121.50 top of zone gave (135-121.5)/(121.5-112) = 1.42:1, below the 2.0 swing floor, so the zone as written permitted a fill that failed the report's own standard. At the new 119.50 cap the worst fill still returns 2.07:1. Do not chase the 120.58 last price - limit orders only, and no fill is better than a bad one four sessions before the print."
+      },
+      "exit": {
+        "target": 135.0,
+        "target_2": 139.4,
+        "scale_plan": "trim half into the 08-27 print if it gaps above 130; hold the rest to 135",
+        "time_stop": "2026-09-11"
+      },
+      "stop": 112.0,
+      "risk_reward": 2.29,
+      "position_size_pct": 2.0,
+      "risk_tier": "standard",
+      "market_cap_usd": 26600000000,
+      "avg_dollar_volume": 240000000,
+      "catalyst": {
+        "event": "Q2 earnings CONFIRMED for Thursday Aug 27 before the open, conference call 9:00 a.m. ET with CEO Todd Vasos and CFO Donny Lau. Consensus $2.01 EPS on $11.19B revenue.",
+        "datetime_et": "2026-08-27T09:00",
+        "action": "enter into the narrowed 117.0-119.5 zone before the print, limit orders only; trim half into any gap above 130",
+        "wait": false
+      },
+      "thesis": "The $4 gasoline Walmart blamed for its 2.6% comp miss is the same input that routes low-income grocery spend into dollar stores, and DG has already de-rated 23.8% from its 158.23 high while the trade-down it should capture is only now arriving. Bernstein store-visit data shows DG traffic accelerating from Q1 to Q2 2026 while peers decelerated - a company-specific datapoint, not a sector hope - against a 16.9x P/E, 8.3% FCF yield and 3.9% dividend yield, with consensus set at a beatable $2.01 on $11.19B.",
+      "key_risk": "Earnings on Aug 27 is a binary inside a 3.0% ATR name, so a guidance miss can gap straight through the 112 stop rather than filling it - the stop is an intention, not a guarantee. Red team cut the size from 2.5% to 2.0% on exactly that: a stop that cannot be relied on is not risk control, and size is the only real control left. The deeper risk is that trade-down is not the tailwind it used to be: DG's core low-end customer is under severe pressure, which cuts traffic and basket size even as new customers arrive. The stock also sits below its 20-day (123.84), 50-day (120.00) and 200-day (124.69), so nothing in the tape confirms the thesis yet.",
+      "counter_argument": "DG has been a value trap for three years - cheap on every screen and getting cheaper because the earnings power itself is eroding on shrink, labor and a permanently squeezed core shopper. The daily chart is below all major moving averages with a strong-sell technical reading, and buying a serial guidance-cutter four sessions before it guides again is the trade that lost money all year. My own TJX position, the same trade-down thesis in off-price, just stopped out twice in three sessions.",
+      "sources": [
+        "https://www.stocktitan.net/news/DG/dollar-general-corporation-announces-webcast-of-its-second-quarter-bipz3jdcgxs4.html",
+        "https://www.tikr.com/blog/dollar-general-stock-is-down-over-30-in-3-months-is-it-still-a-buy-in-2026",
+        "https://www.tradingpedia.com/2026/08/13/dollar-general-recovery-value-risks-and-2026-outlook/",
+        "https://public.com/stocks/dg/forecast-price-target",
+        "https://finance.yahoo.com/markets/stocks/articles/stock-market-today-aug-20-214858123.html"
+      ],
+      "rank": 4,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.29,
+        "claimed_risk_reward": 2.29,
+        "live_price": 120.58,
+        "live_price_asof": "2026-08-20T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 913.8,
+        "bid": 120.42,
+        "ask": 122.21,
+        "spread_pct": 1.475,
+        "atr14": 3.6337,
+        "checked_at_et": "2026-08-21T07:13:59-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.29:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 119.0 is -1.3% from live 120.58"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-08-27 is ahead of us"
+          },
+          {
+            "check": "earnings_date",
+            "status": "pass",
+            "detail": "earnings date 2026-08-27 confirmed against the calendar"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 4.4 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-08-20T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "bid/ask spread 1.48%; the round trip costs 11% of the target move \u2014 set the entry as a limit, never market"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "2.0% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "sources",
+            "status": "pass",
+            "detail": "all 4 checked source(s) resolve"
+          }
+        ]
+      }
+    }
+  ],
+  "watchlist": [
+    {
+      "symbol": "/MBTU6",
+      "instrument": "Micro Bitcoin futures (Sep 2026) - OPEN SHORT x2",
+      "note": "CLOSE BOTH SHORTS AT MARKET - the most urgent action in this report. Opened 08-18 @ 64,100 and 08-19 @ 64,340; BTC spot is $77,894, roughly 21% against entry on the underlying, and both blew through the 66,600 stop days ago. On a leveraged futures contract that is the whole risk budget and more. The thesis was continuation below $63k; what arrived instead was Treasury buyback liquidity, SEC token-fundraising exemptions plus a White House push on the Clarity Act, and $517M of spot-ETF inflows, into a market where 1.2M BTC had accumulated near a $63k cost basis - fuel for the >$1B of short liquidations in one hour through $69k. Do not average down. Do not re-short.",
+      "trigger": "Exit both contracts at market on the next futures session. No condition."
+    },
+    {
+      "symbol": "HD",
+      "instrument": "Home Depot - OPEN LONG x2",
+      "note": "CLOSE - do not wait for the 328 stop. Opened 08-18 @ 340.00 and 08-19 @ 337.49; last 334.49 after a 2.85% fall on 08-20, now below the 20-day (342.35), 50-day (339.74) and 200-day (346.25) and 15.9% off the 397.63 high. The thesis was a housing-turnover recovery, and the single most important input to housing turnover just made a two-decade high AFTER the Treasury doubled its buyback to defend it. That is the thesis falsified by the news, not by the price. Waiting for 328 buys nothing - it is inside a single 9.32 ATR day.",
+      "trigger": "Exit at market on the open."
+    },
+    {
+      "symbol": "LCII",
+      "instrument": "LCI Industries - OPEN LONG",
+      "note": "CLOSE AND BOOK +12.2%. Opened 08-18 @ 94.00, last 105.44, target was 138 with no stop. LCI supplies RV components, and an RV is the single most rate-sensitive and most fuel-sensitive big-ticket purchase in the US consumer basket - financed over 10-15 years at long rates, and 6-10 mpg. $4 gas and a 5.25% 30y attack it from both sides at once. The 138 target needs a discretionary recovery the tape is actively pricing out. This is the position most easily left alone because it is green, which is precisely why it is being closed.",
+      "trigger": "Exit at market on the open."
+    },
+    {
+      "symbol": "TJX",
+      "instrument": "TJX Companies - OPEN LONG (stopped out)",
+      "note": "CLOSE - already through the stop. Opened 08-19 @ 150.85, last 140.69 (-6.7%) against a 145.50 stop; the second TJX stop-out in three sessions. The trade-down-to-off-price thesis was mechanically right - Walmart's 2.6% comps and the $4-gas commentary confirm a weakening consumer - but off-price was sold with the rest of discretionary rather than bid as a defensive, which usually means the factor beta dominated the idiosyncratic story. Recommended 4x in 10 days, stopped twice. Not re-pitched today and the bar for a third pitch is not met.",
+      "trigger": "Exit at market. Do not re-enter."
+    },
+    {
+      "symbol": "NKE",
+      "instrument": "NIKE Inc Class B - OPEN LONG x2, DOWNGRADE NOTICE",
+      "note": "HOLD EXISTING SIZE, ADD NOTHING. This is a downgrade of positions opened 08-17 @ 40.00 and 08-18 @ 38.00, not a new idea, and it is on the watchlist rather than in the recommendations because at a 1.50 reward-to-risk (entry 40.00, revised target 52.00, bear case 32.00) it fails the 2.5 long-term floor. If you do not already own it, do nothing. TARGET CUT from 65/62 to 52 - the 200-day, a level the stock has actually traded at rather than an aspiration; the original 65 implied a 62% turnaround in a consumer Walmart just described as cutting back on $4 gas. HARD INVALIDATION ADDED at a close below 38.60, replacing the original no-stop structure: last 40.21 is 41.8% off the 69.14 high and only 3.5% above the 52-week low of 38.86, below its 20-, 50- and 200-day, and 'no stop' on a name making new lows is an unbounded bet on a turnaround with no date. Evidence is thin and one-sided - no dated catalyst, no insider buying, no confirmation in the price - which is why conviction is 2.",
+      "trigger": "Exit in full on a close below 38.60.",
+      "demotion_reason": "Reward-to-risk 1.50 against a 2.5 long_term floor; published as a position-management downgrade for existing holders only."
+    },
+    {
+      "symbol": "XLE",
+      "instrument": "Energy Select Sector SPDR - OPEN LONG x3",
+      "note": "HOLD, RAISE STOP TO 59.80, AND DELIBERATELY NOT RE-PITCHED. Open 08-15 @ 60.80, 08-16 @ 60.50, 08-18 @ 60.80; last 63.75, +4.9% on all three, 1.47% off the 52-week high and 18.5% above the 200-day. A single 59.80 stop replaces the old 57.80/58.60/59.20, sited just below the 20-day (60.08) so a genuine trend break takes it out rather than noise - roughly a free trade on all three tranches. Not a recommendation today: remaining reward to the 67 target is +5.1% against 6.2% of risk, a 0.82 reward-to-risk that fails the swing floor of 2.0, and XLE has been recommended 5 times in 10 days. The thesis is being confirmed - Walmart naming $4 gas reads straight through to energy revenue - which is exactly why the discipline matters. A confirmed thesis at a bad price is still a bad entry.",
+      "trigger": "Nothing to do unless 59.80 breaks. Re-entry would need a pullback that restores a 2.0 ratio."
+    },
+    {
+      "symbol": "PFE",
+      "instrument": "Pfizer Inc - OPEN LONG",
+      "note": "HOLD, NO CHANGE. Opened 08-18 @ 25.80, last 27.79 (+7.7%), above its 20-day (26.12), 50-day (25.31) and 200-day (25.98), 3.3% off a 52-week high on $1.06B a day. The best-behaving position in the book and the only one both working and structurally uncorrelated to the two things breaking today - long rates and the discretionary consumer. Not re-pitched because nothing changed and it needs nothing.",
+      "trigger": "No action."
+    },
+    {
+      "symbol": "CCJ",
+      "instrument": "Cameco Corp - OPEN LONG x2, continuing accumulation",
+      "note": "HOLD, CONTINUING ACCUMULATION - a continuing position, not a new idea. Open 08-17 @ 95.00 and 08-18 @ 88.00, target 135, long_term. Last 95.59, below the 200-day (104.82) but above the 20-day (93.51), 29.3% off the 135.24 high. Not re-captured today because there is no new information and no level change; re-pitching it would be noise. The uranium/datacenter-power thesis is undisturbed by today's macro, and a fiscal-dominance regime if anything favours hard assets and regulated power.",
+      "trigger": "No action. Accumulation continues on weakness."
+    },
+    {
+      "symbol": "REAL",
+      "instrument": "TheRealReal Inc",
+      "note": "Cleared on fundamentals and failed on price. Raised FY26 guidance on 08-06 with GMV +22% and 74.4% gross margin - a genuine trade-down beneficiary from the aspirational end, same consumer thesis as DG. Failed reward-to-risk at 1.83 against a shelf-registration bear case of 8.50. Moving that bear case to 8.05 would have passed it; that was declined. Recorded so the idea is not lost if the price improves.",
+      "trigger": "A pullback that gets the ratio above 2.0 against an unchanged 8.50 bear case."
+    },
+    {
+      "symbol": "VST",
+      "instrument": "Vistra Corp",
+      "note": "Same PJM power-scarcity thesis as CEG, worse evidence and worse structure. 0 open-market insider buys against 8 sells worth $6.86M in six months, price below its 20-, 50- and 200-day, and only 4.7% off a 52-week low. A deeper de-rating is not the same as better value. CEG was chosen over it on the insider tape and on structure.",
+      "trigger": "An insider buy on the tape, or a reclaim of the 50-day."
+    },
+    {
+      "symbol": "PRAX",
+      "instrument": "Praxis Precision Medicines",
+      "note": "The clean uncorrelated binary this report wanted, and it is not in the window. The relutrigine PDUFA moved from Sep 27 to Dec 27, 2026 - the FDA deemed additional sensitivity analyses of existing data a major amendment, with no new studies requested and no safety or manufacturing concerns cited, so it is procedural rather than a signal on approval. Also +136% off its 52-week low and only 7.2% off its high, so approval is substantially priced, with 0 insider buys against 12 sells worth $3.61M. Cash of ~$1.4B with runway into 2028 means dilution risk is genuinely low.",
+      "trigger": "Revisit in late November ahead of the Dec 27 PDUFA, on a materially lower price."
+    },
+    {
+      "symbol": "DHT",
+      "instrument": "DHT Holdings Inc",
+      "note": "Red team withdrew the recommendation; the OPEN POSITION MANAGEMENT stands unchanged - hold the 2026-08-18 position (entry 18.80, now 19.80, +5.3%), raise the stop to 18.60 just under the 20-day, and ADD NOTHING. It is withdrawn as a recommendation for three reasons. (1) NO SOURCE SUPPORTS THE THESIS: the two cited URLs are a generic market wrap and a precious-metals report - neither mentions tankers, ton-miles, OPEC+ or day rates, so the entire crude-tanker argument is unsourced, which config forbids. (2) THE TARGET HAS NO ANCHOR: 22.50 sits 9.5% above the 52-week high of 20.55, so it is a new-high projection with no overhead reference, not a resistance level. Re-anchored to the real first resistance at 20.55, the trade gives 0.75 of reward against 1.20 of risk from the 19.80 mark - 0.63:1, far below the 2.0 swing floor. (3) The published 2.90 R:R contradicts the report's own thesis text, which states 2.25; 2.90 is measured from a 19.60 add-entry that is below the market, while a holder's live ratio is 2.25. The reward here is largely spent, the same conclusion already reached for XLE at 0.82.",
+      "trigger": "Re-pitchable only with a sourced tanker-rate datapoint (day rates, ton-miles or an OPEC+ supply decision) and a target anchored to a level rather than projected beyond the 52-week high.",
+      "demoted_from_rank": 3,
+      "demotion_reason": "unsourced thesis; target 9.5% above the 52-week high with no overhead anchor; R:R falls to 0.63 against a level-anchored target"
+    },
+    {
+      "symbol": "BCC",
+      "instrument": "Boise Cascade Co",
+      "note": "Red team withdrew the recommendation and takes the report's own counter-argument at its word: 'If the honest read is that the whole rate-sensitive housing complex is uninvestable while the long end makes two-decade highs, then BCC should be closed too, and the only real argument for keeping it is that it is the one that has not broken yet.' That is a momentum argument wearing a fundamental costume, and it stopped being true yesterday: BCC closed 81.77, -1.64%, BELOW the 20-day at 81.99 - the one structural level the thesis cites as intact. Two further failures. NO COMPANY-SPECIFIC SOURCE: both cited URLs are macro bond articles; nothing sourced here concerns Boise Cascade, lumber or housing starts. And the book contradicts itself - the report's own top idea (GLD, conviction 4, 4%) is a bet that the long end keeps selling off, which is precisely the move BCC's key_risk names as fatal. Holding both without saying so is one view sized twice in opposite directions. FOR EXISTING HOLDERS of the 2026-08-18 position at 81.00: this is not an instruction to dump at the open - keep the raised 76.90 stop, add nothing, and treat the 20-day at 81.99 as the line that decides whether to exit into strength alongside the HD and LCII closes already recorded.",
+      "trigger": "A reclaim of the 20-day at 81.99 on a day the 30y is not making new highs, plus a company- or lumber-specific datapoint rather than a bond-market article.",
+      "demoted_from_rank": 4,
+      "demotion_reason": "thesis reduces to 'it has not broken yet' and it just broke the 20-day it cites; no company-specific source; directly contradicts the report's own conviction-4 long-end thesis"
+    },
+    {
+      "symbol": "EVTC",
+      "instrument": "EVERTEC Inc",
+      "note": "Demoted by validation: bid/ask spread 26.49%; the round trip costs 42% of the target move \u2014 too wide to trade this thesis",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 4,
+      "demotion_reason": "bid/ask spread 26.49%; the round trip costs 42% of the target move \u2014 too wide to trade this thesis"
+    }
+  ],
+  "validation_summary": {
+    "checked": 5,
+    "passed": 0,
+    "warned": 4,
+    "failed": 1,
+    "enforced": true,
+    "demoted": 1
+  }
+}
