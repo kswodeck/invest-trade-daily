@@ -86,8 +86,8 @@
       "direction": "buy",
       "horizon": "long_term",
       "conviction": 4,
-      "last_price": 136.21,
-      "last_price_asof": "2026-08-21T16:00 ET (prior close; re-quoted 2026-08-24 07:12 ET, US pre-session)",
+      "last_price": 135.66,
+      "last_price_asof": "2026-08-24T14:19:09+00:00",
       "price_source": "finnhub",
       "market_cap_usd": 45925000000,
       "avg_dollar_volume": 702000000,
@@ -190,7 +190,8 @@
             "detail": "1 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
           }
         ]
-      }
+      },
+      "distance_to_entry_pct": 1.24
     },
     {
       "symbol": "DHT",
@@ -200,8 +201,8 @@
       "direction": "buy",
       "horizon": "swing",
       "conviction": 3,
-      "last_price": 19.82,
-      "last_price_asof": "2026-08-21T16:00 ET (prior close; re-quoted 2026-08-24 07:12 ET, US pre-session)",
+      "last_price": 19.8,
+      "last_price_asof": "2026-08-24T14:19:05+00:00",
       "price_source": "finnhub",
       "market_cap_usd": 3200000000,
       "avg_dollar_volume": 62000000,
@@ -306,7 +307,8 @@
             "detail": "2 of 3 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
           }
         ]
-      }
+      },
+      "distance_to_entry_pct": 2.06
     },
     {
       "symbol": "DG",
@@ -316,8 +318,8 @@
       "direction": "buy",
       "horizon": "swing",
       "conviction": 3,
-      "last_price": 123.41,
-      "last_price_asof": "2026-08-21T16:00 ET (prior close; re-quoted 2026-08-24 07:12 ET, US pre-session)",
+      "last_price": 123.86,
+      "last_price_asof": "2026-08-24T14:19:10+00:00",
       "price_source": "finnhub",
       "entry": {
         "ideal": 119.0,
@@ -421,7 +423,8 @@
             "detail": "2 of 3 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
           }
         ]
-      }
+      },
+      "distance_to_entry_pct": 4.08
     },
     {
       "symbol": "AVGO",
@@ -431,8 +434,8 @@
       "direction": "buy",
       "horizon": "swing",
       "conviction": 2,
-      "last_price": 368.45,
-      "last_price_asof": "2026-08-21T16:00 ET (prior close; re-quoted 2026-08-24 07:12 ET, US pre-session)",
+      "last_price": 362.43,
+      "last_price_asof": "2026-08-24T14:19:11+00:00",
       "price_source": "finnhub",
       "market_cap_usd": null,
       "avg_dollar_volume": 7830000000,
@@ -539,7 +542,8 @@
             "detail": "1 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
           }
         ]
-      }
+      },
+      "distance_to_entry_pct": 6.6
     }
   ],
   "data_quality_notes": "READ THIS FIRST \u2014 three mandatory closes. Regardless of how the mechanical validator ranks or demotes them below, the following are actions for today, not watchlist items: (1) COVER the /MBTU6 September micro-bitcoin shorts at market and exit the BTC spot shorts. Four short recommendations were published 08-16 to 08-19 at 62,950/63,400/64,100/64,340 with stops at 65,200 and 66,600; bitcoin is 77,915, roughly 17% beyond the highest stop, on a leveraged product where the loss is unbounded. The risk control already failed \u2014 this is the single largest error in the open book. (2) CLOSE the TLT long from 82.60 at the open; long duration has no remaining support with the 30-year at a 19-year high and a September cut priced at 2c against a hike at 32c. (3) CLOSE TJX \u2014 the 08-19 entry at 150.85 is 6.8% underwater and its 145.50 stop was breached three days ago.\n\nPIPELINE CAVEAT: validate_report.py fails any idea lacking both an entry.ideal and an exit.target, so --enforce will demote the nine position-management entries here to the watchlist. For the six holds (XLE, CCJ, PFE, LCII, KRE, HD) that demotion is semantically right \u2014 no new money should go in. For the three closes above it is not, and the instruction stands regardless of where it ends up rendered.\n\nResearch completed rather than being cut off \u2014 notes.md carries a RESEARCH COMPLETE block, so truncated is false. The window was about 33 minutes (06:38-07:11 ET, verified against the clock); the [HH:MM ET] headings inside notes.md drift up to ~4 minutes fast because they were estimated, though every price and level in them came from a fetched source.\n\nComposition: 17 ideas, of which 8 deploy new capital (VST, DHT, NKE, DG, RARE, BCC, KXFEDDECISION, AVGO) and 9 are position management. That skew is the honest shape of the day \u2014 this book carried eleven open positions into a week with two opposing macro events, and cleaning it up was worth more than adding to it. There are NO intraday ideas: there is no US economic release on Monday 08-24 and no overnight futures mark was obtainable, so rather than manufacture one the lane is left empty.\n\nOn the reward-to-risk numbers, which is where this report has failed before: every ratio was recomputed here from the final entry, target and downside rather than carried over from the notes. They land at 3.88 (DHT), 3.00 (NKE), 2.88 (DG), 2.75 (RARE), 2.71 (VST), 2.40 (BCC), 2.33 (KXFEDDECISION) and 2.29 (AVGO) \u2014 spread across the range rather than clustered just above the floors, which is the signature to worry about. The stronger evidence of discipline is what did not publish: the research phase withdrew four adds outright when they failed on recomputation \u2014 XLE at 1.11, CCJ at 1.86, PFE at 2.44 and LCII at 2.33 \u2014 instead of nudging targets up to clear the bar. PFE missing 2.5 by 0.06 and being cut anyway is the behaviour the floor exists to produce. Those four names publish as holds with no buy level, and the entry.condition on each says so explicitly.\n\nPrices: every equity and ETF mark is the Friday 2026-08-21 close, re-quoted at 07:12 ET this morning with the US market in its pre-session. All 15 quotes returned ok:true and none had moved \u2014 that is a closed market, not stale data. Bitcoin is live from CoinGecko as of 06:39 ET. The /MBTU6 mark of 77,915 is BTC spot used as a proxy; no live futures quote was obtainable, and the cover instruction does not depend on the exact tick.\n\nSources that failed: Yahoo Finance returned HTTP 429 for every index, futures, FX and commodity symbol (^GSPC, ^NDX, ^DJI, ^RUT, ^VIX, /ES, /NQ, DXY, gold, WTI), so there is no live index, VIX, dollar or commodity level anywhere in this report and Friday's index closes are cited to a news article rather than a feed. market_data.py events returned zero markets for every query tried, so Kalshi was queried directly at api.elections.kalshi.com, which worked, and the Robinhood listing was cross-checked by hand. market_data.py history returned nothing for NUVL and EXAS, which is why NUVL's 09-18 PDUFA \u2014 an otherwise qualifying catalyst \u2014 is absent: no history meant no levels could be set. The FRED rates block returned null and the series were fetched individually instead. UPS and CVS are plausible long-term de-rates whose filings there was no time to read, so they were not captured rather than guessed at.\n\nTwo flags on the surviving book. The correlation cap is at its limit but not breached: HD, BCC and LCII are three expressions of one bet on US rates and housing, which is the maximum of three, and BCC's own key_risk says so. Three sizes were cut here to respect the conviction-2 lottery-ticket ceiling in config/strategy.md: AVGO from 1.5% to 1.0%, and KRE and HD from 2% to 1%. AVGO's evidence is genuinely one-sided (the bear catalyst is confirmed, the bull case is only management guidance) and it is correctly marked wait-for-the-print. For KRE and HD read the 1% as the cap rather than as a measurement \u2014 both are existing longs opened at roughly 2% and being held to a stop, so the size actually at risk is the larger number until they are stopped or closed. Finally, the core PCE release day is unresolved between Tuesday 08-25 and Wednesday 08-26 \u2014 previews disagree. Both fall before Warsh speaks on 08-28, which is what the Fed-hike contract actually depends on, so the ambiguity does not change the trade.\n\nRED TEAM (phase 2c, separate pass, ran after validation). Nothing was moved to the watchlist. That is deliberate, not leniency: ten of the seventeen entries are position management for positions already open, and demoting them would delete the stop and close instructions for live risk rather than protect anyone from it. What changed:\n\nRE-RANKED. The three mandatory closes were at ranks 9, 14 and 15, underneath six ideas asking for new money, while the note above called them the day's most urgent actions and the largest error in the book. Rank is this report's priority axis and a free-text preamble is not a substitute for it. The closes are now 1 (/MBTU6 bitcoin cover), 2 (TLT), 3 (TJX); the six actionable ideas follow at 4-9 and the eight holds at 10-17.\n\n/MBTU6 CARRIED A LIVE PIPELINE BUG. Its catalyst.wait was false while TLT's and TJX's were true, so publish_sheets.positions_from_report() would have opened a NEW long /MBTU6 line in state/open_positions.json dated 2026-08-24 \u2014 booking a fresh long bitcoin futures position on the morning the short book is unwound, into the permanent performance record. Set to true. Its second source, a Kalshi Fed-decision market URL, had nothing to do with bitcoin and was removed.\n\nVST'S FIRST ORDER DID NOT CLEAR THE FLOOR. entry.ideal is 134.00 and validates at 2.71 against a 2.5 long-term floor, but entry.condition instructed the first third at \"138 or better\" \u2014 above Friday's 136.21 close, so it fills instantly. At 136.21 the ratio is 2.44; at 138 it is 2.25. Both fail. The validated number described an order the reader was not told to place. Corrected the instruction to 134.00 rather than moving the 210 target, which is the failure mode this phase exists to catch. Separately, NVIDIA reports 2026-08-26 after the close and VST is an AI-power proxy that de-rated 28% in the July-August semiconductor selloff \u2014 an index-level dated risk two days out, absent from key_risk on the top-ranked, largest-size idea. Added.\n\nNKE DOWNGRADED 3 TO 2, ADD WITHDRAWN. This was the only continuing position where adding was still sanctioned, at 3% and conviction 3, on the strength of a 3.00 ratio. That ratio is built from a 62.00 target and a 32.00 bear case, and NKE's sole source is a finnhub price quote. No filing, no earnings release, no analyst target, no margin datapoint \u2014 a price is not evidence, and both endpoints of the arithmetic are unsupported. Every other hold in this report withdrew its add on recomputation; the one that kept its add has the weakest evidence base of the seventeen. Entry level removed, consistent with CCJ, PFE, LCII and XLE. The existing long from 40.00/38.00 stands.\n\nBCC DOWNGRADED 3 TO 2. Its catalyst field cited \"building-products demand against a 30-year Treasury yield at its highest since 2007\" \u2014 the bear case for a housing-levered long, presented as its reason to exist \u2014 plus a 20-day/50-day cross. Neither of its two sources carries a building-products datapoint; one is a price quote and the other is a generic NVDA/Jackson Hole preview. Rewritten to say plainly that this is a hold-to-stop, not a thesis.\n\nCORRELATION COUNT UNDERSTATED. The note above says HD, BCC and LCII are three expressions of one rates-and-housing bet and that the cap of three is \"at its limit but not breached.\" KRE is a fourth: its own catalyst field names the 09-16 FOMC and a 32c hike as the driver. TLT was a fifth until today. After TLT closes the book holds four live rate-path longs against a stated cap of three \u2014 a breach, not a limit. It is not fixable by cutting one, because all four are hold-to-stop instructions on open positions and removing one deletes its stop. Recorded so the next run does not add a fifth.\n\nTHREE VALIDATOR FAILURES ARE ARTIFACTS, NOT DEFECTS. (1) The Kalshi 404s on ranks 6, 1 and 16 were transient. Re-queried live at 07:2x ET: KXFEDDECISION-26SEP-H25 returns 200 with yes_bid 31c / yes_ask 32c / last 32c, 1.74M open interest, and the H0 maintain leg at 67/68c \u2014 the 32c entry price and the 69% Robinhood cross-check in that idea are both confirmed against the exchange. It is the best-sourced idea in the report and keeps conviction 3. (2) The 4.29% CCJ and 9.37% LCII spreads that failed on liquidity are pre-market quotes on a closed market, not real trading costs; CCJ trades hundreds of millions a day. (3) DHT's earnings_date warning is a false positive \u2014 its catalyst is Frontline's 08-31 print, not DHT's own, and FRO 2026-08-31 bmo was confirmed on the fetched calendar along with DG 08-27 bmo, NVDA 08-26 amc and AVGO 09-02 amc. Every dated catalyst in this report checks out.\n\nTWO KEPT WITH THE ARITHMETIC FLAGGED. RARE's 2.75 is computed against a 21.50 stop that its own key_risk calls \"decoration\" \u2014 a second CRL gaps an ultra-rare gene therapy well through it, and against a realistic 13-14 the ratio is about 1.0. The idea survives because the CMC-only CRL argument is specific, falsifiable and genuinely well sourced, and because the write-up already tells the reader to hold it as a defined full-size loss; but the 2.75 should not be read as risk control. DG's 2.88 assumes a 119.00 fill inside a 113-121 zone against a 111 stop; a gap-down fill near the bottom of that zone turns the ratio into a mirage produced by a 2-point stop. Both are entered after or around their dated events at 2%, which is the mitigation.\n\nThe composition line above is also wrong on its own count: six entries have wait=false and are acted on today (VST, DHT, NKE before this pass, RARE, the Kalshi hike contract, and the bitcoin cover), not eight. DG, AVGO and BCC are wait-for-the-print or hold instructions, and NKE has now joined the no-new-money group, making ten entries with no entry level rather than nine. Validation demoted 13 idea(s) whose numbers did not check out. 4 more carry warnings \u2014 see the validation block on each.",
@@ -656,5 +660,7 @@
       "demoted_from_rank": 17,
       "demotion_reason": "entry or target is missing; cannot compute without entry and target; no entry price"
     }
-  ]
+  ],
+  "last_refreshed_et": "2026-08-24T10:19:33-04:00",
+  "last_refresh_session": "regular"
 }
