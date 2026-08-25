@@ -1,0 +1,758 @@
+{
+  "date": "2026-08-25",
+  "generated_at_et": "2026-08-25T07:08:03-04:00",
+  "research_minutes": 42,
+  "truncated": false,
+  "data_quality_notes": "READ THE TOP FIVE FIRST \u2014 THEY ARE EXITS, NOT TRADES. Ranks 1-5 (/MBTU6, BTC, TJX, TLT, KRE) close existing positions. /MBTU6 is the urgent one: the micro-bitcoin short carried a 66,600 stop and bitcoin is 79,258, roughly 19% past it on a leveraged product with unbounded loss. The 2026-08-24 report already ordered this cover at 77,915 and it was not executed, so the loss has widened another ~1,350 points per contract. TJX's 145.50 stop was breached 2026-08-19 and has not been recovered since. These five have entry == target by construction, so validate_report.py will score their reward-to-risk as undefined and may demote them to the watchlist. That demotion is a mechanical artefact of the schema, not a judgement: they are actions for today. Their risk_reward is written as null rather than a fabricated ratio.\n\nRANKING NOTE. Rank is conviction first, then recomputed reward-to-risk, per config/strategy.md. Within a conviction tier the exits are placed ahead of the new ideas because they have no reward-to-risk to rank on and no entry decision to make \u2014 they are due today. That is the one deliberate departure from a pure R:R sort.\n\nPRICES. The run is at ~07:20 ET, pre-market. Every equity and ETF last_price is the 2026-08-24 16:00 ET close from Finnhub \u2014 a closed market, not a stale quote. Bitcoin (79,258, +2.2% 24h) and the Kalshi contract are live. No live index, VIX, DXY, oil or gold print was obtainable all session: Yahoo Finance returned HTTP 429 on every symbol, Finnhub refuses CFD indices, Stooq 404'd the ^-prefixed index symbols and no Alpha Vantage key is configured. The index levels in market_context are therefore the CNBC 2026-08-24 closes and are labelled as such. There is no 30-year yield read this run.\n\nTOOLING BUG FOUND. scripts/market_data.py `events` returns unusable output \u2014 multi-leg parlay markets with null bid/ask/last, because Kalshi renamed the price fields to yes_bid_dollars / yes_ask_dollars / last_price_dollars and the parser still reads the old names. Research worked around it by calling the Kalshi API directly; the Fed contract prices here come from that direct call. Event-contract hunting is blind until this is fixed.\n\nREWARD-TO-RISK. All seven ratios were recomputed here from the final entry, target and downside rather than taken from the notes: VST 3.10, BCC 2.91, NVDA 2.86, KXFEDDECISION 2.75, NKE 2.74, XLE 2.43, DHT 2.07. The spread is wide rather than clustered just above the floors, which is the fitted-target signature this report has shown before. Two ideas changed on their own arithmetic during the falsification pass and both were fixed by demanding a better price, not a better target: XLE had been captured with entry and stop both at 60.20 (undefined R:R) and was re-cut with a 57.40 stop on new money; VST at yesterday's unfilled 134.00 gave only 2.15 against a 108 bear case, below the 2.5 long-term floor, so the entry was lowered to 128.00 for 3.10. DHT at 2.07 is the one ratio sitting close to its floor and should be read as marginal.\n\nMIX AND REPETITION. Twelve ideas: five exits, four accumulations or restated levels, two position holds with changed risk, one conditional event contract. Nothing intraday cleared the bar \u2014 the tape on 2026-08-24 was a rotation out of AI into consumer discretionary rather than a directional day, and the week's real events (PCE Wednesday morning, NVDA Wednesday after the close, Warsh at Jackson Hole Friday) are all ahead. Two ideas are marked WAIT and should not be entered today: NVDA (only on a good-print-bad-reaction flush into 190-201 after Wednesday) and the Fed hike contract (only after Warsh speaks Friday). XLE and DHT have been pitched five and four times respectively in ten days; both are carried here as holds with explicit do-not-chase instructions rather than as fresh pitches. Correlation: three ideas key off the Fed path (TLT close, KRE close, KXFEDDECISION yes), which is exactly at the cap of three \u2014 VST is rate-sensitive but points the other way, and its rate exposure is named in its key_risk.\n\nWHAT WAS REJECTED, so it is not re-pitched tomorrow: AGX ($126.6M insider selling into an 11-day slide); JELD (the tariff read was backwards \u2014 a ~$14M cost, and 11.3x levered); CULP and VRA (real insider clusters, both fail the $500K dollar-volume floor); a DE short (tariff list not published); memory names MU/WDC/SNDK (6-9% ATRs, no edge); software into this week's prints (all within 6% of highs); homebuilder shorts (late); and the Kalshi BTC-100k contract (fair value 34-46% against a 36-39% market \u2014 no edge). MHK 134.07 was identified as the cleanest short expression of the panel-tariff cost side and deliberately passed on: no dated catalyst, requires margin, and no evidence on Mohawk's specific Canadian panel exposure. AMWD and AZEK were left unchecked when the history source returned no data \u2014 a real gap in that sweep. ELV showed a $2.24M three-buyer insider cluster with a 2026-07-17 purchase and is not yet researched enough to publish.\n\nResearch ran 06:35-07:17 ET, about 42 minutes, and finished inside its budget rather than being cut off, so truncated is false. The [HH:MM ET] headings early in notes.md drift up to ~6 minutes fast; every price in them was fetched. Canada's counter-tariff product schedule for 2026-09-08 has not been published, so the read-across to BCC's distribution arm could not be sized.\n\nRED TEAM (phase 2c). Twelve ideas in, nine out. Three cut, two downgraded or re-conditioned, one source fault fixed that would otherwise have destroyed a good idea.\n\nCUT. BTC (was rank 2) \u2014 Robinhood Crypto cannot short, so the two 'sell' lots the state file carries at 62,950 and 63,400 could never have been opened; there is no order to place and the real bitcoin exposure to close is /MBTU6 at rank 1. KXFEDDECISION-26SEP-H25 (was rank 12) \u2014 the 45c entry is 32% above the live 34c ask with no fair value offered at 45, while the idea's own key_risk concedes the October and December legs make 33c coherent rather than mispriced; there is also an unaddressed pending order in the same contract at 32c from 2026-08-22. XLE (was rank 10) \u2014 the 60.20 new-money tranche carried a 57.40 stop sitting 2.50 below the 59.90 stop being placed on the existing lots, so it could never reach its own stop; the 2.43 described a tranche the idea itself said not to buy, and the honest forward ratio on the position that exists is 1.21. The XLE stop-raise instruction is preserved in full in its watchlist note and is still an action for today.\n\nSOURCE FAULT, NOT A DATA FAULT. Five ideas were failed on 'sources return 404' for the Kalshi markets URL. That is a validator artifact: check_sources issues a HEAD request, and this endpoint answers 404 to HEAD while returning 200 with live data to GET \u2014 verified here, and the payload's 0.33/0.34 matches what the report quotes. Left alone, --enforce would have demoted VST, a conviction-4 idea whose every other check passed, on an HTTP-method quirk. The URL has been replaced on all five with the Robinhood event page, which is the trading venue anyway and resolves cleanly. scripts/validate_report.py should fall back to GET when a HEAD returns 404.\n\nDOWNGRADED. VST 4 to 3, size 4% to 3%. The 3.10 ratio rests entirely on a 108 bear case that is asserted, never derived; at 104 it is 2.58 and at 100 it is 2.21, under the 2.5 long-term floor. The 128.00 entry also sits below the 250-day low of 132.66, so the first tranche only fills on the breakdown that is the counter-argument playing out. Thesis intact, evidence thinner than the conviction claimed.\n\nFACTUAL CORRECTION. NVDA's entry condition gated on 'revenue at or above the ~$91.9B consensus', taken from a preview article \u2014 but this run's own notes.md line 16 and the Finnhub earnings calendar both carry $93.6B revenue / $2.13 EPS. A $92B print would have cleared the published bar while missing the Street by 1.8%, which is precisely the print that flushes. The bar is now $93.6B. DHT's key_risk now discloses that its 2.07 describes a limit that has failed to fill twice, and that the lot which actually exists has a forward ratio of 1.53 from 19.72.\n\nNOT CUT, AND DELIBERATELY. The four surviving exits map to real open lots verified against state/open_positions.json (/MBTU6 64,100 and 64,340; TJX 150.85 stop 145.50; TLT 82.60; KRE 76.80 stop 74.20). They fail direction_consistency because a close has entry == target by construction \u2014 a schema artefact, not a judgement. BCC keeps conviction 4: it is the best-evidenced new idea in the report, the product overlap with the Section 338 tariff list is exact rather than thematic, the segment figures trace to the Q2 release and the 10-Q, and its counter_argument already names the launder-a-loser hazard without being asked. Every price in the report was re-fetched and matches its source to the cent; nothing was fabricated. Correlation after the cuts: two Fed-path ideas (TLT close, KRE close), both risk-reducing exits rather than new exposure, down from three.\n\nCARRIED, NOT ACTIONED. Six open positions get no instruction today \u2014 CCJ (two lots, no stop), PFE, and the pending CEG, EEM (three duplicate entries), DG, LULU, GLD, DINO and SVRA orders. That is a gap in the research phase, not something the red team can fill at this hour, and it is recorded so tomorrow starts from it.\n\nTWO MORE VALIDATOR FALSE POSITIVES, CHECKED SO THEY ARE NOT ACTED ON. DHT's 'claims an earnings catalyst but DHT is not on the fetched calendar' is correct and irrelevant \u2014 the catalyst is Frontline's print, not DHT's, and FRO was confirmed on the calendar for 2026-08-31 before the open at EPS 2.5667 on $749.7M, matching the report to the decimal. NVDA's target-feasibility warning assumes 15 sessions; the time stop is 2026-10-15, about 35 sessions past the print. Neither flag changed a level. Validation demoted 4 idea(s) whose numbers did not check out. 5 more carry warnings \u2014 see the validation block on each.",
+  "market_context": {
+    "summary": "The regime is hike risk, not cut hope, and every rate-sensitive long in the book is fighting it. Kalshi prices the 2026-09-16 FOMC at 33-34c for a 25bp HIKE against 0-1c for any cut, with October at 22-23c and December at 24-28c for a hike \u2014 essentially zero probability of easing across three consecutive meetings, on real open interest (4.03M contracts on September hold, 1.83M on September hike). The bond market agrees: the 10-year rose to 4.74% from 4.69%, the 2-year to 4.24% from 4.19%, and the 10y-2y curve flattened to +0.46 from +0.50. Core PCE at 3.3% against a 3.63% effective funds rate leaves a real policy rate near 0.3%. The 2026-08-24 tape was a rotation rather than a risk-off day \u2014 SPX -0.28%, Nasdaq -0.76%, Dow +0.26% \u2014 with memory and AI hardware broken (MU -5.8%, SanDisk -6%, Seagate -6.5%, NVDA -2.91%, MRVL -3.27%) while consumer discretionary ripped (FIVE +5.0%, KSS +4.0%, ULTA +3.3%, ANF +3.1%). Bitcoin is 79,258, up 2.2% in 24 hours and up roughly 26% in nine sessions. The week is front-loaded onto Wednesday: July core PCE at 08:30 ET and NVIDIA's fiscal Q2 after the close, then Kevin Warsh's first Jackson Hole keynote as Chair on Friday morning.",
+    "regime": "mixed",
+    "levels": {
+      "spx": "7652.86 (2026-08-24 close, CNBC \u2014 no live print available)",
+      "nasdaq_composite": "25980.19 (2026-08-24 close, CNBC)",
+      "dow": "53417.16 (2026-08-24 close, CNBC)",
+      "vix": null,
+      "dxy": null,
+      "wti": null,
+      "gold": null,
+      "us10y": 4.74,
+      "us2y": 4.24,
+      "us10y_2y": 0.46,
+      "fed_funds_effective": 3.63,
+      "btc": 79258.0,
+      "eth": 2476.86,
+      "unemployment_rate": 4.1,
+      "core_pce_yoy": 3.3,
+      "kalshi_sep_hike_25bp_cents": "33/34",
+      "kalshi_sep_cut_cents": "0/1"
+    },
+    "econ_calendar": [
+      {
+        "event": "July core PCE, personal income and spending",
+        "datetime_et": "2026-08-26T08:30",
+        "importance": "high",
+        "consensus": "+0.2% m/m, 3.3% y/y unchanged"
+      },
+      {
+        "event": "Q2 GDP second estimate, durable goods, CB consumer confidence",
+        "datetime_et": "2026-08-26T08:30",
+        "importance": "medium",
+        "consensus": null
+      },
+      {
+        "event": "NVIDIA fiscal Q2 2027 earnings (after the close)",
+        "datetime_et": "2026-08-26T16:20",
+        "importance": "high",
+        "consensus": "~$91.9B revenue, $2.08-2.13 EPS"
+      },
+      {
+        "event": "Jackson Hole Symposium opens",
+        "datetime_et": "2026-08-27T09:00",
+        "importance": "medium",
+        "consensus": null
+      },
+      {
+        "event": "Fed Chair Kevin Warsh Jackson Hole keynote (his first as Chair)",
+        "datetime_et": "2026-08-28T10:00",
+        "importance": "high",
+        "consensus": "69% of surveyed fund managers expect a neutral tone"
+      },
+      {
+        "event": "Frontline (FRO) Q2 earnings, before the open \u2014 the VLCC day-rate read for DHT",
+        "datetime_et": "2026-08-31T08:00",
+        "importance": "medium",
+        "consensus": "EPS 2.57 on $750M revenue"
+      },
+      {
+        "event": "Canadian counter-tariffs on $20B of US goods take effect",
+        "datetime_et": "2026-09-08T00:00",
+        "importance": "medium",
+        "consensus": null
+      },
+      {
+        "event": "August CPI",
+        "datetime_et": "2026-09-10T08:30",
+        "importance": "high",
+        "consensus": null
+      },
+      {
+        "event": "FOMC rate decision",
+        "datetime_et": "2026-09-16T14:00",
+        "importance": "high",
+        "consensus": "Kalshi: hold 65/66c, hike 25bp 33/34c, cut 0/1c"
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "symbol": "BCC",
+      "instrument": "Boise Cascade Company",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "long_term",
+      "conviction": 4,
+      "unit": "usd",
+      "entry": {
+        "ideal": 76.5,
+        "zone_low": 74.0,
+        "zone_high": 80.0,
+        "order_type": "limit",
+        "condition": "Accumulate into the 200-day at 76.71 in thirds. Hold the existing 81.00 lot; only new money waits for the zone."
+      },
+      "exit": {
+        "target": 110.0,
+        "target_2": 131.0,
+        "scale_plan": "Trim a third at 110. The 131.27 print from the last cycle is the second anchor, not a base case.",
+        "time_stop": "2028-08-25"
+      },
+      "stop": null,
+      "bear_case_price": 65.0,
+      "position_size_pct": 3,
+      "risk_tier": "standard",
+      "market_cap_usd": 2894000000,
+      "catalyst": {
+        "event": "A 50% US tariff on Canadian plywood, wood veneer, laminated veneer lumber and MDF took effect 2026-08-19 under three Section 338 proclamations issued 2026-07-20. Separately, Boise Cascade became sole nationwide distributor of James Hardie s full product portfolio effective 2026-07-31.",
+        "datetime_et": null,
+        "action": "Accumulate in thirds into the 74-80 zone, with the 200-day at 76.71 as the anchor. Add under 70 on any housing-driven flush. There is no need to chase 82; the tariff is a multi-quarter margin change, not a one-day event.",
+        "wait": false
+      },
+      "thesis": "Boise Cascade manufactures exactly the four products Washington just put a 50% tariff on \u2014 plywood, veneer, LVL and MDF \u2014 and the market has not repriced it: the tariff went live 2026-08-19 and BCC has traded 83.13, 81.77, 82.47, 82.24 since, down 1.1%. The margin arithmetic is already visible before any tariff help, with Wood Products EBITDA at $52.4M in Q2 against $37.3M a year earlier on plywood pricing up 15% y/y; the segment s weak spot was EWP, where I-joist pricing fell 7% and LVL 4% against Canadian import competition that now carries a 50% duty. At $2.90B market cap, ~$148M net debt and ~$505M of annualised Q2 EBITDA, the stock trades near 6.0x EV/EBITDA and 37% below its 18-month high of 131.27.",
+      "key_risk": "Housing demand, which is the whole bear case. Tariffs raise panel prices, but if starts roll over under a Fed that the market gives a one-in-three chance of hiking in September, BCC loses on volume what it gains on price \u2014 and its Building Materials Distribution arm, which produced the larger $85.6M of Q2 segment EBITDA, actually pays the higher input costs. Management named volatile mortgage rates as a headwind in the Q2 release.",
+      "counter_argument": "The honest hazard in this specific recommendation is that it converts an existing 81.00 swing long with a 76.00 stop into a stop-free long-term hold, which is the classic way a trader launders a losing trade into an investment. Two things make it defensible here rather than a rationalisation: the position is green, not red, and the thesis genuinely changed after entry \u2014 the tariff took effect and the James Hardie agreement began, both after 2026-08-18. The 76.00 stop is being removed deliberately and the invalidation below replaces it. If US housing starts fall more than 10% year-over-year for two consecutive months, or Wood Products segment EBITDA fails to exceed the $52.4M Q2 print in either Q3 or Q4 despite the tariff, the thesis is wrong and the position should be sold regardless of price.",
+      "sources": [
+        "https://kcma.org/insights/president-trumps-new-section-338-tariffs-products-canada",
+        "https://woodcentral.com.au/section-338-tariffs-canada-lumber/",
+        "https://www.stocktitan.net/news/BCC/boise-cascade-company-reports-second-quarter-2026-w2rkx06awvdp.html",
+        "https://www.sec.gov/Archives/edgar/data/1328581/000132858126000027/bcc-20260630.htm"
+      ],
+      "rank": 1,
+      "last_price": 82.24,
+      "last_price_asof": "2026-08-24T16:00:00-04:00",
+      "price_source": "finnhub (2026-08-24 close)",
+      "risk_reward": 2.91,
+      "distance_to_entry_pct": 7.5,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.91,
+        "claimed_risk_reward": 2.91,
+        "live_price": 82.24,
+        "live_price_asof": "2026-08-24T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 918.9,
+        "bid": 82.41,
+        "ask": 83.21,
+        "spread_pct": 0.966,
+        "atr14": 2.6442,
+        "checked_at_et": "2026-08-25T07:19:46-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.91:1 clears the 2.5:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 76.5 is -7.0% from live 82.24"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "long-term idea, no dated event expected"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "long-term target is valuation-anchored, not ATR-bound"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-08-24T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "pass",
+            "detail": "bid/ask spread 0.97%; the round trip costs 2% of the target move"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 4 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "3% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "1 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "VST",
+      "instrument": "Vistra Corp",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "long_term",
+      "conviction": 3,
+      "unit": "usd",
+      "entry": {
+        "ideal": 128.0,
+        "zone_low": 122.0,
+        "zone_high": 134.0,
+        "order_type": "limit",
+        "condition": "LEVEL LOWERED FROM YESTERDAY, DELIBERATELY. The 134.00 published 2026-08-24 did not fill, and against a 108 bear case it only offers 2.15 to 1 \u2014 below the 2.5 floor. 128.00 offers 3.10 to 1. Accumulate in thirds; the third tranche belongs under 122. Red team note: 128.00 is below the 250-day low of 132.66, so the first tranche requires a breakdown to fill. Do not shorten the accumulation schedule to force a fill, and do not pay up toward 134 to get involved \u2014 the entry was lowered on purpose."
+      },
+      "exit": {
+        "target": 190.0,
+        "target_2": 215.0,
+        "scale_plan": "Trim a third at 190. The 219.82 print from earlier in the cycle is the second anchor, not the base case.",
+        "time_stop": "2029-08-25"
+      },
+      "stop": null,
+      "bear_case_price": 108.0,
+      "position_size_pct": 3,
+      "risk_tier": "standard",
+      "catalyst": {
+        "event": "Merchant power repricing to structural datacenter load growth, against 2026 guidance reaffirmed at the Q2 call on 2026-08-07 \u2014 adjusted EBITDA $6.8-7.6B and adjusted FCF before growth $3.925-4.725B.",
+        "datetime_et": null,
+        "action": "Accumulate in thirds across 122-134 over the next two quarters. Add under 122 on any macro-driven flush. The driver is a multi-year load-growth imbalance, not a print, so there is no reason to pay up for immediacy.",
+        "wait": false
+      },
+      "thesis": "CONTINUING IDEA, RE-LEVELLED. Vistra closed 135.66, 38.3% below its 219.82 high, below its 20-day (143.96), 50-day (153.13) and 200-day (159.58), and 2.3% above its 250-day low of 132.66 \u2014 a merchant generator being sold while the load-growth thesis is unchanged and guidance was reaffirmed three weeks ago. Today s work adds the shape of the wider power complex: over 250 sessions the pre-revenue story names have been destroyed \u2014 SMR -84.2%, OKLO -79.5%, NNE -70.0%, LEU -61.8% \u2014 while businesses that actually generate cash held far better, with CCJ only 24.4% off its high. Vistra sits on the cash-flow side of that split and is being marked as though it sits on the narrative side.",
+      "key_risk": "BEAR-CASE SENSITIVITY, ADDED BY RED TEAM AND THE REASON THIS IS CONVICTION 3, NOT 4. The whole 3.10 ratio rests on a 108 bear case that is asserted rather than derived anywhere in the research. It is load-bearing and it is fragile: at a 104 bear case the ratio falls to 2.58 and at 100 it is 2.21, below the 2.5 floor this report holds long-term ideas to. A 100 handle is not a stretch for a merchant generator in a hiking cycle when the speculative names in the same complex are down 70-85%. Note also that the 128.00 entry sits BELOW the 250-day low of 132.66, so it only fills on a break to new lows \u2014 which is the counter-argument below actually happening, not a discount handed over for free. Then rates: this is a capital-intensive generator with real leverage into a market pricing a 33-34% chance of a September hike, zero chance of a cut across three meetings, and a 10-year that rose to 4.74%. Higher discount rates compress exactly this kind of long-duration cash-flow asset, and that is the most likely reason the de-rating runs further before it reverses. With no hard stop, size to survive another 20% drawdown \u2014 which is why the entry was moved down rather than the target moved up.",
+      "counter_argument": "The strongest case against is that merchant power margins are cyclical and the datacenter load story is the same story that carried this complex into a bubble which has since lost 70-85% in its speculative names; a 38% de-rating in Vistra may be the first leg of that repricing rather than the end of it. Invalidation, replacing a stop: if Vistra cuts or withdraws its 2026 adjusted EBITDA guidance of $6.8-7.6B, or if adjusted FCF before growth comes in below the $3.925B low end for two consecutive quarters, the thesis is wrong and the position should be sold regardless of price.",
+      "sources": [
+        "https://www.nasdaq.com/market-activity/stocks/vst/historical",
+        "https://fred.stlouisfed.org/series/DGS10",
+        "https://robinhood.com/us/en/prediction-markets/economics/events/fed-rate-decision-in-september-2026-sep-16-2026/"
+      ],
+      "rank": 2,
+      "last_price": 135.66,
+      "last_price_asof": "2026-08-24T16:00:00-04:00",
+      "price_source": "finnhub (2026-08-24 close)",
+      "risk_reward": 3.1,
+      "distance_to_entry_pct": 5.98,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 3.1,
+        "claimed_risk_reward": 3.1,
+        "live_price": 135.66,
+        "live_price_asof": "2026-08-24T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 918.9,
+        "bid": 137.83,
+        "ask": 138.08,
+        "spread_pct": 0.181,
+        "atr14": 4.6123,
+        "checked_at_et": "2026-08-25T07:19:58-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 3.1:1 clears the 2.5:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 128.0 is -5.6% from live 135.66"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "long-term idea, no dated event expected"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "long-term target is valuation-anchored, not ATR-bound"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-08-24T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "pass",
+            "detail": "bid/ask spread 0.18%; the round trip costs 0% of the target move"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "3% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "1 of 3 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "NVDA",
+      "instrument": "NVIDIA Corp",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 3,
+      "unit": "usd",
+      "entry": {
+        "ideal": 196.0,
+        "zone_low": 190.0,
+        "zone_high": 201.0,
+        "order_type": "limit",
+        "condition": "ONLY AFTER THE PRINT, AND ONLY ON A GOOD-PRINT-BAD-REACTION FLUSH. Required: fiscal Q2 revenue at or above $93.6B AND October-quarter guidance at or above consensus, with the stock trading into 190-201 on the reaction. If the numbers miss, or if it gaps up, this trade does not exist. RED TEAM CORRECTION: the condition previously read '~$91.9B consensus', taken from a preview article, but this run's own notes.md and the Finnhub earnings calendar both carry the estimate at $93.6B revenue / $2.13 EPS. A $92B print would have cleared the old published bar while missing the Street by 1.8% \u2014 the exact print that sells off. The bar is the higher number."
+      },
+      "exit": {
+        "target": 236.0,
+        "target_2": 260.0,
+        "scale_plan": "Trim half at 236, the 120-day high. Trail the rest against the 20-day.",
+        "time_stop": "2026-10-15"
+      },
+      "stop": 182.0,
+      "position_size_pct": 3,
+      "risk_tier": "standard",
+      "catalyst": {
+        "event": "NVIDIA fiscal Q2 2027 earnings, 2026-08-26 after the close. Company guidance was ~$91.0B revenue plus or minus 2% with GAAP/non-GAAP gross margin ~74.9%/75.0%. Consensus is $93.6B revenue and $2.13 EPS per the Finnhub earnings calendar fetched this run \u2014 above the top of company guidance, which is normal for this name and is the bar that matters. The call also lands the morning after July PCE.",
+        "datetime_et": "2026-08-26T16:20",
+        "action": "WAIT for the print. Do not hold into it and do not buy the gap. The trade is the second-day flush, if it comes.",
+        "wait": true
+      },
+      "thesis": "NVIDIA has already de-risked into its own print: it fell five straight sessions from 225.30 on 2026-08-13 to 208.48 on 2026-08-24, a 7.5% slide that closed on its 50-day at 207.65 on 135.2M shares, the heaviest volume since 2026-08-03. That is positioning being cut before the event rather than after it, and it means a good number does not have to fight an extended chart. The specific setup being bought is the familiar pattern where the numbers are fine and the stock still flushes on a guidance nitpick \u2014 a move into 190-201 puts it below the 50-day and at the top of the 189.80 120-day low, roughly two ATRs of downside from here, against a 120-day high of 236.54 and sell-side targets clustered $275-325.",
+      "key_risk": "The condition may simply never trigger, in which case this idea produces nothing \u2014 and that is the better outcome than the alternative, which is that the print is genuinely bad. If fiscal Q3 guidance disappoints on Blackwell timing or gross margin, 190 is not support, it is a waypoint, and the 182 stop gets taken. Do not treat the entry zone as a value level independent of the numbers. Second, this is the most written-up trade on the street this week \u2014 'buy the post-NVDA flush' is not a differentiated idea, and the only thing keeping it honest is that it costs nothing if the condition never fires. On the target-feasibility warning: the validator sized 236 at 6.79 ATR over an assumed 15 sessions, but the time stop is 2026-10-15, roughly 35 sessions after the print, so the warning is softer than it reads. 236 is the 120-day high, a real level, not a number chosen to clear the floor.",
+      "counter_argument": "The strongest case against is that the pre-print slide is information, not noise: the whole memory and AI-hardware complex broke on 2026-08-24 with Micron down 5.8%, SanDisk 6.5%, Western Digital 5.2%, Marvell 3.3% and Broadcom 2.6%, on DRAM/NAND pricing-power downgrades and rising Treasury yields raising hyperscaler financing costs. If the market is de-rating AI capex rather than de-risking one print, buying the flush is buying the first leg of a trend. The revenue-and-guide condition on the entry is the guard against exactly that.",
+      "sources": [
+        "https://www.investing.com/news/stock-market-news/nvidia-fiscal-q2-2027-earnings-outlook-what-to-watch-on-august-26-93CH-4872130",
+        "https://www.nasdaq.com/market-activity/stocks/nvda/historical",
+        "https://www.cnbc.com/2026/08/23/stock-market-today-live-updates.html"
+      ],
+      "rank": 3,
+      "last_price": 208.48,
+      "last_price_asof": "2026-08-24T16:00:00-04:00",
+      "price_source": "finnhub (2026-08-24 close)",
+      "risk_reward": 2.86,
+      "distance_to_entry_pct": 6.37,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.86,
+        "claimed_risk_reward": 2.86,
+        "live_price": 208.48,
+        "live_price_asof": "2026-08-24T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 919.0,
+        "bid": 210.11,
+        "ask": 210.36,
+        "spread_pct": 0.119,
+        "atr14": 5.8877,
+        "checked_at_et": "2026-08-25T07:19:59-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.86:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 196.0 is -6.0% from live 208.48"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-08-26 is ahead of us"
+          },
+          {
+            "check": "earnings_date",
+            "status": "pass",
+            "detail": "earnings date 2026-08-26 confirmed against the calendar"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "warn",
+            "detail": "target is 6.79 ATR away, 15 session(s) to get there \u2014 beyond the 6.0 ATR guide for swing, likely optimistic"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-08-24T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "pass",
+            "detail": "bid/ask spread 0.12%; the round trip costs 1% of the target move"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "3% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "1 of 3 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "NKE",
+      "instrument": "NIKE Inc Class B",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "long_term",
+      "conviction": 3,
+      "unit": "usd",
+      "entry": {
+        "ideal": 40.75,
+        "zone_low": 38.5,
+        "zone_high": 42.5,
+        "order_type": "limit",
+        "condition": "Continuing accumulation of an existing position, not a new one. Buy the 38.50-42.50 band in thirds; the 2-year low is 38.86 and that is where the third tranche belongs."
+      },
+      "exit": {
+        "target": 62.0,
+        "target_2": 75.0,
+        "scale_plan": "Trim a third at 62 (roughly 2.0x sales). 75 only if currency-neutral revenue turns positive for two consecutive quarters.",
+        "time_stop": "2029-08-25"
+      },
+      "stop": null,
+      "bear_case_price": 33.0,
+      "position_size_pct": 3,
+      "risk_tier": "standard",
+      "catalyst": {
+        "event": "No dated catalyst, by design \u2014 this is a de-rating being bought, and Nike does not report fiscal Q1 2027 until late September 2026. The driver is the April 2026 insider cluster now sitting underwater, against a stock 55% below its 2-year high.",
+        "datetime_et": null,
+        "action": "Accumulate in thirds across 38.50-42.50 over the next two quarters. Do not add above 42.50 \u2014 that is above what the insiders paid and removes the only edge here. Reassess in full at the fiscal Q1 2027 print.",
+        "wait": false
+      },
+      "thesis": "POSITION UPDATE \u2014 continuing accumulation of the 38.00 and 40.00 lots, re-pitched because a piece of evidence prior versions of this idea did not cite has now been checked. Four Nike insiders bought on the open market in a single week in April 2026: CEO Elliott Hill 47,320 shares at about $42.27, director Timothy Cook 25,000 at $42.43, director Robert Swan 11,781 at $42.44 and director John Rogers 4,000 at $43.34 \u2014 $3.73M of buying against $1.20M of sales, net +$2.53M over six months. Nike closed at 40.75, below every one of those prices and 55.0% below its 2-year high of 90.62, with the 2-year low at 38.86 just 4.6% away. Fiscal Q4 beat on both lines ($0.20 adjusted vs $0.13; $10.97B vs $10.86B) and guides earnings flattish through the first half of fiscal 2027.",
+      "key_risk": "The turnaround is not working yet and the company says so \u2014 Elliott Hill s own words on the Q4 call were that the results aren t there yet and that sell-through in Nike Sportswear and Jordan streetwear remains challenged. Revenue fell 1% reported and 4% currency-neutral. Buying a franchise on the promise of a fix that management has not delivered in four quarters is the whole risk, and the April insider buys are now four months stale with the stock lower.",
+      "counter_argument": "The Q4 gross margin improvement of 8.9% was driven largely by a one-off $986M tariff refund after the Supreme Court struck down many of the global duties \u2014 strip that out and the underlying margin story is far less encouraging than the headline. That is the strongest case against, and it is why this is conviction 3 rather than 4. Invalidation, replacing a stop: if currency-neutral revenue declines accelerate beyond -5% in any quarter of fiscal 2027, or the company withdraws or cuts its flattish first-half guidance, the thesis is wrong and the position should be exited.",
+      "sources": [
+        "https://finnhub.io/api/v1/stock/insider-transactions?symbol=NKE",
+        "https://about.nike.com/en/newsroom/releases/nike-inc-reports-fiscal-2026-fourth-quarter-and-full-year-results",
+        "https://www.cnbc.com/2026/06/30/nike-nke-q4-2026-earnings.html"
+      ],
+      "rank": 4,
+      "last_price": 40.75,
+      "last_price_asof": "2026-08-24T16:00:00-04:00",
+      "price_source": "finnhub (2026-08-24 close)",
+      "risk_reward": 2.74,
+      "distance_to_entry_pct": 0.0,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.74,
+        "claimed_risk_reward": 2.74,
+        "live_price": 40.75,
+        "live_price_asof": "2026-08-24T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 919.1,
+        "bid": 39.99,
+        "ask": 40.07,
+        "spread_pct": 0.2,
+        "atr14": 1.0729,
+        "checked_at_et": "2026-08-25T07:20:00-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.74:1 clears the 2.5:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 40.75 is +0.0% from live 40.75"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "long-term idea, no dated event expected"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "long-term target is valuation-anchored, not ATR-bound"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-08-24T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "pass",
+            "detail": "bid/ask spread 0.20%; the round trip costs 0% of the target move"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "3% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "1 of 3 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "DHT",
+      "instrument": "DHT Holdings \u2014 HOLD INTO THE FRONTLINE PRINT",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 3,
+      "unit": "usd",
+      "entry": {
+        "ideal": 19.4,
+        "zone_low": 18.9,
+        "zone_high": 19.8,
+        "order_type": "limit",
+        "condition": "Unchanged level from 2026-08-23 and 2026-08-24, neither of which filled. The 19.40 limit stands; 18.90 is the 20-day."
+      },
+      "exit": {
+        "target": 22.5,
+        "target_2": 24.0,
+        "scale_plan": "Trim half at 20.62, the 120-day high, and hold the balance to 22.50.",
+        "time_stop": "2026-11-30"
+      },
+      "stop": 17.9,
+      "position_size_pct": 2,
+      "risk_tier": "standard",
+      "catalyst": {
+        "event": "Frontline (FRO) Q2 earnings, 2026-08-31 before the open, consensus EPS 2.57 on $750M revenue. It is the cleanest public read on VLCC spot rates and day-rate guidance, and the only dated tanker catalyst inside the horizon.",
+        "datetime_et": "2026-08-31T08:00",
+        "action": "Hold the existing 18.80 lot through the Frontline print rather than trimming ahead of it. If Frontline guides VLCC day rates lower, exit DHT on the reaction regardless of the stop.",
+        "wait": false
+      },
+      "thesis": "POSITION UPDATE \u2014 HOLD, with the stop raised. Long from 18.80 on 2026-08-18, DHT closed 19.72 on 2026-08-24, up 4.9%, 4.4% below its 120-day high of 20.62, with the 20-day (18.87) above the 50-day (18.33) and both rising. The structure is intact and the dated catalyst is external: Frontline reports 2026-08-31 before the open and its VLCC day-rate guidance is what actually reprices this group. Raising the stop from 17.60 to 17.90 keeps it below the 20-day while cutting open risk on a winner.",
+      "key_risk": "Tanker equities are a rate derivative and DHT carries a 3.6% ATR, so a soft Frontline guide can take out three sessions of gains in one gap before the stop is reachable. RED TEAM ADDITION: the published 2.07 describes the 19.40 limit, which has now failed to fill on two consecutive days. The lot that actually exists is long from 18.80 and marked at 19.72, and from there the forward reward-to-risk to the 22.50 target against the raised 17.90 stop is 1.53 to 1, not 2.07. That is the number the hold decision should be judged on, and it is why the trim-half-at-20.62 leg matters. Fourth DHT pitch in three days; new money must not chase it at 19.72.",
+      "counter_argument": "The case against holding into Frontline is that it converts a working technical position into a bet on another company s guidance, which is a different trade from the one that was entered. The rebuttal is that this was always a day-rate trade rather than a company-specific one, so Frontline s guidance is the thesis being tested rather than an unrelated risk being taken on.",
+      "sources": [
+        "https://www.nasdaq.com/market-activity/stocks/dht/historical",
+        "https://finnhub.io/api/v1/calendar/earnings"
+      ],
+      "rank": 5,
+      "last_price": 19.72,
+      "last_price_asof": "2026-08-24T16:00:00-04:00",
+      "price_source": "finnhub (2026-08-24 close)",
+      "risk_reward": 2.07,
+      "distance_to_entry_pct": 1.65,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.07,
+        "claimed_risk_reward": 2.07,
+        "live_price": 19.72,
+        "live_price_asof": "2026-08-24T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 919.2,
+        "bid": 19.46,
+        "ask": 19.65,
+        "spread_pct": 0.972,
+        "atr14": 0.7094,
+        "checked_at_et": "2026-08-25T07:20:02-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.07:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 19.4 is -1.6% from live 19.72"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-08-31 is ahead of us"
+          },
+          {
+            "check": "earnings_date",
+            "status": "warn",
+            "detail": "claims an earnings catalyst but DHT is not on the fetched calendar"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 4.37 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-08-24T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "pass",
+            "detail": "bid/ask spread 0.97%; the round trip costs 6% of the target move"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "2% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "1 of 2 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    }
+  ],
+  "watchlist": [
+    {
+      "symbol": "BTC",
+      "instrument": "Bitcoin \u2014 spot short (position does not exist)",
+      "note": "Red team cut, was rank 2. Robinhood Crypto cannot short, so the two 'sell' lots state/open_positions.json carries at 62,950 and 63,400 could never have been opened \u2014 either they are phantom entries or they were sales of spot already completed. Either way there is no order to place today, and the real bitcoin exposure to close is the /MBTU6 futures short at rank 1. A no-op occupying the second slot dilutes the one bitcoin instruction that is actually urgent. Treat as flat; do not re-short bitcoin at any size.",
+      "trigger": "None. state/open_positions.json should have both BTC sell lots marked closed."
+    },
+    {
+      "symbol": "KXFEDDECISION-26SEP-H25",
+      "instrument": "Fed rate decision September 2026 \u2014 Hike 25bps (YES)",
+      "note": "Red team cut, was rank 12. The 45c entry is 32% above the live 34c ask with no fair-value estimate offered at 45 anywhere in the idea. The idea's own key_risk concedes it cannot demonstrate September is the meeting and that October at 22-23c and December at 24-28c are already coherent with 33c \u2014 i.e. the market is distributing the hike, not mispricing it. Buying into a post-Warsh repricing on a book with 1.83M contracts of open interest on the hike leg means paying the new fair value, not capturing an edge; the underreaction the trade needs is asserted nowhere. Separately, state/open_positions.json already carries a pending order in this exact contract at 32c with a 27c stop from 2026-08-22, which this recommendation contradicts without mentioning. Cutting it also drops the Fed-path correlation cluster from three ideas to two, and both survivors are risk-reducing exits.",
+      "trigger": "A hawkish Warsh on 2026-08-28 AND the contract still available at or below 38c afterwards \u2014 i.e. a demonstrable underreaction, not a chase. Resolve the stale 32c pending order first."
+    },
+    {
+      "symbol": "XLE",
+      "instrument": "Energy Select Sector SPDR Fund \u2014 HOLD, RAISE ALL THREE STOPS TO 59.90, DO NOT ADD",
+      "note": "Red team cut as a trade, was rank 10; the position management below still stands and is an action for today. ACTION: hold all three open lots (60.50 / 60.80 / 60.80 from 08-15, 08-16, 08-18) and raise their stops from 57.80 / 58.60 / 59.20 to a single 59.90, just under the 20-day at 60.52, which makes the whole position free. Plan the first trim at 64.70, the 120-day high. WHY THE ADD WAS CUT: the published 60.20 new-money tranche carried a 57.40 stop that sits 2.50 BELOW the 59.90 stop being placed on everything else, so it could never be reached \u2014 a slide to 59.90 flushes the existing lots and leaves only the newest, worst-cost-basis tranche standing. You would be buying 30 cents above your own stop-out. The 2.43 reward-to-risk described that incoherent tranche, 4.8% below market, which the idea itself said not to buy. The honest forward number on the position that actually exists is 63.11 to a 67.00 target against a 59.90 stop = 1.21 to 1, which argues for the trim, not an add. Fifth XLE pitch in ten days.",
+      "trigger": "A reset to the 50-day at 57.63 after the existing position is stopped, not a dip to the 20-day."
+    },
+    {
+      "symbol": "MHK",
+      "instrument": "Mohawk Industries",
+      "note": "The cleanest short expression of the cost side of the 50% Section 338 panel tariff, and the only panel consumer still technically intact \u2014 134.07, 6.3% off its high, above its 20-day (132.13), 50-day (120.57) and 200-day (112.85), $123.7M/day. Deliberately not taken: no dated catalyst, shorting an uptrend requires margin, and there is no evidence yet on Mohawk's specific Canadian panel exposure.",
+      "trigger": "Evidence of Mohawk's Canadian panel input exposure, plus a break of the 132.13 20-day."
+    },
+    {
+      "symbol": "ELV",
+      "instrument": "Elevance Health",
+      "note": "Four open-market insider buys from three buyers totalling $2.24M, the newest on 2026-07-17 at $366.05-368.25, plus 3,000 shares at $289.84 on 2026-03-05. Not previously covered by this report and not researched enough to publish.",
+      "trigger": "A full fundamental pass and a defensible bear-case price."
+    },
+    {
+      "symbol": "LCII",
+      "instrument": "LCI Industries",
+      "note": "Open position, held. Flagged for $13.1M of one-way insider selling across six sales with zero open-market buys; 104.51, 24.4% off its high and below the 20-day.",
+      "trigger": "Any further insider sales, or a close below the 102.42 50-day, closes it."
+    },
+    {
+      "symbol": "HD",
+      "instrument": "Home Depot",
+      "note": "Open position, held, and the next one to go. 337.43, below both the 20-day (342.55) and 50-day (340.31), 8.7% off its high.",
+      "trigger": "A close below 328 closes the position."
+    },
+    {
+      "symbol": "PATK",
+      "instrument": "Patrick Industries",
+      "note": "Panel-tariff cost side, already priced \u2014 85.12, 42.7% off its 148.50 high and 4.7% above its 250-day low, below all three moving averages. The short is late.",
+      "trigger": "None; recorded so tomorrow does not re-derive it."
+    },
+    {
+      "symbol": "AMWD",
+      "instrument": "American Woodmark",
+      "note": "Unchecked gap in the panel-tariff consumer sweep \u2014 the history source returned no data for AMWD and AZEK.",
+      "trigger": "Working price history, then the same cost-side screen applied to PATK, LZB and TREX."
+    },
+    {
+      "symbol": "/MBTU6",
+      "instrument": "Micro Bitcoin Futures September 2026 \u2014 CLOSE THE SHORT",
+      "note": "Demoted by validation: target 79266.0 is not below entry 79266.0 for a short; no stop, so risk is undefined",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 1,
+      "demotion_reason": "target 79266.0 is not below entry 79266.0 for a short; no stop, so risk is undefined"
+    },
+    {
+      "symbol": "TJX",
+      "instrument": "TJX Companies \u2014 CLOSE THE LONG, STOP ALREADY BREACHED",
+      "note": "Demoted by validation: target 140.71 is not below entry 140.71 for a sell; no stop, so risk is undefined",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 2,
+      "demotion_reason": "target 140.71 is not below entry 140.71 for a sell; no stop, so risk is undefined"
+    },
+    {
+      "symbol": "TLT",
+      "instrument": "iShares 20+ Year Treasury Bond ETF \u2014 CLOSE THE LONG",
+      "note": "Demoted by validation: target 82.56 is not below entry 82.56 for a sell; no stop, so risk is undefined",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 3,
+      "demotion_reason": "target 82.56 is not below entry 82.56 for a sell; no stop, so risk is undefined"
+    },
+    {
+      "symbol": "KRE",
+      "instrument": "SPDR S&P Regional Banking ETF \u2014 CLOSE THE LONG",
+      "note": "Demoted by validation: target 74.76 is not below entry 74.76 for a sell; no stop, so risk is undefined",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 4,
+      "demotion_reason": "target 74.76 is not below entry 74.76 for a sell; no stop, so risk is undefined"
+    }
+  ],
+  "validation_summary": {
+    "checked": 9,
+    "passed": 0,
+    "warned": 5,
+    "failed": 4,
+    "enforced": true,
+    "demoted": 4
+  }
+}
