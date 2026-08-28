@@ -51,6 +51,32 @@ Phase 2 must produce a schema-valid `report.json` **even if `notes.md` is
 short, truncated, or nearly empty**. A thin report that says so honestly is the
 correct output; a fabricated full report is a failure.
 
+## Scheduling
+
+GitHub cron is UTC-only, so 6am ET is declared as two arms (`0 10` and `0 11`
+UTC) and both fire every day of the year. `scripts/schedule_gate.py` decides
+which one works, on two separate questions:
+
+- **Is it still early enough?** From the wall clock in New York, never from
+  which cron fired — in EDT the "EST arm" lands at a perfectly reasonable 7am,
+  so the hour alone cannot tell the arms apart. The window is `6-11` ET.
+- **Is today's report already published?** From the branch tip, never from the
+  checked-out tree. A scheduled run is pinned to the SHA it was created at, so
+  its checkout cannot contain a commit the earlier arm pushed minutes ago.
+
+Consequences worth knowing before you go debugging:
+
+- A second run per day that finishes in ~10 seconds is the gate working.
+- GitHub's scheduler is best-effort and has delivered this repo's crons ten
+  hours late. `Report Watchdog` dispatches a catch-up when the window is still
+  open and fails loudly when it has closed with nothing published. A day with
+  no `reports/<date>/` is a real outcome, not necessarily a bug.
+- Never widen the window so far that an afternoon run publishes a report framed
+  as the 6am pre-open view.
+
+Logic changes here need a test in `tests/` — run with
+`python -m unittest discover -s tests`.
+
 ## Data access
 
 Use `scripts/market_data.py` before reaching for raw web scraping — it is

@@ -3,10 +3,12 @@ name: Daily Trade Report
 on:
   schedule:
     # 06:00 America/New_York year-round. GitHub cron is UTC only and has no DST
-    # awareness, so both arms are declared and the gate job below drops whichever
-    # one is not 6am ET today.
-    - cron: "0 10 * * *"   # 06:00 EDT
-    - cron: "0 11 * * *"   # 06:00 EST
+    # awareness, so both arms are declared and the gate job below decides which
+    # one does the work. Both arms fire every day, so a second run appearing in
+    # the Actions list and finishing in ten seconds is the gate working, not a
+    # double report — see scripts/schedule_gate.py.
+    - cron: "0 10 * * *"   # 06:00 EDT / 05:00 EST
+    - cron: "0 11 * * *"   # 07:00 EDT / 06:00 EST
   workflow_dispatch:
     inputs:
       research_minutes:
@@ -24,8 +26,8 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # Decides whether this invocation is the real 6am ET run. Kept separate so the
-  # skip costs a few seconds rather than spinning up the whole pipeline.
+  # Decides whether this invocation is today's run. Kept separate so the skip
+  # costs a few seconds rather than spinning up the whole pipeline.
   gate:
     runs-on: ubuntu-latest
     outputs:
@@ -36,38 +38,42 @@ jobs:
         with:
           fetch-depth: 1
 
-      - id: check
-        name: Is this the 6am ET run?
+      # A scheduled run is pinned to the SHA that existed when GitHub created
+      # it, so this checkout cannot contain a report the earlier arm pushed
+      # minutes ago. Ask the branch tip instead — reading the working tree here
+      # is what made the duplicate guard a race rather than a check.
+      - id: published
+        name: Is today's report already on the branch?
         run: |
           set -euo pipefail
-          ET_HOUR=$(TZ=America/New_York date +%-H)
           ET_DATE=$(TZ=America/New_York date +%F)
-          echo "date=$ET_DATE" >> "$GITHUB_OUTPUT"
-          echo "Now: $(TZ=America/New_York date) (hour $ET_HOUR)"
-
-          if [ "${{ github.event_name }}" != "schedule" ]; then
-            echo "Manual run — proceeding."
-            echo "proceed=true" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
-          # Already have today's report? Then this is the second DST arm, or a
-          # duplicate delivery. Either way there is nothing to do.
-          if [ -f "reports/$ET_DATE/report.json" ]; then
-            echo "reports/$ET_DATE/report.json already exists — skipping."
-            echo "proceed=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
-          # GitHub's scheduler is best-effort and routinely runs late, so accept
-          # the 6, 7, and 8 o'clock hours rather than only 6.
-          if [ "$ET_HOUR" -ge 6 ] && [ "$ET_HOUR" -le 8 ]; then
-            echo "Within the 6-8am ET window — proceeding."
-            echo "proceed=true" >> "$GITHUB_OUTPUT"
+          git fetch --depth=1 origin "${{ github.ref_name }}"
+          if git cat-file -e "FETCH_HEAD:reports/$ET_DATE/report.json" 2>/dev/null; then
+            echo "reports/$ET_DATE/report.json is on ${{ github.ref_name }}."
+            echo "have=true" >> "$GITHUB_OUTPUT"
           else
-            echo "Outside the window — this is the other DST arm. Skipping."
-            echo "proceed=false" >> "$GITHUB_OUTPUT"
+            echo "No report for $ET_DATE on ${{ github.ref_name }} yet."
+            echo "have=false" >> "$GITHUB_OUTPUT"
           fi
+
+      # REPORT_WINDOW_ET is half-open. It is wide because GitHub's scheduler is
+      # best-effort and has delivered this repo's crons up to ten hours late;
+      # it is bounded because a report framed as the 6am pre-open view is a lie
+      # if it is researched in the afternoon.
+      - id: check
+        name: Should today's report run?
+        env:
+          REPORT_WINDOW_ET: "6-11"
+        run: |
+          set -euo pipefail
+          printf '### Schedule gate\n```\n' >> "$GITHUB_STEP_SUMMARY"
+          python3 scripts/schedule_gate.py \
+            --event-name "${{ github.event_name }}" \
+            --cron "${{ github.event.schedule }}" \
+            --have-report "${{ steps.published.outputs.have }}" \
+            --window "${REPORT_WINDOW_ET}" \
+            | tee -a "$GITHUB_STEP_SUMMARY"
+          printf '```\n' >> "$GITHUB_STEP_SUMMARY"
 
   report:
     needs: gate
