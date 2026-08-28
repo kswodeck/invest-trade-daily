@@ -1,0 +1,34 @@
+name: Tests
+
+# The scheduling bugs this suite covers were invisible for two weeks: both DST
+# arms passed an hour check meant to reject one of them, and the duplicate guard
+# was a race that happened to win. None of it showed up until a morning went
+# missing. Cheap to run, so run it on every change to the logic.
+
+on:
+  push:
+    paths:
+      - "scripts/**"
+      - "tests/**"
+      - ".github/workflows/tests.yml"
+  pull_request:
+    paths:
+      - "scripts/**"
+      - "tests/**"
+  workflow_dispatch:
+
+jobs:
+  unittest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run the unit tests
+        run: python -m unittest discover -s tests -v
