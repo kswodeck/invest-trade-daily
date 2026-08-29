@@ -30,8 +30,8 @@ def et(month: int, day: int, hour: int, minute: int = 0) -> datetime:
     return datetime(2026, month, day, hour, minute, tzinfo=ET)
 
 
-def gate(now, *, event="schedule", have_report=False, window=(6, 11)):
-    return decide(now, event, have_report, window[0], window[1])
+def gate(now, *, event="schedule", state="missing", window=(6, 11)):
+    return decide(now, event, state, window[0], window[1])
 
 
 class CronToLocalHour(unittest.TestCase):
@@ -63,7 +63,7 @@ class SummerArms(unittest.TestCase):
         self.assertTrue(gate(et(8, 28, 6, 2)).proceed)
 
     def test_seven_am_arm_is_stopped_by_the_published_report(self):
-        d = gate(et(8, 28, 7, 5), have_report=True)
+        d = gate(et(8, 28, 7, 5), state="published")
         self.assertFalse(d.proceed)
         self.assertIn("already on the branch", d.reason)
 
@@ -103,6 +103,34 @@ class LateDelivery(unittest.TestCase):
         self.assertFalse(gate(et(8, 28, 11, 0)).proceed)
 
 
+class StubReports(unittest.TestCase):
+    """A skeleton left by a dying synthesis is not today's work.
+
+    2026-08-28 shipped {"data_quality_notes": "Synthesis in progress.",
+    "recommendations": []} to the Sheet, and because the file existed every
+    later check treated the day as done.
+    """
+
+    def test_stub_is_retried_while_the_window_is_open(self):
+        d = gate(et(8, 28, 7, 5), state="stub")
+        self.assertTrue(d.proceed)
+        self.assertIn("only a stub", d.reason)
+
+    def test_stub_past_the_cutoff_alarms_rather_than_running(self):
+        d = gate(et(8, 28, 12, 30), state="stub")
+        self.assertFalse(d.proceed)
+        self.assertTrue(d.late)
+        self.assertIn("nothing usable", d.reason)
+
+    def test_missing_past_the_cutoff_says_so_differently(self):
+        d = gate(et(8, 28, 12, 30), state="missing")
+        self.assertTrue(d.late)
+        self.assertIn("no report was published", d.reason)
+
+    def test_a_stub_before_the_window_is_still_the_wrong_arm(self):
+        self.assertFalse(gate(et(1, 15, 5, 1), state="stub").proceed)
+
+
 class ManualRuns(unittest.TestCase):
     """The duplicate guard exists to stop the scheduler, not the operator."""
 
@@ -110,7 +138,7 @@ class ManualRuns(unittest.TestCase):
         self.assertTrue(gate(et(8, 27, 16, 30), event="workflow_dispatch").proceed)
 
     def test_dispatch_runs_even_when_a_report_exists(self):
-        d = gate(et(8, 27, 16, 30), event="workflow_dispatch", have_report=True)
+        d = gate(et(8, 27, 16, 30), event="workflow_dispatch", state="published")
         self.assertTrue(d.proceed)
 
     def test_date_is_the_et_date(self):

@@ -16,14 +16,19 @@ broke:
 2. **Has today's report already been published?** Decided from the branch tip,
    never from the checked-out tree. A scheduled run is pinned to the SHA that
    existed when GitHub created it, so its checkout cannot contain a commit an
-   earlier arm pushed minutes ago. The caller resolves this and passes the
-   answer in as --have-report.
+   earlier arm pushed minutes ago. The caller resolves this with
+   scripts/report_state.py and passes the answer in as --report-state.
+
+   "Exists" is not the same as "published": a synthesis that dies mid-write
+   leaves a schema-valid skeleton behind, and treating that as done is what
+   made 2026-08-28 publish "Synthesis in progress." and then go quiet. A stub
+   is retried while the window is open.
 
 Answering (2) against the live branch is what actually stops the duplicate run;
 the hour window only decides whether a late delivery is still worth honouring.
 
     python scripts/schedule_gate.py --event-name schedule \
-        --cron "0 11 * * *" --have-report false --window 6-11
+        --cron "0 11 * * *" --report-state missing --window 6-11
 
 Prints a JSON decision to stdout and, when GITHUB_OUTPUT is set, appends
 `proceed`, `date` and `late` for the workflow to branch on. Always exits 0 —
@@ -35,9 +40,14 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import sys
 from dataclasses import dataclass, asdict
 from datetime import datetime, timedelta
+from pathlib import Path
 from zoneinfo import ZoneInfo
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from report_state import MISSING, PUBLISHED, STUB  # noqa: E402
 
 ET = ZoneInfo("America/New_York")
 UTC = ZoneInfo("UTC")
@@ -78,7 +88,7 @@ def cron_local_hour(cron: str, now_et: datetime) -> int | None:
 def decide(
     now_et: datetime,
     event_name: str,
-    have_report: bool,
+    report_state: str,
     window_start: int,
     window_end: int,
 ) -> Decision:
@@ -96,7 +106,7 @@ def decide(
         # duplicate guard exists to stop the scheduler, not the operator.
         return Decision(True, date, f"{event_name} — proceeding on request")
 
-    if have_report:
+    if report_state == PUBLISHED:
         return Decision(False, date, f"reports/{date}/report.json is already on the branch")
 
     if now_et.hour < window_start:
@@ -108,15 +118,21 @@ def decide(
         )
 
     if now_et.hour >= window_end:
+        detail = (
+            "nothing usable was published today"
+            if report_state == STUB
+            else "no report was published today"
+        )
         return Decision(
             False,
             date,
-            f"{now_et:%H:%M} ET is past the {window_end:02d}:00 cutoff — GitHub "
-            "delivered this cron too late for a pre-open report",
+            f"{now_et:%H:%M} ET is past the {window_end:02d}:00 cutoff and "
+            f"{detail} — too late for a pre-open report",
             late=True,
         )
 
-    return Decision(True, date, f"{now_et:%H:%M} ET, no report yet — proceeding")
+    have = "only a stub" if report_state == STUB else "no report yet"
+    return Decision(True, date, f"{now_et:%H:%M} ET, {have} — proceeding")
 
 
 def _window(raw: str) -> tuple[int, int]:
@@ -129,9 +145,10 @@ def main() -> int:
     ap.add_argument("--event-name", required=True, help="github.event_name")
     ap.add_argument("--cron", default="", help="github.event.schedule, for the log")
     ap.add_argument(
-        "--have-report",
+        "--report-state",
         required=True,
-        help="true if reports/<today>/report.json exists on the branch tip",
+        choices=[MISSING, STUB, PUBLISHED],
+        help="what scripts/report_state.py says about today's report on the branch tip",
     )
     ap.add_argument(
         "--window",
@@ -145,12 +162,13 @@ def main() -> int:
     decision = decide(
         now_et=now_et,
         event_name=args.event_name,
-        have_report=args.have_report.strip().lower() == "true",
+        report_state=args.report_state,
         window_start=start,
         window_end=end,
     )
 
     print(f"Now: {now_et:%a %Y-%m-%d %H:%M:%S %Z} (hour {now_et.hour})")
+    print(f"Today's report on the branch: {args.report_state}.")
     if args.cron:
         local = cron_local_hour(args.cron, now_et)
         where = f"{local:02d}:00 ET today" if local is not None else "an unparsed hour"

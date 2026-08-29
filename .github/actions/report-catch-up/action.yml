@@ -1,0 +1,99 @@
+name: Report catch-up
+description: >
+  Notice that today's report is missing or a stub and dispatch a catch-up run,
+  while the ET window is still open. Safe to call from any workflow.
+
+inputs:
+  token:
+    description: Token with actions:write, for dispatching the report workflow.
+    required: true
+  branch:
+    description: Branch to read the report from and dispatch against.
+    required: false
+    default: main
+  window:
+    description: ET hours [start-end) in which a catch-up is still worth starting.
+    required: false
+    default: "6-11"
+  max-runs:
+    description: >
+      Give up after this many report runs have already been created today. The
+      bound is what stops a repeatedly-failing pipeline from being dispatched
+      all morning by every workflow that calls this.
+    required: false
+    default: "3"
+
+outputs:
+  state:
+    description: missing, stub, or published — today's report on the branch.
+    value: ${{ steps.state.outputs.state }}
+  late:
+    description: true when the window closed with nothing usable published.
+    value: ${{ steps.gate.outputs.late }}
+  dispatched:
+    description: true when this call started a catch-up run.
+    value: ${{ steps.dispatch.outputs.dispatched }}
+
+runs:
+  using: composite
+  steps:
+    # The branch tip, not the checkout: a scheduled run is pinned to the SHA it
+    # was created at and cannot see a report committed since.
+    - id: state
+      shell: bash
+      run: |
+        set -euo pipefail
+        ET_DATE=$(TZ=America/New_York date +%F)
+        git fetch --depth=1 origin "${{ inputs.branch }}"
+        if REPORT=$(git cat-file -p "FETCH_HEAD:reports/$ET_DATE/report.json" 2>/dev/null); then
+          STATE=$(printf '%s' "$REPORT" | python3 "$GITHUB_WORKSPACE/scripts/report_state.py")
+        else
+          STATE=missing
+        fi
+        echo "reports/$ET_DATE/report.json on ${{ inputs.branch }}: $STATE"
+        echo "state=$STATE" >> "$GITHUB_OUTPUT"
+
+    - id: gate
+      shell: bash
+      run: |
+        set -euo pipefail
+        python3 "$GITHUB_WORKSPACE/scripts/schedule_gate.py" \
+          --event-name schedule \
+          --report-state "${{ steps.state.outputs.state }}" \
+          --window "${{ inputs.window }}"
+
+    - id: dispatch
+      if: steps.gate.outputs.proceed == 'true'
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.token }}
+        MAX_RUNS: ${{ inputs.max-runs }}
+      run: |
+        set -euo pipefail
+        dispatched=false
+        note() { echo "dispatched=$dispatched" >> "$GITHUB_OUTPUT"; }
+        trap note EXIT
+
+        # Two reasons not to dispatch: one is already running (the report
+        # workflow serialises on its own concurrency group, so this would only
+        # queue a duplicate that then skips), or today has already had enough
+        # attempts that another is unlikely to be the thing that helps.
+        RUNS=$(gh run list --workflow daily-report.yml --limit 50 \
+          --json status,createdAt 2>/dev/null || echo '[]')
+        read -r BUSY TODAY < <(printf '%s' "$RUNS" | python3 "$GITHUB_WORKSPACE/scripts/report_runs.py")
+
+        if [ "$BUSY" != "0" ]; then
+          echo "A report run is already queued or in progress — leaving it alone."
+          exit 0
+        fi
+        if [ "$TODAY" -ge "$MAX_RUNS" ]; then
+          echo "::warning::$TODAY report runs already started today and none produced" \
+            "a usable report. Not dispatching another; this needs a human."
+          exit 0
+        fi
+
+        echo "::warning::Today's report is ${{ steps.state.outputs.state }} and the" \
+          "window is still open. Dispatching a catch-up run (attempt $((TODAY + 1)))."
+        gh workflow run daily-report.yml --ref "${{ inputs.branch }}"
+        dispatched=true
+        echo "Catch-up run dispatched." >> "$GITHUB_STEP_SUMMARY"

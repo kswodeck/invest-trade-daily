@@ -19,6 +19,9 @@ from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from report_state import PUBLISHED, classify  # noqa: E402
+
 REPO = Path(__file__).resolve().parent.parent
 SCHEMA_PATH = REPO / "scripts" / "report_schema.json"
 ET = ZoneInfo("America/New_York")
@@ -36,9 +39,20 @@ def is_valid(path: Path) -> tuple[bool, str]:
 
         jsonschema.validate(report, json.loads(SCHEMA_PATH.read_text()))
     except ImportError:
-        return True, "jsonschema unavailable; accepted without validation"
+        pass  # fall through to the emptiness check, which needs no schema
     except Exception as exc:  # noqa: BLE001 - jsonschema.ValidationError and friends
         return False, f"report.json failed schema validation: {str(exc).splitlines()[0]}"
+
+    # Schema-valid is not the same as finished. A synthesis phase killed
+    # mid-write leaves behind a well-formed skeleton — on 2026-08-28 it was
+    # {"data_quality_notes": "Synthesis in progress.", "recommendations": []} —
+    # which passes validation and then goes to the Sheet as if it were the
+    # morning's work. A report carrying neither a recommendation nor a
+    # watchlist entry has concluded nothing, so say that in the stub's words
+    # rather than publishing a placeholder.
+    if classify(report) != PUBLISHED:
+        return False, "report.json holds no recommendations and no watchlist"
+
     return True, f"valid, {len(report.get('recommendations', []))} recommendations"
 
 

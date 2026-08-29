@@ -29,7 +29,7 @@ Google Sheet. Two Claude phases run in sequence inside one GitHub Actions job.
 | 0 Context | `scripts/build_context.py` | `reports/<date>/prior_context.md` | `state/`, past reports |
 | 1 Research | `/daily-research` | `candidates.jsonl` (the deliverable), `notes.md` (context) | web, `market_data.py`, prior context |
 | 2 Synthesis | `/daily-synthesis` | `reports/<date>/report.json` | the above |
-| 2a Guarantee | `scripts/ensure_report.py` | a stub `report.json` if needed | `report.json`, `notes.md` |
+| 2a Guarantee | `scripts/ensure_report.py` | a stub `report.json` if it is missing, invalid, or empty | `report.json`, `notes.md` |
 | 2b Validate | `scripts/validate_report.py` | a `validation` block per idea | live prices, ATR, earnings calendar |
 | 2c Red team | `/daily-redteam` | edits `report.json` | validation flags, sources |
 | 2d Enforce | `scripts/validate_report.py --enforce` | demotes failures to the watchlist | `report.json` |
@@ -64,15 +64,33 @@ which one works, on two separate questions:
   checked-out tree. A scheduled run is pinned to the SHA it was created at, so
   its checkout cannot contain a commit the earlier arm pushed minutes ago.
 
+"Published" is a three-way answer from `scripts/report_state.py`, not a file
+existence test. A report holding neither a recommendation nor a watchlist entry
+is a **stub**: it concluded nothing, so it is retried while the window is open
+and alarmed on once the window shuts. `2026-08-28` is why — synthesis was killed
+mid-write, left a schema-valid `{"data_quality_notes": "Synthesis in progress.",
+"recommendations": []}`, and every later check saw a file and called the day
+done. `ensure_report.py` uses the same rule, so a skeleton like that is replaced
+by the honest no-signal stub instead of reaching the Sheet.
+
+Recovery is `.github/actions/report-catch-up`, which any workflow can call: it
+dispatches the report when the branch has nothing usable and the window is still
+open. `Report Watchdog` and `Refresh Prices` both call it, on the theory that
+whichever workflow GitHub does manage to deliver can rescue the morning.
+`scripts/report_runs.py` bounds it — three attempts a day, and never while one
+is already running.
+
 Consequences worth knowing before you go debugging:
 
 - A second run per day that finishes in ~10 seconds is the gate working.
 - GitHub's scheduler is best-effort and has delivered this repo's crons ten
-  hours late. `Report Watchdog` dispatches a catch-up when the window is still
-  open and fails loudly when it has closed with nothing published. A day with
-  no `reports/<date>/` is a real outcome, not necessarily a bug.
+  hours late, watchdog slots included. A day with no `reports/<date>/` is a real
+  outcome, not necessarily a bug — but it should always be a red `Report
+  Watchdog` run, never silence.
 - Never widen the window so far that an afternoon run publishes a report framed
   as the 6am pre-open view.
+- Nothing here can fix delivery itself. If a morning must be guaranteed, the
+  trigger has to come from outside GitHub Actions.
 
 Logic changes here need a test in `tests/` — run with
 `python -m unittest discover -s tests`.
