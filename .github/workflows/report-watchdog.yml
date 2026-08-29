@@ -5,18 +5,20 @@ name: Report Watchdog
 # about ten hours late, the gate correctly refused to publish an afternoon
 # "pre-open" report, and the day produced nothing — silently.
 #
-# This workflow is the recovery path and the alarm. It asks one question:
-# does the branch have a report for today's ET date? If not, and there is still
-# time, it dispatches the daily report. If the window has closed with nothing
-# published, it fails loudly so the silence is visible.
+# This workflow is the recovery path and the alarm. It asks whether the branch
+# holds a usable report for today's ET date. If not, and there is still time, it
+# dispatches the daily report. If the window has closed with nothing published,
+# it fails loudly so the silence is visible.
 #
-# Its own crons are delivered by the same best-effort scheduler, so several
-# slots are declared. They are cheap — the common case is a few seconds of
-# looking and going quiet.
+# Its own crons ride the same best-effort scheduler, so several slots are
+# declared — and the same catch-up runs from Refresh Prices too, on the theory
+# that whichever workflow GitHub does manage to deliver can rescue the day.
+# They are cheap: the common case is a few seconds of looking and going quiet.
 
 on:
   schedule:
     - cron: "25 12 * * *"   # 08:25 EDT / 07:25 EST — first catch-up
+    - cron: "25 13 * * *"   # 09:25 EDT / 08:25 EST
     - cron: "25 14 * * *"   # 10:25 EDT / 09:25 EST — last catch-up
     - cron: "25 16 * * *"   # 12:25 EDT / 11:25 EST — past the window: alarm
   workflow_dispatch:
@@ -38,68 +40,32 @@ jobs:
         with:
           fetch-depth: 1
 
-      - id: published
-        name: Is today's report on the branch?
+      - id: catchup
+        uses: ./.github/actions/report-catch-up
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref_name }}
+
+      - name: Alarm — the window closed with nothing usable
+        if: steps.catchup.outputs.late == 'true'
+        env:
+          STATE: ${{ steps.catchup.outputs.state }}
         run: |
-          set -euo pipefail
           ET_DATE=$(TZ=America/New_York date +%F)
-          git fetch --depth=1 origin "${{ github.ref_name }}"
-          if git cat-file -e "FETCH_HEAD:reports/$ET_DATE/report.json" 2>/dev/null; then
-            echo "have=true" >> "$GITHUB_OUTPUT"
+          if [ "$STATE" = "stub" ]; then
+            WHAT="a stub was published for $ET_DATE, with no recommendations and no watchlist"
           else
-            echo "have=false" >> "$GITHUB_OUTPUT"
+            WHAT="no report was published for $ET_DATE at all"
           fi
-
-      # Same window, same rules as the report's own gate — deliberately the
-      # same code, so the watchdog can never disagree with the thing it guards.
-      - id: check
-        name: Is a catch-up run still worth starting?
-        env:
-          REPORT_WINDOW_ET: "6-11"
-        run: |
-          set -euo pipefail
-          printf '### Watchdog\n```\n' >> "$GITHUB_STEP_SUMMARY"
-          python3 scripts/schedule_gate.py \
-            --event-name schedule \
-            --have-report "${{ steps.published.outputs.have }}" \
-            --window "${REPORT_WINDOW_ET}" \
-            | tee -a "$GITHUB_STEP_SUMMARY"
-          printf '```\n' >> "$GITHUB_STEP_SUMMARY"
-
-      - name: Dispatch the missing report
-        if: steps.check.outputs.proceed == 'true'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          set -euo pipefail
-          # The report workflow serialises on its own concurrency group, so a
-          # dispatch sent while one is running would only queue a duplicate that
-          # then skips. Cheap, but not free — don't send it.
-          BUSY=$(gh run list --workflow daily-report.yml --limit 20 \
-            --json status \
-            --jq '[.[] | select(.status == "queued" or .status == "in_progress")] | length')
-          if [ "$BUSY" != "0" ]; then
-            echo "A daily-report run is already queued or in progress — leaving it alone."
-            exit 0
-          fi
-
-          echo "::warning::No report for $(TZ=America/New_York date +%F) yet; \
-          the scheduled run did not land. Dispatching a catch-up."
-          gh workflow run daily-report.yml --ref "${{ github.ref_name }}"
-          echo "Catch-up dispatched." >> "$GITHUB_STEP_SUMMARY"
-
-      - name: Alarm — the window closed with no report
-        if: steps.check.outputs.late == 'true'
-        run: |
-          ET_DATE=$(TZ=America/New_York date +%F)
-          echo "::error::No report was published for $ET_DATE and the window has closed."
+          echo "::error::The report window has closed and $WHAT."
           {
-            echo "**No report for $ET_DATE.**"
+            echo "**Nothing usable for $ET_DATE.**"
             echo
-            echo "The scheduled run did not arrive inside the ET window and no"
-            echo "catch-up succeeded. Nothing was published to the Sheet today."
+            echo "The window has closed and $WHAT."
             echo
-            echo "Run \`Daily Trade Report\` by hand if a late report is still wanted;"
-            echo "note that it will be researched now, not pre-open."
+            echo "Either the scheduled run never arrived inside the window, or the"
+            echo "pipeline ran and produced nothing. Check the most recent"
+            echo '`Daily Trade Report` run before dispatching another — a report'
+            echo "started now is researched now, not pre-open, and should say so."
           } >> "$GITHUB_STEP_SUMMARY"
           exit 1

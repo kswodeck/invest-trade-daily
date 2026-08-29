@@ -27,6 +27,7 @@ concurrency:
 
 permissions:
   contents: write
+  actions: write   # the catch-up step dispatches Daily Trade Report
 
 jobs:
   refresh:
@@ -43,6 +44,17 @@ jobs:
       - uses: actions/checkout@v5
         with:
           fetch-depth: 1
+
+      # Any workflow GitHub does manage to deliver can rescue a missing morning.
+      # These slots land inside the report window often enough to matter, and a
+      # price refresh must never fail because the report is absent — hence
+      # continue-on-error.
+      - name: Catch up the daily report if it is missing
+        continue-on-error: true
+        uses: ./.github/actions/report-catch-up
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref_name }}
 
       # Each slot is declared twice for DST, so one of the pair is always the
       # wrong hour. The window is wide because GitHub's scheduler runs late; the

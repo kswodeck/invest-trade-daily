@@ -42,19 +42,23 @@ jobs:
       # it, so this checkout cannot contain a report the earlier arm pushed
       # minutes ago. Ask the branch tip instead — reading the working tree here
       # is what made the duplicate guard a race rather than a check.
+      #
+      # And ask what the report *is*, not merely whether the file exists: a
+      # synthesis killed mid-write leaves a schema-valid skeleton that must not
+      # count as today's work. See scripts/report_state.py.
       - id: published
-        name: Is today's report already on the branch?
+        name: What does the branch hold for today?
         run: |
           set -euo pipefail
           ET_DATE=$(TZ=America/New_York date +%F)
           git fetch --depth=1 origin "${{ github.ref_name }}"
-          if git cat-file -e "FETCH_HEAD:reports/$ET_DATE/report.json" 2>/dev/null; then
-            echo "reports/$ET_DATE/report.json is on ${{ github.ref_name }}."
-            echo "have=true" >> "$GITHUB_OUTPUT"
+          if REPORT=$(git cat-file -p "FETCH_HEAD:reports/$ET_DATE/report.json" 2>/dev/null); then
+            STATE=$(printf '%s' "$REPORT" | python3 scripts/report_state.py)
           else
-            echo "No report for $ET_DATE on ${{ github.ref_name }} yet."
-            echo "have=false" >> "$GITHUB_OUTPUT"
+            STATE=missing
           fi
+          echo "reports/$ET_DATE/report.json on ${{ github.ref_name }}: $STATE"
+          echo "state=$STATE" >> "$GITHUB_OUTPUT"
 
       # REPORT_WINDOW_ET is half-open. It is wide because GitHub's scheduler is
       # best-effort and has delivered this repo's crons up to ten hours late;
@@ -70,7 +74,7 @@ jobs:
           python3 scripts/schedule_gate.py \
             --event-name "${{ github.event_name }}" \
             --cron "${{ github.event.schedule }}" \
-            --have-report "${{ steps.published.outputs.have }}" \
+            --report-state "${{ steps.published.outputs.state }}" \
             --window "${REPORT_WINDOW_ET}" \
             | tee -a "$GITHUB_STEP_SUMMARY"
           printf '```\n' >> "$GITHUB_STEP_SUMMARY"
