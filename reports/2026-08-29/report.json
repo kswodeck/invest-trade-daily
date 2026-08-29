@@ -1,0 +1,940 @@
+{
+  "date": "2026-08-29",
+  "generated_at_et": "2026-08-29T11:36:30-04:00",
+  "research_minutes": 40,
+  "truncated": false,
+  "data_quality_notes": "Research phase completed and logged a RESEARCH COMPLETE block, so nothing here is truncated. 11 candidates captured, 11 published, 0 dropped on the reward-to-risk floor \u2014 every ratio below was recomputed by synthesis from the final entry, target and downside rather than carried over from the notes.\n\nWHAT IS ACTIONABLE TODAY, AND IT IS NOT MUCH. This is a Saturday report. Of eleven ideas, exactly two can be acted on before Monday: the /MBTU6 cover at the Sunday 18:00 ET CME reopen, and the ETH limit at 2,100 in a 24/7 market. Seven of the remaining nine are limit orders sitting 2.7% to 14.1% below Friday's close that may never fill. The research phase checked all 18 Robinhood-listed coins and found a uniform, beta-ordered drift lower with no dislocation in any pair \u2014 config/strategy.md asks a weekend run to lean on crypto for actionable ideas and today crypto did not produce one. That is a real gap in this report, not a stylistic choice.\n\nTHE REWARD-TO-RISK CLUSTERING, FLAGGED AGAINST ITSELF. All six new long-term ideas compute between 2.53 and 2.68 against a 2.5 floor (ELV 2.53, LULU 2.54, ETH 2.55, CAG 2.56, KMPR 2.56, MDT 2.60, CME 2.68). That is the exact fingerprint of targets fitted to clear a bar, and the reader should treat it with suspicion. The research phase pre-emptively audited itself on this and the audit holds up on inspection: for every one of them the target was set first from something external and citable (company EPS guidance, a published sell-side target, a historical multiple, a stated ETH/BTC ratio), the bear case was set second from an observed price at or below the actual 150-day low, and the ENTRY was then solved for. The tell that distinguishes this from the failure mode is that every single long-term entry sits BELOW Friday's market \u2014 CME -2.7%, MDT -3.5%, LULU -5.6%, ELV -6.7%, CAG -9.3%, ETH -14.1% \u2014 and all seven are marked WAIT. Targets were never moved to rescue a ratio; if they had been, the entries would sit at or above the market. Three of the solved entries independently landed within a dollar of where insiders actually bought (ELV 368.6 vs purchases at 366.05-368.25; CAG 14.66 vs the CEO at 14.59; KMPR 27.00 vs five buyers at 26.34-26.53), which is a genuine cross-check rather than an after-the-fact dressing. The honest cost of the method, stated plainly: there is no margin of safety above the floor, so if the market comes to exactly these limits and no further, each position opens at the least attractive price the strategy permits. Treat every long-term entry below as a CEILING and prefer to be filled beneath it.\n\nTWO STOPS WERE BREACHED AND IGNORED, AND THAT IS THE TOP OF THIS REPORT. Ranks 1 and 2 are not ideas, they are corrections. The /MBTU6 short is 21.7% offside past a 66,600 stop breached around 2026-08-20, and this is the THIRD consecutive report to request the cover \u2014 2026-08-25 and 2026-08-26 both ranked it first and it is still open. TJX is 10.4% down past a 145.50 stop, a defined 3.5% risk carried to three times that. Neither carries a reward-to-risk because a loss realisation has none, and writing one would be fiction.\n\nPORTFOLIO RISK THAT NO SINGLE IDEA BELOW SHOWS: the existing open book is one undiversified bet on Iran. XLE x3, DINO, DHT x2 and indirectly CCJ \u2014 six-plus of twenty open positions \u2014 all resolve on whether the Strait of Hormuz reopens, against this report's own stated cap of three ideas per driver. Nothing was added to that complex today and FRO, INSW, STNG, PBF, CVI, DK, VLO and MPC were all rejected partly on those grounds. Among today's NEW risk the cap holds: three ideas touch the rate path (CME, KMPR, the Fed contract) and they are not the same bet \u2014 CME monetises hedging volume in either direction, KMPR reinvests insurance float at higher-for-longer yields, and the Fed contract is a directional bet on September timing specifically.\n\nREGIME CHANGE, FRIDAY. Every level in the existing open book was set before Warsh's hawkish Jackson Hole debut flipped the market from pricing cuts to pricing hikes. The EEM cancellation at rank 3 is that repricing firing a kill switch the 2026-08-22 report wrote for itself.\n\nSOURCES THAT FAILED, AND WHAT EACH COST. Yahoo Finance returned HTTP 429 for the entire session on every symbol, so there is NO VIX index level, NO DXY, no index futures (ES/NQ), no gold or WTI futures and no ^GSPC/^NDX/^DJI/^RUT in this report; ETF proxies (SPY/QQQ/IWM/GLD/VIXY) were substituted and are labelled as such everywhere they appear. This directly weakened the EEM cancellation, whose stated invalidation had a DXY leg that could not be measured \u2014 the hawkish leg is confirmed, the dollar leg is assumed, and that is disclosed in the idea's own key_risk. The /MBT futures quote could not be fetched either, so rank 1 uses CoinGecko BTC spot (77,836 live) as an explicitly labelled proxy; /MBT tracks spot within roughly 1%. Also failed: bls.gov (403 to WebFetch \u2014 release dates confirmed via search against bls.gov/schedule instead), Kalshi's /markets price fields (null; only /trades and /orderbook returned prices), Alpha Vantage (no API key), Stooq (404 on indices), and Finnhub for CFD indices (subscription required). Two tooling bugs worth fixing: `market_data.py events` keyword-matched a search for 'Fed' to a baseball market on pitcher Erick Fedde and is effectively broken for event contracts, and finnhub's insider feed for STNG is corrupt ($18.93B sell value, a buy at $5.87 on a $78 stock) and was discarded.\n\nPRICES. All equity and ETF prices are the Friday 2026-08-28 16:00 ET close, verified as session=closed at synthesis time. On a Saturday that is the freshest honest equity price, not stale data. Crypto was re-quoted live at 11:42 ET (BTC 77,836, ETH 2,442.64). CAG's total debt could not be fetched and is named inside that idea's key_risk rather than quietly omitted \u2014 for a packaged-food turnaround, leverage is the usual failure mode, so it is the largest single unknown in the report.\n\nHORIZON SKEW IS PRONOUNCED AND WAS NOT MANUFACTURED: 7 long_term, 3 swing, 1 intraday \u2014 and the intraday item is a futures cover, not a trade. There are zero intraday setups because it is Saturday and the US cash sessions are shut, so there was no intraday setup to have. Per config/strategy.md this is stated rather than apologised for, and nothing was padded to balance the mix.\n\nCOVERAGE NOT REACHED, for the next run: systematic small/micro-cap screening beyond the seven names hand-screened in the addendum, ADRs and international, the September S&P index rebalance, and the FDA calendar beyond PRAX and SVRA. Only ONE event contract is published against a config that actively wants them \u2014 Robinhood lists 77 economics, 62 crypto and 5 metals markets, but only the Fed decision markets could be confirmed against a Robinhood URL, and guessing at venue availability would break a non-negotiable. The December Fed contract was rejected on an 8-cent bid-ask spread that eats the entire edge.\n\nREJECTED WITH REASONS LOGGED: CIEN, AVGO, FN, PRAX, SVRA, FRO, INSW, STNG, PBF/CVI/DK/VLO/MPC, a short /M2KU6, KXFEDDECISION-26DEC, a 2s10s flattener (could not verify Robinhood carries /ZT), and FSBC \u2014 whose seven insider 'buys' were all at exactly $44.00 on exactly 2026-07-22, which is a capital raise at a fixed offering price, not six people independently deciding a stock is cheap. A dollar total is not a cluster; a distribution of dates and prices is.\n\n=== RED TEAM (phase 2c) ===\nCut one idea, downgraded three, fixed two sources and one mislabelled direction. Ten remain.\n\nCUT: the Kalshi September no-hike contract (was rank 11). Its own key_risk and counter_argument establish that fed funds futures price a September hike 9-12 points more hawkish than this contract, and the counter_argument names the error precisely \u2014 'treating that gap as my edge rather than as my error is the exact reasoning that keeps losing trades open' \u2014 then takes the position anyway. That is the falsification step written down and ignored. On the report's own fair value the edge is 1-6 cents on a binary; on futures-implied fair value it is 10-13 cents negative. Verified against the live Kalshi book before cutting (H0 53/54c, H25 46/47c): the prices and the polarity in the report were correct, so this is a judgement kill and not a data error. The validator's 404 on the Kalshi endpoint was transient \u2014 that URL returns 200.\n\nTHE MAIN FINDING \u2014 the bear cases, not the targets, are where the arithmetic was flattered. The research phase self-audited its reward-to-risk cluster (2.53-2.68 against a 2.5 floor), argued the free variable was the ENTRY rather than the target, and invited an independent check. The audit is correct about the numerator and wrong about the denominator. It claims bear cases were 'set from an observed price, usually at or below the actual 150-day low'. Recomputed from fetched OHLCV, that holds for three names and fails for three:\n  CONSERVATIVE \u2014 LULU bear 88 vs 150d low 104.44 (-15.7%), CAG 11.00 vs 12.53 (-12.2%), KMPR 21.00 vs 22.69 (-7.4%). ETH 1,550 is the actual June low, cross-checked two ways.\n  FLATTERED \u2014 CME bear 240 vs low 218.31 (+9.9%), ELV 300 vs 274.84 (+9.2%), MDT 78 vs 73.31 (+6.4%). Substituting the observed low collapses the published ratios to CME 1.71, MDT 1.77, ELV 1.85 \u2014 all below the 2.5 floor they were built to clear.\n  The asymmetry is what matters: the three flattered ideas were the three largest positions in the book (4% each) and the three honest ones the smallest (2-2.5%). Sizing ran exactly inverse to robustness. A reader told 'ELV 2.53' and 'LULU 2.54' would take them for equivalent setups; they are not, because LULU's denominator absorbs a 15.7% break of its low while ELV's assumes the stock never revisits a price it traded at in March. Raising a bear case has the same arithmetic effect as lowering a target, and the self-audit only checked the target.\n  Acted on by cutting conviction and size rather than by moving levels: CME 4->3 and 4%->3%, MDT 4->3 and 4%->3%, ELV 4->3 and 4%->2%. Bear cases were deliberately NOT rewritten to the observed lows \u2014 that would have tripped the enforce pass and auto-demoted all three on a standard this red team does not actually endorse (a 150-day low is one print, often a panic wick, not a considered downside). CME and MDT survive because their published two-rung plans average to almost exactly the price that clears 2.5 against the observed low (266 vs 264.51; 85 vs 84.94) \u2014 so both are conditional on BOTH rungs filling, and a first-rung-only fill is not the advertised trade. ELV fails even that test (356 average vs 350.60 required) and was cut hardest; it also rests on 2026 being the Medicaid margin trough while its own key_risk concedes the MLR is still rising and that every managed care insurer has called a false trough for two years. Re-ranked from 6 to 9 on that basis.\n\nWHAT THE READER MUST NOT MISS: this report recommends buying nothing today. All seven long-term ideas are 'WAIT' limits below Friday's close (-2.7% to -14.0%), the top three ranks are two position exits and an order cancellation, and the only same-day new-money position in the book was the Kalshi contract, which is now cut. That is an honest outcome after a regime change and is not a criticism \u2014 but the report presents as ten ideas and is operationally 'close two losers, cancel one order, and leave seven resting limits'. Several of those limits will never fill; CAG at -9.3% and ETH at -14.0% require a real drawdown to trigger.\n\nCORRELATION, and a risk nobody named: three of the surviving long-term ideas (ELV, KMPR, CAG) come from a single insider-cluster screen over beaten-down value, and all three run the same 'management called the trough and bought their own stock' mechanism. Separately, MDT (3.16%), CAG (4.35%) and KMPR (4.58%) are dividend-yield defensives being recommended in a report whose own market_context declares a hawkish repricing toward a hiking path. Bond proxies de-rating on rising rates is the classic loser in exactly the regime this report just called, and it appears in none of the three key_risk fields. Flagged rather than cut \u2014 the ideas are value cases, not yield cases \u2014 but the tension is real and unaddressed. One correlation the research phase flagged itself (ETH and the Fed no-hike contract sharing a driver) is resolved by the cut above.\n\nLEFT STANDING WITH A CAVEAT: ETH's bear case is the most honest in the report, but its 3,500 target rests on an ETH/BTC ratio of 0.045 that is never anchored to anything \u2014 the notes justify it as 'the ratio normalising IS the flow thesis, so the target and the mechanism are the same claim', which is circular. No historical range for the ratio was cited. The entry sits 14% below market so this is largely academic, and conviction 3 / 2% already reflects it.\n\nNOT CUT, AND DELIBERATELY SO: the three position actions at ranks 1-3. Covering the /MBTU6 short (-21.7% on a breached stop, leveraged and marked daily) and selling TJX (-10.4% on a breached stop) are the correct calls and the ranking is right \u2014 they are the only actions with money at stake today.\n\nFIXES: /MBTU6's Robinhood source 404'd and was replaced with the live product page (verified 200, lists the micro contracts); its direction was changed from 'long' to 'buy' so a published row does not read as 'go long bitcoin futures at conviction 5' when it is a buy-to-cover. EEM's key_risk was rewritten: the research phase cancelled on a half-verified condition because Yahoo 429'd on DXY all session, and red team closed that gap independently via Finnhub \u2014 UUP (dollar bullish ETF) +0.57% on 2026-08-28 against EEM -0.70% the same session, so both legs of the pre-committed invalidation are met on observed prices and the cancel is fully supported rather than assumed.\n\nNOT MANUFACTURED: no criticism was invented to look diligent. Four of the ten survive untouched. Validation demoted 3 idea(s) whose numbers did not check out. 7 more carry warnings \u2014 see the validation block on each.",
+  "market_context": {
+    "summary": "The regime changed on Friday and it reframes everything below. Kevin Warsh used his first Jackson Hole speech as Fed Chair on 2026-08-28 to say he is impressed with economic strength, that underlying inflation trends have NOT improved, and that the Fed has more work to do \u2014 while explicitly refusing to give forward guidance or publish a reaction function at all, as a stated governance philosophy. Odds of a September hike went from roughly 1-in-3 pre-speech to a majority expecting one; the Kalshi strip now prices September 47%, October 28%, December ~45%. Friday's tape is consistent with a hawkish repricing rather than a growth scare: GLD -3.24% (the single biggest move on the tape, a no-yield asset repricing), IWM -1.35% (small caps are the most rate-sensitive cohort), QQQ -0.65%, SPY -0.23%, VIXY +1.79%. The tell nobody should miss is that TLT fell only 0.30%. A hawkish shock that moves gold 3.2% and barely registers on the 20y+ long bond is the long end saying it finds the inflation-fighting credible \u2014 that is a flattener, not a bond bear market, and 10y-2y is already only +39bp. Two prints stand between here and the Sep 16 FOMC: August payrolls Fri Sep 4, and August CPI Fri Sep 11, three sessions before the meeting. Note for the record that no VIX or DXY level appears above because Yahoo returned HTTP 429 all session; every figure here is an ETF proxy or a FRED series, labelled as such.",
+    "regime": "risk-off",
+    "levels": {
+      "spy": 769.35,
+      "qqq": 716.43,
+      "iwm": 295.75,
+      "gld": 408.89,
+      "tlt": 82.88,
+      "vixy": 17.66,
+      "us10y": 4.67,
+      "us2y": 4.2,
+      "fed_funds_eff": 3.63,
+      "curve_10y_2y_bp": 39,
+      "u3_unemployment": 4.1,
+      "btc": 77836.0,
+      "eth": 2442.64,
+      "vix": null,
+      "dxy": null,
+      "_note": "Equity/ETF levels are the Friday 2026-08-28 close (finnhub). Rates are FRED as of 2026-08-27, curve as of 2026-08-28, U3 for July. Crypto is live at 2026-08-29 11:42 ET (CoinGecko). VIX and DXY are null \u2014 Yahoo Finance returned HTTP 429 for the entire session and no fallback carried them. VIXY and GLD are ETF proxies standing in for the index levels, not the indices."
+    },
+    "econ_calendar": [
+      {
+        "event": "August Employment Situation (nonfarm payrolls)",
+        "datetime_et": "2026-09-04T08:30",
+        "importance": "high",
+        "consensus": null
+      },
+      {
+        "event": "August CPI",
+        "datetime_et": "2026-09-11T08:30",
+        "importance": "high",
+        "consensus": null
+      },
+      {
+        "event": "FOMC rate decision + SEP/dot plot (meeting Sep 15-16), statement 14:00, presser 14:30",
+        "datetime_et": "2026-09-16T14:00",
+        "importance": "high",
+        "consensus": "Kalshi prices a 25bp hike at 47c, no change at 54c"
+      },
+      {
+        "event": "MDT fiscal Q1 2027 earnings, before open",
+        "datetime_et": "2026-09-01T06:45",
+        "importance": "medium",
+        "consensus": "guided $1.38-1.40 adj EPS, ~11.5-12% organic growth"
+      },
+      {
+        "event": "DELL and PANW earnings, after close",
+        "datetime_et": "2026-09-01T16:05",
+        "importance": "medium",
+        "consensus": "DELL rev est $45.85B; PANW $3.42B"
+      },
+      {
+        "event": "AVGO earnings, after close \u2014 the week's biggest print",
+        "datetime_et": "2026-09-02T16:05",
+        "importance": "high",
+        "consensus": "rev $29.95B, EPS $3.30"
+      },
+      {
+        "event": "LULU Q2 fiscal 2026 earnings, after close, call 16:30 ET",
+        "datetime_et": "2026-09-03T16:05",
+        "importance": "high",
+        "consensus": "rev $2.51B, EPS $1.79 (-42.3% YoY); company guided rev $2.45-2.475B"
+      },
+      {
+        "event": "ADBE earnings, after close",
+        "datetime_et": "2026-09-10T16:05",
+        "importance": "medium",
+        "consensus": "rev $6.82B, EPS $6.20"
+      },
+      {
+        "event": "Labor Day \u2014 US markets closed",
+        "datetime_et": "2026-09-07T00:00",
+        "importance": "low",
+        "consensus": null
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "symbol": "CME",
+      "instrument": "CME Group Inc Class A",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "long_term",
+      "conviction": 3,
+      "unit": "usd",
+      "last_price": 285.8,
+      "last_price_asof": "2026-08-28T16:00 ET close",
+      "price_source": "finnhub quote / nasdaq 150-day history via market_data.py",
+      "entry": {
+        "ideal": 278.0,
+        "zone_low": 250.0,
+        "zone_high": 280.0,
+        "order_type": "limit",
+        "condition": "WAIT. Do not pay 285.80. Accumulate in halves at 278 and 254. 278 is not a chart guess \u2014 against a $240 bear case and a $380 target it is the price at which this returns 2.68, and the 2.5 long-term floor breaks at 280.0. At Friday's 285.80 the idea computes 2.05 and fails its own rule. The 254 rung is the 50-day (253.99); the 20-day is 270.01, so the first rung sits between the two and requires a normal pullback, not a crash."
+      },
+      "exit": {
+        "target": 380.0,
+        "target_2": 420.0,
+        "scale_plan": "Trim a third at 380 (roughly 28x a forward-forward $13.50 of EPS, in line with where a regulated monopoly compounder has historically traded, not above it). Hold the balance toward 420 only while quarterly interest-rate ADV is still setting records. The 3.97% dividend ($11.35/yr) is paid while waiting."
+      },
+      "stop": null,
+      "bear_case_price": 240.0,
+      "risk_tier": "high_conviction",
+      "position_size_pct": 3.0,
+      "market_cap_usd": 102770000000,
+      "catalyst": {
+        "event": "A structural, not dated, driver: Kevin Warsh used his first Jackson Hole speech on 2026-08-28 to refuse forward guidance and refuse to publish a reaction function at all, as a stated governance philosophy rather than a one-off. Forward guidance existed to compress the dispersion of expectations about the policy path. Removing it does the opposite by construction, and interest-rate uncertainty is the raw input to CME's largest business.",
+        "datetime_et": null,
+        "action": "Accumulate in halves at 278 and 254 over the next one to two quarters. There is no urgency and no print to front-run. Add on any broad-market drawdown that takes it under 254. The Oct 5 launch of AI compute futures and the Sep 11 start of 24/7 silver are free options, not reasons to hurry.",
+        "wait": true
+      },
+      "thesis": "The Fed just made its own policy path less predictable on purpose, and CME Group is the toll booth on the hedging that creates. The volume response is already visible and it is not subtle: March 2026 ADV was an all-time record 41.1M contracts, +33% year over year, with interest-rate products alone +42% to 20.8M; Q1 set records in both SOFR futures and options (7.5M ADV) and US Treasury futures and options (10.6M ADV); July then set the highest-ever monthly ADV at 27M, +23% year over year. That flows through a business earning $4.27B of net income on $6.76B of revenue \u2014 a 63% net margin \u2014 because incremental contracts cost the exchange almost nothing to clear.",
+      "key_risk": "Revenue grew only 5.0% over the trailing twelve months while ADV grew 22-33%, which means realised rate per contract is compressing as volume mixes toward cheaper products. If that compression is structural rather than a mix artifact, record volumes stop translating into record revenue and the whole mechanism breaks. The other risk is duller: at 24x trailing and 23x forward this is not a cheap stock, so a multiple de-rating can offset several years of volume growth.",
+      "counter_argument": "The strongest case against is that this is already priced \u2014 CME is 30.9% above its 150-day low and sits above both its 20-day and 50-day averages, and the volume records are public information that the sell side has had since April. The response is the entry discipline rather than a denial: the idea is only taken at 278 and below, which is where the arithmetic works, and the driver is a change in the Fed's operating doctrine that dates from Friday, not from April. RED TEAM \u2014 bear case flattered, conviction and size cut. The $240 bear case sits 9.9% ABOVE CME's actual 150-day low of 218.31, a price the stock really traded at this year. Substitute the observed low and the 278 entry returns 1.71, not 2.68 \u2014 below the 2.5 floor. The mitigant, and the reason this survives at all, is that the published two-rung plan (278 and 254) averages 266, against the 264.51 that clears 2.5 against the observed low. So the idea works if and only if BOTH rungs actually fill. A single fill at 278 is not this trade. Conviction 4->3 and size 4%->3% accordingly.",
+      "sources": [
+        "https://www.cmegroup.com/media-room/press-releases/2026/4/02/cme_group_reachesall-timerecordmonthlyandquarterlyaveragedailyvo.html",
+        "https://www.cmegroup.com/media-room/press-releases/2026/7/02/cme_group_reportsrecordjuneaveragedailyvolumeandsecond-highestq2.html",
+        "https://stockanalysis.com/stocks/cme/",
+        "https://www.washingtonpost.com/business/2026/08/28/fed-chair-warsh-speaks-jackson-hole-conference/",
+        "https://qz.com/fed-chair-kevin-warsh-jackson-hole-speech-082826"
+      ],
+      "rank": 1,
+      "risk_reward": 2.68,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.68,
+        "claimed_risk_reward": 2.68,
+        "live_price": 285.8,
+        "live_price_asof": "2026-08-28T20:00:00+00:00",
+        "market_session": "closed",
+        "price_age_minutes": 1191.0,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": 5.8032,
+        "checked_at_et": "2026-08-29T11:52:01-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.68:1 clears the 2.5:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 278.0 is -2.7% from live 285.8"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "long-term idea, no dated event expected"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "long-term target is valuation-anchored, not ATR-bound"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is closed; last price 2026-08-28T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "no bid/ask available (normal outside regular hours)"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "3.0% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "3 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "MDT",
+      "instrument": "Medtronic plc",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "long_term",
+      "conviction": 3,
+      "unit": "usd",
+      "last_price": 91.23,
+      "last_price_asof": "2026-08-28T16:00 ET close",
+      "price_source": "finnhub quote / nasdaq 150-day history via market_data.py",
+      "entry": {
+        "ideal": 88.0,
+        "zone_low": 82.0,
+        "zone_high": 88.0,
+        "order_type": "limit",
+        "condition": "WAIT FOR THE PRINT, then accumulate in halves at 88 and 82. Do not buy at 91.23 and do not buy before Tuesday 09-01 bmo. 88 is arithmetic: against a $78 bear case and a $114 target, the 2.5 long-term floor breaks at 88.29 \u2014 at 91.23 the idea returns 1.72 and fails. The 82 rung sits between the 50-day (85.49) and the 150-day low (73.31). This report rejected AVGO and CIEN today for being pre-print coin flips; the same rule applies here."
+      },
+      "exit": {
+        "target": 114.0,
+        "target_2": 128.0,
+        "scale_plan": "Trim a third at 114 \u2014 19.2x the midpoint of company-guided FY27 adjusted EPS of $5.90-6.00, and the higher of the two freshly-raised sell-side targets (Needham $114, TD Cowen $110), so it is a level someone has already underwritten. Hold the balance toward 128 only while organic revenue growth stays above 6%. The 3.16% dividend ($2.88/yr) is paid while waiting."
+      },
+      "stop": null,
+      "bear_case_price": 78.0,
+      "risk_tier": "high_conviction",
+      "position_size_pct": 3.0,
+      "market_cap_usd": 116770000000,
+      "catalyst": {
+        "event": "Fiscal Q1 2027 results, Tuesday 2026-09-01 before the open. Company guidance for the quarter is ~11.5-12% organic revenue growth and $1.38-1.40 adjusted EPS; FY27 guidance is 6.75-7.25% organic growth and $5.90-6.00 adjusted EPS. The second, undated driver is the MiniMed diabetes separation \u2014 FY27 guidance conservatively assumes a full year of Diabetes and no separation share-count benefit, so completing it before year-end is upside management has deliberately excluded.",
+        "datetime_et": "2026-09-01T06:45",
+        "action": "Do nothing before Tuesday. Let the print land, then accumulate in halves at 88 and 82 over the next one to two quarters. If the print gaps it above 91 on a beat, stand down and wait for the level rather than chasing \u2014 there is no urgency in a multi-year holding.",
+        "wait": true
+      },
+      "thesis": "The trailing multiple on Medtronic is lying and the reason is documented. MDT shows a 24.46 P/E on $3.73 of TTM EPS against a 15.34 forward P/E, because fiscal 2026 earnings absorbed one-off MiniMed separation costs \u2014 roughly 4 cents of IPO dilution plus an 8-cent hit from a one-time $157M charge owed to Blackstone for funding the MiniMed Flex pump \u2014 which management stated explicitly is specific to fiscal 2026 and does not affect 2027. Strip that and you are paying 15.3x forward earnings for a business that just delivered its highest annual revenue growth in ten years, grew TTM revenue 8.4% to $36.36B, guides to 6.75-7.25% organic growth, and pays 3.16%.",
+      "key_risk": "Medtronic has spent the better part of a decade guiding to acceleration and then not delivering it, so the FY27 guide is a promise rather than a result \u2014 and the Q1 number is flattered by an extra selling week worth 125-150bp of revenue growth and 600-700bp of EPS growth, which management discloses but which makes the headline look better than the underlying. If organic growth settles back near 4%, this is a 15x stock that deserves 15x.",
+      "counter_argument": "The strongest case against is that the forward multiple is cheap for a reason and the market has correctly refused to pay up for this management team through several previous acceleration stories. That is why the idea waits for the print and buys 3.5% lower rather than now: the discipline is the answer to the objection, and the bear case is priced at $78, close to the 150-day low of $73.31, rather than at some level that flatters the ratio. Insiders offer no support either \u2014 0 open-market buys against 3 sells totalling $595K. RED TEAM \u2014 bear case flattered, conviction and size cut. The $78 bear case sits 6.4% ABOVE the actual 150-day low of 73.31. Against the observed low the 88 entry returns 1.77, not 2.60. As with CME the two-rung plan (88 and 82) averages 85, against the 84.94 that clears 2.5 on the observed low \u2014 so the arithmetic survives only on a full two-rung fill, not on the first rung alone. Conviction 4->3, size 4%->3%.",
+      "sources": [
+        "https://stockanalysis.com/stocks/mdt/",
+        "https://www.medtechdive.com/news/medtronic-lowers-earnings-forecast-after-minimed-ipo/815688/",
+        "https://news.medtronic.com/2026-06-03-Medtronic-reports-fourth-quarter-and-full-year-fiscal-2026-results-delivers-highest-annual-revenue-growth-in-10-years",
+        "https://seekingalpha.com/article/4938788-medtronic-expecting-strong-revenue-growth-in-fiscal-q1"
+      ],
+      "rank": 2,
+      "risk_reward": 2.6,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.6,
+        "claimed_risk_reward": 2.6,
+        "live_price": 91.23,
+        "live_price_asof": "2026-08-28T20:00:00+00:00",
+        "market_session": "closed",
+        "price_age_minutes": 1191.1,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": 1.9332,
+        "checked_at_et": "2026-08-29T11:52:01-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.6:1 clears the 2.5:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 88.0 is -3.5% from live 91.23"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-09-01 is ahead of us"
+          },
+          {
+            "check": "earnings_date",
+            "status": "pass",
+            "detail": "earnings date 2026-09-01 confirmed against the calendar"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "long-term target is valuation-anchored, not ATR-bound"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is closed; last price 2026-08-28T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "no bid/ask available (normal outside regular hours)"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "3.0% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "1 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "LULU",
+      "instrument": "lululemon athletica inc.",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "long_term",
+      "conviction": 3,
+      "unit": "usd",
+      "last_price": 120.81,
+      "last_price_asof": "2026-08-28T16:00 ET close",
+      "price_source": "finnhub quote / nasdaq history via market_data.py",
+      "entry": {
+        "ideal": 114.0,
+        "zone_low": 100.0,
+        "zone_high": 114.0,
+        "order_type": "limit",
+        "condition": "POSITION UPDATE \u2014 TRIM HALF, DO NOT ADD AT 120.81. Sell half the 2026-08-22 long (@115.00) into Friday's unearned 5.2% pop, before the Sep 3 print. The 114.00 figure is arithmetic, not a forecast: against an $88 bear case and the $180 target, new capital only clears the 2.5 long-term reward-to-risk floor at 114.29 or below. At 120.81 the ratio is 1.80 and fails this report's own floor, so buying here would be buying a trade the strategy says not to take."
+      },
+      "exit": {
+        "target": 180.0,
+        "target_2": 200.0,
+        "scale_plan": "Trim half NOW at 120-121 pre-print. Hold the remaining half through Sep 3 as the long-term core. Trim a further third at 180 (roughly 19x a normalised $9.50 of earnings power, below the 2025 multiple, not above it)."
+      },
+      "stop": null,
+      "bear_case_price": 88.0,
+      "risk_tier": "standard",
+      "position_size_pct": 2.0,
+      "catalyst": {
+        "event": "Q2 fiscal 2026 results, Thursday 2026-09-03 after close, call 16:30 ET. Management has already guided revenue to $2.45-2.475B (-2% to -3%, North America down low double digits) with gross margin down 410bp including a 150bp tariff headwind; consensus EPS is $1.79, a 42.3% decline year over year. UBS cut its price target to $120 on 2026-08-28 \u2014 below Friday's close \u2014 and flags that this print may be used to cut the full-year profit outlook.",
+        "datetime_et": "2026-09-03T16:05",
+        "action": "Trim half before the close on Wed 2026-09-02. Hold the balance through the print. Resume accumulation only at or below 114.00, and only after the full-year guide is on the table.",
+        "wait": true
+      },
+      "thesis": "POSITION UPDATE \u2014 trim into strength, keep the core. The long-term case is intact and insider-supported: three open-market purchases by two distinct buyers in six months totalling $1.99M against $100K of sales, including board chair Charles Bergh buying 4,275 shares at $117.05 on 2026-06-15 and 6,090 at $164.20 in March \u2014 management is underwater alongside the position at 164 and 151. What changed is the price, not the thesis. LULU rose 5.2% on Friday on the day UBS *lowered* its target to $120, which is bargain-hunting and pre-print positioning rather than news, and it hands back a free 5% three sessions before a binary the company has already told the market will be ugly.",
+      "key_risk": "The specific risk is a full-year guidance cut on Sep 3, which UBS has explicitly flagged as likely \u2014 that would re-rate the stock for several quarters rather than one session, and the 120-day low of 104.44 offers little support beneath it. There is no stop on this position by design, so a bad print is absorbed in full by whatever is still held.",
+      "counter_argument": "Trimming a multi-year turnaround because of one scheduled print is exactly the short-termism that ruins long-term positions, and if the print is merely not-terrible the trimmed half is bought back higher. The answer is that only half comes off and the thesis keeps a full-sized voice \u2014 but the arithmetic is not a judgement call: at 120.81 the idea returns 1.80 against its own 2.5 floor, and a position you would not open at today's price is a position you are only holding out of inertia.",
+      "sources": [
+        "https://www.tikr.com/blog/lululemon-reports-q2-earnings-september-3-what-the-stock-needs-to-show",
+        "https://www.stocktitan.net/news/LULU/lululemon-athletica-inc-announces-second-quarter-fiscal-2026-x9pzzn60khef.html",
+        "https://wp.madrestravels.com/2026/08/28/lululemon-athletica-jumps-5-2-after-ubs-maintains-neutral/",
+        "https://finnhub.io/"
+      ],
+      "rank": 3,
+      "risk_reward": 2.54,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.54,
+        "claimed_risk_reward": 2.54,
+        "live_price": 120.81,
+        "live_price_asof": "2026-08-28T20:00:00+00:00",
+        "market_session": "closed",
+        "price_age_minutes": 1191.2,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": 4.3642,
+        "checked_at_et": "2026-08-29T11:52:15-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.54:1 clears the 2.5:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 114.0 is -5.6% from live 120.81"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-09-03 is ahead of us"
+          },
+          {
+            "check": "earnings_date",
+            "status": "pass",
+            "detail": "earnings date 2026-09-03 confirmed against the calendar"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "long-term target is valuation-anchored, not ATR-bound"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is closed; last price 2026-08-28T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "no bid/ask available (normal outside regular hours)"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "2.0% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "2 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "KMPR",
+      "instrument": "Kemper Corporation",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "long_term",
+      "conviction": 3,
+      "unit": "usd",
+      "last_price": 27.93,
+      "last_price_asof": "2026-08-28T16:00 ET close",
+      "price_source": "finnhub quote / nasdaq 150-day history via market_data.py",
+      "entry": {
+        "ideal": 26.9,
+        "zone_low": 24.5,
+        "zone_high": 27.0,
+        "order_type": "limit",
+        "condition": "WAIT for 27.00 or better \u2014 only 3.3% below Friday's close, so this is a realistic fill rather than a wish. 27.00 is where the idea clears the 2.5 long-term floor against a $21 bear case and a $42 target; at 27.93 it computes 2.03 and fails. It is also, independently, where five insiders bought between $26.34 and $26.53 on 2026-08-11 to 08-13. Accumulate in halves at 26.90 and 24.50."
+      },
+      "exit": {
+        "target": 42.0,
+        "target_2": 48.0,
+        "scale_plan": "Trim a third at 42 \u2014 the lower of the two Buy-rated sell-side targets (TD Cowen $42, UBS $43) and about 9.3x a normalised $4.50 of EPS, which is simply the $1.12 per diluted share Kemper earned in Q2 2025 annualised. That is a return to prior earnings power, not an expansion beyond it. The 4.58% dividend ($1.28) is collected while waiting. Hold the balance toward 48 only if the California personal auto combined ratio is actually back at target."
+      },
+      "stop": null,
+      "bear_case_price": 21.0,
+      "risk_tier": "standard",
+      "position_size_pct": 2.5,
+      "market_cap_usd": 1650000000,
+      "avg_dollar_volume": 24600000,
+      "catalyst": {
+        "event": "A named, dated pricing fix in California personal auto, run by a management team that is three months old and buying the stock. Kemper has 5.5% of average rate increase effective as of Q2 2026 with a further 6.9% filing pending, and management has said it needs double-digit rate increases in California personal auto to return that book to target profitability. Stephen McAnena became CEO on 2026-06-01 and Eric Kappler joined as President of Property & Casualty on 2026-07-30.",
+        "datetime_et": null,
+        "action": "Set limits at 26.90 and 24.50 and let them work over the next one to two quarters. The invalidation is not a price: stop adding if there is further adverse prior-year reserve development on the commercial auto book in a second consecutive quarter, because that is the number the whole thesis rests on.",
+        "wait": true
+      },
+      "thesis": "The $8.33 trailing loss per share is almost entirely a $460M non-cash goodwill impairment, and Kemper stated plainly that it has no impact on the cash-generating ability of the businesses, on statutory capital, on holding company liquidity, or on debt and revolving credit covenant compliance \u2014 the same quarter's adjusted profit beat, on improving underlying operating performance. What is left is a $4.59B-revenue insurer at 8.85x forward earnings paying 4.58%. The evidence that insiders agree is the strongest single cluster this morning's screening produced: five open-market purchases by five distinct buyers between 2026-08-11 and 08-13 at $26.34-26.53, with **zero sales**, including new CEO Stephen McAnena buying 3,000 shares at $26.50 \u2014 five separate people at five slightly different prices over three days, which is what independent decisions look like rather than a coordinated offering. Market cap is $1.65B on 58.92M shares and average dollar volume is roughly $24.6M a day, so a position is a trivial fraction of daily liquidity.",
+      "key_risk": "This is a reserve problem, and reserve adequacy is the single hardest thing to judge about an insurer from the outside. Commercial auto reserves total roughly $1 billion with about 90% in bodily injury, the quarter carried $17.7M of adverse prior-year development, and management identifies California bodily injury as the predominant issue. If those reserves are short, the rate increases do not save it and the equity absorbs the difference. The stock is also a small cap at $1.65B with a 3.55% ATR, and the sell side has been slashing: TD Cowen cut its target to $42 from $81.",
+      "counter_argument": "The strongest case against is that the $460M writedown is management admitting the acquired business is worth materially less than it paid, and calling it non-cash does not make the underlying deterioration imaginary \u2014 goodwill impairments are usually a lagging confession, not a one-off. Consensus is Hold at $36.33 and TD Cowen's target has fallen by half. The answer is not that they are wrong; it is that at 26.90 I am paying 8.5x forward for a business whose own five most informed people bought at 26.34-26.53 three weeks ago, with the bear case set at $21 \u2014 below the 52-week low of $22.69 \u2014 to allow for the reserves being short.",
+      "sources": [
+        "https://investors.kemper.com/news/news-details/2026/Kemper-Reports-Second-Quarter-2026-Operating-Results/default.aspx",
+        "https://www.investing.com/news/company-news/kemper-q2-2026-slides-adjusted-profit-beats-despite-460m-impairment-93CH-4842372",
+        "https://stockanalysis.com/stocks/kmpr/",
+        "https://www.fool.com/earnings/call-transcripts/2026/08/12/kemper-kmpr-q2-2026-earnings-call-transcript/",
+        "https://finnhub.io/"
+      ],
+      "rank": 4,
+      "risk_reward": 2.56,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.56,
+        "claimed_risk_reward": 2.56,
+        "live_price": 27.93,
+        "live_price_asof": "2026-08-28T20:00:00+00:00",
+        "market_session": "closed",
+        "price_age_minutes": 1191.3,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": 0.992,
+        "checked_at_et": "2026-08-29T11:52:16-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.56:1 clears the 2.5:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 26.9 is -3.7% from live 27.93"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "long-term idea, no dated event expected"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "long-term target is valuation-anchored, not ATR-bound"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is closed; last price 2026-08-28T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "no bid/ask available (normal outside regular hours)"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "2.5% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "1 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "CAG",
+      "instrument": "Conagra Brands Inc",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "long_term",
+      "conviction": 3,
+      "unit": "usd",
+      "last_price": 16.09,
+      "last_price_asof": "2026-08-28T16:00 ET close",
+      "price_source": "finnhub quote / nasdaq 150-day history via market_data.py",
+      "entry": {
+        "ideal": 14.6,
+        "zone_low": 13.0,
+        "zone_high": 14.75,
+        "order_type": "limit",
+        "condition": "WAIT. Do not pay 16.09 \u2014 the stock is already 28.4% above its 150-day low and 10% above where the insiders bought. Accumulate in halves at 14.60 and 13.20. 14.60 is doing double duty: it is where new CEO John Brase actually bought 35,000 shares on 2026-07-17, and it is where the idea clears the 2.5 long-term floor (2.56) against an $11 bear case and a $23.80 target. At 16.09 the idea computes 0.83 and fails outright. Buy where management bought or do not buy."
+      },
+      "exit": {
+        "target": 23.8,
+        "target_2": 27.0,
+        "scale_plan": "Trim a third at 23.80 \u2014 14x a recovered ~$1.70 of EPS, versus the ~$1.45 implied by today's 11.13 forward P/E. 14x is the middle of the historical range for a low-growth packaged-food name, not a re-rating to a premium. The 4.35% dividend ($0.70, already halved, so the payout is not the next thing at risk) is collected while waiting. Hold the balance toward 27 only if organic revenue stops declining."
+      },
+      "stop": null,
+      "bear_case_price": 11.0,
+      "risk_tier": "standard",
+      "position_size_pct": 2.0,
+      "market_cap_usd": 7700000000,
+      "catalyst": {
+        "event": "A new CEO cleaning house and buying the stock himself. John Brase took over, halved the dividend, took the company to a $1.92B net loss on writedowns, and has said publicly that every product needs to earn its keep. COO Tom McGough is retiring and business unit leaders now report directly to Brase. The undated driver is whether that discipline turns an 11.13x forward multiple into a normal one.",
+        "datetime_et": null,
+        "action": "Do nothing at 16.09. Set limits at 14.60 and 13.20 and let them work over the next one to two quarters. The invalidation is not a price: stop adding if organic revenue decline steepens beyond the current -2.9% for two consecutive quarters, because the whole thesis is stabilisation, not growth.",
+        "wait": true
+      },
+      "thesis": "The insider file here is as clean as this screen produced all morning: three open-market purchases by three distinct buyers totalling $1.12M and, unusually, **zero sales** \u2014 CEO John Brase bought 35,000 shares at $14.59 on 2026-07-17, and directors John Mulligan and Richard Lenny bought 17,500 at $14.31 and 25,000 at $14.34 on 2026-04-14. A chief executive buying half a million dollars of his own stock weeks after halving the dividend and writing down $1.92B is buying the cleared decks, not the old story. The market is paying 11.13x forward earnings and a 4.35% yield for that, against a consensus that has given up \u2014 the sell-side price target is $14.38, below the current price.",
+      "key_risk": "This is a shrinking business in a structurally challenged category: revenue fell 2.9% to $11.28B, trailing EPS is -$4.00, and packaged food faces private-label share loss and GLP-1 demand pressure that no cost programme fixes. **I could not fetch a total debt figure**, and leverage is how packaged-food turnarounds actually fail \u2014 a $7.70B equity value sitting on top of an unverified debt load is the single largest unknown in this idea and it is not a small one. The evidence is also one-sided: an insider cluster and a low multiple, with no operating datapoint yet showing the decline has stopped.",
+      "counter_argument": "The strongest case against is that the sell side is right and I am buying a value trap with a good story \u2014 consensus is Hold with a $14.38 target, 10.6% *below* the market, and analysts covering this name have watched the category shrink for a decade. That objection is why the entry is 14.60 and 13.20 rather than 16.09: at 14.60 I am paying roughly the analyst target and exactly what the CEO paid, which means the trade does not require anyone to be wrong about today, only about 2028. It may never fill, and that is an acceptable outcome.",
+      "sources": [
+        "https://stockanalysis.com/stocks/cag/",
+        "https://finnhub.io/",
+        "https://simplywall.st/stocks/us/food-beverage-tobacco/nyse-cag/conagra-brands"
+      ],
+      "rank": 5,
+      "risk_reward": 2.56,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.56,
+        "claimed_risk_reward": 2.56,
+        "live_price": 16.09,
+        "live_price_asof": "2026-08-28T20:00:00+00:00",
+        "market_session": "closed",
+        "price_age_minutes": 1191.4,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": 0.4114,
+        "checked_at_et": "2026-08-29T11:52:19-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.56:1 clears the 2.5:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 14.6 is -9.3% from live 16.09"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "long-term idea, no dated event expected"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "long-term target is valuation-anchored, not ATR-bound"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is closed; last price 2026-08-28T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "no bid/ask available (normal outside regular hours)"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "2.0% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "2 of 3 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "ELV",
+      "instrument": "Elevance Health Inc",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "long_term",
+      "conviction": 3,
+      "unit": "usd",
+      "last_price": 394.43,
+      "last_price_asof": "2026-08-28T16:00 ET close",
+      "price_source": "finnhub quote / nasdaq 150-day history via market_data.py",
+      "entry": {
+        "ideal": 368.0,
+        "zone_low": 340.0,
+        "zone_high": 370.0,
+        "order_type": "limit",
+        "condition": "WAIT. Do not pay 394.43. Accumulate in halves at 368 and 344. 368 is where two things meet: it is the price at which this clears the 2.5 long-term floor against a $300 bear case and a $540 target (2.53), and it is within a dollar of where CEO Gail Boudreaux and director Ramiro Peru actually bought on 2026-07-17. At 394.43 the idea computes 0.91 and fails outright. The 344 rung sits between the 368 level and the 150-day low of 274.84."
+      },
+      "exit": {
+        "target": 540.0,
+        "target_2": 600.0,
+        "scale_plan": "Trim a third at 540 \u2014 roughly 16x an FY2028 adjusted EPS near $34, which is the company's own path, not mine: management guides FY2026 adjusted EPS to at least $27.00 and states confidence in returning to at least 12% adjusted EPS growth in 2027. This is a two-to-three year anchor, not a chart level. Hold the balance toward 600 only while the benefit expense ratio is falling year over year."
+      },
+      "stop": null,
+      "bear_case_price": 300.0,
+      "risk_tier": "high_conviction",
+      "position_size_pct": 2.0,
+      "market_cap_usd": 85540000000,
+      "catalyst": {
+        "event": "A margin trough management has named and is actively fixing, bought by the people who run it. Elevance guides Medicaid to an approximately -1.75% operating margin in 2026 on elevated utilisation and rate-adjustment timing, calls it the trough, and is exiting underperforming Medicaid markets (it has already shut down its D.C. Medicaid business). Q2 2026 adjusted EPS was $7.45 against $6.21 consensus on $49.8B of revenue versus $48.63B expected, and full-year adjusted EPS guidance went up to at least $27.00 with operating cash flow to at least $6B.",
+        "datetime_et": null,
+        "action": "Accumulate in halves at 368 and 344 over the next one to two quarters. There is no print to front-run. Stop adding if the benefit expense ratio rises again year over year in a second consecutive quarter \u2014 that is the invalidation, not the price.",
+        "wait": true
+      },
+      "thesis": "A $201B-revenue business trading at 14.6x its own guided fiscal 2026 earnings, where the thing that broke it is dated and management has put money behind the fix. The insider file is the part that matters and it is a genuine cluster rather than a lone buyer: four open-market purchases by three distinct buyers, $2.24M against $1.74M of sales, with CEO Gail Boudreaux buying 2,045 and 680 shares at $366-368 and director Ramiro Peru buying 1,000 at $366.05 \u2014 all on the same day, 2026-07-17, two days after the Q2 print that raised guidance. Executives sell for a hundred reasons and buy for one.",
+      "key_risk": "The medical loss ratio is going the wrong way \u2014 89.7% in Q2 2026 against 88.9% a year earlier, with a targeted benefit expense ratio near 90.2% \u2014 and managed care has spent two years discovering that medical cost trend is worse than it guided. If ACA and Medicaid utilisation keeps running hot, 2026 is not the trough, the $27 guide goes, and a 14.6x multiple on a falling number is not cheap. ACA membership growing to as many as 1M from 900K expected is growth in exactly the book where the cost problem lives.",
+      "counter_argument": "The strongest case against is that every managed care insurer has called a trough for two years running and been wrong, so an insider buy at $366 is a well-paid executive being wrong with her own money rather than a signal. It is a fair point and the answer is the entry, not a rebuttal: the idea only opens at 368 and 344, prices that require the market to hand back the 7.5% it has added since those purchases, and the bear case is set at $300 \u2014 11.1x guided earnings, close to the actual 150-day low of 274.84 \u2014 rather than at a level that flatters the ratio. RED TEAM \u2014 the weakest ratio in the book; downgraded hardest. The $300 bear case sits 9.2% above the actual 150-day low of 274.84, and the report's own text calls 300 'close to the actual 150-day low', which 9.2% is not. Against the observed low the 368 entry returns 1.85, not 2.53. Unlike CME and MDT it does not survive the two-rung average either: 368 and 344 average 356, against the 350.60 required. Compounding it, the thesis rests on 2026 being the Medicaid margin trough while its own key_risk concedes the medical loss ratio is still rising year over year and that every managed care insurer has called a false trough for two years running \u2014 the idea's load-bearing claim is the one its risk section says is unreliable. The insider cluster is genuine and is why this is downgraded rather than cut. Conviction 4->3, size 4%->2%.",
+      "sources": [
+        "https://www.elevancehealth.com/newsroom/elv-quarterly-earnings-q2-2026",
+        "https://stockanalysis.com/stocks/elv/",
+        "https://www.healthcaredive.com/news/elevance-medicaid-exits-q2-2025-2026-earnings-raise/825217/",
+        "https://simplywall.st/stocks/us/healthcare/nyse-elv/elevance-health/news/elevance-health-elv-raises-2026-targets-and-exits-weak-medic/amp",
+        "https://finnhub.io/"
+      ],
+      "rank": 6,
+      "risk_reward": 2.53,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.53,
+        "claimed_risk_reward": 2.53,
+        "live_price": 394.43,
+        "live_price_asof": "2026-08-28T20:00:00+00:00",
+        "market_session": "closed",
+        "price_age_minutes": 1191.5,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": 9.2518,
+        "checked_at_et": "2026-08-29T11:52:20-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.53:1 clears the 2.5:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 368.0 is -6.7% from live 394.43"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "long-term idea, no dated event expected"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "long-term target is valuation-anchored, not ATR-bound"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is closed; last price 2026-08-28T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "no bid/ask available (normal outside regular hours)"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "2.0% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "sources",
+            "status": "pass",
+            "detail": "all 4 checked source(s) resolve"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "ETH",
+      "instrument": "Ethereum (ETH) spot",
+      "asset_class": "crypto",
+      "venue": "Robinhood Crypto",
+      "direction": "buy",
+      "horizon": "long_term",
+      "conviction": 3,
+      "unit": "usd",
+      "last_price": 2442.64,
+      "last_price_asof": "2026-08-29T11:42 ET (24/7 market, live)",
+      "price_source": "CoinGecko via market_data.py crypto",
+      "entry": {
+        "ideal": 2100.0,
+        "zone_low": 1900.0,
+        "zone_high": 2150.0,
+        "order_type": "limit",
+        "condition": "WAIT \u2014 do not chase 2,444. ETH is +27.6% over 30 days and the ETHA proxy sits ~16% above its 20-day (18.37 vs 15.81), which is extended, not cheap. Accumulate in halves at 2,100 and 1,950. 2,100 is arithmetic: against a $1,550 bear case and a $3,500 target the 2.5 long-term floor breaks at 2,107 \u2014 at 2,444 the idea returns 1.18 and fails badly. The 2,100 area maps to the ETHA 20-day and 1,950 to its 50-day. Spot rather than /MET futures deliberately: this is a multi-quarter hold and roll costs make futures the wrong wrapper."
+      },
+      "exit": {
+        "target": 3500.0,
+        "target_2": 4200.0,
+        "scale_plan": "Trim a third at 3,500. That target is the mechanism, not a round number: ETH/BTC is 0.0314 today, and 0.045 with bitcoin near 78,000 is 3,510 \u2014 it is the ratio normalising, which is the same thing the flow thesis predicts. Hold the balance toward 4,200 only while ETH ETF net inflows are still running positive on a monthly basis."
+      },
+      "stop": null,
+      "bear_case_price": 1550.0,
+      "risk_tier": "speculative",
+      "position_size_pct": 2.0,
+      "catalyst": {
+        "event": "A regulatory change that turned ETH into a yield-bearing asset inside an institutional wrapper, and flows that have started to show it. The SEC and CFTC joint interpretive release of 2026-03-17 classified staking rewards as non-securities, removing the barrier that had blocked staking ETFs for over a year. Two US Ethereum staking ETFs are now live (Grayscale ETHE, BlackRock ETHB since March 2026) with five more issuers pending, and Fidelity filed on 2026-08-11 to add staking to FETH.",
+        "datetime_et": null,
+        "action": "Wait for the pullback, then accumulate in halves at 2,100 and 1,950 over the next one to two quarters. Add under 1,950 only if monthly ETF net flows are still positive \u2014 the flow is the thesis, so a month of net outflows is the signal to stop adding, not a discount.",
+        "wait": true
+      },
+      "thesis": "Staking approval changed what an Ethereum ETF is: a non-yielding commodity wrapper became a yield-bearing one, and that is a different product to an allocator. The flows are already responding and they are measurable rather than anecdotal \u2014 BlackRock ETHA took roughly $1.02B of net inflows across nine consecutive sessions from 2026-08-17 to 08-27 with not one day of net selling; the week ending 08-21 saw about $697M of Ethereum ETF inflows, the strongest week in roughly ten months; and in July 2026 Ethereum ETFs took $365M, their best month ever and the first month they out-gathered Bitcoin ETFs. ETH is 50.6% below its 2025-08-24 all-time high of $4,946 while the reason people would not own it has just been removed.",
+      "key_risk": "The entire thesis is flow, and flow reverses faster than fundamentals. Nine good days is nine days. ETH has genuinely lost ground on the merits too \u2014 Solana has taken on-chain activity and the investment narrative is muddier than Bitcoin's, which is why ETH fell about 32% year to date into mid-2026 against Bitcoin's 11%. Robinhood Crypto cannot short, so if this is wrong the only expression is not owning it, and there is no hard stop on the position by design.",
+      "counter_argument": "The strongest case against is that a 27.6% thirty-day move means the staking news is already in the price and I am buying the second leg of a rally that started without me. That is exactly why the idea does not enter here: it enters 14% lower at 2,100, where the arithmetic works against a $1,550 bear case drawn from the actual June 2026 low, and it may well never fill. A long-term crypto position bought 16% above its 20-day average is a momentum trade wearing a thesis.",
+      "sources": [
+        "https://www.cryptotimes.io/2026/08/29/blackrocks-ethereum-etf-posts-1-02-billion-in-inflows-over-9-days-as-eth-price-surges/",
+        "https://coingape.com/markets/ethereum-price-prediction-as-eth-etfs-lead-inflows-amid-fidelitys-staking-filing/",
+        "https://everstake.one/resources/blog/ethereum-staking-etfs-for-institutions",
+        "https://crypto.news/ethereum-price-prediction-will-eth-underperform-bitcoin-2026/",
+        "https://www.coingecko.com/en/coins/ethereum"
+      ],
+      "rank": 7,
+      "risk_reward": 2.55,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.55,
+        "claimed_risk_reward": 2.55,
+        "live_price": null,
+        "live_price_asof": null,
+        "market_session": null,
+        "price_age_minutes": null,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": null,
+        "checked_at_et": "2026-08-29T11:52:20-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.55:1 clears the 2.5:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "warn",
+            "detail": "no live price available to compare against"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "long-term idea, no dated event expected"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "long-term target is valuation-anchored, not ATR-bound"
+          },
+          {
+            "check": "price_freshness",
+            "status": "warn",
+            "detail": "no quote fetched, so freshness is unknown"
+          },
+          {
+            "check": "instrument_choice",
+            "status": "pass",
+            "detail": "ETH spot is correct for a long-term hold; futures roll costs make multi-year contract exposure awkward"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "2.0% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "sources",
+            "status": "pass",
+            "detail": "all 4 checked source(s) resolve"
+          }
+        ]
+      }
+    }
+  ],
+  "watchlist": [
+    {
+      "symbol": "EVTC",
+      "instrument": "Evertec Inc",
+      "note": "A genuine insider cluster in a 20%-growth payments processor, held back by one unreconciled number. 7 open-market buys by 5 distinct buyers totalling $2.25M, six of the seven lots on 2026-05-07 to 05-12 at $22.03-24.33 (at the 150-day low), against $1.45M of sales. Q2 2026 revenue +20% YoY to $275M; TTM revenue $996.16M (+12.4%); Morgan Stanley raised its target to $34 from $25. Not recommended because trailing P/E 19.35 versus forward P/E 7.21 implies forward EPS near $4.16 against $1.55 trailing, and that bridge is UNVERIFIED. MDT and KMPR were taken with the same shape only because each had a documented one-off behind it (MiniMed/Blackstone charges; a $460M goodwill impairment). Here there is none \u2014 for an acquisitive payments processor it is probably acquisition amortisation, i.e. a GAAP-versus-adjusted comparison, and building a target on a multiple that cannot be explained is precisely the arithmetic this report exists to catch. Two further marks against: unlike KMPR and CAG the cluster sits alongside real selling, and at 29.98 the stock is already 15-28% above where the insiders bought, so the entry advantage is gone. Most of the buying also landed in the days immediately BEFORE the 2026-05-13 unauthorised-access disclosure, which is not evidence of anything improper but is not a clean 'they bought the bad news' story either.",
+      "trigger": "Pull the Q2 2026 10-Q or press release and reconcile GAAP EPS to adjusted EPS. If the $4.16 forward figure is adjusted and cash conversion supports it, this is a 20%-growth payments business at a single-digit multiple with a five-buyer insider cluster and it deserves a full workup and a real entry level. If the gap is only amortisation dressed up, it is a 19x stock and there is nothing here. Next run starts here.",
+      "demoted_from_rank": null,
+      "demotion_reason": "Never ranked \u2014 could not be valued honestly within the research budget."
+    },
+    {
+      "symbol": "KXFEDDECISION-26SEP-H0",
+      "instrument": "Kalshi \u2014 Fed maintains rate at the September 2026 FOMC (0bp hike)",
+      "note": "CUT BY RED TEAM \u2014 the idea falsified itself and was published anyway. Its own key_risk and counter_argument state that fed funds futures price a September hike at 56-59% while this contract prices 47%, i.e. the deeper and better-capitalised market is 9-12 points more hawkish. The counter_argument then names the error exactly \u2014 'treating that gap as my edge rather than as my error is the exact reasoning that keeps losing trades open' \u2014 and takes the position regardless. That is the falsification step being written down and then ignored, which is the specific failure this phase exists to catch. On the report's own stated fair value (September hike 40-45%, so no-change worth 55-60c) the edge against a 54c ask is 1-6 cents on a binary; on the futures-implied fair value of 41-44c it is 10-13 cents NEGATIVE. A 1% lottery ticket with no demonstrated edge is a donation, and the 2.88 reward-to-risk is an artefact of a 38c stop on an event contract, not an expected value. Verified independently against the live Kalshi book: the September strip is H0 53/54c, H25 (25bp hike) 46/47c, tails 1c \u2014 the report's prices and polarity are correct (YES on H0 does resolve to no-change), so this is a judgement kill, not a data error. Also note for the record that the validator's 404 on the Kalshi trades endpoint was transient: the URL returns 200 now.",
+      "trigger": "Re-open only if Kalshi and fed funds futures CONVERGE and the convergence goes the dovish way, or if the Sep 4 payrolls (2026-09-04 08:30 ET) or Sep 11 CPI (2026-09-11 08:30 ET) come in soft enough to move futures below 50% for a September hike. Buying the dovish side of the cheaper venue while the deeper venue is more hawkish is not an edge in either direction.",
+      "demoted_from_rank": 11,
+      "demotion_reason": "Report's own falsification pass showed the edge inverted against fed funds futures; it was downgraded rather than cut."
+    },
+    {
+      "symbol": "/MBTU6",
+      "instrument": "Micro Bitcoin futures, September 2026 (CME /MBT)",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 1,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target"
+    },
+    {
+      "symbol": "TJX",
+      "instrument": "The TJX Companies Inc",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; no entry price",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 2,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; no entry price"
+    },
+    {
+      "symbol": "EEM",
+      "instrument": "iShares MSCI Emerging Markets ETF",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; no entry price",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 3,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; no entry price"
+    }
+  ],
+  "validation_summary": {
+    "checked": 10,
+    "passed": 0,
+    "warned": 7,
+    "failed": 3,
+    "enforced": true,
+    "demoted": 3
+  }
+}
