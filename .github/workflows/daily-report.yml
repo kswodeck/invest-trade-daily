@@ -1,14 +1,24 @@
 name: Daily Trade Report
 
 on:
+  # An external caller is the only way to actually get 6am. GitHub's scheduler
+  # has delivered this repo's crons 4-11 hours late every day since 2026-08-27,
+  # and no cron declared here can fix that — see docs/scheduling.md.
+  repository_dispatch:
+    types: [run-daily-report]
+
   schedule:
     # 06:00 America/New_York year-round. GitHub cron is UTC only and has no DST
     # awareness, so both arms are declared and the gate job below decides which
     # one does the work. Both arms fire every day, so a second run appearing in
     # the Actions list and finishing in ten seconds is the gate working, not a
     # double report — see scripts/schedule_gate.py.
-    - cron: "0 10 * * *"   # 06:00 EDT / 05:00 EST
-    - cron: "0 11 * * *"   # 07:00 EDT / 06:00 EST
+    #
+    # Deliberately off the top of the hour: :00 is the busiest minute on
+    # GitHub's scheduler and the one it sheds hardest under load. This is a
+    # hedge, not a fix.
+    - cron: "7 10 * * *"   # 06:07 EDT / 05:07 EST
+    - cron: "7 11 * * *"   # 07:07 EDT / 06:07 EST
   workflow_dispatch:
     inputs:
       research_minutes:
@@ -20,6 +30,15 @@ on:
         type: boolean
         required: false
         default: false
+      respect_window:
+        description: >
+          "true" applies the 6-11 ET window and the duplicate check, as a
+          scheduled run would. Automated callers set this; leave it alone when
+          dispatching by hand. Declared as a string, not a boolean, because the
+          primary caller is the REST API and a string is unambiguous there.
+        type: string
+        required: false
+        default: "false"
 
 concurrency:
   group: daily-report
@@ -33,6 +52,7 @@ jobs:
     outputs:
       proceed: ${{ steps.check.outputs.proceed }}
       date: ${{ steps.check.outputs.date }}
+      started_et: ${{ steps.check.outputs.started_et }}
     steps:
       - uses: actions/checkout@v5
         with:
@@ -76,6 +96,7 @@ jobs:
             --cron "${{ github.event.schedule }}" \
             --report-state "${{ steps.published.outputs.state }}" \
             --window "${REPORT_WINDOW_ET}" \
+            --respect-window "${{ github.event.inputs.respect_window || 'false' }}" \
             | tee -a "$GITHUB_STEP_SUMMARY"
           printf '```\n' >> "$GITHUB_STEP_SUMMARY"
 
@@ -92,6 +113,7 @@ jobs:
       id-token: write
     env:
       REPORT_DATE: ${{ needs.gate.outputs.date }}
+      RUN_STARTED_ET: ${{ needs.gate.outputs.started_et }}
       FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
       ALPHAVANTAGE_API_KEY: ${{ secrets.ALPHAVANTAGE_API_KEY }}
       TWELVEDATA_API_KEY: ${{ secrets.TWELVEDATA_API_KEY }}
@@ -181,6 +203,16 @@ jobs:
           else
             python scripts/ensure_report.py "$REPORT_DATE"
           fi
+
+      # The 6-11 ET window means a delivery hours late still produces a report.
+      # It must not then read like the 6am pre-open view — say when it actually
+      # ran, before anything downstream renders it.
+      - name: Note the hour if this was not the 6am run
+        if: always()
+        continue-on-error: true
+        run: |
+          python scripts/note_late_run.py "reports/$REPORT_DATE/report.json" \
+            --started-et "$RUN_STARTED_ET" | tee -a "$GITHUB_STEP_SUMMARY"
 
       # Deterministic checks on every number the model wrote: recomputed
       # reward-to-risk, direction consistency, entry against the live price,

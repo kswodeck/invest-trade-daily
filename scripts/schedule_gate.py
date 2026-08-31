@@ -31,7 +31,7 @@ the hour window only decides whether a late delivery is still worth honouring.
         --cron "0 11 * * *" --report-state missing --window 6-11
 
 Prints a JSON decision to stdout and, when GITHUB_OUTPUT is set, appends
-`proceed`, `date` and `late` for the workflow to branch on. Always exits 0 —
+`proceed`, `date`, `late` and `started_et` for the workflow to branch on. Always exits 0 —
 "do not run" is a decision, not a failure.
 """
 
@@ -51,6 +51,14 @@ from report_state import MISSING, PUBLISHED, STUB  # noqa: E402
 
 ET = ZoneInfo("America/New_York")
 UTC = ZoneInfo("UTC")
+
+# Events that arrive on a timer and must therefore be second-guessed. A human
+# pressing "Run workflow" is not one of them: the duplicate guard exists to stop
+# a scheduler, not an operator. An automated external trigger — the only thing
+# that can actually deliver 6am, see docs/scheduling.md — belongs on this list,
+# so it can fire both DST arms and let the gate drop the wrong one rather than
+# needing to be reconfigured twice a year.
+AUTOMATED_EVENTS = frozenset({"schedule", "repository_dispatch"})
 
 
 @dataclass(frozen=True)
@@ -91,6 +99,7 @@ def decide(
     report_state: str,
     window_start: int,
     window_end: int,
+    respect_window: bool = False,
 ) -> Decision:
     """Whether this invocation should run the pipeline.
 
@@ -101,9 +110,9 @@ def decide(
     """
     date = now_et.date().isoformat()
 
-    if event_name != "schedule":
-        # A human (or the watchdog) asked for this explicitly. Honour it — the
-        # duplicate guard exists to stop the scheduler, not the operator.
+    if event_name not in AUTOMATED_EVENTS and not respect_window:
+        # A human (or the catch-up, which has already run these same checks)
+        # asked for this explicitly. Honour it.
         return Decision(True, date, f"{event_name} — proceeding on request")
 
     if report_state == PUBLISHED:
@@ -155,6 +164,12 @@ def main() -> int:
         default="6-11",
         help="ET hours [start-end) in which a scheduled run may proceed",
     )
+    ap.add_argument(
+        "--respect-window",
+        default="false",
+        help="force the schedule guards on an otherwise-manual event, so an "
+             "automated caller can fire both DST arms and let the gate choose",
+    )
     args = ap.parse_args()
 
     start, end = _window(args.window)
@@ -165,6 +180,7 @@ def main() -> int:
         report_state=args.report_state,
         window_start=start,
         window_end=end,
+        respect_window=args.respect_window.strip().lower() == "true",
     )
 
     print(f"Now: {now_et:%a %Y-%m-%d %H:%M:%S %Z} (hour {now_et.hour})")
@@ -189,6 +205,7 @@ def main() -> int:
             fh.write(f"proceed={str(decision.proceed).lower()}\n")
             fh.write(f"date={decision.date}\n")
             fh.write(f"late={str(decision.late).lower()}\n")
+            fh.write(f"started_et={now_et.isoformat(timespec='seconds')}\n")
     return 0
 
 

@@ -30,8 +30,8 @@ def et(month: int, day: int, hour: int, minute: int = 0) -> datetime:
     return datetime(2026, month, day, hour, minute, tzinfo=ET)
 
 
-def gate(now, *, event="schedule", state="missing", window=(6, 11)):
-    return decide(now, event, state, window[0], window[1])
+def gate(now, *, event="schedule", state="missing", window=(6, 11), respect_window=False):
+    return decide(now, event, state, window[0], window[1], respect_window)
 
 
 class CronToLocalHour(unittest.TestCase):
@@ -144,6 +144,37 @@ class ManualRuns(unittest.TestCase):
     def test_date_is_the_et_date(self):
         # 20:30 UTC on the 27th is still the 27th in ET; 01:00 UTC is not.
         self.assertEqual(gate(et(8, 27, 16, 30)).date, "2026-08-27")
+
+
+class AutomatedExternalTrigger(unittest.TestCase):
+    """The only thing that can actually deliver 6am is an external caller.
+
+    It fires both DST arms and lets the gate drop the wrong one, exactly as the
+    in-repo crons do — so it never needs reconfiguring in March and November.
+    """
+
+    def test_repository_dispatch_is_guarded_like_a_cron(self):
+        # EDT: the "EST arm" lands at 7am with the report already published.
+        d = gate(et(8, 31, 7, 0), event="repository_dispatch", state="published")
+        self.assertFalse(d.proceed)
+
+    def test_repository_dispatch_at_six_runs(self):
+        self.assertTrue(gate(et(8, 31, 6, 0), event="repository_dispatch").proceed)
+
+    def test_repository_dispatch_too_early_in_winter_is_dropped(self):
+        d = gate(et(1, 15, 5, 0), event="repository_dispatch")
+        self.assertFalse(d.proceed)
+        self.assertIn("other DST arm", d.reason)
+
+    def test_workflow_dispatch_opting_in_is_guarded(self):
+        d = gate(et(8, 31, 7, 0), event="workflow_dispatch",
+                 state="published", respect_window=True)
+        self.assertFalse(d.proceed)
+
+    def test_workflow_dispatch_by_hand_still_overrides(self):
+        # A person pressing "Run workflow" is not a scheduler to be second-guessed.
+        d = gate(et(8, 31, 16, 0), event="workflow_dispatch", state="published")
+        self.assertTrue(d.proceed)
 
 
 if __name__ == "__main__":
