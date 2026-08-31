@@ -30,6 +30,14 @@ on:
         type: boolean
         required: false
         default: false
+      respect_window:
+        description: >
+          Apply the 6-11 ET window and the duplicate check, as a scheduled run
+          would. Automated callers set this so they can fire both DST arms;
+          leave it false when dispatching by hand.
+        type: boolean
+        required: false
+        default: false
 
 concurrency:
   group: daily-report
@@ -87,6 +95,7 @@ jobs:
             --cron "${{ github.event.schedule }}" \
             --report-state "${{ steps.published.outputs.state }}" \
             --window "${REPORT_WINDOW_ET}" \
+            --respect-window "${{ github.event.inputs.respect_window || 'false' }}" \
             | tee -a "$GITHUB_STEP_SUMMARY"
           printf '```\n' >> "$GITHUB_STEP_SUMMARY"
 

@@ -87,9 +87,25 @@ Anything that runs a daily HTTPS request and is itself punctual:
 - Any always-on machine you already run, via its own crontab. `TZ` in the
   crontab handles DST.
 
-If the scheduler is UTC-only, it has the same DST problem GitHub does — declare
-both arms (`0 10` and `0 11` UTC) and let the repo's gate drop the wrong one,
-exactly as the in-repo crons do.
+### DST, without a twice-yearly reminder
+
+If the scheduler is UTC-only it has the same DST problem GitHub does. Do not
+solve it by editing the schedule in March and November — that is a reminder
+waiting to be missed. Fire **both** arms, `0 10` and `0 11` UTC, and let the
+gate drop the wrong one:
+
+- `repository_dispatch` is treated as an automated trigger, so it gets the
+  window check and the duplicate check exactly as a cron does. In EDT the
+  10:00Z call is 6am and runs; the 11:00Z call is 7am and skips because the
+  report is already on the branch. In EST the 10:00Z call is 5am and is dropped
+  as too early; the 11:00Z call is 6am and runs.
+- A caller that can only reach `workflow_dispatch` (the GitHub Actions API's
+  `run_workflow`) gets the same behaviour by passing the input
+  `respect_window: true`.
+
+A person pressing **Run workflow** in the UI leaves that input false and still
+overrides everything — the guards exist to second-guess a scheduler, not an
+operator.
 
 ### Keeping the GitHub crons
 
