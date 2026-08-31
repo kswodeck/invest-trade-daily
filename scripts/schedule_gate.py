@@ -31,7 +31,7 @@ the hour window only decides whether a late delivery is still worth honouring.
         --cron "0 11 * * *" --report-state missing --window 6-11
 
 Prints a JSON decision to stdout and, when GITHUB_OUTPUT is set, appends
-`proceed`, `date` and `late` for the workflow to branch on. Always exits 0 —
+`proceed`, `date`, `late` and `started_et` for the workflow to branch on. Always exits 0 —
 "do not run" is a decision, not a failure.
 """
 
@@ -189,6 +189,7 @@ def main() -> int:
             fh.write(f"proceed={str(decision.proceed).lower()}\n")
             fh.write(f"date={decision.date}\n")
             fh.write(f"late={str(decision.late).lower()}\n")
+            fh.write(f"started_et={now_et.isoformat(timespec='seconds')}\n")
     return 0
 
 

@@ -89,8 +89,13 @@ Consequences worth knowing before you go debugging:
   Watchdog` run, never silence.
 - Never widen the window so far that an afternoon run publishes a report framed
   as the 6am pre-open view.
-- Nothing here can fix delivery itself. If a morning must be guaranteed, the
-  trigger has to come from outside GitHub Actions.
+- Nothing here can fix delivery itself, and everything above is damage control:
+  it turns "no report" into "a late report that admits it is late". Since
+  2026-08-27 delivery has run 4-11 hours late daily. A 6am report requires an
+  external caller hitting `repository_dispatch` — see `docs/scheduling.md`.
+- A run that starts materially after the pre-open slot is stamped by
+  `scripts/note_late_run.py`, so a report researched mid-session says so instead
+  of reading like the 6am view. Never remove that stamp to tidy up a report.
 
 Logic changes here need a test in `tests/` — run with
 `python -m unittest discover -s tests`.
