@@ -41,71 +41,129 @@ That is the ceiling for anything living inside GitHub Actions.
 
 ## What actually fixes it
 
-A trigger from outside GitHub. The workflow accepts one:
+A trigger from outside GitHub. Use **cron-job.org**: it is free with no card, it
+understands `America/New_York` so daylight saving is its problem rather than
+yours, and the token it holds can do nothing but start a workflow run.
 
-```yaml
-on:
-  repository_dispatch:
-    types: [run-daily-report]
+### The token: Actions, not Contents
+
+This matters more than it looks. This repository's Actions hold
+`GCP_SERVICE_ACCOUNT_JSON`, `CLAUDE_CODE_OAUTH_TOKEN` and every market-data key.
+**Anyone who can push to the repo can add a workflow step that prints them.** So
+the trigger must not use a token that can push:
+
+| Endpoint | Token permission | What a leak costs you |
+| --- | --- | --- |
+| `POST /repos/…/dispatches` (`repository_dispatch`) | Contents: **write** | Push access → every Actions secret is readable |
+| `POST /repos/…/actions/workflows/…/dispatches` (`workflow_dispatch`) | Actions: **write** | Someone can start and cancel workflow runs. That is all. |
+
+Use the second one. `repository_dispatch` stays wired up in the workflow for a
+caller that already has a Contents-scoped token for other reasons, but it is not
+what you should hand to a third-party scheduler.
+
+Create the token at **Settings → Developer settings → Personal access tokens →
+Fine-grained tokens**:
+
+- **Repository access:** Only select repositories → `invest-trade-daily`
+- **Permissions → Repository permissions → Actions:** Read and write
+- Leave everything else at "No access". (Metadata: Read is added automatically
+  and cannot be removed; it is harmless.)
+- **Expiration:** pick one, and put the rotation date in your calendar. A
+  dispatch that silently stops because a token expired is the same outage in a
+  new costume.
+
+### The call
+
 ```
-
-Any scheduler that can make one HTTPS call at 06:00 America/New_York will do.
-The call:
-
-```
-POST https://api.github.com/repos/kswodeck/invest-trade-daily/dispatches
+POST https://api.github.com/repos/kswodeck/invest-trade-daily/actions/workflows/daily-report.yml/dispatches
 Accept: application/vnd.github+json
 Authorization: Bearer <TOKEN>
 Content-Type: application/json
 
-{"event_type": "run-daily-report"}
+{"ref": "main", "inputs": {"respect_window": "true"}}
 ```
 
-A `204` means accepted. The run starts within seconds, arrives at the gate as a
-non-`schedule` event, and therefore proceeds regardless of the window — the
-duplicate guard exists to stop the scheduler, not the operator.
+A **204 No Content** means accepted; the run starts within seconds. Any other
+status is a failure — 401 is a bad or expired token, 403 is a token without
+Actions: write, 422 is a malformed body.
 
-### The token
+`respect_window: "true"` is what makes the call safe to repeat. It tells the
+gate to apply the 6-11 ET window and the duplicate check to this dispatch, so a
+retry, an overlap with a GitHub cron that finally arrived, or a second scheduler
+firing all resolve to a ten-second skip instead of a duplicate report.
 
-A fine-grained personal access token, scoped to this repository only, with a
-single permission: **Contents: read and write** — the `dispatches` endpoint is
-gated on write access to the repo, not on an Actions permission. Give it an
-expiry and a calendar reminder to rotate it; a dispatch that silently stops
-working because a token expired is the same outage in a new costume.
+### cron-job.org, exactly
 
-Store it in whichever service makes the call. It never goes in this repo.
+1. Sign up at <https://cron-job.org> and confirm the email.
+2. **Create cronjob.**
+3. **Title:** `invest-trade-daily 6am ET`
+4. **URL:**
+   `https://api.github.com/repos/kswodeck/invest-trade-daily/actions/workflows/daily-report.yml/dispatches`
+5. **Schedule:** every day, hour `6`, minute `0`. Set **Timezone** to
+   `America/New_York` — this is the whole reason to prefer this service, and it
+   is why you need only one schedule rather than two UTC arms.
+6. Open the **Advanced** section:
+   - **Request method:** `POST`
+   - **Headers:**
+     - `Authorization: Bearer <TOKEN>`
+     - `Accept: application/vnd.github+json`
+     - `Content-Type: application/json`
+   - **Request body:** `{"ref": "main", "inputs": {"respect_window": "true"}}`
+   - **Treat redirects as success / expected status:** GitHub answers `204`.
+     If the service lets you name the success status, say `204`; otherwise its
+     default 2xx handling is correct.
+7. Enable **notifications on failure**, so a 401 after a token expiry reaches
+   you rather than becoming a quiet outage.
+8. Save, then use **Test run** and confirm you get `204` and that a
+   `Daily Trade Report` run appears in the repo's Actions tab within a few
+   seconds.
 
-### Picking a scheduler
+### If you would rather not give a third party the token
 
-Anything that runs a daily HTTPS request and is itself punctual:
+A Cloudflare Worker keeps the token as an encrypted secret in your own account.
+Free plan covers this comfortably. Cloudflare cron triggers are **UTC only**, so
+declare both DST arms and let the repo's gate drop the wrong one.
 
-- A hosted cron service (cron-job.org, EasyCron and similar) — free tiers cover
-  one daily call, and most let you set the timezone to America/New_York so DST
-  is handled for you.
-- A Cloudflare Worker on a cron trigger, or AWS EventBridge → Lambda. More
-  moving parts, no per-service account to trust with a token.
-- Any always-on machine you already run, via its own crontab. `TZ` in the
-  crontab handles DST.
+`wrangler.toml`:
 
-### DST, without a twice-yearly reminder
+```toml
+name = "invest-trade-daily-trigger"
+main = "src/index.js"
+compatibility_date = "2026-08-31"
 
-If the scheduler is UTC-only it has the same DST problem GitHub does. Do not
-solve it by editing the schedule in March and November — that is a reminder
-waiting to be missed. Fire **both** arms, `0 10` and `0 11` UTC, and let the
-gate drop the wrong one:
+[triggers]
+crons = ["0 10 * * *", "0 11 * * *"]   # 06:00 ET in EDT and in EST
+```
 
-- `repository_dispatch` is treated as an automated trigger, so it gets the
-  window check and the duplicate check exactly as a cron does. In EDT the
-  10:00Z call is 6am and runs; the 11:00Z call is 7am and skips because the
-  report is already on the branch. In EST the 10:00Z call is 5am and is dropped
-  as too early; the 11:00Z call is 6am and runs.
-- A caller that can only reach `workflow_dispatch` (the GitHub Actions API's
-  `run_workflow`) gets the same behaviour by passing the input
-  `respect_window: true`.
+`src/index.js`:
 
-A person pressing **Run workflow** in the UI leaves that input false and still
-overrides everything — the guards exist to second-guess a scheduler, not an
-operator.
+```js
+export default {
+  async scheduled(event, env, ctx) {
+    const res = await fetch(
+      "https://api.github.com/repos/kswodeck/invest-trade-daily/actions/workflows/daily-report.yml/dispatches",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${env.GH_DISPATCH_TOKEN}`,
+          Accept: "application/vnd.github+json",
+          "Content-Type": "application/json",
+          "User-Agent": "invest-trade-daily-trigger",
+        },
+        body: JSON.stringify({ ref: "main", inputs: { respect_window: "true" } }),
+      },
+    );
+    // 204 is success. Anything else should be loud in the Worker's logs.
+    if (res.status !== 204) {
+      throw new Error(`dispatch failed: ${res.status} ${await res.text()}`);
+    }
+  },
+};
+```
+
+Then `wrangler secret put GH_DISPATCH_TOKEN` and `wrangler deploy`. Both arms
+fire every day; in EDT the 11:00Z one finds the report already published and
+skips, in EST the 10:00Z one is dropped as too early.
 
 ### Keeping the GitHub crons
 

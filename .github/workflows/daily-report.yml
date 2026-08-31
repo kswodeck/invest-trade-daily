@@ -32,12 +32,13 @@ on:
         default: false
       respect_window:
         description: >
-          Apply the 6-11 ET window and the duplicate check, as a scheduled run
-          would. Automated callers set this so they can fire both DST arms;
-          leave it false when dispatching by hand.
-        type: boolean
+          "true" applies the 6-11 ET window and the duplicate check, as a
+          scheduled run would. Automated callers set this; leave it alone when
+          dispatching by hand. Declared as a string, not a boolean, because the
+          primary caller is the REST API and a string is unambiguous there.
+        type: string
         required: false
-        default: false
+        default: "false"
 
 concurrency:
   group: daily-report
