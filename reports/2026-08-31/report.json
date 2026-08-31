@@ -1,0 +1,690 @@
+{
+  "date": "2026-08-31",
+  "generated_at_et": "2026-08-31T09:04:25-04:00",
+  "truncated": false,
+  "data_quality_notes": "Research phase ran to completion and logged a genuine RESEARCH COMPLETE block, so nothing here is truncated: 9 candidate lines, 7 distinct symbols, all 7 published, none dropped on the reward-to-risk floor. TLT was captured three times as the Warsh news was absorbed; the last capture (conviction 2, entry 81.20, wait) is the one published.\n\nPRICES. Every price in this report is the 2026-08-28 Nasdaq daily close, re-fetched at 09:00 ET this morning and matching what research recorded. At 09:00 ET on a Monday pre-open that is the freshest honest equity price, not stale data. Live quote feeds were down for the entire run and again during synthesis: Yahoo Finance returned HTTP 429 on every symbol across four separate retries, Finnhub 503'd on all indices, the earnings calendar and insider transactions, Kalshi returned only null-priced sports parlay shards on nine distinct economic queries, and the macro subcommand timed out during synthesis. Nasdaq daily history was the one equity source that worked. Consequence: there is no live index, futures, VIX, DXY, gold or WTI level in this report and no event contracts at all. Nothing was estimated to fill a gap.\n\nWHAT THE DATA OUTAGE COST. Two ideas were rejected purely for want of a fetchable price \u2014 a /MES short, expressed instead as the SPY short with the substitution disclosed, and NUVL ahead of its Sep 18 PDUFA. Both are on the watchlist and should be the first two checks tomorrow.\n\nCOUNT AND SKEW. Seven ideas, about 15% of capital, nothing above 3%. Five swing and two long-term; no intraday setup cleared the bar, which is the correct outcome with no live intraday data and a four-print week ahead. The book is deliberately lopsided the other way from the open positions: one short (SPY) against 21 existing longs.\n\nREWARD-TO-RISK. All seven ratios were recomputed here from the final entry, target and downside \u2014 the stop for swing, the stated bear-case price for long-term \u2014 and match what research logged: DG 2.80, GEV 2.77, RARE 2.74, LULU 2.60, SPY 2.56, TLT 3.13, JBL 2.15. The spread is 2.15-3.13 with margins over floor from +0.10 to +1.13, which is not the clustering pattern that signals targets fitted to clear the bar. Two are worth challenging anyway because they rest on a judged number rather than an external anchor: LULU (+0.10 over its 2.5 floor, resting on an 85 bear case) and JBL (+0.15 over 2.0, resting on a 335 target). The other targets are externally anchored: JBL 335 is the converged 20/50-day, SPY 750 sits just under the 50-day at 753.96, GEV 1180/690 are inside the 150-day extremes, DG 142 is 18x the $7.90 guidance midpoint, TLT 86.20 is carried unchanged from the open position.\n\nCORRELATION. Two clusters sit at the cap of three. Sep 4 payrolls / Fed path: TLT long duration and SPY short equity take opposite sides of the same print, with DG thematically labour-linked but not mechanically repriced by the number. AI capex: GEV and JBL, plus the already-open CCJ. AVGO (reports Sep 2), NRG, CEG, VST, PWR and URA were left out for the cap, not for lack of merit \u2014 AVGO in particular is Wednesday's referendum on the de-rating both GEV and JBL lean against.\n\nREPETITION. DG is the third pitch in ten days and TLT the third; both are disclosed in their own counter_argument and key_risk. DG's new information is concrete and dated \u2014 the Aug 27 print and its 48-hour round-trip. TLT's is that its original thesis broke: it was opened on 2026-08-20 when a cut was the base case, and the entry has been cut from 82.60 to 81.20 with conviction cut to 2 because of it. LULU and GEV are continuing long-term accumulations, not new risk.\n\nBOOK HYGIENE \u2014 three open positions are stale and should not be read as live. The BTC short (entry 62,950/63,400, stops 65,200) and the /MBTU6 futures short (entries 64,100/64,340, stop 66,600) are both far through their stops with BTC near 78,100. TJX at 135.12 is through its 145.50 stop. These need closing in the position file, not re-pitching.\n\nTRACK RECORD. 0 of 9 closed trades hit target, average -3.3%. That sample is under the ~15-trade threshold the prior-context file sets for signal, so it is noise and has not been over-fit to \u2014 but it is why sizing here is conservative and why two of seven ideas carry an explicit wait.\n\nCOVERAGE GAPS. Index, futures and volatility levels; the complete Sep 1-4 earnings calendar (LULU, AVGO, DELL and PANW were found by search only); all Robinhood prediction markets; systematic small- and micro-cap screening. The micro-cap lane was also deliberately de-prioritised on evidence \u2014 the Morningstar US Micro Cap Index is +45.7% versus +22.8% for the broad market through Aug 17, making it the year's best-performing corner rather than a discounted one, and small caps led Friday's decline.\n\nRED TEAM (2026-08-31, separate pass, live quote feeds had recovered by 09:07 ET and every price, moving average, ATR and range figure below was re-fetched and re-checked independently).\n\nCUT 2, DOWNGRADED 3, CORRECTED 3, CUT NOTHING FOR THE SAKE OF CUTTING. Seven ideas become five; capital at risk falls from about 15% to 11%.\n\nCut: TLT to watchlist \u2014 its 3.13 reward-to-risk is reach, not edge. The 86.20 target is 7.13 ATR away, beyond the 6.0 swing guide, and was carried over unchanged from the 2026-08-20 position while the entry was revised down 82.60 to 81.20 for a regime the report itself says broke the original thesis. Revising the entry for bad news and leaving the target alone is the pattern this phase exists to catch. Against the first real resistance, the 50-day at 83.874, reward-to-risk is 1.67 and fails the 2.0 floor. Cut: JBL to watchlist on the correlation test \u2014 GEV, JBL and the open CCJ were at the three-idea AI-capex cap and all three take the same side of Wednesday's Broadcom guide, so the weakest of the cluster goes: thinnest reward-to-risk in the book at 2.15, a 1.4 ATR stop on a 4.64% ATR name, a self-declared inability to explain an 18% five-session fall (checked and confirmed company-specific, with the S&P down only 1.2% over the same stretch and no cause identified anywhere), and a target whose only anchor is a 20/50-day shelf at 333.75/334.08 that is falling away from it.\n\nDowngraded: GEV 4 to 3 \u2014 the order evidence is real and was verified from a second source ($24.2B orders +88%, $176B backlog, 100 to 116 GW), but the one hard datapoint on converting it contradicts the thesis (adjusted EPS $2.47 versus $3.04, an 18.75% miss, also verified), and a 4 asserts one-sided evidence this is not. RARE 3 to 2 and 2% to 1% \u2014 its central 'de-risking the market has not credited' claim is overstated in two ways: no source ties the Aug 19 GENGLYCOS approval to UX111's facility, process or specific CMC observations, and the market did see it and sold the stock 11% the next session on the month's heaviest volume. The 3.45% spread also eats about 14% of the target move, putting realised reward-to-risk near 2.1 rather than 2.74. SPY 3 to 2 and 2% to 1% \u2014 the 750 target is 4.51 ATR away and the trade's own time stop is Sep 4, five sessions out, not the fifteen the validator assumed because the feasibility check does not read time_stop; the Warsh paraphrase was also stronger than the speech, which is conditional ('Otherwise, we have work to do') and explicitly non-committal ('committed to a discipline, not to a decision'). Kept only because it is the sole short against 21 open longs.\n\nCorrected without changing conviction: DG's thesis claimed Friday's 122.89 closed below the 122.78 pre-print close \u2014 it closed 0.09% above, and the cited ~134 pre-market gap is not in the daily bars, where the Aug 27 session high was 132.4999. The setup survives the correction intact and DG moves to rank 1: it is the only idea here whose numbers all verified, whose entry is anchored to a confirmed level (50-day 121.295) and which is actionable today rather than on a flush that may not come. LULU's claim that the bad news already sits in the guidance is wrong as stated \u2014 consensus is roughly $2.50-2.51B and $1.79-1.83 against a $2.45-2.475B company guide, so the street models a beat of the guide and there is room to disappoint; the wait-for-the-negative-reaction plan is unharmed and arguably helped, so conviction holds at 3 with the thesis rewritten to what is true. Friday's unexplained +5.05% in LULU on a red tape is also now flagged: a third of the run into the print came in one session.\n\nNot cut, and deliberately so: DG and GEV both survived hard looks. LULU's earnings date was independently re-confirmed as Sep 3 after market close against the company's own announcement and the Finnhub calendar, as was AVGO Sep 2 after the close and JBL Sep 24 before the open. Every level cited in the surviving ideas was re-derived from 200 sessions of daily bars this morning: DG 50-day 121.295, SPY 20-day 769.216 and 50-day 753.955, GEV 50-day 1031.649 and 20-day 993.535, RARE 20-day 26.024 and 50-day 28.429, LULU 20-day 121.057 and 50-day 117.813. No target was moved outward to rescue a ratio; no level was moved at all. The only mechanical field changed was SPY's time stop, which was written as 2026-09-05 \u2014 a Saturday \u2014 and is now Sep 4.",
+  "market_context": {
+    "summary": "Monday pre-open after a Jackson Hole repricing that equities have not marked. Kevin Warsh said on Aug 28 that underlying inflation trends have not improved and the Fed may have work to do; CME FedWatch odds of a 25bp HIKE at the Sep 15-16 FOMC jumped from 35.4% to 57.5% in a session, and Barclays now carries hikes in both September and December as its base case. The rates and metals markets took that seriously \u2014 gold fell 3.2% on its heaviest volume in 120 days, the Russell fell 1.35%, small caps and domestically-exposed industrials led the decline. The S&P fell only 0.23% to 769.35, sitting 1.29% off its 120-day high and exactly on its 20-day average, with realised volatility near the bottom of its range \u2014 the third hawkish Warsh message in a row that equities have faded. The week decides it: ISM Manufacturing Tue, ADP and the Beige Book Wed, ISM Services Thu, and August payrolls Fri, against a July print of -23k and unemployment expected to go 4.1% to 4.2%. A hiking cycle beginning on negative payrolls is the tension the whole book is arranged around. Separately and largely independent of the Fed, the AI-power complex is in a thesis-level de-rating \u2014 GEV -23.8%, NRG -41.5%, VST -23.1%, PWR -23.6% off their highs \u2014 while the underlying numbers keep rising, and Broadcom on Wednesday is the first hard test of it.",
+    "regime": "mixed",
+    "levels": {
+      "spy": 769.35,
+      "us10y": 4.67,
+      "us10y_2y_spread_bp": 39,
+      "fed_funds_effective": 3.63,
+      "tlt": 82.88,
+      "vix": null,
+      "dxy": null,
+      "gold": null,
+      "wti": null,
+      "btc": 78098,
+      "levels_asof": "2026-08-28 close; VIX, DXY, gold and WTI unavailable \u2014 all index and futures feeds down"
+    },
+    "econ_calendar": [
+      {
+        "event": "ISM Manufacturing PMI",
+        "datetime_et": "2026-09-01T10:00",
+        "importance": "medium",
+        "consensus": null
+      },
+      {
+        "event": "ADP employment report and Federal Reserve Beige Book",
+        "datetime_et": "2026-09-02T08:15",
+        "importance": "medium",
+        "consensus": null
+      },
+      {
+        "event": "Broadcom (AVGO) Q3 FY2026 results \u2014 near-term referendum on AI capex",
+        "datetime_et": "2026-09-02T16:30",
+        "importance": "high",
+        "consensus": null
+      },
+      {
+        "event": "ISM Services PMI",
+        "datetime_et": "2026-09-03T10:00",
+        "importance": "medium",
+        "consensus": null
+      },
+      {
+        "event": "lululemon (LULU) Q2 FY2026 results",
+        "datetime_et": "2026-09-03T16:30",
+        "importance": "high",
+        "consensus": "guided revenue $2.45-2.475B, -2% to -3%"
+      },
+      {
+        "event": "August non-farm payrolls",
+        "datetime_et": "2026-09-04T08:30",
+        "importance": "high",
+        "consensus": "+45k, unemployment 4.2% (July printed -23k)"
+      },
+      {
+        "event": "FOMC decision",
+        "datetime_et": "2026-09-16T14:00",
+        "importance": "high",
+        "consensus": "57.5% implied probability of a 25bp hike"
+      },
+      {
+        "event": "Ultragenyx UX111 FDA PDUFA action date",
+        "datetime_et": "2026-09-19T00:00",
+        "importance": "high",
+        "consensus": null
+      },
+      {
+        "event": "Jabil (JBL) FQ4 2026 results and Annual Investor Briefing",
+        "datetime_et": "2026-09-24T06:30",
+        "importance": "high",
+        "consensus": "guided revenue $9.2-10.0B, core EPS $3.80-4.20"
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "rank": 1,
+      "symbol": "DG",
+      "instrument": "Dollar General Corporation",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 3,
+      "last_price": 122.89,
+      "last_price_asof": "2026-08-28T16:00:00-04:00",
+      "price_source": "nasdaq daily close 2026-08-28 (live quote feeds down all run)",
+      "entry": {
+        "ideal": 121.0,
+        "zone_low": 118.0,
+        "zone_high": 124.0,
+        "order_type": "limit",
+        "condition": "No add above 126. Entry at 121 sits on the 50-day average of 121.30."
+      },
+      "exit": {
+        "target": 142.0,
+        "target_2": 155.0,
+        "scale_plan": "Trim half at 142 (18x the $7.90 FY2026 guidance midpoint), trail the balance toward 155."
+      },
+      "stop": 113.5,
+      "risk_reward": 2.8,
+      "position_size_pct": 3,
+      "risk_tier": "standard",
+      "catalyst": {
+        "event": "The Q2 FY2026 beat-and-raise of Aug 27 that the stock has already given back in full, with August payrolls Sep 4 08:30 ET as the near-term test of the trade-down read behind it. DG reported EPS $2.48 against a $2.00 estimate on $11.3B revenue, comps +3.5% split 2.0% traffic and 1.5% ticket, and raised FY2026 guidance to $7.80-8.00 EPS from $7.20-7.45.",
+        "datetime_et": "2026-09-04T08:30",
+        "action": "Enter now into 118-124 \u2014 you are being offered the pre-earnings price after the earnings. Do not wait for Friday: a soft payroll print supports this thesis rather than threatening it, so do not sell into it. No add above 126.",
+        "wait": false
+      },
+      "thesis": "DG round-tripped a beat-and-raise in 48 hours. On Aug 27 it opened at 127.84 and traded to 132.4999 intraday, +7.9% over the prior close, on 6.41M shares against a 1.5-2.2M daily norm; it closed that session at 125.89 and closed Friday at 122.89 \u2014 0.09% above the 122.78 it closed the day before the print. The round trip is complete, not more than complete. (Red team correction: the synthesis text said Friday closed below 122.78 and cited a ~134 pre-market gap; the daily bars say 132.4999 was the session high and 122.89 is fractionally above, not below. The setup is the same either way, but the number was wrong.) Nothing in the numbers deteriorated in between: the comp was traffic-led at +2.0%, which is customers rather than price, and full-year EPS guidance was raised roughly 8% at the midpoint. At 122.89 against $7.90 of guided FY2026 EPS that is 15.6x, 22.3% below the 158.23 high of the last 150 sessions and sitting on the 50-day average of 121.30 (confirmed at 121.295). The macro behind it is the same labour data that threatens the rest of this book \u2014 July payrolls at -23k with unemployment heading to 4.2% is the environment where a traffic-driven discounter takes share, and DG outperformed Dollar Tree on the print.",
+      "key_risk": "The market may have faded the print for a reason: the gross margin expansion could be a temporary shrink-and-markdown benefit rather than a structural gain, in which case the guidance raise does not repeat and 15.6x is the right multiple, not a cheap one. A genuinely strong Sep 4 payroll number also removes the trade-down tailwind. The 113.50 stop is 1.9 ATR below entry on a 3.23% ATR name. Red team addition: the 1.80% bid/ask spread costs roughly 10% of the target move on a round trip \u2014 this must be a limit order at 121 or better, never a market order, and the friction is real enough that chasing the top of the 118-124 zone gives away most of the edge over the 50-day.",
+      "counter_argument": "This is the third time in ten days this report has pointed at DG and the level has barely moved \u2014 at some point that is anchoring rather than patience. The honest answer is that the Aug 27 print is the concrete new information the repetition guard asks for, but it also means the previously published 119.00 entry was set on worse information than exists now.",
+      "sources": [
+        "https://qz.com/dollar-general-earnings-forecast-raised-q2-2026-082726",
+        "https://www.rttnews.com/story.aspx?Id=3685440",
+        "https://seekingalpha.com/news/4637374-dollar-general-soars-after-hiking-guidance-and-outperforming-rival-dollar-tree",
+        "https://finance.yahoo.com/markets/stocks/articles/dollar-general-dg-increased-traffic-034015402.html"
+      ],
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.8,
+        "claimed_risk_reward": 2.8,
+        "live_price": 122.89,
+        "live_price_asof": "2026-08-28T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 3915.2,
+        "bid": 122.63,
+        "ask": 123.5,
+        "spread_pct": 0.707,
+        "atr14": 3.9725,
+        "checked_at_et": "2026-08-31T09:15:43-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.8:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 121.0 is -1.5% from live 122.89"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-09-04 is ahead of us"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 5.29 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-08-28T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "pass",
+            "detail": "bid/ask spread 0.71%; the round trip costs 4% of the target move"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "3% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "1 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    },
+    {
+      "rank": 2,
+      "symbol": "GEV",
+      "instrument": "GE Vernova Inc.",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "long_term",
+      "conviction": 3,
+      "last_price": 911.93,
+      "last_price_asof": "2026-08-28T16:00:00-04:00",
+      "price_source": "nasdaq daily close 2026-08-28 (live quote feeds down all run)",
+      "entry": {
+        "ideal": 820.0,
+        "zone_low": 780.0,
+        "zone_high": 840.0,
+        "order_type": "limit",
+        "condition": "Accumulate in thirds into 780-840. Do not start at 912 \u2014 Friday closed 911.93, one tick off the session low, on the ninth down day out of ten. Final third only on a macro-driven flush under 750."
+      },
+      "exit": {
+        "target": 1180.0,
+        "target_2": 1400.0,
+        "scale_plan": "No scheduled trim. This is a multi-year hold; reassess only against the invalidation conditions in key_risk, not against price."
+      },
+      "stop": null,
+      "bear_case_price": 690.0,
+      "risk_reward": 2.77,
+      "position_size_pct": 3,
+      "risk_tier": "standard",
+      "catalyst": {
+        "event": "A physical generation-equipment shortage with a multi-year order book behind it. Gas Power equipment backlog plus slot reservation agreements went from 100 GW to 116 GW in Q2 2026 with at least 125 GW guided by year-end; total backlog is $176B; annual gas turbine output scales from 20 GW in Q3 2026 to 24 GW in 2028 and 30 GW in 2030. Behind it: US datacenter electricity demand went from 23 GW in 2023 to 42 GW in 2026 with 75.8 GW projected, against grid interconnection queues of 5-7 years and 7-10 in the best markets.",
+        "datetime_et": null,
+        "action": "WAIT \u2014 do not buy at 912. Accumulate in thirds into 780-840 as the drawdown continues, add a further third on any flush under 750. No urgency; the backlog is booked into 2029. Near-term marker to watch: Broadcom reports Wednesday Sep 2 and is the first hard datapoint on the AI-capex overbuild fear that caused this de-rating.",
+        "wait": true
+      },
+      "thesis": "GE Vernova sells the specific thing that is scarce: the binding constraint on AI datacenter buildout is no longer capital or chips but delivered electrons, and GEV's turbine slots are the bottleneck. Q2 2026 orders were $24.2B, up 88% organically, revenue $11.1B up 22%, free cash flow $5.1B in the quarter, and it raised 2026 revenue and free cash flow guidance. The stock is nonetheless 23.8% below its 150-day high of 1195.94 at 911.93 and far under its 50-day average of 1031.65, because the whole AI-power complex was sold on a thesis-level fear of capex overbuild rather than on company news \u2014 NRG is 41.5% off its high, VST 23.1%, PWR 23.6%, CEG 17.1%, and Vistra's Q2 adjusted EBITDA rose 31% year over year while its stock fell 37% from its high. That is a multiple de-rating, not an earnings event.",
+      "key_risk": "INVALIDATION (long-term thesis, no hard stop): the gas power equipment backlog plus slot reservations fail to reach the guided 125 GW by year-end 2026, or decline in any quarter, or the 2026 adjusted EBITDA margin guide of 12-14% is cut. Either would mean the order book is being cancelled or cannot be built profitably, which is the actual thesis. Bear-case price 690 \u2014 a capex-cycle roll back toward the 656.00 low of the last 150 sessions. Concrete evidence for that risk already exists and was verified independently: Q2 adjusted EPS was $2.47 against a $3.04 consensus, an 18.75% miss, against a revenue beat and raised guidance \u2014 converting this backlog into earnings is visibly not going smoothly. Red team additions. (1) The 780-840 accumulation zone is 10-15% below Friday's close, so it only fills if the de-rating the thesis calls a mistake keeps going: you are filled precisely in the world where the counter-argument is winning, and there is no trigger in this plan that distinguishes a cheap entry from a broken thesis. (2) Broadcom's Sep 2 guide is an unhedged binary for this position and for the whole AI-capex cluster it sits in. (3) Friday's close of 911.93 was -4.39% and one tick off the session low on the ninth down day in ten; nothing here is a completed base.",
+      "counter_argument": "Hyperscalers may be ordering turbine slots the way they ordered GPUs \u2014 as option value, not committed capacity \u2014 and slot reservations are not firm orders. If AI capex payback disappoints, reservations get released, the 116 GW converts at a far lower rate than the market assumed, and GEV is a cyclical industrial that was priced as a secular compounder. The 18.75% EPS miss alongside record orders is exactly the shape that argument would take early.",
+      "sources": [
+        "https://www.gevernova.com/news/press-releases/ge-vernova-reports-second-quarter-2026-financial-results-raises-2026-financial",
+        "https://www.turbomachinerymag.com/view/ge-vernova-gas-turbine-backlog-hits-116-gw-as-power-orders-more-than-double",
+        "https://www.investing.com/news/company-news/ge-vernova-q2-2026-slides-backlog-hits-176b-guidance-raised-93CH-4805961",
+        "https://www.spglobal.com/energy/en/news-research/special-reports/energy-transition/2026-trends-in-data-center-services-infrastructure",
+        "https://www.fool.com/investing/2026/08/30/vistra-stock-sits-37-below-its-high-while-power-demand-keeps-climbing-should-you-buy-it/"
+      ],
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.77,
+        "claimed_risk_reward": 2.77,
+        "live_price": 911.93,
+        "live_price_asof": "2026-08-28T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 3915.3,
+        "bid": 886.12,
+        "ask": 889.3,
+        "spread_pct": 0.358,
+        "atr14": 42.669,
+        "checked_at_et": "2026-08-31T09:15:43-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.77:1 clears the 2.5:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 820.0 is -10.1% from live 911.93"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "long-term idea, no dated event expected"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "long-term target is valuation-anchored, not ATR-bound"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-08-28T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "pass",
+            "detail": "bid/ask spread 0.36%; the round trip costs 1% of the target move"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "3% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "3 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    },
+    {
+      "rank": 3,
+      "symbol": "LULU",
+      "instrument": "lululemon athletica inc.",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "long_term",
+      "conviction": 3,
+      "last_price": 120.81,
+      "last_price_asof": "2026-08-28T16:00:00-04:00",
+      "price_source": "nasdaq daily close 2026-08-28 (live quote feeds down all run)",
+      "entry": {
+        "ideal": 110.0,
+        "zone_low": 104.0,
+        "zone_high": 116.0,
+        "order_type": "limit",
+        "condition": "Only after the Sep 3 print, and only on a negative reaction into 104-116. Do not buy ahead of Thursday and do not chase a relief gap above 130."
+      },
+      "exit": {
+        "target": 175.0,
+        "target_2": 195.0,
+        "scale_plan": "Accumulate in thirds across the 104-116 zone. No scheduled trim; target 175 is a valuation anchor over roughly two to three years, 195 the prior 150-day high."
+      },
+      "stop": null,
+      "bear_case_price": 85.0,
+      "risk_reward": 2.6,
+      "position_size_pct": 3,
+      "risk_tier": "standard",
+      "catalyst": {
+        "event": "Q2 FY2026 results Thursday Sep 3, 2026, conference call 16:30 ET. Management has already guided to revenue $2.45-2.475B (-2% to -3%), North America down low double digits, gross margin -410bp on a 150bp tariff headwind against 100bp of offsets, and 500bp of SG&A deleverage. The driver for owning it is the tariff and markdown drag anniversarying while China compounds at mid-to-high teens.",
+        "datetime_et": "2026-09-03T16:30",
+        "action": "WAIT for the print. Hold the existing core position through it; add only afterward, in thirds into 104-116 on a negative reaction. Do not add ahead of Thursday and do not chase a relief gap above 130.",
+        "wait": true
+      },
+      "thesis": "Update to the position opened 2026-08-22 at 115.00 (last 120.81, +5.0%): thesis intact, hold the core and add only below. LULU trades 38.3% below its 195.74 high of the last 150 sessions into a quarter management has already told the market will be bad \u2014 the guide embeds a 410bp gross margin hit that is mostly tariff, a cost shock with an expiry date rather than a demand problem, while China Mainland is still guided to grow mid-to-high teens. Red team correction to the edge as originally stated: it is not true that the bad news sits fully in the guidance. Sell-side consensus for Thursday is roughly $2.50-2.51B revenue and $1.79-1.83 EPS, above the company's own $2.45-2.475B guide \u2014 the street is modelling a beat of the guide, so there is still room to disappoint against consensus even if management's own numbers are met. What survives is narrower and is what the plan actually trades: a de-rated brand where the tariff drag has a known expiry, bought only if Thursday produces the negative reaction that the gap between consensus and guide makes more likely, not less.",
+      "key_risk": "INVALIDATION (multi-quarter thesis, no hard stop): North America revenue declines worsen beyond low double digits for two more quarters, or FY2027 guidance fails to show gross margin recovering once the tariff step-up anniversaries. Bear-case price 85 \u2014 about 30% below the 104.44 range low, where the market would be pricing structural brand impairment rather than a cost cycle. Near-term: the stock has already rallied 15.7% off 104.44 into the print, so the low-expectations edge is partly spent, and on a 4.36 ATR (3.6%) a 15% gap either way Thursday night is normal. Red team additions. (1) A third of that rally came in a single session \u2014 Friday was +5.05% (115.00 to 120.81) on a day the rest of this book fell \u2014 so the 104-116 add zone now requires giving all of Friday back and more, and the report did not explain that move. (2) The 2.60 reward-to-risk clears the 2.5 long-term floor by 0.10 and rests entirely on the judged 85 bear case, which has no external anchor; at an 80 bear case it is 2.17 and fails the floor. Treat this as a hold-the-core-and-wait, not as an idea with margin. (3) The stock sits 21.6% below its 200-day average of 154.09 and the average is still falling.",
+      "counter_argument": "The bear case is that North America is not a tariff problem at all but brand fatigue \u2014 low-double-digit US declines are far too steep to blame on price, competitors have taken the category, and China is simply doing now what US growth did before it rolled over. If that is right the multiple keeps compressing and 120 is not cheap, it is early.",
+      "sources": [
+        "https://corporate.lululemon.com/newsroom/press-releases/2026/08-20-2026-113008522",
+        "https://finance.yahoo.com/markets/stocks/articles/lululemon-q2-earnings-upcoming-likely-140400250.html"
+      ],
+      "validation": {
+        "verdict": "pass",
+        "computed_risk_reward": 2.6,
+        "claimed_risk_reward": 2.6,
+        "live_price": 120.81,
+        "live_price_asof": "2026-08-28T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 3915.4,
+        "bid": 119.39,
+        "ask": 119.85,
+        "spread_pct": 0.385,
+        "atr14": 4.3642,
+        "checked_at_et": "2026-08-31T09:15:44-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.6:1 clears the 2.5:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 110.0 is -8.9% from live 120.81"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-09-03 is ahead of us"
+          },
+          {
+            "check": "earnings_date",
+            "status": "pass",
+            "detail": "earnings date 2026-09-03 confirmed against the calendar"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "long-term target is valuation-anchored, not ATR-bound"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-08-28T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "pass",
+            "detail": "bid/ask spread 0.39%; the round trip costs 1% of the target move"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "3% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "sources",
+            "status": "pass",
+            "detail": "all 2 checked source(s) resolve"
+          }
+        ]
+      }
+    },
+    {
+      "rank": 4,
+      "symbol": "RARE",
+      "instrument": "Ultragenyx Pharmaceutical Inc.",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 2,
+      "last_price": 25.61,
+      "last_price_asof": "2026-08-28T16:00:00-04:00",
+      "price_source": "nasdaq daily close 2026-08-28 (live quote feeds down all run)",
+      "entry": {
+        "ideal": 25.2,
+        "zone_low": 24.6,
+        "zone_high": 25.8,
+        "order_type": "limit",
+        "condition": "Accumulate into 24.60-25.80 over the next week. Do not chase above 25.80 \u2014 the drift lower into the date is the edge."
+      },
+      "exit": {
+        "target": 31.5,
+        "target_2": 36.0,
+        "scale_plan": "Trim half into the Sep 18 close so only the residual position is exposed to the binary. Do not hold full size through the PDUFA date."
+      },
+      "stop": 22.9,
+      "risk_reward": 2.74,
+      "position_size_pct": 1,
+      "risk_tier": "lottery",
+      "catalyst": {
+        "event": "FDA PDUFA action date for UX111 (rebisufligene etisparvovec), an AAV9 gene therapy seeking accelerated approval in Sanfilippo syndrome type A \u2014 a fatal pediatric lysosomal storage disease with no approved treatment. BLA resubmission was accepted Apr 2, 2026.",
+        "datetime_et": "2026-09-19T00:00",
+        "action": "Enter before the event, into 24.60-25.80 over the next week, then TRIM half into the Sep 18 close. The trade is the run-up plus a residual free option on the date, not a full-size bet on a binary.",
+        "wait": false
+      },
+      "thesis": "The July 2025 complete response letter on UX111 was explicitly CMC-only \u2014 additional chemistry, manufacturing and controls information plus facility inspection observations, not efficacy or safety \u2014 so the FDA has already accepted the clinical case for accelerated approval. On Aug 19, 2026 the FDA approved GENGLYCOS, Ultragenyx's first gene therapy and fifth approval overall. Red team correction to how hard that second point may be leaned on: the synthesis called it 'the specific de-risking event the market appears not to have credited' and read it as the agency having cleared the exact manufacturing the CRL was about. No source establishes that GENGLYCOS and UX111 share a facility, a process or the specific inspection observations cited, so it is a soft read-across, not the CRL resolved. And the market did credit it \u2014 it simply disagreed: the session after the approval RARE opened 28.39 and closed 25.32, -11%, on the heaviest volume of the month. What is left is a cheap, drifting setup rather than a mispriced fact: RARE trades at 25.61, 30% below its 150-day high of 36.57 and below both its 20-day (26.02) and 50-day (28.43) averages, into a dated binary. That is worth a lottery ticket, not a standard position.",
+      "key_risk": "Cash burn is the real problem, not the science: Ultragenyx lost $92M in Q2 and $277M in H1 2026, with $294M of operating cash burn in the half against 2026 revenue guidance of $730-760M. A second CRL, or an equity raise on the back of an approval, are both live and would swamp the catalyst. This stock also sells its own good news \u2014 on Aug 20, the session after the GENGLYCOS approval, it opened at 28.39 and closed at 25.32 on the heaviest volume of the month. Red team addition: the 3.45% bid/ask spread eats about 14% of the target move on a round trip, so the realised reward-to-risk is nearer 2.1 than the stated 2.74 \u2014 the margin over the 2.0 floor is mostly spread. Downgraded to conviction 2 and 1% for that plus the corrected read on GENGLYCOS.",
+      "counter_argument": "The Aug 20 fade may have been the market telling you something true: an accelerated approval in an ultra-rare fatal pediatric disease is worth very little revenue against a $294M half-year burn, so approval may be the moment the financing arrives rather than the moment the stock re-rates. The setrusumab Phase 3 failure in December 2025 showed how fast this name can lose 40% on a single binary.",
+      "sources": [
+        "https://ir.ultragenyx.com/news-releases/news-release-details/ultragenyx-announces-us-fda-acceptance-bla-resubmission-ux111",
+        "https://www.marketbeat.com/fda-calendar/upcoming/",
+        "https://www.cgtlive.com/view/fda-accepts-ultragenyx-new-bla-submission-mps-iiia-gene-therapy-ux111",
+        "https://seekingalpha.com/news/4535687-ultragenyx-plummets-late-stage-studies-asset-genetic-bone-disorder-fails"
+      ],
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.74,
+        "claimed_risk_reward": 2.74,
+        "live_price": 25.61,
+        "live_price_asof": "2026-08-28T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 3915.5,
+        "bid": 25.1,
+        "ask": 25.98,
+        "spread_pct": 3.446,
+        "atr14": 1.211,
+        "checked_at_et": "2026-08-31T09:15:54-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.74:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 25.2 is -1.6% from live 25.61"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-09-19 is ahead of us"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 5.2 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-08-28T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "bid/ask spread 3.45%; the round trip costs 14% of the target move \u2014 set the entry as a limit, never market"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 2 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "1% is within the 1% lottery-ticket ceiling for conviction 2"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "3 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    },
+    {
+      "rank": 5,
+      "symbol": "SPY",
+      "instrument": "SPDR S&P 500 ETF Trust",
+      "asset_class": "etf",
+      "venue": "Robinhood Stocks",
+      "direction": "sell_short",
+      "requires_margin": true,
+      "horizon": "swing",
+      "conviction": 2,
+      "last_price": 769.35,
+      "last_price_asof": "2026-08-28T16:00:00-04:00",
+      "price_source": "nasdaq daily close 2026-08-28 (live quote feeds down all run)",
+      "entry": {
+        "ideal": 773.0,
+        "zone_low": 770.0,
+        "zone_high": 776.0,
+        "order_type": "limit",
+        "condition": "Short into strength only \u2014 requires a push back toward Friday's 775.30 high early in the week. Do not initiate below 770."
+      },
+      "exit": {
+        "target": 750.0,
+        "target_2": 738.0,
+        "scale_plan": "Cover half at 750 (just under the 50-day at 753.96), trail the balance toward 738.",
+        "time_stop": "2026-09-04"
+      },
+      "stop": 782.0,
+      "risk_reward": 2.56,
+      "position_size_pct": 1,
+      "risk_tier": "lottery",
+      "catalyst": {
+        "event": "A four-print week that either confirms or kills the September hike: ISM Manufacturing Tue Sep 1 10:00 ET, ADP plus the Fed Beige Book Wed Sep 2, ISM Services Thu Sep 3 10:00 ET, and August payrolls Fri Sep 4 08:30 ET.",
+        "datetime_et": "2026-09-04T08:30",
+        "action": "Enter before the print, into strength in 770-776 early in the week; do not initiate below 770. Cover half at 750 if it gets there and close the balance at the Sep 4 time stop regardless \u2014 the reason to be short expires with the print. Do NOT add after the payroll release.",
+        "wait": false
+      },
+      "thesis": "The rates market repriced a September Fed HIKE from roughly 36% to 57.5% on Friday after Warsh spoke at Jackson Hole. Red team read the speech rather than the coverage, and the paraphrase in this report was stronger than the text: Warsh did not say inflation has not improved, he said progress 'over the past two years has been modest' with inflation at 3.7%, and the hawkish line is conditional \u2014 'We must be confident that underlying inflation is moving to our objective, clearly and at sufficient speed. Otherwise, we have work to do.' He also said explicitly 'I stand here today committed to a discipline, not to a decision.' The market reaction is the harder evidence and it is unambiguous: gold fell 3.2% on its heaviest volume in 120 days and the Russell dropped 1.35%. The S&P fell only 0.23%, closed at 769.35, and sits 1.29% off its 120-day high of 779.37, exactly on its 20-day SMA of 769.22, with ATR14 at 0.66% \u2014 near the bottom of its realised-volatility range. Equities have not marked the same news the bond and gold markets marked, and this is the third hawkish Warsh message in a row that equities have faded.",
+      "key_risk": "Shorting an index 1.3% below its high is the most common way to lose money, and the 782 stop is only 1.7 ATR above entry, so ordinary drift takes it out. The catalyst is also two-sided: a weak Friday payroll print kills the hike, and the market may read that as bullish before it reads it as recessionary. Red team addition, and the reason for the downgrade to conviction 2 at 1%: the 750 target is 4.51 ATR from a 773 entry, and the trade's own time stop is Sep 4 \u2014 five sessions from today, not the fifteen the validator's target-feasibility check assumes, because that check does not read time_stop. A 3% index decline inside one week is possible on a payroll print and is not the base case; the half-cover at 750 should not be expected to fill on schedule. Kept in the book because it is the only short against 21 open longs and Sep 4 is a genuine two-sided catalyst, but sized as the lottery ticket it is.",
+      "counter_argument": "Warsh explicitly gave no forward guidance and no reaction function, and stopped well short of signalling a September move \u2014 57.5% is a coin flip, not a decision. With July payrolls at -23k and unemployment heading to 4.2%, a hike may simply not happen, in which case equities were right to shrug and the bond and gold moves were the overreaction.",
+      "sources": [
+        "https://www.federalreserve.gov/newsevents/speech/warsh20260828a.htm",
+        "https://www.cnbc.com/2026/08/28/kevin-warsh-jackson-hole-fed-inflation-rate-hike.html",
+        "https://www.schaeffersresearch.com/content/news/2026/08/27/the-week-ahead-august-jobs-report-takes-center-stage"
+      ],
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.56,
+        "claimed_risk_reward": 2.56,
+        "live_price": 769.35,
+        "live_price_asof": "2026-08-28T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 3915.6,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": 5.0973,
+        "checked_at_et": "2026-08-31T09:15:55-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.56:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 773.0 is +0.5% from live 769.35"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-09-04 is ahead of us"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 4.51 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-08-28T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "no bid/ask available (normal outside regular hours)"
+          },
+          {
+            "check": "instrument_choice",
+            "status": "warn",
+            "detail": "short SPY needs margin; /MES expresses the same view with defined sizing and near-24h trading"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 2 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "1% is within the 1% lottery-ticket ceiling for conviction 2"
+          },
+          {
+            "check": "sources",
+            "status": "pass",
+            "detail": "all 3 checked source(s) resolve"
+          }
+        ]
+      }
+    }
+  ],
+  "watchlist": [
+    {
+      "symbol": "TLT",
+      "instrument": "iShares 20+ Year Treasury Bond ETF",
+      "demoted_from_rank": 6,
+      "note": "CUT by red team. The 3.13 reward-to-risk is manufactured by reach: the 86.20 target is 7.13 ATR from the 81.20 entry, beyond the 6.0 ATR swing guide, and it was carried over unchanged from the position opened 2026-08-20 under a thesis this report itself says is now broken. The entry was revised down for the new regime (82.60 to 81.20); the target was not revised at all, which is the exact asymmetry the red team exists to catch. Against the first real resistance rather than a carried-over number \u2014 the 50-day average at 83.87 \u2014 reward-to-risk is (83.87-81.20)/(81.20-79.60) = 1.67, below the 2.0 swing floor. The idea clears the bar only by aiming at a level seven ATR away. Its own counter_argument concedes the rest: a hawkish repricing bear-flattens a curve already at +39bp, so the damage lands on the front end and TLT is not the instrument for the view even if the view is right.",
+      "trigger": "Two things must both be true: a soft August payroll print on Sep 4 (sub-25k, or unemployment 4.3%+), AND a level low enough that the 50-day at 83.87 alone clears a 2.0 reward-to-risk \u2014 that is an entry near 82.0 with the 79.60 stop, or a stop tightened on a defined intraday low. Separately, the 2026-08-20 long at 82.60 is an open position, not a new one: red team's view is that the case for adding is gone and the case for holding is now a judgement call the counter_argument argues against. Do not average down into it."
+    },
+    {
+      "symbol": "JBL",
+      "instrument": "Jabil Inc.",
+      "demoted_from_rank": 7,
+      "note": "CUT by red team on the correlation test. GEV, JBL and the already-open CCJ sit at the three-idea cap on the AI-capex driver, all three take the same side of Broadcom's Sep 2 guide, and JBL is the weakest of the cluster \u2014 so it is the one that goes. Specifics: 2.15 is the thinnest reward-to-risk in the book, the 272 stop is 1.4 ATR below entry on a 4.64% ATR name so ordinary noise takes it out, and the idea's own key_risk concedes it cannot explain an 18% five-session decline. That concession was independently checked and is correct: coverage confirms the move was company-specific (the S&P fell only 1.2% over the same five sessions) with no identified cause, and buying an unexplained waterfall in a contract manufacturer whose largest structural risk is a customer insourcing is a bet on the absence of news. The target has one anchor and it is decaying: 335 is the converged 20/50-day at 333.75/334.08, but both averages are falling with price 10% beneath them, so the '334 shelf' will not be at 334 by the Sep 24 catalyst.",
+      "trigger": "An explanation for the 18% decline \u2014 a 13F, a 13D/G, an 8-K, a customer disclosure or a downgrade note that names a cause \u2014 or the AI-capex cluster freeing a slot. Absent a cause, wait for the Sep 24 print and the FY2027 guide rather than paying for the mean reversion in front of it."
+    },
+    {
+      "symbol": "AVGO",
+      "instrument": "Broadcom Inc.",
+      "note": "Deliberately not captured \u2014 GEV, JBL and the open CCJ already sit at the 3-idea cap on the AI-capex driver, and AVGO would be a fourth. Reports Wednesday Sep 2 and is the first hard datapoint on the overbuild fear behind the whole power/EMS de-rating. NVDA guided FY2028 revenue +70% on Aug 27 and the complex kept falling, which says the market is discounting the guides rather than the results.",
+      "trigger": "Read the Sep 2 guide as the referendum on GEV and JBL rather than as a trade in itself. A disappointing guide is what fills GEV's 780-840 and JBL's 282-298 zones."
+    },
+    {
+      "symbol": "NUVL",
+      "instrument": "Nuvalent Inc.",
+      "note": "PDUFA Sep 18, 2026 \u2014 a second binary alongside RARE. Rejected purely on data: Nasdaq history and every quote source failed on four separate attempts, so no entry, stop or reward-to-risk could be set. Nothing was estimated.",
+      "trigger": "Re-check price history first thing tomorrow. If levels can be set, this is a legitimate candidate on merit."
+    },
+    {
+      "symbol": "MES",
+      "instrument": "Micro E-mini S&P 500 futures (/MES)",
+      "note": "The intended expression of the equity short. Rejected on data \u2014 no live futures or index level was fetchable all run. Expressed instead as the SPY short at rank 5, with the substitution disclosed there.",
+      "trigger": "Restore a live /MES or ES=F quote, then compare the futures expression against the SPY short on financing and margin."
+    },
+    {
+      "symbol": "TLX",
+      "instrument": "Telix Pharmaceuticals Ltd.",
+      "note": "Pixclara / TLX101-Px PDUFA Sep 11, 2026, NDA resubmission accepted Apr 10 with Fast Track and Orphan Drug. Rejected because there is no discount: 11.29 is only 9.5% below the 150-day high of 12.48, so you pay full price for a binary \u2014 unlike RARE, which is drifting down into its date. US ADS dollar volume of roughly $1.0-3.4M/day clears the liquidity floor but is thin, and market cap could not be established without guessing the ADS ratio.",
+      "trigger": "Only actionable on a meaningful pullback into the date, and only once market cap can be sized properly."
+    }
+  ],
+  "validation_summary": {
+    "checked": 5,
+    "passed": 1,
+    "warned": 4,
+    "failed": 0,
+    "enforced": true
+  }
+}
