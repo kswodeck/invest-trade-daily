@@ -85,9 +85,9 @@
       "direction": "buy",
       "horizon": "long_term",
       "conviction": 3,
-      "last_price": 120.26,
-      "last_price_asof": "2026-08-31 close",
-      "price_source": "nasdaq via market_data.py history",
+      "last_price": 119.92,
+      "last_price_asof": "2026-09-01T17:23:39+00:00",
+      "price_source": "finnhub",
       "entry": {
         "ideal": 112.0,
         "zone_low": 104.5,
@@ -189,7 +189,8 @@
             "detail": "all 3 checked source(s) resolve"
           }
         ]
-      }
+      },
+      "distance_to_entry_pct": 7.07
     },
     {
       "symbol": "IWM",
@@ -200,9 +201,9 @@
       "horizon": "swing",
       "conviction": 2,
       "requires_margin": true,
-      "last_price": 293.93,
-      "last_price_asof": "2026-08-31 close",
-      "price_source": "nasdaq via market_data.py history",
+      "last_price": 290.72,
+      "last_price_asof": "2026-09-01T17:24:35+00:00",
+      "price_source": "finnhub",
       "entry": {
         "ideal": 298.5,
         "zone_low": 296.5,
@@ -304,7 +305,8 @@
             "detail": "all 4 checked source(s) resolve"
           }
         ]
-      }
+      },
+      "distance_to_entry_pct": -2.61
     }
   ],
   "watchlist": [
@@ -395,5 +397,7 @@
     "warned": 2,
     "failed": 0,
     "enforced": true
-  }
+  },
+  "last_refreshed_et": "2026-09-01T13:24:46-04:00",
+  "last_refresh_session": "regular"
 }
