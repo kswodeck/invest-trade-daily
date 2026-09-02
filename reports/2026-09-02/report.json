@@ -1,0 +1,1203 @@
+{
+  "date": "2026-09-02",
+  "generated_at_et": "2026-09-02T06:33:57-04:00",
+  "truncated": false,
+  "data_quality_notes": "RESEARCH COMPLETE \u2014 not truncated. The research phase logged a completion block at 06:32 ET and amended it at 06:37 after a late finding, so nothing here was cut off mid-sentence. 16 candidate lines resolved to 13 distinct symbols; all 13 are published and none were dropped on the reward-to-risk floor.\n\nWHY THE SHAPE IS WHAT IT IS. Four of the thirteen are exits or risk reduction (TLT and LCII close outright; DHT, DINO and XLE are stop raises on open positions) and two more say explicitly to wait (LULU and AVGO, both reporting within 30 hours). That is the honest shape of a day with 23 open positions, several of which carry no stop at all, into a regime that inverted inside two weeks. Position updates do not add new risk.\n\nZERO INTRADAY IDEAS, stated plainly rather than padded. Every equity price in this report is the 2026-09-01 close, roughly 14 hours old at synthesis with the market not yet open, and there was no 08:30 ET print today. There was no honest basis for a level-precise same-session trade, so none was manufactured. Eleven swing, two long_term. No conviction-5 ideas either: nothing today had multiple independent confirmations AND a clean counter-argument, because the dominant driver is a war.\n\nCONCENTRATION IS THE MAIN RISK IN THIS REPORT, more than any single idea. The thirteen ideas are four bets, each at or under the three-name correlation cap. Driver A, Strait of Hormuz transit closure: DHT, DINO, XLE \u2014 treat as ONE bet of roughly 6.5% of capital, not three of 2%. Driver B, destroyed Qatari liquefaction: EQT, CRK, CEG \u2014 this one does NOT end with a ceasefire, since the trains need three to five years regardless. Driver C, the rate and inflation consequence: TLT exit, IYR short, KXFEDDECISION October hike. Driver D, idiosyncratic: CCJ, LULU, AVGO, LCII. The second-order truth: A, B and C all trace to the same war. A ceasefire helps C while hurting A, so the book is partially self-hedged, but a sustained escalation wins on every line at once. That is the definition of concentration and it should govern sizing. Note also that the LCII exit leans on the same rate move as Driver C; it is classified as idiosyncratic because it reduces exposure rather than adding it.\n\nTHE LATE FINDING THAT CHANGED THREE IDEAS. At 06:33 ET research found that the labour market is already contracting \u2014 payrolls fell 23,000 in July against a +80,000 forecast, with June revised down to +20,000. That cuts directly against Driver C, which needs the Fed to keep hiking. All three Driver C ideas were re-captured at lower conviction as a result: TLT from 4 to 3, IYR from 3 to 2, and the October hike contract from 3 to 2 with its price cap lowered from 31c to 29c. IYR additionally carries an explicit stand-down gate on Friday's print. This is why the two conviction-2 ideas exist and why they are sized as lottery tickets.\n\nSIZING ADJUSTMENT MADE IN SYNTHESIS. IYR was captured at 1.5% and is published at 1.0%, the conviction-2 cap in config/strategy.md. No other candidate exceeded its cap.\n\nREWARD-TO-RISK CLUSTERING \u2014 checked, and it is not target-fitting. Every ratio here was recomputed in code from the final entry, target and downside rather than trusted from the notes. Three land close to the 2.0 swing floor: TLT 2.06, LCII 2.05 and EQT 2.12. Each level was derived before the ratio was computed \u2014 TLT's 78.30 from roughly 17 duration against a 10y at 5.05%, LCII's 89.00 is the actual 150-day low, EQT's 63.00 is chart resistance between the close and the 180-day high of 68.24. XLE shows 4.37 only because its new-money entry sits close to the raised stop; if XLE never trades back to 63.00 the new-money leg simply does not happen and the update is purely the stop consolidation to 61.40.\n\nFAILED SOURCES AND PRICE GAPS. Yahoo returned HTTP 429 for all index, futures and volatility symbols, so there is NO VIX level, NO DXY level, and no live crude print in this report \u2014 'crude above $95' is sourced from news reporting, not from a fetched quote, and is labelled as such in market_context.levels. All equity and ETF prices are finnhub quotes at the 2026-09-01 close (session: pre-market, age ~872 minutes at synthesis); they were re-quoted during synthesis and were unchanged, because the market has not opened. Event-contract prices are live Kalshi bid/ask at 06:20 ET. Research could not enumerate a Kalshi series for the jobs report, and Robinhood's prediction-markets economics page lists only Fed decisions, so there is no event-contract expression of Friday's payroll print despite it being the most important date in this report. Gasoline event markets were found but Robinhood availability could not be verified, so they were not traded.\n\nCOVERAGE GAP: NO NEW SMALL CAPS. CRK at roughly $4.7bn is the smallest new name. Research recorded the reason rather than an excuse: every small cap reachable in the time available sat inside a driver already at its correlation cap (FRO under A, FLNG and the LNG shippers under B), and opening a fourth driver properly needed more time than remained. A micro cap researched in ten minutes is a guess, not a lottery ticket. Carried forward for tomorrow.\n\nPOSITION DECISIONS THAT DO NOT FIT THE IDEA SCHEMA are in the watchlist and must not be skipped: close all four BTC and /MBTU6 shorts (stops breached by 15-19%); TJX and BCC are stopped out and should not be re-entered; attach stops to NKE at 36.20 and PFE at 26.80, both of which have been carried with no stop at all; cancel the stale resting orders in VST (134.00, 128.00), DG (119.00, 121.00) and BCC (76.50).\n\nTRACK RECORD CONTEXT. The book is 0 for 9 on closed trades at an average of -3.3%. That sample is under the ~15 needed to mean much, but it is not encouraging, and it is part of why today's report leans toward attaching stops and taking profits rather than adding new risk.\n\n=== RED TEAM (phase 2c, 06:40-06:55 ET) ===\n\nCORRECTION TO THE CONCENTRATION PARAGRAPH ABOVE, which is the most important\nline in this report and is wrong as written. It says \"a ceasefire helps C while\nhurting A, so the book is partially self-hedged.\" It is the other way round.\nDriver C is three ways of being short duration: exiting TLT removes a long-end\nlong, the IYR short needs yields higher, and the October hike contract needs the\ninflation impulse to persist. A ceasefire collapses crude, takes the inflation\nimpulse out, pulls yields down and loses on all three \u2014 which is precisely what\neach of those ideas says in its own key_risk field (\"A US-Iran ceasefire\ncollapses crude and takes it to single digits\"; \"a ceasefire unwinds crude, the\ninflation impulse and the hike odds together, and IYR opens through the 106.40\nstop\"). The book is not partially self-hedged. Escalation wins on every line and\na ceasefire headline loses on essentially every line at once, including both\nexits, which would have sold near the low of the news cycle. Only LULU, AVGO and\nthe LCII exit sit on the other side, and they are the three smallest claims here.\nPost-red-team the escalation-correlated capital is roughly 12% (XLE 2.5, DINO 2,\nDHT 2, CCJ 3, EQT 2.5, CEG 1, IYR 1, KXFEDDECISION 1, less the CRK cut). Size it\nas one position, because on a ceasefire morning it will behave as one.\n\nWHAT WAS CUT. CRK, from rank 5. Its only differentiator over EQT \u2014 Haynesville\nbasis capture into Gulf Coast liquefaction \u2014 is negated by its own\ncounter-argument, which concedes the scarcity rent accrues to terminal owners\nuntil new trains commission. Its published entry condition said to own EQT\ninstead if it does not pull back, which is the author conceding it is not a\nsecond idea. Full reasoning is on the watchlist entry.\n\nWHAT WAS DOWNGRADED. Both conviction-4s, on the principle that a 4 that is wrong\ngets sized larger than a 3 that is wrong. CCJ 4 to 3: the new leg of its thesis \u2014\nthat the war made energy security concrete \u2014 was tested on the tape on\n2026-09-01 and failed, with CCJ -2.53%, URA -3.45% and UEC -5.31% on the day\ncrude cleared $95 and XLE printed an all-time high; what is left is the crowded\nthree-year consensus story the idea's own counter-argument concedes. EQT 4 to 3:\non timeframe, not direction \u2014 the rebuttal to its counter-argument is explicitly\na multi-year contracting mechanism, which cannot underwrite a swing target 6.06\nATR away in 15 sessions. CEG 3 to 2 and 2.5% to 1.0%: its own counter-argument\nsays the fuel-cost mechanism reaches revenue with a multi-year lag \"if at all\"\nand that the stock is actually priced on datacenter contracting news, so the\nmarket is pricing a different variable than the thesis; the only direct evidence\nis one session of relative strength inside a complex down 22-50%. There are now\nno conviction-4 ideas in this report.\n\nWHAT WAS FIXED RATHER THAN CUT. XLE: the 4.37 reward-to-risk is the largest\nnumber in the report and is entry geometry, not edge \u2014 the new-money entry sits\n1.60 above the raised stop, and the 70.00 target has no resistance behind it\nbecause the fund is at an all-time high. Flagged in the idea; the actionable\ncontent is the stop consolidation to 61.40. DINO: the 108 to 116 target raise is\nwhat took computed reward-to-risk from 1.55 (below the floor) to 3.00, which is\nthe exact failure mode this phase exists to catch. The target survives only\nbecause it has a peer-relative anchor the original text omitted (DINO +11.8%\nagainst PBF +139% and CVI +118% over 150 days), and the disclosure is now written\ninto the idea so the reader can discount it. IYR: the counter-argument claimed a\n1.5% size against a published 1.0%; corrected, and the inconsistency with the TLT\nidea is now stated \u2014 TLT is an exit rather than a short because the growth case\nfor the long end was judged too strong to bet against, yet IYR is that same bet\nwith equity beta on top. AVGO: the \"margin mix, not demand\" entry gate is softer\nthan it reads, because that distinction will not be cleanly resolvable live on\nthe call; the honest default is no trade.\n\nRE-RANKED, and on a modified rule that is worth stating. Conviction first as\nusual, but within the conviction-3 block the tiebreak is evidence quality and\ntime-criticality rather than raw reward-to-risk, because two of the largest\nratios here (XLE 4.37, DINO 3.00) are the ones this review just flagged as\ngeometry artifacts, and ranking on them would put the weakest numbers on top.\nThe two exits lead because they must be done at the open, followed by the three\nstop raises, then new risk. That ordering also matches the report's own framing\nof today as a risk-reduction day against an 0-for-9 closed-trade record.\n\nTWO VALIDATOR ARTIFACTS THE ENFORCE PASS WILL ACT ON, recorded here so the\ndemotions are not misread as substantive.\n\n(1) The Kalshi source 404s on TLT, LCII, IYR and KXFEDDECISION are false. The API\nendpoint answers HEAD with 404 and GET with 200, and validate_report.py checks\nsources with HEAD. Red team fetched both URLs by GET and the data is live and\nmatches this report exactly: Sep 16 25bp hike 61c bid / 62c ask, Sep hold 39c,\nOct 28 25bp hike 27c bid / 28c ask, Oct hold 69c, on open interest of 3.4mn and\n33.9k contracts respectively. The citation in all four ideas was swapped to\nhttps://kalshi.com/markets/kxfeddecision, the canonical public page for the same\nseries, which returns 429 to automated HEAD requests and so reads as\nunverifiable rather than dead. The underlying numbers were verified by GET, not\ntaken on trust, and the swap is disclosed here rather than made quietly.\n\n(2) The spread failures on EQT (7.96%), DHT (11.78%) and LCII (16.76%) are\npre-market book artifacts, not tradeable spreads. These quotes were taken at\n06:35 ET with the market shut: EQT bid 51.62 against ask 55.90 on a $33bn large\ncap, LCII bid 94.00 against ask 111.20, DHT 19.10 against 21.49. No US equity of\nthis size trades at a 17% spread in regular hours, and every entry in this report\nis a limit order for the regular session. If the enforce pass demotes these three\nto the watchlist, the demotion is mechanical and they should be re-read on their\nmerits; the LCII line in particular is an exit of an open position, and \"the\nspread is too wide to trade this thesis\" is not a reason to keep holding it.\n\nNOT CUT, AND DELIBERATELY SO. The two exits, the three stop raises and the two\nwait-for-the-print ideas were left alone. Six of the twelve survivors reduce risk\nor explicitly instruct the reader to do nothing today, which is the correct shape\nfor a book with 23 open positions, several unstopped, going 0-for-9 on closed\ntrades into a regime that inverted in two weeks. Nothing was invented to look\ndiligent, and the largest single criticism in this review is aimed at the\nportfolio construction rather than at any individual idea. Validation demoted 3 idea(s) whose numbers did not check out. 7 more carry warnings \u2014 see the validation block on each.",
+  "market_context": {
+    "regime": "risk-off",
+    "summary": "A rates shock, not a growth scare. Resumed strikes in the Iran war put crude above $95 and triggered a global bond selloff on 2026-09-01: the US 10y hit a 20-month high of 4.788% and the Kalshi FOMC market now prices a 25bp HIKE on Sep 16 at 62c against 39c for a hold, up from 32c eleven days ago. Equities, duration and gold fell together (SPY -0.69%, QQQ -1.27%, TLT -0.79%, GLD -2.9%) while XLE printed a new all-time high, the highest since the fund's 1998 inception and the only major sector bid. The curve is a bear steepener \u2014 10y 4.75 against a 2y at 4.34 with the effective funds rate at 3.63 \u2014 so this is term premium and inflation expectation, which is hostile to long duration, REITs and financed discretionary goods, and supportive of energy and short duration value. Two mechanisms run underneath: the Strait of Hormuz is largely closed to transit after two tankers were struck on 2026-08-31, and Qatari LNG exports are roughly 96% offline with the damaged liquefaction trains estimated at three to five years of repair. The second does not end with a ceasefire. Cutting against all of it: payrolls fell 23,000 in July against a +80,000 forecast, with June revised down to +20,000 \u2014 the August Employment Situation on Friday Sep 4 adjudicates between the inflation story and the labour story, and it is why the three rate-driven ideas here are downgraded and gated.",
+    "levels": {
+      "spy": 761.78,
+      "qqq": 707.64,
+      "iwm": 290.57,
+      "tlt": 81.87,
+      "xle": 64.77,
+      "gld": 396.75,
+      "us10y": 4.75,
+      "us2y": 4.34,
+      "us10y_intraday_high_2026_09_01": 4.788,
+      "curve_10y_2y": 0.4,
+      "fed_funds_eff": 3.63,
+      "unrate": 4.1,
+      "btc": 76659,
+      "gasoline_aaa_national": 4.1203,
+      "wti": "no live print (yahoo HTTP 429); reported above $95 per news sources",
+      "vix": null,
+      "dxy": null,
+      "prices_asof": "2026-09-01 close (equities/ETFs), market closed at synthesis"
+    },
+    "econ_calendar": [
+      {
+        "event": "AVGO Q3 FY26 earnings (after the close)",
+        "datetime_et": "2026-09-02T16:20",
+        "importance": "high",
+        "consensus": "revenue ~$29.4bn (+84% y/y), GAAP EPS ~2.55, consolidated gross margin guided to ~74%"
+      },
+      {
+        "event": "EIA weekly petroleum status report",
+        "datetime_et": "2026-09-02T10:30",
+        "importance": "medium",
+        "consensus": "gasoline inventories below the five-year average; -2.536mn bbl in the week to Aug 21"
+      },
+      {
+        "event": "LULU Q2 FY26 earnings (after the close)",
+        "datetime_et": "2026-09-03T16:05",
+        "importance": "high",
+        "consensus": "EPS ~1.79 on revenue 2.45-2.475bn, a 2-3% decline"
+      },
+      {
+        "event": "August Employment Situation",
+        "datetime_et": "2026-09-04T08:30",
+        "importance": "high",
+        "consensus": "prior -23,000 against a +80,000 forecast; June revised to +20,000"
+      },
+      {
+        "event": "FOMC decision",
+        "datetime_et": "2026-09-16T14:00",
+        "importance": "high",
+        "consensus": "Kalshi 62c for a 25bp hike, 39c hold, ~1c for a cut"
+      },
+      {
+        "event": "ADBE earnings (after the close)",
+        "datetime_et": "2026-09-10T16:05",
+        "importance": "medium",
+        "consensus": "est EPS 6.20 on revenue $6.82bn"
+      },
+      {
+        "event": "September CPI release",
+        "datetime_et": "2026-10-13T08:30",
+        "importance": "high",
+        "consensus": "first print fully capturing crude above $95"
+      },
+      {
+        "event": "FOMC decision (resolves KXFEDDECISION-26OCT-H25)",
+        "datetime_et": "2026-10-28T14:00",
+        "importance": "high",
+        "consensus": "Kalshi 28c for a 25bp hike, 69c hold"
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "symbol": "TLT",
+      "instrument": "iShares 20+ Year Treasury Bond ETF",
+      "asset_class": "etf",
+      "venue": "Robinhood Stocks",
+      "direction": "sell",
+      "horizon": "swing",
+      "conviction": 3,
+      "last_price": 81.87,
+      "last_price_asof": "2026-09-01T16:00 ET (previous close, market closed)",
+      "entry": {
+        "ideal": 81.87,
+        "zone_low": 81.5,
+        "zone_high": 83.2,
+        "order_type": "market",
+        "condition": "Exit the existing long at the open, before Friday. This supersedes the version of this idea captured earlier today at conviction 4 \u2014 the conviction is lower because of the jobs report, not because the exit is less right."
+      },
+      "exit": {
+        "target": 78.3,
+        "target_2": 76.5,
+        "scale_plan": "This is the exit of an open long, not a new short. Close the whole position. The targets mark where TLT lands if the 10y reaches ~5.05% and ~5.20%, and they are the reason not to hold rather than levels to work."
+      },
+      "stop": 83.6,
+      "position_size_pct": 0,
+      "requires_margin": false,
+      "catalyst": {
+        "event": "August Employment Situation Friday Sep 4 2026 08:30 ET, then the FOMC decision Sep 16 14:00 ET which Kalshi prices at 62c for a 25bp hike against 39c for a hold",
+        "datetime_et": "2026-09-04T08:30",
+        "action": "close the long before Friday rather than hold a coin flip through the print",
+        "wait": false
+      },
+      "thesis": "POSITION UPDATE \u2014 close the open TLT long (entry 82.60, last 81.87, -0.9%). The position was a bet the long end would rally; it is doing the opposite for a reason it cannot survive. Resumed strikes in the Iran war put crude above $95 and triggered a global bond selloff on Sep 1, taking the US 10y to a 20-month high of 4.788%, and the Kalshi FOMC market went from 32c to 62c on a September hike in eleven days. FRED has the 10y at 4.75 against a 2y at 4.34 with the effective funds rate at 3.63 \u2014 the front end anchored while the long end sells, a term-premium bear steepener, which is the shape that hurts a 17-duration ETF most. TLT is below its 20-day (82.47) and 50-day (83.71) on rising volume: 25.6mn, 35.8mn and 37.3mn shares the last three sessions. Exiting at 81.87 costs 0.9%; the stop at 80.95 costs 2.0%.",
+      "key_risk": "The August jobs report on Friday Sep 4 at 08:30 ET is a genuine two-way risk to this exit, and it is the reason conviction is 3 rather than 4. The US shed 23,000 jobs in July against a forecast of +80,000, after a downward revision of June to +20,000 \u2014 the labour market is already contracting. A second negative print on Friday prices the September hike out quickly, yields fall, and TLT rallies through 83.60 with the exit having sold near the low. Selling before a print that could go either way is a deliberate choice to take a small certain loss over an uncertain larger one.",
+      "counter_argument": "The strongest case for holding: an oil shock is a growth tax, the labour market is already shrinking, and a Fed that hikes into both raises recession odds \u2014 which is ultimately bullish for the long end. Rate hikes have historically marked where long bonds bottom. That argument is strong enough that this is an exit rather than a short: the recommendation is to be flat, not to bet against duration, precisely because the growth case and the inflation case are both live and Friday adjudicates between them.",
+      "sources": [
+        "https://www.fool.com/coverage/stock-market-today/2026/09/01/stock-market-midday-sept-1-stocks-slide-on-global-bond-sell-off/",
+        "https://tradingeconomics.com/united-states/non-farm-payrolls",
+        "https://www.bls.gov/news.release/empsit.nr0.htm",
+        "https://kalshi.com/markets/kxfeddecision",
+        "https://fred.stlouisfed.org/series/DGS10"
+      ],
+      "risk_reward": 2.06,
+      "risk_tier": "standard",
+      "rank": 1,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.06,
+        "claimed_risk_reward": 2.06,
+        "live_price": 81.87,
+        "live_price_asof": "2026-09-01T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 882.9,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": 0.7481,
+        "checked_at_et": "2026-09-02T06:43:41-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.06:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 81.87 is +0.0% from live 81.87"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-09-04 is ahead of us"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 4.77 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-09-01T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "no bid/ask available (normal outside regular hours)"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "0% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "2 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "XLE",
+      "instrument": "Energy Select Sector SPDR Fund",
+      "asset_class": "etf",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 3,
+      "last_price": 64.77,
+      "last_price_asof": "2026-09-01T16:00 ET (previous close, market closed)",
+      "entry": {
+        "ideal": 63.0,
+        "zone_low": 62.3,
+        "zone_high": 63.8,
+        "order_type": "limit",
+        "condition": "POSITION UPDATE. The three open longs from 60.50-60.80 hold, with all three stops raised to a single level of 61.40. New money only into a pullback at 62.30-63.80 \u2014 do not buy the all-time high."
+      },
+      "exit": {
+        "target": 70.0,
+        "target_2": null,
+        "scale_plan": "Targets consolidated: the 64.50 and 66.50 targets on the older tranches are now behind the market, so run one target at 70.00 for the whole position and trail. RED TEAM ON THE TARGET: 70.00 is not resistance. XLE printed an all-time high on 2026-09-01, so there is no price history above the market and nothing behind 70.00 but a round number and an extrapolation \u2014 the validator flags it at 6.37 ATR, beyond the swing guide. Manage this position on the trailing stop, not on the target."
+      },
+      "stop": 61.4,
+      "position_size_pct": 2.5,
+      "requires_margin": false,
+      "catalyst": {
+        "event": "Weekly EIA petroleum status report Wednesdays 10:30 ET, against a Strait of Hormuz that is largely closed to transit after two tankers were struck on 2026-08-31",
+        "datetime_et": "2026-09-02T10:30",
+        "action": "hold with the raised stop; add only on a pullback to the 62.30-63.80 zone",
+        "wait": false
+      },
+      "thesis": "POSITION UPDATE covering the three open XLE longs (2026-08-15 at 60.80, 08-16 at 60.50, 08-18 at 60.80; last 64.77, roughly +6.7%). Decision: HOLD, consolidate all three stops up to 61.40 and run a single target at 70.00. XLE printed a new all-time intraday high on 2026-09-01, the highest since the fund\u2019s 1998 inception, and closed +1.27% on a day the S&P fell 0.69% \u2014 it was the only major sector bid. The driver is physical: strikes on shipping have largely halted Strait of Hormuz transit and pushed crude above $95, roughly 30% above pre-war levels. The reason this is an update rather than an add is risk, not conviction: stops at 57.80, 58.60 and 59.20 sit 8-11% below the market on a position already 6.7% in profit. 61.40 is roughly 3 ATR (1.10) below the close and just under the 20-day at 61.83, which converts an open-ended war bet into a defined one.",
+      "key_risk": "Sizing and correlation, not direction. Together with the DHT and DINO updates this is the third position in this report whose outcome depends on the same Strait of Hormuz closure \u2014 that is the correlation cap, and the three should be treated as one bet of about 6.5% of capital, not three of 2%. A ceasefire prices out all three simultaneously and overnight.",
+      "counter_argument": "The strongest case against: sector ETFs at all-time highs on a geopolitical premium mean-revert violently, and XLE has run 52.62 to 64.77 inside 150 days. Buying any of it here is buying the last 20% of a move whose cause could end with a headline. The defensible half of the position is the part already owned from 60.50-60.80 with a stop at 61.40; the new-money zone at 62.30-63.80 is optional and should be skipped by anyone already carrying DHT or DINO. RED TEAM: the headline 4.37 reward-to-risk is the highest number in this report and it is an artifact of entry geometry, not an edge estimate \u2014 it falls out of a new-money entry at 63.00 sitting only 1.60 above the raised stop, divided into a 7.00 move to an unanchored target. The three open lines are held from 60.50-60.80, so their actual risk-reward bears no relation to 4.37. Read this idea as what it is: a stop consolidation to 61.40 on a winning position. Do not size the optional new-money leg off that ratio.",
+      "sources": [
+        "https://www.fool.com/coverage/stock-market-today/2026/09/01/stock-market-midday-sept-1-stocks-slide-on-global-bond-sell-off/",
+        "https://www.upi.com/Top_News/World-News/2026/09/01/iran-two-oil-tankers-struck-strait-of-hormuz/7601788274469/",
+        "https://tradingeconomics.com/commodity/brent-crude-oil/news/530749"
+      ],
+      "risk_reward": 4.37,
+      "risk_tier": "standard",
+      "rank": 2,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 4.37,
+        "claimed_risk_reward": 4.37,
+        "live_price": 64.77,
+        "live_price_asof": "2026-09-01T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 883.1,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": 1.0984,
+        "checked_at_et": "2026-09-02T06:43:42-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 4.37:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 63.0 is -2.7% from live 64.77"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-09-02 is ahead of us"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "warn",
+            "detail": "target is 6.37 ATR away, 15 session(s) to get there \u2014 beyond the 6.0 ATR guide for swing, likely optimistic"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-09-01T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "no bid/ask available (normal outside regular hours)"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "2.5% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "sources",
+            "status": "pass",
+            "detail": "all 3 checked source(s) resolve"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "DINO",
+      "instrument": "HF Sinclair Corporation",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 3,
+      "last_price": 103.97,
+      "last_price_asof": "2026-09-01T16:00 ET (previous close, market closed)",
+      "entry": {
+        "ideal": 99.5,
+        "zone_low": 97.0,
+        "zone_high": 101.5,
+        "order_type": "limit",
+        "condition": "POSITION UPDATE. Existing longs from 93.00 hold with the stop raised to 94.00. New money only on a pullback into 97.00-101.50 \u2014 do NOT buy the 150-day high at 103.97."
+      },
+      "exit": {
+        "target": 116.0,
+        "target_2": 125.0,
+        "scale_plan": "Target raised from 108.00 to 116.00. Trim half at 116.00 and trail the balance; take the whole position off on any credible ceasefire headline regardless of level. RED TEAM DISCLOSURE: the 108.00 -> 116.00 raise is what made this idea publishable. At the previously published 108.00 target, entry 99.50 against the 94.00 stop computes to 1.55:1, below the 2.0 swing floor; at 116.00 it computes to 3.00:1. That is the exact pattern this review exists to catch, so the target is being left in place only because it has an anchor the original text omitted: DINO has moved 93.00 -> 103.97 (+11.8%) while PBF ran 31.44 -> 74.99 and CVI 19.62 -> 42.87 over 150 days, so 116 is a laggard-catch-up level against peers in the same crack-spread spike rather than a number picked to clear the floor. Treat the stop raise from 86.50 to 94.00 as the actionable content and 116 as an objective, not a forecast; the new-money entry at 99.50 should be taken on the stop distance alone."
+      },
+      "stop": 94.0,
+      "position_size_pct": 2,
+      "requires_margin": false,
+      "catalyst": {
+        "event": "Weekly EIA petroleum status report (Wednesdays 10:30 ET) \u2014 gasoline inventories fell 2.536mn bbl in the week to Aug 21 and remain below the five-year average, while the AAA national average printed $4.1203 on 2026-09-02, up 2.49c in one day and 93c year on year",
+        "datetime_et": "2026-09-02T10:30",
+        "action": "hold and raise the stop; add only on a pullback, and only while the weekly gasoline draw persists",
+        "wait": false
+      },
+      "thesis": "POSITION UPDATE to the 2026-08-22 long at 93.00 (last 103.97, +11.8%). Decision: HOLD, raise the stop from 86.50 to 94.00, raise the target from 108.00 to 116.00, and do not add at the high. What changed is that the refining trade went from strong to vertical: DINO closed at 103.97 against a 150-day high of 103.99 after six consecutive up days from 93.24, and the whole complex is at or within 1.5% of its highs (MPC 383.00 against a high of 383.01, VLO -0.8%, CVI -1.4%, PBF -1.5%). The mechanism is real \u2014 the Strait of Hormuz is largely closed, US gasoline inventories are below the five-year average, and the AAA national average is $4.1203 against $3.1869 a year ago \u2014 but a stop 17.5% below the market is not risk management on a position that has already made 11.8%, and 94.00 sits about 2.7 ATR (3.70) below the close while still protecting the entry.",
+      "key_risk": "The entire refining complex is priced for the Strait staying closed. PBF has gone 31.44 to 74.99 and CVI 19.62 to 42.87 inside 150 days; those are war multiples, not mid-cycle ones. A ceasefire headline \u2014 and Tehran is publicly urging a return to the June deal \u2014 gaps this group down double digits overnight, through any stop, before the US open. The raised stop reduces but does not remove that: an overnight gap fills below it.",
+      "counter_argument": "The strongest case against holding at all: buying or holding a cyclical at its all-time high on a geopolitical premium is the classic way to give back a year of gains in a week, and the correct trade after +11.8% in eight sessions may simply be to ring the register. The reason to stay is that the driver is physical inventory rather than sentiment \u2014 the gasoline draw and the sub-five-year-average level are measurable weekly at 10:30 ET on Wednesdays, so the thesis has a scheduled falsification test rather than a vibe.",
+      "sources": [
+        "https://www.upi.com/Top_News/World-News/2026/09/01/iran-two-oil-tankers-struck-strait-of-hormuz/7601788274469/",
+        "https://gasprices.aaa.com/",
+        "https://tradingeconomics.com/commodity/gasoline",
+        "https://www.cnbc.com/2026/09/01/us-iran-war-trump-hormuz-tanker-attack-shipping-sanctions-.html"
+      ],
+      "risk_reward": 3.0,
+      "risk_tier": "standard",
+      "rank": 3,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 3.0,
+        "claimed_risk_reward": 3.0,
+        "live_price": 103.97,
+        "live_price_asof": "2026-09-01T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 883.3,
+        "bid": 104.0,
+        "ask": 105.2,
+        "spread_pct": 1.147,
+        "atr14": 3.7017,
+        "checked_at_et": "2026-09-02T06:43:44-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 3.0:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 99.5 is -4.3% from live 103.97"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-09-02 is ahead of us"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 4.46 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-09-01T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "bid/ask spread 1.15%; the round trip costs 7% of the target move \u2014 set the entry as a limit, never market"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "2% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "sources",
+            "status": "pass",
+            "detail": "all 4 checked source(s) resolve"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "CCJ",
+      "instrument": "Cameco Corporation",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "long_term",
+      "conviction": 3,
+      "last_price": 96.26,
+      "last_price_asof": "2026-09-01T16:00 ET (previous close, market closed)",
+      "entry": {
+        "ideal": 94.0,
+        "zone_low": 90.0,
+        "zone_high": 97.0,
+        "order_type": "limit",
+        "condition": "Continuing accumulation of the open position, not a new idea. Add a third in the 94-97 zone around the 50-day at 95.82; hold the rest for 90 or below on any broad-market drawdown. Do not chase above 99."
+      },
+      "exit": {
+        "target": 135.0,
+        "target_2": 155.0,
+        "scale_plan": "Existing target of 135 unchanged \u2014 it is the 150-day high and roughly where the equity sits if the long-term uranium price settles above $100/lb against contracted deliveries of 28mn lbs a year. Second target 155 on a 3-5 year view including Westinghouse."
+      },
+      "stop": null,
+      "bear_case_price": 78.0,
+      "position_size_pct": 3,
+      "requires_margin": false,
+      "catalyst": {
+        "event": "Structural driver, no single date: long-term uranium contract prices at multi-year highs in the mid-$90s per pound with Kazakhstan having trimmed its 2026 output plan, against a Westinghouse AP1000 pipeline of 91 reactors backed by a conditional $17.5bn DOE commitment. Cameco holds 49% of Westinghouse and has contracted average annual deliveries above 28mn lbs for five years.",
+        "datetime_et": null,
+        "action": "accumulate in thirds \u2014 one tranche at 94-97 now, one under 90 on any macro drawdown, and hold the last for a broad market washout. There is nothing to rush.",
+        "wait": false
+      },
+      "thesis": "POSITION UPDATE and continuing accumulation of the open longs from 95.00 and 88.00 (last 96.26). What changed since those entries is that energy security stopped being an abstraction: the Strait of Hormuz is largely closed, Qatari LNG is 96% offline with liquefaction trains needing three to five years to repair, and every importing government has just been shown what fossil-fuel dependence costs. Nuclear is the only baseload answer that does not travel through a chokepoint, and the supply side is tightening independently \u2014 Kazakhstan trimmed its 2026 output plan and long-term contract uranium is at multi-year highs in the mid-$90s per pound. Cameco is the second-largest producer with contracted deliveries above 28mn lbs a year for five years, which converts the term price into visible revenue rather than a spot bet, plus 49% of Westinghouse against an AP1000 pipeline of 91 reactors and a conditional $17.5bn DOE commitment. The dislocation is relative: CCJ trades 28.8% below its 150-day high of 135.24 while the crude-levered energy complex prints all-time highs. The market has repriced the commodity that the war disrupted and not the one that replaces it.",
+      "key_risk": "Uranium equities trade as high-beta risk assets first and utility-linked contracts second \u2014 CCJ fell 2.53%, URA 3.45% and UEC 5.31% on 2026-09-01 during the very energy shock that is supposed to be their thesis. With a 4.29% ATR, this position can lose a fifth of its value in a market drawdown without a single fact about uranium changing. Invalidation, since a long-term hold carries no hard stop: the long-term uranium contract price falling back below $80/lb, or Kazatomprom restoring and then raising its output guidance \u2014 either means the supply tightness is over and the thesis is wrong at any price. A second invalidation is Westinghouse AP1000 orders failing to convert from the DOE commitment into signed reactor contracts over the next 18 months.",
+      "counter_argument": "The strongest case against: this is the most crowded structural long in the market, it has been the consensus five-year story for three years running, and CCJ is still 28.8% below its high \u2014 which is evidence the thesis has been priced and re-priced rather than that it is undiscovered. Nuclear build cycles also slip by years as a matter of routine, so a 91-reactor pipeline and a conditional DOE commitment are not deliveries. Note too that the insider check returned zero transactions in either direction over six months, which for a Canadian issuer means the Form 4 data is simply uninformative here rather than a signal of any kind. RED TEAM: conviction cut from 4 to 3. The structural case is intact, but the specific reason this was a 4 today \u2014 that the war made energy security concrete \u2014 was put on the tape on 2026-09-01 and rejected: crude went above $95, XLE printed an all-time high, and CCJ fell 2.53% with URA -3.45% and UEC -5.31%. The one new piece of evidence was tested in real time and failed. What remains is the three-year consensus story this idea's own counter-argument concedes is crowded, which is conviction-3 evidence, not conviction-4. Size is held at 3% because this is an existing accumulation, but note it is the largest position in the report and carries no stop: do not put the third tranche on while the tape is selling the driver.",
+      "sources": [
+        "https://finance.yahoo.com/energy/articles/cameco-corp-ccj-q2-2026-190111354.html",
+        "https://www.ans.org/news/article-7425/uranium-prices-up-could-demand-more-than-double/",
+        "https://www.cameco.com/invest/markets/uranium-price",
+        "https://www.azernews.az/region/262917.html"
+      ],
+      "risk_reward": 2.56,
+      "risk_tier": "standard",
+      "rank": 4,
+      "validation": {
+        "verdict": "pass",
+        "computed_risk_reward": 2.56,
+        "claimed_risk_reward": 2.56,
+        "live_price": 96.26,
+        "live_price_asof": "2026-09-01T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 883.3,
+        "bid": 95.09,
+        "ask": 95.74,
+        "spread_pct": 0.681,
+        "atr14": 4.1307,
+        "checked_at_et": "2026-09-02T06:43:46-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.56:1 clears the 2.5:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 94.0 is -2.3% from live 96.26"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "long-term idea, no dated event expected"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "long-term target is valuation-anchored, not ATR-bound"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-09-01T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "pass",
+            "detail": "bid/ask spread 0.68%; the round trip costs 2% of the target move"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "3% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "sources",
+            "status": "pass",
+            "detail": "all 4 checked source(s) resolve"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "LULU",
+      "instrument": "lululemon athletica inc.",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "long_term",
+      "conviction": 3,
+      "last_price": 118.0,
+      "last_price_asof": "2026-09-01T16:00 ET (previous close, market closed)",
+      "entry": {
+        "ideal": 108.0,
+        "zone_low": 104.0,
+        "zone_high": 114.0,
+        "order_type": "limit",
+        "condition": "POST-PRINT ONLY. No add before Q2 results Thursday 2026-09-03 after the close. First tranche 110-114 only if FY26 guidance is reaffirmed; second tranche 104-108 if the market overshoots a soft quarter. If guidance is cut a second time, stand down entirely and re-underwrite."
+      },
+      "exit": {
+        "target": 175.0,
+        "target_2": 210.0,
+        "scale_plan": "Continuing position, not a new one \u2014 the 2026-08-22 line at 115 rides to 175. Second target 210 on an 18-24 month view."
+      },
+      "stop": null,
+      "bear_case_price": 85.0,
+      "position_size_pct": 2,
+      "requires_margin": false,
+      "catalyst": {
+        "event": "Q2 FY26 earnings Thursday 2026-09-03 after the close. Consensus EPS ~1.79 on revenue of 2.45-2.475bn, a 2-3% decline; guided gross margin down 410bp on tariffs and distribution investment; North America expected down low double digits against China Mainland +19.5%. UBS told clients on Aug 25 that the print may be used to cut the full-year profit outlook again.",
+        "datetime_et": "2026-09-03T16:05",
+        "action": "DO NOT ENTER OR ADD TODAY. Hold the existing 115 line through the print at current size and reassess on the guidance sentence, not the quarter.",
+        "wait": true
+      },
+      "thesis": "POSITION UPDATE to the 2026-08-22 long at 115.00 (last 118.00, +2.6%). Decision: HOLD at current size, do not add, and the correct action today is explicitly to wait. Nothing in the business changed since yesterday, but two things around it did: the print is now one session away rather than two, and the macro backdrop turned hostile to a discretionary retailer, with crude above $95 and the 10y at a 20-month high squeezing exactly the consumer that buys $120 leggings. The long-term case is unchanged \u2014 an international business compounding (China Mainland guided +19.5%, rest of world +14.6%) inside a stock that has already de-rated 30.7% from its 180-day high of 170.20 \u2014 but that case is about 2028, and Thursday is a guidance event the position does not need to be larger for.",
+      "key_risk": "The specific risk is the sentence after the quarter, not the quarter: UBS flagged on Aug 25 that lululemon may cut its full-year outlook a second time. A second cut converts this from a de-rated compounder into a broken one, and the stock is only 13% above its 180-day low of 104.44 with a 3.85% daily ATR \u2014 a bad guide can clear that in a single session. Invalidation, since there is no hard stop: two consecutive quarters of North America comparable sales declining worse than the prior quarter, or a second reduction to FY26 EPS guidance. Either means the brand problem is not tariffs and the thesis is wrong at any price.",
+      "counter_argument": "The strongest case against holding into Thursday at all: consensus already expects EPS down 42.3% year on year and revenue down 2.7%, so the bar is low \u2014 but low bars have not been protecting this stock, which fell from 170 to 118 while everyone knew the numbers were coming down. Sitting through a binary event to defend a 2.6% gain is a poor risk trade in isolation. It is defensible only because this is a multi-year position at 2% of capital where the intended holding period is longer than the noise.",
+      "sources": [
+        "https://www.tikr.com/blog/lululemon-reports-q2-earnings-september-3-what-the-stock-needs-to-show",
+        "https://markets.financialcontent.com/stocks/article/stockstory-2026-9-2-what-to-expect-from-lululemons-lulu-q2-earnings",
+        "https://finance.yahoo.com/markets/stocks/articles/lululemon-q2-earnings-upcoming-likely-140400250.html"
+      ],
+      "risk_reward": 2.91,
+      "risk_tier": "standard",
+      "rank": 5,
+      "validation": {
+        "verdict": "pass",
+        "computed_risk_reward": 2.91,
+        "claimed_risk_reward": 2.91,
+        "live_price": 118.0,
+        "live_price_asof": "2026-09-01T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 883.4,
+        "bid": 118.0,
+        "ask": 118.3,
+        "spread_pct": 0.254,
+        "atr14": 4.548,
+        "checked_at_et": "2026-09-02T06:43:48-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.91:1 clears the 2.5:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 108.0 is -8.5% from live 118.0"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-09-03 is ahead of us"
+          },
+          {
+            "check": "earnings_date",
+            "status": "pass",
+            "detail": "earnings date 2026-09-03 confirmed against the calendar"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "long-term target is valuation-anchored, not ATR-bound"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-09-01T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "pass",
+            "detail": "bid/ask spread 0.25%; the round trip costs 0% of the target move"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "2% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "sources",
+            "status": "pass",
+            "detail": "all 3 checked source(s) resolve"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "AVGO",
+      "instrument": "Broadcom Inc.",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 3,
+      "last_price": 369.68,
+      "last_price_asof": "2026-09-01T16:00 ET (previous close, market closed)",
+      "entry": {
+        "ideal": 345.0,
+        "zone_low": 330.0,
+        "zone_high": 355.0,
+        "order_type": "limit",
+        "condition": "POST-PRINT ONLY, and conditional on WHY it falls. Buy 330-355 only if the selloff is about gross margin mix \u2014 management guiding consolidated gross margin toward ~74% on a heavier custom-TPU weighting. If instead AI bookings, backlog or the FY27 AI revenue outlook disappoint, do not buy at any price: that is a demand problem, not an accounting-of-mix problem."
+      },
+      "exit": {
+        "target": 440.0,
+        "target_2": null,
+        "scale_plan": "Single target at 440, roughly 11% below the 495 all-time high and back inside the pre-Q2-selloff range. Trim the whole position there."
+      },
+      "stop": 305.0,
+      "position_size_pct": 2,
+      "requires_margin": false,
+      "catalyst": {
+        "event": "Q3 FY26 earnings TODAY, Wednesday 2026-09-02, after the close. Consensus revenue ~$29.4bn, which is roughly 84% year-on-year growth, on GAAP EPS near 2.55; company has guided consolidated gross margin down to about 74% on a heavier mix of lower-margin AI semiconductors, principally custom TPUs.",
+        "datetime_et": "2026-09-02T16:20",
+        "action": "DO NOT ENTER TODAY. Wait for the print and the call, then act only on the 330-355 zone and only if the fall is margin-mix driven.",
+        "wait": true
+      },
+      "thesis": "Broadcom reports tonight with revenue growing about 84% year on year while the stock trades 25.3% below its all-time high of 495.00 and below both its 20-day (387.54) and 50-day (384.84). That gap between the fundamental trajectory and the price is the setup, and the reason for it is specific and knowable: the selloff dates from the fiscal Q2 print and is about gross margin, not demand \u2014 a heavier weighting of custom AI accelerators carries lower gross margin than merchant silicon, taking consolidated gross margin toward roughly 74%. That is a mix effect on a business whose dollar gross profit is compounding, and mix effects get re-rated once the market stops extrapolating the percentage. The correct action today is nonetheless to wait: the ATR is 12.48 and an earnings gap will be several multiples of that, so entering before the print is a coin flip regardless of how good the thesis is.",
+      "key_risk": "The whole idea rests on the distinction between margin mix and demand, and one number on tonight\u2019s call collapses it: if Broadcom trims its AI revenue outlook or the backlog conversion slows, the de-rating is correct and 330 becomes a stop on the way to the 150-day low of 289.96 rather than a floor. This is also a large-cap AI semiconductor in a tape where the 10y just hit a 20-month high \u2014 long-duration equity is precisely what a rising discount rate punishes, which is why QQQ fell 1.27% on 2026-09-01 against SPY\u2019s 0.69%. RED TEAM: the entry gate is softer than it reads. 'Buy only if the selloff is about gross margin mix, not demand' asks the reader to adjudicate, live on the call, a distinction that management has every incentive to blur and that will not be cleanly resolvable while the stock is repricing in the after-hours. Assume the honest answer at 17:30 ET is 'both narratives are present', in which case the correct action is no trade rather than a judgment call. Note also that the 440 target is 7.61 ATR away, beyond the swing guide: this is a multi-month recovery objective carrying a swing label, and the 2.38 reward-to-risk should be read on that horizon.",
+      "counter_argument": "The strongest case against: a 25% drawdown in a mega-cap that everyone owns is rarely about a single line item, and a company selling more of a lower-margin product to a handful of concentrated hyperscaler customers is describing exactly how a merchant semiconductor franchise turns into a contract manufacturer. If that is what is happening, the multiple compression is permanent and no post-print level is cheap. The entry condition is written to make that falsifiable on tonight\u2019s call rather than discovered later.",
+      "sources": [
+        "https://finance.yahoo.com/markets/stocks/articles/broadcom-set-report-q3-earnings-150200149.html",
+        "https://finance.yahoo.com/news/broadcom-inc-avgo-down-19-144518049.html",
+        "https://www.moomoo.com/ca/articles/broadcom-stock-earnings"
+      ],
+      "risk_reward": 2.38,
+      "risk_tier": "standard",
+      "rank": 6,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.38,
+        "claimed_risk_reward": 2.38,
+        "live_price": 369.68,
+        "live_price_asof": "2026-09-01T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 883.5,
+        "bid": 368.45,
+        "ask": 368.66,
+        "spread_pct": 0.057,
+        "atr14": 12.4792,
+        "checked_at_et": "2026-09-02T06:43:50-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.38:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 345.0 is -6.7% from live 369.68"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-09-02 is ahead of us"
+          },
+          {
+            "check": "earnings_date",
+            "status": "pass",
+            "detail": "earnings date 2026-09-02 confirmed against the calendar"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "warn",
+            "detail": "target is 7.61 ATR away, 15 session(s) to get there \u2014 beyond the 6.0 ATR guide for swing, likely optimistic"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-09-01T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "pass",
+            "detail": "bid/ask spread 0.06%; the round trip costs 0% of the target move"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "2% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "sources",
+            "status": "pass",
+            "detail": "all 3 checked source(s) resolve"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "IYR",
+      "instrument": "iShares U.S. Real Estate ETF",
+      "asset_class": "etf",
+      "venue": "Robinhood Stocks",
+      "direction": "sell_short",
+      "horizon": "swing",
+      "conviction": 2,
+      "last_price": 102.45,
+      "last_price_asof": "2026-09-01T16:00 ET (previous close, market closed)",
+      "entry": {
+        "ideal": 103.6,
+        "zone_low": 102.8,
+        "zone_high": 104.6,
+        "order_type": "limit",
+        "condition": "Two gates, both required. (1) Short only into a bounce toward the broken 20-day (104.17) and 50-day (104.41), which sit within 0.25 of each other \u2014 do not initiate below 102.80. (2) STAND DOWN if the August jobs report on Friday Sep 4 08:30 ET shows negative payrolls or a rising unemployment rate; do not hold this through a print that prices the hike out. This supersedes the conviction-3 version captured earlier today."
+      },
+      "exit": {
+        "target": 96.5,
+        "target_2": 93.0,
+        "scale_plan": "Cover half at 96.50, trail the rest toward the 150-day low at 92.45."
+      },
+      "stop": 106.4,
+      "position_size_pct": 1.0,
+      "requires_margin": true,
+      "catalyst": {
+        "event": "August Employment Situation Friday Sep 4 2026 08:30 ET, then the FOMC decision Sep 16 14:00 ET, priced 62c for a 25bp hike against 39c for a hold",
+        "datetime_et": "2026-09-04T08:30",
+        "action": "wait for Friday\u2019s print before sizing up; a firm payroll number is the green light, a negative one voids the trade entirely",
+        "wait": false
+      },
+      "thesis": "Rate-sensitive equities have not repriced for a rate move that has already happened. The US 10y closed at a 20-month high of 4.788% on 2026-09-01 after an oil-shock-driven global bond selloff, and Kalshi went from 32c to 62c on a September hike in eleven days \u2014 yet IYR sits only 5.3% below its 150-day high while homebuilders, the other rate-sensitive group, are already 20% below theirs (ITB -19.9%, XHB -18.3%, both five red sessions running). That gap is the trade: the group whose valuation is literally a spread between cap rates and the 10y is trading as though the 10y had not moved. IYR closed below both its 20-day and 50-day on 2026-09-01 with the two converging overhead into a single resistance shelf, and REITs carry real floating-rate and near-term refinancing exposure, so a hike is a cash-flow event for them rather than only a discount-rate one.",
+      "key_risk": "Conviction is 2, and the thinness is the point: this trade needs the bond market\u2019s inflation panic to beat the labour market\u2019s deterioration, and right now the labour market is losing jobs. Payrolls fell 23,000 in July against a forecast of +80,000, after June was revised down to +20,000. A second negative print on Friday takes the September hike off the table, yields fall and IYR gaps up \u2014 which is why the entry carries an explicit stand-down gate rather than a level alone. On top of that it is a margin short held over a war that trades overnight: a ceasefire unwinds crude, the inflation impulse and the hike odds together, and IYR opens through the 106.40 stop with no chance to exit at it. The 1.02% ATR means the stop is only 3.9% away.",
+      "counter_argument": "The strongest case against: an oil shock is a growth shock, and if the Fed hikes into a contracting labour market the curve should bull-flatten with the long end rallying \u2014 which makes REITs, priced off the 10y rather than the funds rate, the wrong short entirely. Real estate is also a real asset whose rents and replacement cost rise with inflation eventually. The negative July payroll print gives that argument teeth it did not have a month ago, which is why this is sized at 1.0% \u2014 the conviction-2 cap \u2014 and gated on Friday rather than published as a conviction call. RED TEAM: this idea is inconsistent with the TLT idea in the same report. TLT is published as an exit rather than a short specifically because the growth-shock case for the long end was judged strong enough that betting against duration is not warranted. IYR is a bet against duration with equity beta and refinancing risk stacked on top, so it is the more aggressive expression of the view the report declined to take directly. Holding both positions coherently requires believing the rate move hurts REITs more than it helps them without being willing to short the rate move itself. The 1% size and the Friday stand-down gate are doing all the work here; if Friday's payroll print is not firm, this trade does not exist.",
+      "sources": [
+        "https://www.fool.com/coverage/stock-market-today/2026/09/01/stock-market-midday-sept-1-stocks-slide-on-global-bond-sell-off/",
+        "https://tradingeconomics.com/united-states/non-farm-payrolls",
+        "https://www.bls.gov/news.release/empsit.nr0.htm",
+        "https://kalshi.com/markets/kxfeddecision",
+        "https://fred.stlouisfed.org/series/DGS10"
+      ],
+      "risk_reward": 2.54,
+      "risk_tier": "lottery",
+      "rank": 7,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.54,
+        "claimed_risk_reward": 2.54,
+        "live_price": 102.45,
+        "live_price_asof": "2026-09-01T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 883.6,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": 1.0455,
+        "checked_at_et": "2026-09-02T06:43:50-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.54:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 103.6 is +1.1% from live 102.45"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-09-04 is ahead of us"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "warn",
+            "detail": "target is 6.79 ATR away, 15 session(s) to get there \u2014 beyond the 6.0 ATR guide for swing, likely optimistic"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-09-01T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "no bid/ask available (normal outside regular hours)"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 2 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "1.0% is within the 1% lottery-ticket ceiling for conviction 2"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "2 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "CEG",
+      "instrument": "Constellation Energy Corporation",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 2,
+      "last_price": 280.31,
+      "last_price_asof": "2026-09-01T16:00 ET (previous close, market closed)",
+      "entry": {
+        "ideal": 272.0,
+        "zone_low": 265.0,
+        "zone_high": 278.0,
+        "order_type": "limit",
+        "condition": "Buy the pullback into the 265-278 band where the 20-day (274.77) and 50-day (265.08) sit. This replaces the unfilled 266.00 order published 2026-08-21 \u2014 the level is raised because the reason to own it is now confirmed rather than anticipated. Do not chase above 278."
+      },
+      "exit": {
+        "target": 320.0,
+        "target_2": 355.0,
+        "scale_plan": "Trim half at 320, just under the 150-day high of 333.80. The balance only runs while gas scarcity is intact."
+      },
+      "stop": 250.0,
+      "position_size_pct": 1.0,
+      "requires_margin": false,
+      "catalyst": {
+        "event": "QatarEnergy LNG force majeure extended into November with liquefaction trains estimated at 3-5 years of repair, keeping the marginal fuel for US power generation structurally expensive. Next checkable date is the October cargo cancellation notices.",
+        "datetime_et": "2026-09-30T00:00",
+        "action": "accumulate on a pullback into the moving-average band; this is a fuel-scarcity trade, so cut it if Qatari cargoes resume",
+        "wait": false
+      },
+      "thesis": "The cleanest way to be long expensive natural gas without owning a gas producer. US wholesale power prices are set at the margin by gas-fired generation, so when gas gets structurally dearer the operator whose fuel cost is not gas captures the whole difference \u2014 and Constellation runs the largest nuclear fleet in the country. The scarcity is now established rather than speculative: Qatari LNG exports are down about 96%, force majeure runs into November, and the damaged trains need three to five years. The tape separated CEG from its peers on 2026-09-01 in a way worth taking seriously \u2014 on a day the S&P fell 0.69%, CEG closed +2.0% at 280.31 and held above both its 20-day and 50-day, while the rest of the merchant power complex broke: Talen -34.7% from its high, NRG -42.4%, Vistra -22.6%, Argan -49.8%, all of them below both averages. That divergence is the market beginning to price fuel position rather than the undifferentiated AI-datacenter-power theme, and CEG is the name on the right side of it.",
+      "key_risk": "CEG is still a 16%-off-its-high member of a complex that is actively unwinding \u2014 Talen, NRG, Vistra and Argan are all down between 22% and 50% from their highs, and one session of relative strength is thin evidence that CEG has decoupled rather than merely lagged. If the AI-power theme is being de-rated wholesale, fuel economics will not save it. The 250 stop is 10.8% away, roughly 3.6 ATR, because a 3.02% daily ATR in a group behaving like this needs the room.",
+      "counter_argument": "The strongest case against: nuclear generators are largely contracted forward through power purchase agreements, so the spot power price that gas is setting today reaches Constellation\u2019s revenue with a multi-year lag, if at all \u2014 which makes the mechanism real but slow, and the stock is being priced on datacenter contracting news rather than on marginal fuel cost. It is also fair to say that the same LNG scarcity that lifts power prices raises the political risk of price caps and windfall interventions on inframarginal generators, which is precisely the profit this thesis is trying to capture. RED TEAM: conviction cut from 3 to 2 and size from 2.5% to 1.0%, the conviction-2 cap. The thesis mechanism is conceded above to reach Constellation's revenue with a multi-year lag 'if at all' because the fleet is contracted forward, and the same paragraph admits the stock is actually priced on datacenter contracting news rather than on marginal fuel cost. An idea whose own text says the market is pricing a different variable is not a 3. The only direct evidence offered is one session of relative strength inside a complex down 22-50% from its highs, which the key risk already calls thin. Everything else cited (Qatari force majeure, the 3-5 year repair) is real but is evidence about gas, not about CEG.",
+      "sources": [
+        "https://www.euronews.com/business/2026/08/31/qatarenergy-extends-lng-cancellations-into-november-as-hormuz-disruption-drags-on",
+        "https://www.azernews.az/region/262917.html",
+        "https://gasoutlook.com/analysis/lng-markets-tighten-as-hormuz-disruption-expected-to-persist/",
+        "https://www.fool.com/coverage/stock-market-today/2026/09/01/stock-market-midday-sept-1-stocks-slide-on-global-bond-sell-off/"
+      ],
+      "risk_reward": 2.18,
+      "risk_tier": "lottery",
+      "rank": 8,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.18,
+        "claimed_risk_reward": 2.18,
+        "live_price": 280.31,
+        "live_price_asof": "2026-09-01T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 883.6,
+        "bid": 274.93,
+        "ask": 278.78,
+        "spread_pct": 1.391,
+        "atr14": 8.4775,
+        "checked_at_et": "2026-09-02T06:43:51-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.18:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 272.0 is -3.0% from live 280.31"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-09-30 is ahead of us"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 5.66 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-09-01T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "bid/ask spread 1.39%; the round trip costs 8% of the target move \u2014 set the entry as a limit, never market"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 2 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "1.0% is within the 1% lottery-ticket ceiling for conviction 2"
+          },
+          {
+            "check": "sources",
+            "status": "pass",
+            "detail": "all 4 checked source(s) resolve"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "KXFEDDECISION-26OCT-H25",
+      "instrument": "Will the Federal Reserve hike rates by 25bps at the October 2026 meeting? (YES)",
+      "asset_class": "event",
+      "venue": "Robinhood Prediction Markets",
+      "direction": "yes",
+      "horizon": "swing",
+      "conviction": 2,
+      "unit": "cents",
+      "last_price": 28,
+      "last_price_asof": "2026-09-02T06:20 ET (Kalshi, yes_bid 27 / yes_ask 28, volume 48,838)",
+      "entry": {
+        "ideal": 28,
+        "zone_low": 25,
+        "zone_high": 29,
+        "order_type": "limit",
+        "condition": "Pay no more than 29c \u2014 the cap is lower than the 31c in the earlier capture of this idea because the August jobs report on Friday can reprice it downward, and there is no reason to pay up ahead of that. Buying a starter now and the rest after Friday\u2019s print is the better construction."
+      },
+      "exit": {
+        "target": 55,
+        "target_2": 100,
+        "scale_plan": "Sell half at 55c, roughly where the contract should trade after a September hike plus a hot September CPI on Oct 13. Let the balance run to the Oct 28 resolution.",
+        "time_stop": "2026-10-28"
+      },
+      "stop": 15,
+      "position_size_pct": 1,
+      "requires_margin": false,
+      "catalyst": {
+        "event": "Three dated gates before resolution: the August Employment Situation Sep 4 08:30 ET, the FOMC decision Sep 16 14:00 ET (priced 62c hike / 39c hold), and the September CPI release Oct 13 08:30 ET, which is the first print fully capturing crude above $95. Resolves on the FOMC decision Oct 28 2026 14:00 ET.",
+        "datetime_et": "2026-10-28T14:00",
+        "action": "buy a starter at 25-29c now; add only if Friday\u2019s payroll print is firm, and cut the position outright if payrolls are negative again",
+        "wait": false
+      },
+      "thesis": "The market is pricing one hike and then a pause \u2014 62c for a 25bp hike on Sep 16 but only 28c for another on Oct 28, with 69c on a hold. That structure assumes the energy shock is a one-off the Fed can look through, and the supply loss says otherwise: Qatari LNG exports are down about 96% with the damaged trains estimated at three to five years of repair, Strait of Hormuz transit is largely halted after two tankers were struck on 2026-08-31, the US naval blockade remains in force with no US-Iran talks scheduled, and the AAA national gasoline average printed $4.1203 on 2026-09-02 against $3.1869 a year ago, up 29%. The September CPI release on Oct 13 is the first print that fully contains crude above $95 and it lands fifteen days before the October meeting. My estimate is about 35% against the market\u2019s 28% \u2014 a real but modest edge, which is what a conviction-2 sizing is for.",
+      "key_risk": "Thin evidence on the decisive variable, which is why this is a 2 and sized at 1%. The bet needs the Fed to hike twice in a row into a labour market that is already shrinking: payrolls fell 23,000 in July against a forecast of +80,000, after June was revised down to +20,000. A second negative print on Friday Sep 4 makes back-to-back hikes very hard to justify and this contract goes to the low teens. It is also conditional two deep \u2014 it needs the September hike (62%) and then an immediate repeat (roughly 45% conditional) \u2014 so a September hike delivered with explicit one-and-done language halves it on the statement alone, with the thesis about inflation entirely intact. A US-Iran ceasefire collapses crude and takes it to single digits.",
+      "counter_argument": "The strongest case against is the textbook one and it has just gained evidence: central banks look through relative price shocks and target core, an oil shock that lifts gasoline 29% year on year is a tax on consumption and therefore disinflationary elsewhere with a lag, and hiking twice into a contracting labour market converts a supply shock into a recession. The July payroll print of -23,000 is exactly the data a committee would cite to stop after one. That is why the market sits at 28c, and it is a good reason \u2014 the position is a small bet that this specific committee, which has already pushed the 10y to a 20-month high on hawkish signalling, is not following the textbook.",
+      "sources": [
+        "https://kalshi.com/markets/kxfeddecision",
+        "https://robinhood.com/us/en/prediction-markets/economics/",
+        "https://tradingeconomics.com/united-states/non-farm-payrolls",
+        "https://www.azernews.az/region/262917.html",
+        "https://gasprices.aaa.com/",
+        "https://www.cbsnews.com/live-updates/us-iran-war-deal-strait-of-hormuz/"
+      ],
+      "risk_reward": 2.08,
+      "risk_tier": "lottery",
+      "rank": 9,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.08,
+        "claimed_risk_reward": 2.08,
+        "live_price": null,
+        "live_price_asof": null,
+        "market_session": null,
+        "price_age_minutes": null,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": null,
+        "checked_at_et": "2026-09-02T06:43:51-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.08:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "warn",
+            "detail": "no live price available to compare against"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-10-28 is ahead of us"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "warn",
+            "detail": "no ATR available to size the move against"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 2 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "1% is within the 1% lottery-ticket ceiling for conviction 2"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "1 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    }
+  ],
+  "watchlist": [
+    {
+      "symbol": "BTC",
+      "instrument": "Bitcoin spot short + /MBTU6 futures shorts (4 open lines)",
+      "note": "CLOSE ALL FOUR. Entries 62,950 / 63,400 / 64,100 / 64,340 against stops at 65,200-66,600; BTC is 76,659 this morning, so every stop was breached by roughly 15-19% and these are dead trades carried as bookkeeping. There is no 'flatten' direction in the schema, which is the only reason this is not a recommendation.",
+      "trigger": "Flatten at the open. Do not re-establish and do not average into a losing short \u2014 nothing in today's research gives an edge on crypto in either direction."
+    },
+    {
+      "symbol": "NKE",
+      "instrument": "NIKE, Inc.",
+      "note": "Two open lines (40.00 and 38.00) carrying NO STOP. Last 38.12, which is 0.4% above the 150-day low of 37.97 and 44.3% below the high. Deliberately not re-pitched: NKE has appeared 4x in 10 days and no NKE-specific work was done today.",
+      "trigger": "Attach a hard stop at 36.20 (about 1.7 ATR below the 150-day low). Add nothing, and treat the 62-65 target as withdrawn until there is fresh work to defend it."
+    },
+    {
+      "symbol": "PFE",
+      "instrument": "Pfizer Inc.",
+      "note": "The book's best position (+10.7% from 25.80) and it has no stop either. Last 28.55, 1.9% below its 150-day high, 2.15% ATR \u2014 the lowest-volatility winner in the book and structurally defensive in a stagflationary tape.",
+      "trigger": "Attach a stop at 26.80, below the 20-day at 27.42 and roughly 2.9 ATR down, which protects the entry. No change otherwise."
+    },
+    {
+      "symbol": "TJX",
+      "instrument": "The TJX Companies, Inc.",
+      "note": "STOPPED OUT and it stands. Entry 150.85 on 2026-08-19 with a 145.50 stop; last 133.27, roughly -11.7%. Reviewed for re-entry because off-price retail is the classic trade-down beneficiary of $4.12 gasoline and it sits on its 150-day low \u2014 and rejected.",
+      "trigger": "Do not re-enter. A stopped-out name at its 150-day low needs a reason beyond the thesis that already failed."
+    },
+    {
+      "symbol": "BCC",
+      "instrument": "Boise Cascade Company",
+      "note": "STOPPED OUT. Entry 81.00 with a 76.00 stop; last 75.84. The thesis was broken by the rate move \u2014 building products against a 10y at a 20-month high is the wrong side of this regime.",
+      "trigger": "Close it. The 76.50 resting order published 2026-08-25 should be cancelled, not left working."
+    },
+    {
+      "symbol": "VST",
+      "instrument": "Vistra Corp.",
+      "note": "CANCEL the resting buy orders at 134.00 (2026-08-24) and 128.00 (2026-08-25). VST is 138.08, 22.6% below its high and below both its 20-day (141.16) and 50-day (150.76), inside a merchant-power complex that is actively unwinding (AGX -49.8%, NRG -42.4%, TLN -34.7%).",
+      "trigger": "Withdraw both levels. A limit order that only fills because the name keeps falling is a passive short-volatility bet on a broken theme, not an entry plan. CEG is the expression of this theme worth owning today."
+    },
+    {
+      "symbol": "DG",
+      "instrument": "Dollar General Corporation",
+      "note": "CANCEL the resting buy orders at 119.00 (2026-08-21) and 121.00 (2026-08-31), now 8-10% below the market. The trade-down thesis is real \u2014 DG closed +3.4% at 131.09 and DLTR +4.0% on a -0.69% SPY day \u2014 but DG has run 99.57 to 131.09, +32% off its 150-day low and 6% above its 20-day. The thesis is in the price.",
+      "trigger": "Cancel the orders. They now only fill if the trade-down thesis stops working."
+    },
+    {
+      "symbol": "EEM",
+      "instrument": "iShares MSCI Emerging Markets ETF",
+      "note": "Resting 65.60 order published three times (08-21, 08-22, 08-23), never filled. EEM is 66.77, above both its 20-day and 50-day. No emerging-market work was done today, so there is no basis to re-pitch or raise the level.",
+      "trigger": "Leave or cancel the order, but do not treat it as a live recommendation."
+    },
+    {
+      "symbol": "FRO",
+      "instrument": "Frontline plc",
+      "note": "Cut on the correlation cap, not on merit. 44.32, 2.1% off its 150-day high, same Hormuz ton-mile thesis as the already-open DHT, which would make it a fourth name on Driver A.",
+      "trigger": "Only actionable if DHT is closed or the Hormuz driver drops below its three-name cap."
+    },
+    {
+      "symbol": "AGX",
+      "instrument": "Argan, Inc.",
+      "note": "404.75, down 49.8% from its 805.75 high with a 7.02% ATR, and it reported after the close on 2026-09-02. A gas-fired EPC contractor is genuinely interesting in an energy-security regime, but no work was done on the cause of a 50% de-rating.",
+      "trigger": "Revisit after the print, with an explanation for the de-rating in hand. Buying a knife into a binary event is gambling."
+    },
+    {
+      "symbol": "GLD",
+      "instrument": "SPDR Gold Shares",
+      "note": "396.75, down 7.3% in five sessions from 428.07 and 22.2% below the 180-day high \u2014 falling during a week in which a shooting war escalated, which means real rates are dominating. ATR 8.06. GDX sat exactly on its 20-day and fell 3.90%. The 398.00 order published 2026-08-22 is stale.",
+      "trigger": "No defensible entry until the 50-day at 386.74 holds. There may be a trade there; there is not one today."
+    },
+    {
+      "symbol": "OLLI",
+      "instrument": "Ollie's Bargain Outlet Holdings",
+      "note": "Reported 2026-09-02 before the open (est EPS 1.16 on ~$770mn). The purest extreme-value closeout retailer and the best read-through on whether $4.12 gasoline is actually pushing traffic down-market. No company work was done today.",
+      "trigger": "Revisit with actual comparable-sales numbers. FIVE and WOOF reported the same evening and LULU follows Thursday \u2014 together they settle whether the trade-down rotation is real."
+    },
+    {
+      "symbol": "RARE",
+      "instrument": "Ultragenyx Pharmaceutical Inc.",
+      "note": "Open long from 25.20 on 2026-08-31, last 25.81 (+2.4%), stop 22.90, target 31.50. One day old and already carries a stop.",
+      "trigger": "Hold, no change. One of only two positions in the book whose outcome does not depend on the war, rates or the consumer."
+    },
+    {
+      "symbol": "SVRA",
+      "instrument": "Savara Inc.",
+      "note": "Open long from 5.35 on 2026-08-23, flat, stop 4.60, target 8.00. Micro cap, sized as a lottery ticket, already stopped.",
+      "trigger": "Hold, no change. The other non-war, non-rates position in the book."
+    },
+    {
+      "symbol": "CRK",
+      "instrument": "Comstock Resources, Inc.",
+      "note": "RED TEAM CUT from rank 5 (conviction 3, 1.5%). Not on the thesis, which is the same verified Qatari supply hole EQT trades on, but on the differentiator. CRK's only claim to being a separate idea rather than a levered EQT is Haynesville proximity to Gulf Coast liquefaction capturing more of the international price through basis \u2014 and the idea's own counter-argument voids exactly that, conceding that until new US trains commission the scarcity rent accrues to the terminal owner rather than the producer. Strip the differentiator and what remains is a levered single-basin producer with a controlling shareholder and an equity-issuance history, entered the day after a +11.0% move on 6x volume, needing a 5.7% give-back to fill, on a 2.93 reward-to-risk built on a target 6.64 ATR away. The published entry condition already said it: 'if it never trades back below 15.70, skip it and own EQT instead.' That is not a second idea. Cutting it takes Driver B from 6.5% of capital to 3.5%.",
+      "trigger": "Re-underwrite only on something CRK-specific rather than gas-specific: a signed Gulf Coast supply agreement, a Haynesville basis differential print that shows the capture actually happening, or an equity raise completed and out of the way. A fill below 15.00 with EQT not owned is the other route in.",
+      "demoted_from_rank": 5,
+      "demotion_reason": "correlation \u2014 levered duplicate of EQT whose only differentiator is negated by its own counter-argument"
+    },
+    {
+      "symbol": "LCII",
+      "instrument": "LCI Industries",
+      "note": "Demoted by validation: bid/ask spread 16.76%; the round trip costs 144% of the target move \u2014 too wide to trade this thesis",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 2,
+      "demotion_reason": "bid/ask spread 16.76%; the round trip costs 144% of the target move \u2014 too wide to trade this thesis"
+    },
+    {
+      "symbol": "DHT",
+      "instrument": "DHT Holdings Inc (VLCC crude tankers)",
+      "note": "Demoted by validation: bid/ask spread 11.78%; the round trip costs 75% of the target move \u2014 too wide to trade this thesis",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 5,
+      "demotion_reason": "bid/ask spread 11.78%; the round trip costs 75% of the target move \u2014 too wide to trade this thesis"
+    },
+    {
+      "symbol": "EQT",
+      "instrument": "EQT Corporation",
+      "note": "Demoted by validation: bid/ask spread 7.96%; the round trip costs 51% of the target move \u2014 too wide to trade this thesis",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 7,
+      "demotion_reason": "bid/ask spread 7.96%; the round trip costs 51% of the target move \u2014 too wide to trade this thesis"
+    }
+  ],
+  "validation_summary": {
+    "checked": 12,
+    "passed": 2,
+    "warned": 7,
+    "failed": 3,
+    "enforced": true,
+    "demoted": 3
+  }
+}
