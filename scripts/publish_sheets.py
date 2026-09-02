@@ -294,10 +294,14 @@ def coingecko_id(symbol: str) -> str:
 
 def _current_price(pos: dict) -> float | None:
     """Best-effort current price. None is an acceptable answer."""
-    import market_data
-
     cls, symbol = pos.get("asset_class"), pos.get("symbol", "")
     try:
+        # Imported inside the guard, not above it. `market_data` pulls in
+        # `requests`, so on a runner without the dependencies installed this
+        # import raises — and an import error escaping here took down grading
+        # for every position, including the ones needing no price at all.
+        import market_data
+
         if cls == "crypto":
             res = market_data.crypto([pos.get("coingecko_id") or coingecko_id(symbol)])
             if res.get("ok"):

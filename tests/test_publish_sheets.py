@@ -12,6 +12,7 @@ import sys
 import unittest
 from datetime import date
 from pathlib import Path
+from unittest import mock
 
 REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "scripts"))
@@ -188,6 +189,27 @@ class Grading(unittest.TestCase):
                         filled_date="2026-08-21", fill_price=100.0)
         graded = ps.grade_position(dict(live), date(2026, 9, 2))
         self.assertEqual(graded["status"], ps.OPEN)
+
+    def test_grading_survives_a_market_data_that_will_not_import(self):
+        """The runner has no `requests`; grading must degrade, not explode.
+
+        `_current_price` used to import above its own try/except, so a missing
+        dependency escaped as a ModuleNotFoundError and took the whole grading
+        pass with it — every position, including ones needing no price at all.
+        """
+        pos = position(symbol="TST", status=ps.PENDING)
+        with mock.patch.dict(sys.modules, {"market_data": None}):
+            graded = ps.grade_position(dict(pos), date(2026, 9, 2))
+        self.assertEqual(graded["status"], ps.PENDING)
+        self.assertIsNone(graded["pct_vs_entry"])
+
+    def test_a_price_lookup_that_raises_leaves_the_position_ungraded(self):
+        broken = mock.MagicMock()
+        broken.quote.side_effect = RuntimeError("upstream is down")
+        broken.history.side_effect = RuntimeError("upstream is down")
+        with mock.patch.dict(sys.modules, {"market_data": broken}):
+            graded = ps.grade_position(dict(position(status=ps.PENDING)), date(2026, 9, 2))
+        self.assertEqual(graded["status"], ps.PENDING)
 
     def test_a_closed_position_is_never_regraded(self):
         closed = position(symbol="DONE", status=ps.STOPPED, closed="2026-08-25",
