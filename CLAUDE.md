@@ -58,10 +58,24 @@ load-bearing, each because getting it wrong was shipped once:
   futures are marked against the continuous front-month rather than the
   recommended contract, so both are flagged `no` in the Graded column and
   excluded from every figure above the table.
+- **One row is one position, not one publication.** A thesis re-pitched while
+  its position is still live amends that position; it does not open a second
+  one. DHT was published six mornings and XLE five, and the first 57 rows were
+  24 distinct calls, every re-pitched loser counted again in each average.
+  `merge_report` enforces one live position per `(symbol, direction)`.
 
-A thesis republished on four mornings is four rows, each with its own levels,
-each graded on its own merits. That is deliberate, but it means the row count
-is not the call count, so the scorecard line reports both.
+**Re-trading the same name is not deduplication.** Once a position closes —
+target, stop, expiry, or never filled — the same idea published again opens its
+own row, because it is a genuinely separate trade. A symbol worth trading three
+times shows up three times; only concurrent duplicates of one live idea merge.
+
+Amendments are dated, not overwritten. `levels_in_force` returns the entry,
+target and stop standing on a given day, and grading reads them per bar, so a
+stop moved on the 20th governs the 20th onward. Grading a whole history against
+the final stop would be the same rewriting-of-the-past that made the tracker
+worth distrusting. A filled position can have its exits amended but never its
+entry: it was bought at a price. `scripts/dedupe_positions.py` applied this
+rule backwards over the stored history, once.
 
 Prices carry `as of` and the market session they were taken in. At 6am ET the
 freshest honest equity price is the previous close — that is a closed market,
@@ -79,7 +93,9 @@ well by moving the stop closer, and that is free: KRE was republished three
 times at an unchanged entry with the stop walked in, lifting 2.19:1 to 4.07:1
 while making the trade strictly worse, and ideas shipped at 29:1 on a 0.19 ATR
 stop. All ten of the first month's stop-outs had a stop tighter than 1.6 ATR.
-So `check_stop_distance` now puts a floor under the stop in ATRs, and
+So `check_stop_distance` now puts a floor under the stop in ATRs — 2.0 for a
+swing, scaled by asset class because a basket cannot gap on one company's news
+and crypto trades through the weekend — and
 `check_expectancy` asks the question the ratio never answered — 3:1 at a 20%
 hit rate loses money. Its baseline is not a preference: for a driftless random
 walk the chance of touching the target before the stop is exactly `1/(1+R:R)`,

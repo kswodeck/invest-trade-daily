@@ -182,8 +182,10 @@ where the thesis is wrong; find that level first, from real price history, then
 see what target the reward-to-risk floor implies and ask whether it is
 reachable. Doing it in the other order produces a stop reverse-engineered to
 clear the floor, which is what the first month of this report actually did:
-every one of the first ten stop-outs had a stop tighter than 1.6 ATR, and a
-swing stop must now clear 1.5 ATR or validation fails the idea. **If an idea
+every one of the first ten stop-outs had a stop tighter than 1.6 ATR. A swing
+stop must now clear 2.0 ATR to publish — 1.8 for an ETF, 2.5 for crypto and
+futures, which gap in ways ATR does not describe — or validation fails the
+idea. See the table in `config/strategy.md`. **If an idea
 only clears the floor with a tight stop, the idea failed the floor** — widen
 the stop, recheck, and drop it if it no longer qualifies.
 

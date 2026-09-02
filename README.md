@@ -183,6 +183,7 @@ scripts/
   build_context.py       prior picks and outcomes, so research has memory
   ensure_report.py       guarantees a publishable report.json exists
   publish_sheets.py      Sheets writer + performance grader
+  dedupe_positions.py    one-off: collapse re-pitched ideas into one position
   step_summary.py        the Actions run summary
   check_sources.py       probes every data source and capability
   check_sheets.py        write/read/delete test against the Sheet

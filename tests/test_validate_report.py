@@ -41,7 +41,10 @@ def detail_of(checks: list[dict], name: str) -> str:
 
 
 class StopDistance(unittest.TestCase):
-    """ATR=3 here, so a 6-point stop is 2.0 ATR and a 3-point stop is 1.0."""
+    """ATR=3 throughout, so a 6-point stop is 2.0 ATR and a 3-point stop is 1.0.
+
+    Ideas here are `stock` unless stated, whose swing floor is the 2.0 base.
+    """
 
     def test_a_stop_inside_the_noise_fails(self):
         # DHT shipped at 7.4:1 on a 0.71 ATR stop and was stopped the same day.
@@ -50,11 +53,11 @@ class StopDistance(unittest.TestCase):
         self.assertIn("inside the noise", detail_of(checks, "stop_distance"))
 
     def test_a_stop_between_the_floor_and_the_guide_warns(self):
-        checks = vr.check_stop_distance(idea(stop=95.0), atr=3.0)  # 1.67 ATR
+        checks = vr.check_stop_distance(idea(stop=93.5), atr=3.0)  # 2.17 ATR
         self.assertEqual(status_of(checks, "stop_distance"), vr.WARN)
 
     def test_a_stop_clear_of_the_guide_passes(self):
-        checks = vr.check_stop_distance(idea(stop=93.0), atr=3.0)  # 2.33 ATR
+        checks = vr.check_stop_distance(idea(stop=92.0), atr=3.0)  # 2.67 ATR
         self.assertEqual(status_of(checks, "stop_distance"), vr.PASS)
 
     def test_intraday_uses_its_own_tighter_floor(self):
@@ -65,6 +68,33 @@ class StopDistance(unittest.TestCase):
             status_of(vr.check_stop_distance(idea(horizon="swing", stop=97.0), 3.0),
                       "stop_distance"),
             vr.FAIL)
+
+    def test_the_floor_moves_with_what_is_being_stopped_out(self):
+        """2.0 ATR: fine for a stock, generous for an ETF, too tight for crypto."""
+        at_two_atr = {cls: status_of(
+            vr.check_stop_distance(idea(asset_class=cls, stop=94.0), 3.0), "stop_distance")
+            for cls in ("etf", "stock", "crypto", "futures")}
+        self.assertEqual(at_two_atr["etf"], vr.WARN)      # floor 1.8, guide 2.25
+        self.assertEqual(at_two_atr["stock"], vr.WARN)    # floor 2.0, guide 2.5
+        self.assertEqual(at_two_atr["crypto"], vr.FAIL)   # floor 2.5
+        self.assertEqual(at_two_atr["futures"], vr.FAIL)  # floor 2.5
+
+    def test_the_asset_factor_applies_to_swing_but_not_intraday(self):
+        """An intraday position is flat by the close, so it carries no gap risk."""
+        self.assertEqual(vr.stop_atr_bounds("intraday", "crypto"),
+                         vr.stop_atr_bounds("intraday", "etf"))
+        self.assertGreater(vr.stop_atr_bounds("swing", "crypto")[0],
+                           vr.stop_atr_bounds("swing", "etf")[0])
+
+    def test_an_unknown_asset_class_falls_back_to_the_base_floor(self):
+        self.assertEqual(vr.stop_atr_bounds("swing", "something-new"),
+                         (vr.MIN_STOP_ATR["swing"], vr.SAFE_STOP_ATR["swing"]))
+
+    def test_the_detail_names_the_floor_that_was_applied(self):
+        detail = detail_of(vr.check_stop_distance(idea(asset_class="crypto", stop=94.0), 3.0),
+                           "stop_distance")
+        self.assertIn("swing crypto", detail)
+        self.assertIn("2.5 ATR", detail)
 
     def test_long_term_is_exempt_because_its_downside_is_a_bear_case(self):
         checks = vr.check_stop_distance(idea(horizon="long_term", stop=None), atr=3.0)
@@ -86,8 +116,10 @@ class StopDistance(unittest.TestCase):
         the better idea. It is the one that gets stopped.
         """
         atr = 1.03  # KRE's ATR14 on the day
-        loose = idea(entry={"ideal": 76.8}, exit={"target": 82.5}, stop=74.2)
-        tight = idea(entry={"ideal": 76.8}, exit={"target": 82.5}, stop=75.2)
+        loose = idea(asset_class="etf", entry={"ideal": 76.8},
+                     exit={"target": 82.5}, stop=74.2)   # 2.52 ATR
+        tight = idea(asset_class="etf", entry={"ideal": 76.8},
+                     exit={"target": 82.5}, stop=75.2)   # 1.55 ATR
 
         _, loose_rr = vr.check_risk_reward(loose)
         _, tight_rr = vr.check_risk_reward(tight)
@@ -97,21 +129,20 @@ class StopDistance(unittest.TestCase):
         self.assertEqual(status_of(vr.check_stop_distance(loose, atr), "stop_distance"),
                          vr.PASS)
         self.assertEqual(status_of(vr.check_stop_distance(tight, atr), "stop_distance"),
-                         vr.WARN)
+                         vr.FAIL)
 
-    def test_the_floor_is_set_where_it_catches_the_worst_of_the_record(self):
+    def test_the_floor_catches_every_stop_out_on_record(self):
         """Stop-ATR multiples of all nine measurable stop-outs of the first month.
 
-        1.5 fails the worst five outright and warns on the rest; every one of
-        them sits under the 2.0 guide. Nothing filled at 2.0 ATR or wider has
-        been stopped. The floor is deliberately the conservative end of that —
-        raising it to 2.0 would leave swing targets only a 4-6 ATR band under
-        the ATR ceiling, which buys safer stops with more optimistic targets.
+        The widest was 1.59 ATR, so a 2.0 base floor refuses all nine before
+        they are published. Nothing filled at 2.0 ATR or wider has been stopped.
         """
         stopped_out = [1.50, 1.35, 1.49, 1.59, 1.54, 1.13, 1.53, 1.11, 0.71]
-        failed = [m for m in stopped_out if m < vr.MIN_STOP_ATR["swing"]]
-        self.assertEqual(len(failed), 5)
-        self.assertTrue(all(m < vr.SAFE_STOP_ATR["swing"] for m in stopped_out))
+        floor, _ = vr.stop_atr_bounds("swing", "stock")
+        self.assertTrue(all(multiple < floor for multiple in stopped_out))
+        # Even the most forgiving class on the table would have refused all nine.
+        etf_floor, _ = vr.stop_atr_bounds("swing", "etf")
+        self.assertTrue(all(multiple < etf_floor for multiple in stopped_out))
 
 
 class Expectancy(unittest.TestCase):
@@ -212,10 +243,20 @@ class Thresholds(unittest.TestCase):
             self.assertLess(floor, vr.SAFE_STOP_ATR[horizon], horizon)
 
     def test_the_stop_floor_leaves_room_under_the_target_ceiling(self):
-        """A floor high enough to force optimistic targets is its own bug."""
-        for horizon, floor in vr.MIN_STOP_ATR.items():
-            implied_target = floor * vr.RR_FLOOR[horizon]
-            self.assertLess(implied_target, vr.ATR_LIMIT[horizon], horizon)
+        """A floor high enough to force optimistic targets is its own bug.
+
+        Floor x R:R floor is the smallest target that can satisfy both rules;
+        it has to stay under the ATR ceiling or every idea is squeezed into an
+        optimistic target to clear a safe stop. Checked for every asset class,
+        because the factor pushes crypto and futures closest to the edge.
+        """
+        for horizon in vr.MIN_STOP_ATR:
+            for asset_class in list(vr.ASSET_STOP_FACTOR) + [None]:
+                floor, _ = vr.stop_atr_bounds(horizon, asset_class)
+                implied_target = floor * vr.RR_FLOOR[horizon]
+                self.assertLess(implied_target, vr.ATR_LIMIT[horizon],
+                                f"{horizon}/{asset_class}: floor {floor} forces a "
+                                f"{implied_target} ATR target")
 
     def test_conviction_evidence_requirements_rise_with_the_score(self):
         needs = [vr.CONVICTION_EVIDENCE[score] for score in sorted(vr.CONVICTION_EVIDENCE)]

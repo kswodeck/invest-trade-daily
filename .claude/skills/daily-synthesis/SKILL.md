@@ -119,8 +119,10 @@ traded on.
    the chart or a valuation. Say so in `data_quality_notes` if you see it.
 
    **Then check the stop the other way.** Pull `atr14` from
-   `market_data.py history <symbol>` and confirm the stop sits at least 1.5 ATR
-   from the entry on a swing, 0.75 on an intraday. A ratio cleared by a tight
+   `market_data.py history <symbol>` and confirm the stop clears the floor for
+   this idea's horizon and asset class — 2.0 ATR for a swing stock, 1.8 for an
+   ETF, 2.5 for crypto or futures, 1.0 for anything intraday. A ratio cleared
+   by a tight
    stop is not cleared: the trade gets taken out by ordinary daily range before
    the thesis resolves, which is what happened to every one of the first ten
    closed positions. Do not fix this by moving the target — widen the stop and

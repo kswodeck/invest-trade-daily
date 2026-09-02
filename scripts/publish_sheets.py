@@ -48,7 +48,7 @@ COL_PROSE_START, COL_PROSE_END = 19, 25
 PERF_HEADERS = [
     "Opened", "Instrument", "Symbol", "Class", "Venue", "Direction", "Horizon",
     "Conv", "Entry", "Entry Style", "Target", "Stop", "Status", "Graded",
-    "Last Price", "% vs Entry", "Days Open", "Closed", "Note",
+    "Last Price", "% vs Entry", "Days Open", "Rev", "Closed", "Note",
 ]
 
 
@@ -393,9 +393,15 @@ def _pnl_pct(entry: float | None, exit_price: float | None, bullish: bool) -> fl
 def grade_position(pos: dict, today: date) -> dict:
     """Walk the bars in order: fill first, then exit. Never the other way round.
 
-    The same symbol can appear on several rows from different days. Each is
-    graded independently against its own entry, target and stop, from its own
-    publication date, so two setups on one ticker resolve separately.
+    Levels are read per bar from the amendment history, so a stop moved on the
+    20th governs the 20th onward and not the week before it. Grading a whole
+    history against the final stop would be the same rewriting-the-past that
+    made the tracker worth distrusting in the first place.
+
+    A symbol can hold several rows. They are consecutive, not concurrent: one
+    live position per side at a time, and a new row only once the previous one
+    closed — so a name that genuinely round-trips twice is counted twice, while
+    the same idea re-pitched on four mornings is counted once.
     """
     if pos.get("status") not in LIVE_STATUSES:
         return pos
@@ -427,31 +433,36 @@ def grade_position(pos: dict, today: date) -> dict:
         except Exception:  # noqa: BLE001 - grading must never break publishing
             bars = []
 
-    # 1. Find the fill. Everything downstream is measured from here.
+    # 1. Find the fill, against whichever entry was published at the time.
     if not pos.get("filled_date") and bars and entry is not None:
         for bar in bars:
-            if _entry_filled(bar, entry, reference):
+            bar_entry, _, _, bar_reference = levels_in_force(pos, bar["date"])
+            if bar_entry is None:
+                continue
+            if _entry_filled(bar, bar_entry, bar_reference):
                 pos["filled_date"] = bar["date"]
-                pos["fill_price"] = entry  # limit assumed filled at its level
+                pos["fill_price"] = bar_entry  # limit assumed filled at its level
                 pos["status"] = OPEN
                 break
 
-    # 2. Only after a fill can a target or stop mean anything.
+    # 2. Only after a fill can a target or stop mean anything — and only the
+    #    ones standing on the day of the bar being tested.
     if pos.get("filled_date") and pos.get("status") in (OPEN, None):
         after = [b for b in bars if b["date"] >= pos["filled_date"]]
         for bar in after:
-            hit_target = target is not None and _exit_hit(bar, target, bullish, True)
-            hit_stop = stop is not None and _exit_hit(bar, stop, bullish, False)
+            _, bar_target, bar_stop, _ = levels_in_force(pos, bar["date"])
+            hit_target = bar_target is not None and _exit_hit(bar, bar_target, bullish, True)
+            hit_stop = bar_stop is not None and _exit_hit(bar, bar_stop, bullish, False)
             # Both touched in one session and the intraday order is unknowable,
             # so assume the worse outcome rather than flattering the record.
             if hit_target and hit_stop:
-                pos.update(status=STOPPED, closed=bar["date"], exit_price=stop)
+                pos.update(status=STOPPED, closed=bar["date"], exit_price=bar_stop)
                 break
             if hit_target:
-                pos.update(status=TARGET_HIT, closed=bar["date"], exit_price=target)
+                pos.update(status=TARGET_HIT, closed=bar["date"], exit_price=bar_target)
                 break
             if hit_stop:
-                pos.update(status=STOPPED, closed=bar["date"], exit_price=stop)
+                pos.update(status=STOPPED, closed=bar["date"], exit_price=bar_stop)
                 break
 
     # 3. Classes with no bar history resolve on the current print instead.
@@ -485,8 +496,13 @@ def grade_position(pos: dict, today: date) -> dict:
         pos["pct_vs_entry"] = None
 
     # 5. Time-box, distinguishing "never got in" from "got in and it went cold".
+    #    Counted from the last morning the idea was actually published, not the
+    #    first: a level still being pitched today is a live idea, and timing it
+    #    out on the age of its first appearance would retire it mid-argument.
     max_days = MAX_DAYS.get(pos.get("horizon"), 45)
-    if pos.get("status") in (PENDING, OPEN) and pos["days_since_published"] > max_days:
+    last_pitched = pos.get("last_seen") or pos.get("last_amended") or pos["opened"]
+    days_since_pitched = (today - datetime.fromisoformat(last_pitched).date()).days
+    if pos.get("status") in (PENDING, OPEN) and days_since_pitched > max_days:
         if pos.get("filled_date"):
             pos.update(status=EXPIRED, closed=today.isoformat())
         else:
@@ -530,22 +546,140 @@ def positions_from_report(report: dict) -> list[dict]:
     return out
 
 
+# A thesis re-pitched while its position is still live is an update to that
+# position, not a second one. The levels it carries take effect from the day it
+# was published, so `amendments` is a dated history of them rather than an
+# overwrite — grading walks it bar by bar and applies whichever stop was
+# actually in force. Without that, moving a stop would retroactively rewrite
+# every session before the move.
+#
+# The flat `entry`, `target` and `stop` fields always mirror the last record,
+# because that is what the Sheet shows and what every other reader wants. A row
+# published once has no `amendments` at all.
+
+def level_history(pos: dict) -> list[dict]:
+    """The dated level records for this position, oldest first."""
+    history = pos.get("amendments")
+    if history:
+        return history
+    return [{
+        "date": pos.get("opened"),
+        "entry": pos.get("entry"),
+        "target": pos.get("target"),
+        "stop": pos.get("stop"),
+        "reference_price": pos.get("reference_price"),
+    }]
+
+
+def levels_in_force(pos: dict, on: str) -> tuple[Any, Any, Any, Any]:
+    """(entry, target, stop, reference) as they stood on the given ISO date."""
+    entry = target = stop = reference = None
+    for record in level_history(pos):
+        if record.get("date") and record["date"] > on:
+            break
+        entry = record.get("entry", entry)
+        target = record.get("target", target)
+        stop = record.get("stop", stop)
+        reference = record.get("reference_price", reference)
+    if entry is None and target is None and stop is None:
+        # Amended before the first bar we hold — fall back to the opening levels.
+        first = level_history(pos)[0]
+        return (first.get("entry"), first.get("target"), first.get("stop"),
+                first.get("reference_price"))
+    return entry, target, stop, reference
+
+
+def apply_amendment(existing: dict, republished: dict, on: str) -> bool:
+    """Fold a re-pitched idea into the live position it updates.
+
+    Returns True when something actually moved. A position republished at
+    unchanged levels — EEM went out three mornings running at the same 65.60 —
+    is the report repeating itself, not new information, and records nothing.
+
+    An unfilled setup can have every level revised, because none of them has
+    happened yet. A filled one cannot have its entry revised: it was bought at
+    a price, and pretending otherwise would rewrite the fill it already has.
+    """
+    history = level_history(existing)
+    latest = history[-1]
+    filled = bool(existing.get("filled_date"))
+
+    record: dict[str, Any] = {"date": on,
+                              "target": republished.get("target"),
+                              "stop": republished.get("stop")}
+    if not filled:
+        record["entry"] = republished.get("entry")
+        record["reference_price"] = republished.get("reference_price")
+
+    if all(latest.get(field) == value for field, value in record.items() if field != "date"):
+        existing["last_seen"] = on
+        return False
+
+    existing["amendments"] = history + [record]
+    for field, value in record.items():
+        if field != "date":
+            existing[field] = value
+    existing["last_amended"] = on
+    existing["last_seen"] = on
+    # Conviction and sizing are properties of today's view, not of the fill.
+    for field in ("conviction", "position_size_pct", "horizon"):
+        if republished.get(field) is not None:
+            existing[field] = republished[field]
+    if republished.get("last_price") is not None:
+        existing["last_price"] = republished["last_price"]
+        existing["last_price_asof"] = republished.get("last_price_asof")
+    return True
+
+
+def merge_report(positions: list[dict], report: dict) -> tuple[int, int]:
+    """Add today's ideas, amending any that are already live. Mutates in place.
+
+    One live position per (symbol, direction) at a time. Once a position closes
+    — target, stop, expiry, or never filled — the same idea published again is
+    a genuinely new trade and opens its own row, which is how a symbol worth
+    trading repeatedly gets counted repeatedly.
+    """
+    live = {}
+    for pos in positions:
+        if pos.get("status") in (PENDING, OPEN, None):
+            live[(pos.get("symbol"), pos.get("direction"))] = pos
+
+    opened = amended = 0
+    for candidate in positions_from_report(report):
+        key = (candidate.get("symbol"), candidate.get("direction"))
+        current = live.get(key)
+        if current is None:
+            positions.append(candidate)
+            live[key] = candidate
+            opened += 1
+        elif apply_amendment(current, candidate, report["date"]):
+            amended += 1
+    return opened, amended
+
+
 def _price_note(pos: dict) -> str:
+    revisions = len(pos.get("amendments") or [])
+    amended = (f"levels revised {revisions - 1}x, last {pos['last_amended']}"
+               if revisions > 1 and pos.get("last_amended") else "")
+
+    def note(text: str) -> str:
+        return f"{text}; {amended}" if amended and text else (amended or text)
+
     status = pos.get("status")
     if status == PENDING:
         entry = pos.get("entry")
-        return f"waiting for the market to reach {entry}" if entry else "waiting for entry"
+        return note(f"waiting for the market to reach {entry}" if entry else "waiting for entry")
     if status == NOT_FILLED:
-        return "expired without ever trading at the entry — excluded from P&L"
+        return note("expired without ever trading at the entry — excluded from P&L")
     if pos.get("filled_date") and status == OPEN:
-        return f"filled {pos['filled_date']}"
+        return note(f"filled {pos['filled_date']}")
     if pos.get("asset_class") == "futures":
         # Yahoo quotes the continuous front-month, not the specific contract
         # month that was recommended, so the grade carries a basis error.
         base = "graded on continuous front-month; basis differs from the contract"
         return base if pos.get("last_price") is not None else f"{base}; price fetch failed"
     if pos.get("last_price") is not None:
-        return ""
+        return amended
     if pos.get("asset_class") == "event":
         return "no free quote source for event contracts"
     return "price fetch failed this run"
@@ -576,6 +710,9 @@ def perf_row(pos: dict) -> list[Any]:
         # Blank rather than 0 for a setup that never filled, so the average
         # days-held figure is not diluted by rows that were never positions.
         pos.get("days_open", "") if pos.get("filled_date") else "",
+        # How many times the levels were revised while the position stayed live.
+        # Blank rather than 0 for a position published once and left alone.
+        len(pos["amendments"]) - 1 if len(pos.get("amendments") or []) > 1 else "",
         pos.get("closed", ""),
         pos.get("note") or _price_note(pos),
     ]
@@ -1102,15 +1239,9 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Grading {len([p for p in positions if p.get('status') == 'open'])} open positions...")
         positions = [grade_position(p, report_date) for p in positions]
 
-    # Keyed on entry as well as date, so the same ticker recommended twice with
-    # different levels stays two independently graded rows.
-    def key(p: dict) -> tuple:
-        return (p.get("opened"), p.get("symbol"), p.get("direction"), p.get("entry"))
-
-    existing = {key(p) for p in positions}
-    new = [p for p in positions_from_report(report) if key(p) not in existing]
-    positions.extend(new)
-    print(f"Added {len(new)} new positions; {len(positions)} tracked in total.")
+    opened_count, amended_count = merge_report(positions, report)
+    print(f"Opened {opened_count} new position(s), amended {amended_count} live one(s); "
+          f"{len(positions)} tracked in total.")
 
     # Two passes: the block's height is independent of where the detail table
     # starts, so measure it, then regenerate with the real row references.

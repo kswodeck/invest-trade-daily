@@ -55,16 +55,42 @@ HORIZON_SESSIONS = {"intraday": 1, "swing": 15}
 # report's first month it was taken repeatedly: KRE was republished three times
 # at an unchanged 76.80 entry with the stop walked 74.20 -> 75.40 -> 75.20,
 # lifting R:R from 2.19 to 4.07 while making the trade strictly worse. All ten
-# stop-outs on record had a stop tighter than 1.6 ATR; the four filled setups
-# with a stop of 2.0 ATR or more have not been stopped at all. Ideas shipped at
-# 29:1, 26.7:1 and 15:1 on stops of 0.19-0.38 ATR, which is not an opportunity,
-# it is a measurement of nothing.
+# stop-outs on record had a stop tighter than 1.6 ATR; nothing filled at 2.0 ATR
+# or wider has been stopped. Ideas shipped at 29:1, 26.7:1 and 15:1 on stops of
+# 0.19-0.38 ATR, which is not an opportunity, it is a measurement of nothing.
+MIN_STOP_ATR = {"intraday": 1.0, "swing": 2.0}
+SAFE_STOP_ATR = {"intraday": 1.5, "swing": 2.5}
+
+# ...adjusted for what is actually being stopped out, because ATR measures the
+# ordinary day and not the ways each kind of instrument leaves it:
 #
-# The floor is a judgement call on a small sample — raise it and the R:R floor
-# starts forcing optimistic targets instead, since a swing target is capped at
-# 6 ATR. 1.5 leaves targets a workable 3-6 ATR band.
-MIN_STOP_ATR = {"intraday": 0.75, "swing": 1.5}
-SAFE_STOP_ATR = {"intraday": 1.25, "swing": 2.0}
+#   etf       a broad basket cannot gap on one company's news, so its ATR
+#             already describes most of its downside — it needs less cushion
+#   stock     the baseline; earnings, guidance and single-name headlines gap
+#   crypto    trades through the weekend with no halts and fat tails, so the
+#             move that takes out a stop is not drawn from the daily range
+#   futures   leveraged, gaps on the overnight session, and a stop-out is a
+#             margin event rather than a closed trade
+#
+# Applied to swing only. An intraday position is flat by the close, so the
+# overnight and weekend risk these factors price simply does not apply to it —
+# and with a 2.0 ATR target ceiling there is no room for it either.
+ASSET_STOP_FACTOR = {"etf": 0.9, "stock": 1.0, "crypto": 1.25, "futures": 1.25}
+
+
+def stop_atr_bounds(horizon: str, asset_class: str | None) -> tuple[float | None, float | None]:
+    """The (floor, guide) this idea's stop has to clear, in ATRs.
+
+    Tune `MIN_STOP_ATR` for the horizon and `ASSET_STOP_FACTOR` for the
+    instrument; the two multiply. Long-term has neither, because its downside is
+    a bear-case price rather than a stop.
+    """
+    floor, safe = MIN_STOP_ATR.get(horizon), SAFE_STOP_ATR.get(horizon)
+    if floor is None or safe is None:
+        return None, None
+    factor = ASSET_STOP_FACTOR.get(asset_class or "", 1.0) if horizon == "swing" else 1.0
+    return round(floor * factor, 2), round(safe * factor, 2)
+
 
 PASS, WARN, FAIL = "pass", "warn", "fail"
 
@@ -234,10 +260,11 @@ def check_stop_distance(idea: dict, atr: float | None) -> list[dict]:
     if horizon == "long_term":
         return [_check("stop_distance", PASS,
                        "long-term downside is a bear case, not a stop — no ATR floor applies")]
-    floor, safe = MIN_STOP_ATR.get(horizon), SAFE_STOP_ATR.get(horizon)
+    asset_class = idea.get("asset_class")
+    floor, safe = stop_atr_bounds(horizon, asset_class)
     entry = (idea.get("entry") or {}).get("ideal")
     stop = idea.get("stop")
-    if floor is None:
+    if floor is None or safe is None:
         return []
     if entry is None or stop is None:
         return [_check("stop_distance", FAIL, "no entry or stop, so the stop distance is undefined")]
@@ -247,15 +274,17 @@ def check_stop_distance(idea: dict, atr: float | None) -> list[dict]:
         return [_check("stop_distance", WARN, "ATR is zero")]
 
     multiple = round(abs(entry - stop) / atr, 2)
+    label = f"{horizon} {asset_class}" if asset_class else horizon
     detail = f"stop is {multiple} ATR from entry"
     if multiple < floor:
         return [_check("stop_distance", FAIL,
-                       detail + f" — inside the noise; {horizon} stops must clear {floor} ATR")]
+                       detail + f" — inside the noise; a {label} stop must clear {floor} ATR")]
     if multiple < safe:
         return [_check("stop_distance", WARN,
-                       detail + f" — clears the {floor} ATR floor but sits under the {safe} ATR "
-                                "level where stop-outs have clustered")]
-    return [_check("stop_distance", PASS, detail + f", clear of the {safe} ATR guide")]
+                       detail + f" — clears the {floor} ATR floor for a {label} but sits under "
+                                f"the {safe} ATR level where stop-outs have clustered")]
+    return [_check("stop_distance", PASS,
+                   detail + f", clear of the {safe} ATR guide for a {label}")]
 
 
 def check_expectancy(idea: dict, computed_rr: float | None) -> tuple[list[dict], dict[str, Any]]:

@@ -111,7 +111,9 @@ def build(today: date, days: int) -> str:
         lines += [
             f"## Awaiting entry ({len(pending)})", "",
             "These were published but the market never reached the entry, so they are "
-            "not positions. Re-pitching one is fine — say the level is unchanged.", "",
+            "not positions. Re-pitching one is fine and does not double-count: it "
+            "amends the position already tracked rather than opening a second one. "
+            "Say what changed, or say the level is unchanged.", "",
         ]
         lines += [f"- `{p.get('symbol')}` {(p.get('direction') or '').upper()} "
                   f"@ {p.get('entry')} (published {p.get('opened')})" for p in pending]

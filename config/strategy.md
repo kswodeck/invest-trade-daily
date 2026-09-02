@@ -93,16 +93,34 @@ unfinished. That is not the anchoring problem the repetition guard is aimed at
 
   | Horizon | Stop must clear | Comfortable |
   | --- | --- | --- |
-  | `intraday` | 0.75 ATR | 1.25 ATR |
-  | `swing` | 1.5 ATR | 2.0 ATR |
+  | `intraday` | 1.0 ATR | 1.5 ATR |
+  | `swing` | 2.0 ATR | 2.5 ATR |
   | `long_term` | n/a — the downside is a bear case, not a stop | |
+
+  ATR describes the ordinary day. It does not describe the ways each kind of
+  instrument leaves it, so the swing floor is scaled by what is being stopped
+  out:
+
+  | Asset class | Factor | Swing floor | Why |
+  | --- | --- | --- | --- |
+  | `etf` | 0.9 | 1.8 ATR | a basket cannot gap on one company's news |
+  | `stock` | 1.0 | 2.0 ATR | the baseline — earnings and guidance gap |
+  | `crypto` | 1.25 | 2.5 ATR | weekends, no halts, fat tails |
+  | `futures` | 1.25 | 2.5 ATR | leveraged, gaps overnight, a stop is a margin event |
+
+  The factor applies to swing only. An intraday position is flat by the close,
+  so the overnight and weekend risk it prices does not apply — and with a 2.0
+  ATR target ceiling there is no room for it either. Both tables are tunable:
+  `MIN_STOP_ATR`, `SAFE_STOP_ATR` and `ASSET_STOP_FACTOR` in
+  `scripts/validate_report.py`.
 
   A stop closer to the entry than a normal day's range does not test the
   thesis, it tests whether the tape sits still. It is also the free way to lift
   reward-to-risk, and that is exactly how it was used: KRE was republished
   three times at an unchanged 76.80 entry with the stop walked in from 74.20 to
   75.20, lifting the ratio from 2.19 to 4.07 while making the trade strictly
-  worse. Every one of the first ten stop-outs had a stop tighter than 1.6 ATR.
+  worse. Every one of the first ten stop-outs had a stop tighter than 1.6 ATR,
+  so a 2.0 ATR base floor refuses all of them before they reach the page.
 
   **If an idea needs a tight stop to clear the reward-to-risk floor, it has
   failed the floor.** Widen the stop and re-check the ratio, or drop the idea.
