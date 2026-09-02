@@ -47,8 +47,8 @@ COL_PROSE_START, COL_PROSE_END = 19, 25
 
 PERF_HEADERS = [
     "Opened", "Instrument", "Symbol", "Class", "Venue", "Direction", "Horizon",
-    "Conv", "Entry", "Target", "Stop", "Status", "Last Price", "% vs Entry",
-    "Days Open", "Closed", "Note",
+    "Conv", "Entry", "Entry Style", "Target", "Stop", "Status", "Graded",
+    "Last Price", "% vs Entry", "Days Open", "Closed", "Note",
 ]
 
 
@@ -325,6 +325,38 @@ PENDING, OPEN, TARGET_HIT, STOPPED, EXPIRED, NOT_FILLED = (
 LIVE_STATUSES = (None, PENDING, OPEN)
 MAX_DAYS = {"intraday": 5, "swing": 45, "long_term": 730}
 
+CLOSED_STATUSES = (TARGET_HIT, STOPPED, EXPIRED)
+
+# Classes the scorecard cannot honestly measure, and therefore must not average
+# over. Event contracts have no free quote source, so they never leave pending
+# and would drag the fill rate down for a reason that is ours, not the market's.
+# Futures are graded on Yahoo's continuous front-month rather than the contract
+# that was actually recommended, so their percentage carries a basis error.
+# Both stay in the detail table, flagged, and out of every figure above it.
+UNGRADEABLE_CLASSES = {"event", "futures"}
+
+
+def is_graded(pos: dict) -> bool:
+    """Can this row's percentage be trusted enough to average over?"""
+    return (pos.get("asset_class") or "") not in UNGRADEABLE_CLASSES
+
+
+def entry_style(pos: dict) -> str:
+    """Was the entry set below the market, above it, or at it?
+
+    A `pullback` entry only fills when the trade first goes against the
+    direction of the idea, which selects for the ideas that are already
+    failing; a `breakout` entry only fills once the market confirms. Which of
+    the two the report reaches for is a property worth measuring, so it sits in
+    its own column rather than being inferred later.
+    """
+    entry, reference = pos.get("entry"), pos.get("reference_price")
+    if entry is None or reference is None:
+        return "unknown"
+    if entry == reference:
+        return "at-market"
+    return "pullback" if ((entry < reference) == (pos.get("direction") in BULLISH)) else "breakout"
+
 
 def _entry_filled(bar: dict, entry: float, reference: float | None) -> bool:
     """Did this bar trade at or through the entry level?
@@ -370,6 +402,14 @@ def grade_position(pos: dict, today: date) -> dict:
 
     opened = datetime.fromisoformat(pos["opened"]).date()
     pos["days_since_published"] = (today - opened).days
+
+    # A position is open only because a fill made it one. Rows written before
+    # fills were tracked claim `open` with no fill behind them, and nothing
+    # downstream ever demotes them, so they inflated the open count and the
+    # fill rate indefinitely. Send them back to pending; the fill search below
+    # promotes them again the moment a bar actually trades at the entry.
+    if pos.get("status") == OPEN and not pos.get("filled_date"):
+        pos["status"] = PENDING
 
     entry, target, stop = pos.get("entry"), pos.get("target"), pos.get("stop")
     bullish = pos.get("direction") in BULLISH
@@ -525,43 +565,20 @@ def perf_row(pos: dict) -> list[Any]:
         pos.get("horizon", ""),
         pos.get("conviction", ""),
         fmt_price(pos.get("entry"), unit),
+        entry_style(pos),
         fmt_price(pos.get("target"), unit),
         fmt_price(pos.get("stop"), unit),
         status,
+        "yes" if is_graded(pos) else "no",
         fmt_price(pos.get("last_price"), unit),
         # Numeric, not text — the cumulative formulas aggregate this column.
         pct if pct is not None else "",
-        pos.get("days_open", ""),
+        # Blank rather than 0 for a setup that never filled, so the average
+        # days-held figure is not diluted by rows that were never positions.
+        pos.get("days_open", "") if pos.get("filled_date") else "",
         pos.get("closed", ""),
         pos.get("note") or _price_note(pos),
     ]
-
-
-def _pct(rows: list[dict]) -> list[float]:
-    return [r["pct_vs_entry"] for r in rows if r.get("pct_vs_entry") is not None]
-
-
-def _agg(rows: list[dict]) -> dict[str, Any]:
-    """Realized, unrealized and combined figures for a set of positions."""
-    closed = [r for r in rows if r.get("status") in ("target_hit", "stopped", "expired")]
-    open_ = [r for r in rows if r.get("status") == "open"]
-    wins = [r for r in closed if r.get("status") == "target_hit"]
-    cp, op = _pct(closed), _pct(open_)
-    return {
-        "n": len(rows), "closed": len(closed), "open": len(open_),
-        "wins": len(wins),
-        "hit_rate": len(wins) / len(closed) * 100 if closed else None,
-        "realized_sum": sum(cp) if cp else 0.0,
-        "realized_avg": sum(cp) / len(cp) if cp else None,
-        "unrealized_sum": sum(op) if op else 0.0,
-        "unrealized_avg": sum(op) / len(op) if op else None,
-        "priced_open": len(op),
-        "green": len([x for x in op if x > 0]),
-        "red": len([x for x in op if x < 0]),
-        "best": max(cp + op) if (cp + op) else None,
-        "worst": min(cp + op) if (cp + op) else None,
-        "avg_days": (sum(r.get("days_open") or 0 for r in rows) / len(rows)) if rows else None,
-    }
 
 
 def _num(value: float | None, suffix: str = "%", signed: bool = True) -> str:
@@ -570,141 +587,225 @@ def _num(value: float | None, suffix: str = "%", signed: bool = True) -> str:
     return f"{value:+.2f}{suffix}" if signed else f"{value:.2f}{suffix}"
 
 
+# Offset within the cumulative block of the "Average per idea" row — the single
+# figure that answers "how are these calls doing", so it is the one bolded.
+# tests/test_publish_sheets.py asserts it still points at that row.
+HEADLINE_OFFSET = 6
+
+
+def compounded_return(positions: list[dict]) -> float | None:
+    """Return on a book that took each closed idea in turn, full size, in order.
+
+    The average per idea is what an equal-weight basket returned; this is the
+    other honest question — what one unit of capital would have done running the
+    closed trades sequentially. Neither is a sum of percentages, which is what
+    this scorecard used to print and which is not a return at all: it grows with
+    the number of ideas published rather than with how well they did.
+    """
+    graded = [p for p in positions
+              if is_graded(p) and p.get("status") in CLOSED_STATUSES
+              and p.get("pct_vs_entry") is not None]
+    if not graded:
+        return None
+    equity = 1.0
+    for pos in sorted(graded, key=lambda p: (p.get("closed") or "", p.get("opened") or "")):
+        equity *= 1 + pos["pct_vs_entry"] / 100
+    return round((equity - 1) * 100, 2)
+
+
 def cumulative_rows(positions: list[dict], first_row: int) -> tuple[list[list[Any]], list[tuple[int, int, str]]]:
-    """Portfolio totals as live spreadsheet formulas.
+    """Portfolio figures as live spreadsheet formulas.
 
     `first_row` is the 1-based sheet row where the position detail begins. Every
-    range is left open-ended (`N25:N` rather than `N25:N43`) so the figures pick
+    range is left open-ended (`P25:P` rather than `P25:P43`) so the figures pick
     up rows added by a later run, or typed in by hand, without anything being
     regenerated.
 
-    All of it is equal-weighted — one unit per published idea — because the
+    Every figure is equal-weighted — one unit per published idea — because the
     report cannot know what size was actually traded. It measures the calls, not
     an account.
+
+    Two rules run through all of it:
+
+    * **Only graded rows count.** Event contracts have no quote source and
+      futures are marked against the wrong contract month, so averaging over
+      them would report a number nobody can act on. They stay in the detail
+      table, flagged `no`, and out of every figure here.
+    * **Closed means closed.** These tables used to derive it as
+      `ideas - open`, which quietly counted every setup still waiting for its
+      entry as a closed trade — with 22 pending rows that turned 10 closed
+      trades into 32 and made every breakdown average wrong.
     """
     if not positions:
         return [], []
 
-    sym, cls = f"${_col('Symbol')}${first_row}:${_col('Symbol')}", f"${_col('Class')}${first_row}:${_col('Class')}"
-    hor = f"${_col('Horizon')}${first_row}:${_col('Horizon')}"
-    conv = f"${_col('Conv')}${first_row}:${_col('Conv')}"
-    side = f"${_col('Direction')}${first_row}:${_col('Direction')}"
-    stat = f"${_col('Status')}${first_row}:${_col('Status')}"
-    pct = f"${_col('% vs Entry')}${first_row}:${_col('% vs Entry')}"
-    days = f"${_col('Days Open')}${first_row}:${_col('Days Open')}"
+    def rng(header: str) -> str:
+        col = _col(header)
+        return f"${col}${first_row}:${col}"
 
-    n_all = f"COUNTA({sym})"
-    n_open = f'COUNTIF({stat},"*OPEN*")'
-    n_pending = f'COUNTIF({stat},"*PENDING*")'
-    n_nofill = f'COUNTIF({stat},"*NOFILL*")'
-    n_target = f'COUNTIF({stat},"*TARGET*")'
-    n_stopped = f'COUNTIF({stat},"*STOPPED*")'
-    n_expired = f'COUNTIF({stat},"*EXPIRED*")'
+    cls, hor, conv = rng("Class"), rng("Horizon"), rng("Conv")
+    side, stat, pct = rng("Direction"), rng("Status"), rng("% vs Entry")
+    days, style, graded = rng("Days Open"), rng("Entry Style"), rng("Graded")
+
+    # Prepended to every criteria list, so no figure below can accidentally
+    # average over a row this report cannot price honestly.
+    G = f'{graded},"yes"'
+
+    n_all = f"COUNTIF({graded},\"yes\")"
+    n_open = f'COUNTIFS({G},{stat},"*OPEN*")'
+    n_pending = f'COUNTIFS({G},{stat},"*PENDING*")'
+    n_nofill = f'COUNTIFS({G},{stat},"*NOFILL*")'
+    n_target = f'COUNTIFS({G},{stat},"*TARGET*")'
+    n_stopped = f'COUNTIFS({G},{stat},"*STOPPED*")'
+    n_expired = f'COUNTIFS({G},{stat},"*EXPIRED*")'
     n_closed = f"({n_target}+{n_stopped}+{n_expired})"
-    # Pending and never-filled rows carry no percentage, so summing the column
-    # already excludes them; these counts exist to say so out loud.
-    unreal_sum = f'SUMIF({stat},"*OPEN*",{pct})'
-    real_sum = f"(SUM({pct})-{unreal_sum})"
-    # Averages divide by setups that actually became positions. Including ones
-    # that never reached their entry would dilute every figure with trades that
-    # were never taken.
-    n_filled = f"({n_all}-{n_pending}-{n_nofill})"
+    # Built up from the statuses that mean a fill happened, rather than
+    # subtracted from the total, so a status added later cannot silently land
+    # on the wrong side of this line.
+    n_filled = f"({n_open}+{n_closed})"
+    # Rows carrying an actual mark. An open position whose price fetch failed
+    # counts as filled but must not dilute an average as if it were flat.
+    n_marked = f'COUNTIFS({G},{pct},"<>")'
 
-    rows: list[list[Any]] = [
-        [""],
-        ["CUMULATIVE PERFORMANCE — live formulas, equal weight, one unit per idea"],
-        [f'=CONCATENATE("Setups published: ",{n_all},"   ·   filled and open: ",{n_open},'
+    unreal_sum = f'SUMIFS({pct},{G},{stat},"*OPEN*")'
+    real_sum = f"(SUMIFS({pct},{G})-{unreal_sum})"
+
+    rows: list[list[Any]] = []
+    formats: list[tuple[int, int, str]] = []
+
+    def add(cells: list[Any], fmt: dict[int, str] | None = None) -> None:
+        for col, kind in (fmt or {}).items():
+            formats.append((len(rows), col, kind))
+        rows.append(cells)
+
+    add([""])
+    add(["CUMULATIVE PERFORMANCE — live formulas, equal weight, one unit per idea"])
+    add([f'=CONCATENATE("Graded setups: ",{n_all},"   ·   filled and open: ",{n_open},'
          f'"   ·   closed: ",{n_closed},"   ·   awaiting entry: ",{n_pending},'
-         f'"   ·   never filled: ",{n_nofill})'],
-        ["A setup becomes a position only once the market trades at its entry. "
-         "Awaiting-entry and never-filled rows carry no P&L and are excluded below."],
-        [""],
-        ["", "Realized (closed)", "Unrealized (open)", "Combined"],
-        ["Total return, summed",
-         f"={real_sum}", f"={unreal_sum}", f"=SUM({pct})"],
-        ["Average per idea",
+         f'"   ·   never filled: ",{n_nofill},'
+         f'"   ·   ungraded (event / futures): ",COUNTIF({graded},"no"))'])
+    add(["A setup becomes a position only once the market trades at its entry. Awaiting-entry "
+         "and never-filled rows carry no P&L. Event contracts and futures are excluded from "
+         "every figure here — see the Graded column."])
+    add([""])
+
+    add(["", "Realized (closed)", "Unrealized (open)", "Combined"])
+    add(["Average per idea — the equal-weight return",
          f'=IFERROR({real_sum}/{n_closed},"—")',
-         f'=IFERROR(AVERAGEIF({stat},"*OPEN*",{pct}),"—")',
-         f'=IFERROR(SUM({pct})/{n_filled},"—")'],
-        [""],
-        ["Hit rate (closed that reached target)",
-         f'=IFERROR(COUNTIF({stat},"*TARGET*")/{n_closed},"—")'],
-        ["Closed: target / stopped / expired",
-         f"={n_target}", f"={n_stopped}", f"={n_expired}"],
-        ["Fill rate (setups that reached their entry)",
-         f'=IFERROR({n_filled}/{n_all},"—")'],
-        ["Open positions up / down",
-         f'=COUNTIFS({stat},"*OPEN*",{pct},">0")',
-         f'=COUNTIFS({stat},"*OPEN*",{pct},"<0")'],
-        ["Best / worst idea so far",
-         f'=IFERROR(MAX({pct}),"—")', f'=IFERROR(MIN({pct}),"—")'],
-        ["Average days held", f'=IFERROR(AVERAGE({days}),"—")'],
-        [""],
-    ]
+         f'=IFERROR(AVERAGEIFS({pct},{G},{stat},"*OPEN*"),"—")',
+         f'=IFERROR(SUMIFS({pct},{G})/{n_marked},"—")'],
+        {1: "pct", 2: "pct", 3: "pct"})
+    # Static, not a formula: sequencing closed trades by their close date is not
+    # something an open-ended range can express. Recomputed on every publish.
+    add(["Compounded, closed trades taken one at a time",
+         _num(compounded_return(positions))])
+    # MAXIFS/MINIFS rather than MAX/MIN: a futures row marked against the wrong
+    # contract month would otherwise walk off with "best idea so far".
+    add(["Best / worst idea so far",
+         f'=IFERROR(MAXIFS({pct},{G}),"—")', f'=IFERROR(MINIFS({pct},{G}),"—")'],
+        {1: "pct", 2: "pct"})
+    add([""])
+    add(["Hit rate (closed that reached target)",
+         f'=IFERROR({n_target}/{n_closed},"—")'], {1: "rate"})
+    add(["Closed: target / stopped / expired",
+         f"={n_target}", f"={n_stopped}", f"={n_expired}"])
+    add(["Open positions up / down",
+         f'=COUNTIFS({G},{stat},"*OPEN*",{pct},">0")',
+         f'=COUNTIFS({G},{stat},"*OPEN*",{pct},"<0")'])
+    # Days Open is written blank for a setup that never filled, so this averages
+    # over positions rather than over publications. It used to divide by every
+    # row in the table, which turned 5.7 days held into 2.4.
+    add(["Average days held (filled positions only)",
+         f'=IFERROR(AVERAGEIFS({days},{G}),"—")'])
+    add([""])
 
-    # Breakdowns. Buckets come from the data present today; the formulas inside
-    # them stay live, so a row edited later still moves these numbers.
-    # (row offset within this block, column index, "pct" or "rate")
-    # Offsets into `rows` below; kept adjacent to the layout they describe.
-    formats: list[tuple[int, int, str]] = [
-        (6, 1, "pct"), (6, 2, "pct"), (6, 3, "pct"),      # totals
-        (7, 1, "pct"), (7, 2, "pct"), (7, 3, "pct"),      # averages
-        (9, 1, "rate"),                                    # hit rate
-        (11, 1, "rate"),                                   # fill rate
-        (13, 1, "pct"), (13, 2, "pct"),                    # best / worst
-    ]
+    # ---- fill quality ----------------------------------------------------
+    # The entry level decides which ideas you are ever in a position to be
+    # right about. A pullback entry fills only once the trade has first gone
+    # against you, so a book made of them is selected for the ideas that were
+    # already failing — visible here as a fill rate and an average move that
+    # differ by style.
+    add(["FILL QUALITY — which ideas the entry level actually lets you into"])
+    add(["Fill rate (setups that reached their entry)",
+         f'=IFERROR({n_filled}/{n_all},"—")'], {1: "rate"})
+    add(["Still awaiting entry / expired never having filled",
+         f"={n_pending}", f"={n_nofill}"])
+    add(["", "Setups", "Filled", "Fill rate", "Avg move"])
+    for label in ("pullback", "breakout", "at-market"):
+        key = f'"{label}"'
+        setups = f"COUNTIFS({G},{style},{key})"
+        filled = (f'(COUNTIFS({G},{style},{key},{stat},"*OPEN*")'
+                  f'+COUNTIFS({G},{style},{key},{stat},"*TARGET*")'
+                  f'+COUNTIFS({G},{style},{key},{stat},"*STOPPED*")'
+                  f'+COUNTIFS({G},{style},{key},{stat},"*EXPIRED*"))')
+        add([label, f"={setups}", f"={filled}",
+             f'=IFERROR({filled}/{setups},"—")',
+             f'=IFERROR(AVERAGEIFS({pct},{G},{style},{key}),"—")'],
+            {3: "rate", 4: "pct"})
+    add([""])
 
-    def breakdown(label: str, rng: str, values: list[Any]) -> list[list[Any]]:
+    # ---- breakdowns ------------------------------------------------------
+    # Buckets come from the data present today; the formulas inside them stay
+    # live, so a row edited later still moves these numbers.
+    def breakdown(label: str, target_rng: str, values: list[Any]) -> None:
         if len(values) < 2:
-            return []
-        out: list[list[Any]] = [
-            [f"BY {label.upper()}"],
-            ["", "Ideas", "Closed", "Hit rate", "Avg realized", "Avg unrealized", "Combined"],
-        ]
-        for v in values:
-            key = f'"{v}"'
-            cnt = f"COUNTIF({rng},{key})"
-            closed = f'({cnt}-COUNTIFS({rng},{key},{stat},"*OPEN*"))'
-            out.append([
-                str(v),
-                f"={cnt}",
+            return
+        add([f"BY {label.upper()}"])
+        add(["", "Ideas", "Closed", "Hit rate", "Avg realized", "Avg unrealized", "Avg per idea"])
+        for value in values:
+            key = f'"{value}"'
+            where = f"{G},{target_rng},{key}"
+            closed = (f'(COUNTIFS({where},{stat},"*TARGET*")'
+                      f'+COUNTIFS({where},{stat},"*STOPPED*")'
+                      f'+COUNTIFS({where},{stat},"*EXPIRED*"))')
+            open_sum = f'SUMIFS({pct},{where},{stat},"*OPEN*")'
+            add([
+                str(value),
+                f"=COUNTIFS({where})",
                 f"={closed}",
-                f'=IFERROR(COUNTIFS({rng},{key},{stat},"*TARGET*")/{closed},"—")',
-                f'=IFERROR((SUMIF({rng},{key},{pct})-SUMIFS({pct},{rng},{key},{stat},"*OPEN*"))/{closed},"—")',
-                f'=IFERROR(AVERAGEIFS({pct},{rng},{key},{stat},"*OPEN*"),"—")',
-                f"=SUMIF({rng},{key},{pct})",
-            ])
-        out.append([""])
-        return out
+                f'=IFERROR(COUNTIFS({where},{stat},"*TARGET*")/{closed},"—")',
+                f'=IFERROR((SUMIFS({pct},{where})-{open_sum})/{closed},"—")',
+                f'=IFERROR(AVERAGEIFS({pct},{where},{stat},"*OPEN*"),"—")',
+                f'=IFERROR(SUMIFS({pct},{where})/COUNTIFS({where},{pct},"<>"),"—")',
+            ], {3: "rate", 4: "pct", 5: "pct", 6: "pct"})
+        add([""])
+
+    gradeable = [p for p in positions if is_graded(p)]
 
     def distinct(key: str, transform=lambda v: v) -> list[Any]:
-        seen = {transform(p.get(key)) for p in positions if p.get(key) is not None}
+        seen = {transform(p.get(key)) for p in gradeable if p.get(key) is not None}
         return sorted(seen, key=str)
 
-    rows += breakdown("horizon", hor, distinct("horizon"))
-    rows += breakdown("asset class", cls, distinct("asset_class", lambda v: str(v).upper()))
-    rows += breakdown("conviction", conv, distinct("conviction"))
-    rows += breakdown("direction", side, distinct("direction", direction_label))
+    breakdown("horizon", hor, distinct("horizon"))
+    breakdown("asset class", cls, distinct("asset_class", lambda v: str(v).upper()))
+    breakdown("conviction", conv, distinct("conviction"))
+    breakdown("direction", side, distinct("direction", direction_label))
 
-    rows.append([
-        "Equal-weighted percentage moves against each idea's published entry, graded from "
-        "daily bars. These measure the calls, not any account — no sizing, no slippage, "
-        "no fills, no fees. Formulas read the detail table below, so editing or adding a "
-        "row updates every figure above."
-    ])
+    add(["Equal-weighted percentage moves against each idea's published entry, graded from "
+         "daily bars. These measure the calls, not any account — no sizing, no slippage, no "
+         "fees. Averages, never sums: a sum of percentages grows with how many ideas were "
+         "published rather than with how they did. Formulas read the detail table below, so "
+         "editing or adding a row updates every figure above."])
     return rows, formats
 
 
 def summarize(positions: list[dict]) -> list[Any]:
-    closed = [p for p in positions if p.get("status") in (TARGET_HIT, STOPPED, EXPIRED)]
+    graded = [p for p in positions if is_graded(p)]
+    closed = [p for p in graded if p.get("status") in CLOSED_STATUSES]
     wins = [p for p in closed if p.get("status") == TARGET_HIT]
     pcts = [p["pct_vs_entry"] for p in closed if p.get("pct_vs_entry") is not None]
     hit_rate = f"{len(wins) / len(closed) * 100:.0f}%" if closed else "—"
     avg = f"{sum(pcts) / len(pcts):+.2f}%" if pcts else "—"
+    # A thesis re-pitched on four mornings is four rows here but one call, and
+    # the difference is large enough to change how the averages read. The rows
+    # stay independent — each has its own levels and grades on its own merits —
+    # but the count says out loud how many distinct calls are behind them.
+    theses = {(p.get("symbol"), p.get("direction")) for p in graded}
     return [
-        f"SCORECARD — {len(positions)} ideas tracked  ·  {len(closed)} closed  ·  "
-        f"{len(wins)} hit target  ·  hit rate {hit_rate}  ·  avg move {avg}  ·  "
-        f"{len([p for p in positions if p.get('status') == 'open'])} still open"
+        f"SCORECARD — {len(graded)} graded rows from {len(theses)} distinct theses  ·  "
+        f"{len(closed)} closed  ·  {len(wins)} hit target  ·  hit rate {hit_rate}  ·  "
+        f"avg move per closed idea {avg}  ·  "
+        f"{len([p for p in graded if p.get('status') == OPEN])} still open"
     ]
 
 
@@ -927,7 +1028,8 @@ def style_performance(ws, formats: list[tuple[int, int, str]], block_start: int,
                           "startColumnIndex": col, "endColumnIndex": col + 1},
                 "cell": {"userEnteredFormat": {
                     "numberFormat": patterns[kind],
-                    "textFormat": {"bold": kind == "pct" and offset in (6, 7)},
+                    # The headline average is the row people read first.
+                    "textFormat": {"bold": kind == "pct" and offset == HEADLINE_OFFSET},
                 }},
                 "fields": "userEnteredFormat(numberFormat,textFormat)",
             }

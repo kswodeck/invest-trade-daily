@@ -66,12 +66,34 @@ python scripts/add_candidate.py '{
   "position_size_pct": 3,
   "catalyst": {"event": "Q2 earnings", "datetime_et": "2026-08-27T16:20",
                "action": "enter before, trim half into the print", "wait": false},
+  "win_probability": 0.45,
   "thesis": "Two specific sentences naming the mechanism.",
   "key_risk": "The one thing most likely to break it.",
   "counter_argument": "The strongest case against.",
+  "evidence": [
+    {"kind": "dated_catalyst", "detail": "Q2 earnings confirmed on the fetched calendar",
+     "source": "https://..."},
+    {"kind": "primary_document", "detail": "Read the 8-K; guidance raised on datacenter",
+     "source": "https://..."},
+    {"kind": "positioning", "detail": "Three officers bought open-market in August",
+     "source": "https://..."}
+  ],
   "sources": ["https://...", "https://..."]
 }'
 ```
+
+Two fields there are new and are the ones most often left out:
+
+- **`evidence`** is what conviction now means. One entry per *independent*
+  confirmation, and the score is the count of distinct `kind` values — 1 kind
+  is a 2, two kinds a 3, three a 4, four or more a 5. Three articles about the
+  same press release are one confirmation, not three. See the conviction table
+  in `config/strategy.md` for what each kind requires.
+- **`win_probability`** is your estimate that the target is reached before the
+  stop. It has a hard baseline: `1 / (1 + R:R)` is both the driftless
+  random-walk probability and the break-even hit rate, so at 3:1 anything at or
+  below 25% is an idea that loses money at its own numbers. Whatever you claim
+  above that baseline is the edge you are asserting — validation prints both.
 
 It validates on the spot and tells you what is wrong, so a malformed idea
 surfaces while you can still fix it. It rejects non-Robinhood venues outright.
@@ -140,6 +162,11 @@ python scripts/market_data.py crypto bitcoin solana
 python scripts/market_data.py events "Fed"
 python scripts/market_data.py filings NVDA
 python scripts/market_data.py insiders NVDA         # open-market insider buying
+python scripts/market_data.py analysts NVDA        # recommendation trend, surprise record
+python scripts/market_data.py short NVDA           # short interest, days to cover
+python scripts/market_data.py relstrength NVDA --peer XLK   # leading or lagging?
+python scripts/market_data.py implied NVDA --entry 178.5 --target 205
+                                                   # is the target inside what options price?
 ```
 
 **Check insiders on every equity finalist.** Executives sell for a hundred
@@ -149,6 +176,16 @@ of the few genuinely predictive public signals, and it is strongest exactly
 where this report is weakest: confirming that a de-rated name is cheap rather
 than broken. Cite it in the thesis when it is there. Its absence is not a
 negative, so do not treat it as one.
+
+**Set the stop before the target, and never the other way round.** The stop is
+where the thesis is wrong; find that level first, from real price history, then
+see what target the reward-to-risk floor implies and ask whether it is
+reachable. Doing it in the other order produces a stop reverse-engineered to
+clear the floor, which is what the first month of this report actually did:
+every one of the first ten stop-outs had a stop tighter than 1.6 ATR, and a
+swing stop must now clear 1.5 ATR or validation fails the idea. **If an idea
+only clears the floor with a tight stop, the idea failed the floor** — widen
+the stop, recheck, and drop it if it no longer qualifies.
 
 When a source returns `ok: false`, note it and move on — record the gap so the
 synthesis phase can report it honestly in `data_quality_notes`. Use WebSearch

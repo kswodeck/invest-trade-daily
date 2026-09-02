@@ -88,6 +88,38 @@ unfinished. That is not the anchoring problem the repetition guard is aimed at
   reject ideas, not to calibrate targets. If a target only works by being
   optimistic, the idea failed the test.
 
+- **Minimum stop distance**, in ATRs, because the floor above can be cleared
+  two ways and only one of them is honest work.
+
+  | Horizon | Stop must clear | Comfortable |
+  | --- | --- | --- |
+  | `intraday` | 0.75 ATR | 1.25 ATR |
+  | `swing` | 1.5 ATR | 2.0 ATR |
+  | `long_term` | n/a — the downside is a bear case, not a stop | |
+
+  A stop closer to the entry than a normal day's range does not test the
+  thesis, it tests whether the tape sits still. It is also the free way to lift
+  reward-to-risk, and that is exactly how it was used: KRE was republished
+  three times at an unchanged 76.80 entry with the stop walked in from 74.20 to
+  75.20, lifting the ratio from 2.19 to 4.07 while making the trade strictly
+  worse. Every one of the first ten stop-outs had a stop tighter than 1.6 ATR.
+
+  **If an idea needs a tight stop to clear the reward-to-risk floor, it has
+  failed the floor.** Widen the stop and re-check the ratio, or drop the idea.
+
+- **State a win probability, and beat the baseline.** Reward-to-risk says
+  nothing about whether an idea makes money — 3:1 at a 20% hit rate loses.
+  Every idea with a stop carries `win_probability`: your estimate that the
+  target is reached before the stop.
+
+  The number to beat is not arbitrary. For a driftless random walk the chance
+  of touching the target first is exactly `1 / (1 + R:R)` — which is also the
+  break-even hit rate. So an idea at 3:1 needs better than 25% just to be worth
+  nothing, and whatever you claim above that **is** the edge you are asserting.
+  Validation prints the two side by side. An expectancy at or below zero is a
+  hard failure; more than 20 points of claimed edge over the baseline is a
+  large claim and the thesis has to carry it.
+
 - **Every idea carries a downside.** Futures and short equity: a hard stop,
   mandatory, no exceptions. Long equity, crypto, and event contracts: a stop or
   an explicit invalidation condition. Long-term: an invalidation condition is
@@ -115,23 +147,51 @@ unfinished. That is not the anchoring problem the repetition guard is aimed at
 
 ## Conviction scale
 
-| Score | Meaning | Published? |
-| --- | --- | --- |
-| 5 | Multiple independent confirmations, clear catalyst with a known date, clean technical level, no obvious counter-argument | yes |
-| 4 | Strong thesis with a dated catalyst; one meaningful counter-argument, addressed | yes |
-| 3 | Reasonable setup, thinner evidence or a vaguer catalyst window | yes |
-| 2 | **Speculative** — real thesis, thin or one-sided evidence, wide range of outcomes | yes, clearly marked |
-| 1 | Noise, or a hunch with no evidence behind it | no |
+**Conviction is a count of independent confirmations you actually made.** Not a
+feeling about the idea, not a proxy for expected return, and not a default.
 
-Conviction is about **evidence quality**, not expected return. A 5 can be a
+It became a default: of the first 57 published ideas, 39 scored 3. A number
+that lands on the same value two times in three is carrying no information, and
+the by-conviction table on the Performance tab is unreadable because of it.
+
+So the score is now tied to the `evidence` array on each idea. List each
+confirmation with its `kind`, and the score follows from **how many distinct
+kinds** hold:
+
+| Score | Distinct kinds of confirmation | Published? |
+| --- | --- | --- |
+| 5 | 4 or more | yes |
+| 4 | 3 | yes |
+| 3 | 2 | yes |
+| 2 | 1 | yes, clearly marked |
+| 1 | none — a hunch | no |
+
+The kinds, and what each actually requires:
+
+| `kind` | Counts only when |
+| --- | --- |
+| `dated_catalyst` | The event is verified against a calendar you fetched, not a date you remember |
+| `primary_document` | You read the filing, transcript or release — not a story about it |
+| `positioning` | A measured flow or crowding read: insider buys, short interest and days to cover, analyst revision direction, the options-implied move, relative strength |
+| `valuation_anchor` | A defended number for what the asset is worth, with the method shown |
+| `technical_level` | A level from real price history — prior swing, moving average, volume shelf — never a round number |
+| `counter_argument_answered` | The strongest case against, answered with evidence rather than asserted away |
+
+**Two entries of the same kind are one confirmation.** Three articles about one
+press release are one fact; counting them as three is how a thin idea comes to
+look sturdy. Validation checks the count of distinct kinds against the score
+and names the supported score when they disagree — the red team lowers it.
+
+**Conviction is about evidence quality, not expected return.** A 5 can be a
 modest, high-probability move; a moonshot with one source is a 2 no matter how
 large the upside.
 
-**Conviction 2 is publishable and useful** — that is where asymmetric, small-cap
-and early-thesis ideas live, and cutting them would remove exactly the
-high-risk/high-return lane worth having. But it must be honest about what it is:
-a 2 needs its thinness stated in `key_risk`, and it is sized like a lottery
-ticket, not a position. Never inflate a 2 to a 3 to make it look sturdier.
+**Conviction 2 is publishable and useful** — that is where asymmetric,
+small-cap and early-thesis ideas live, and cutting them would remove exactly
+the high-risk/high-return lane worth having. But it must be honest about what
+it is: a 2 needs its thinness stated in `key_risk`, and it is sized like a
+lottery ticket, not a position. Never inflate a 2 to a 3 to make it look
+sturdier — with the evidence list on the page, the inflation is now visible.
 
 ## Ranking
 
@@ -177,11 +237,19 @@ Spend the research budget roughly like this:
 
 1. **Macro and calendar first (~10%).** What prints this week, what the tape did
    overnight, where rates and the dollar are. This frames everything else.
+   Also check relative strength before committing to a name: `market_data.py
+   relstrength SYM --peer <sector ETF>` says whether you are buying leadership
+   or catching something falling relative to everything around it.
 2. **Catalyst hunting (~30%).** Earnings in the next 10 sessions, scheduled
    economic releases, FDA dates, product launches, index rebalances, unlocks,
    court dates, regulatory deadlines. Dated events beat vibes.
 3. **News and filings sweep (~20%).** Overnight news, 8-Ks, guidance changes,
-   insider transactions, analyst moves that actually move price.
+   insider transactions, analyst moves that actually move price. `market_data.py
+   analysts SYM` gives the recommendation trend across four months and the
+   earnings surprise record — read the *change*, not the level. `market_data.py
+   short SYM` gives short interest and days to cover, which matters in both
+   directions: a crowded short is fuel under a long, and it is why a short idea
+   can be right about the business and still lose.
 4. **Durable mispricings (~15%).** The long-term lane, and the one most easily
    crowded out by the day's noise — so give it real time rather than whatever
    is left. What is structurally cheap or structurally favoured and likely to
@@ -193,6 +261,23 @@ Spend the research budget roughly like this:
    history and set entry, target, and downside on actual support/resistance and
    ATR — not round numbers. For long-term ideas, anchor the target to a
    valuation you can defend and the downside to a stated bear case.
+
+   Two things to check here that the report used to skip:
+
+   - **What the options market already prices.** `market_data.py implied SYM
+     --entry E --target T` returns the move priced by the at-the-money
+     straddle, and how many of those moves your target sits away. Under 1.0 the
+     market considers your target ordinary. Much above 2.0 you are not reading
+     the market, you are disagreeing with it — which is allowed, but say so in
+     the thesis and expect the red team to ask why.
+   - **Where the entry sits relative to the market.** An entry below the market
+     on a long only fills once the trade first goes against you, which selects
+     for the ideas that were already failing. The first month was 31 pullback
+     entries against 1 breakout, 42% of them ever filled, and the ones that did
+     fill were the ones falling. The Performance tab now breaks fill rate and
+     average move down by entry style. A pullback entry is fine when the level
+     is real support you can point at; it is not fine as a reflex discount off
+     the last print.
 6. **Falsification (~10%).** For each finalist, argue the other side. Anything
    that does not survive gets demoted or cut. This step is not optional and is
    the first thing people skip.

@@ -29,7 +29,9 @@ to a Google Sheet.
    ├─ Phase 2b — VALIDATE  (code, not a model)
    │    Recomputes R:R, checks direction consistency, compares entries to
    │    live prices, verifies earnings dates against the real calendar,
-   │    sizes targets in ATR, and resolves every cited URL.
+   │    sizes targets and stops in ATR, measures expectancy against the
+   │    random-walk baseline, checks conviction against the evidence
+   │    listed for it, and resolves every cited URL.
    │
    ├─ Phase 2c — RED TEAM  (Opus, ~12 min)
    │    A separate pass whose only job is to attack the ideas and kill

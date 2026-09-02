@@ -76,6 +76,10 @@ def main() -> int:
         ("Kalshi — event contracts", lambda: md.events("", 3), None),
         ("SEC EDGAR — filings", lambda: md.filings("AAPL", 3), "SEC_USER_AGENT"),
         ("FRED — macro", lambda: md.fred_series("DGS10"), "FRED_API_KEY"),
+        ("Yahoo — options chain (implied move)", lambda: md.implied_move("SPY"), None),
+        ("Nasdaq — short interest", lambda: md.short_interest("AAPL"), None),
+        ("Finnhub — analyst trend", lambda: md.analysts("AAPL"), "FINNHUB_API_KEY"),
+        ("Computed — relative strength", lambda: md.relative_strength("AAPL"), None),
     ]
 
     cap_rows = [probe(n, f) for n, f in capabilities]
