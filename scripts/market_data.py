@@ -14,6 +14,11 @@ each result before trusting the payload.
     python scripts/market_data.py earnings --days 14
     python scripts/market_data.py insiders NVDA
     python scripts/market_data.py depth NVDA          # bid/ask spread
+    python scripts/market_data.py implied NVDA        # options-implied move
+    python scripts/market_data.py implied NVDA --entry 180 --target 210
+    python scripts/market_data.py relstrength NVDA --peer XLK
+    python scripts/market_data.py short NVDA
+    python scripts/market_data.py analysts NVDA
 
 Optional environment variables unlock better sources; all are safe to omit:
 FINNHUB_API_KEY, TWELVEDATA_API_KEY, ALPHAVANTAGE_API_KEY, FRED_API_KEY, SEC_USER_AGENT.
@@ -582,24 +587,30 @@ def _bars_alphavantage(symbol: str) -> list[dict[str, Any]]:
     ]
 
 
-def history(symbol: str, days: int = 120) -> dict[str, Any]:
-    """Daily OHLCV plus the levels needed to set entries, targets, and stops."""
-    errors = []
-    rows: list[dict[str, Any]] = []
-    source = ""
-    # Ordered by what actually works from a GitHub Actions runner: Nasdaq is
-    # keyless and unblocked, Yahoo 429s, Stooq 404s. The keyed sources sit
-    # behind them as insurance.
+def _load_bars(symbol: str, days: int) -> tuple[list[dict[str, Any]], str, list[str]]:
+    """Daily bars from the first source that answers. Never raises.
+
+    Ordered by what actually works from a GitHub Actions runner: Nasdaq is
+    keyless and unblocked, Yahoo 429s, Stooq 404s. The keyed sources sit behind
+    them as insurance. Returns (rows, source, errors) with rows empty when
+    every source failed.
+    """
+    errors: list[str] = []
     for name, loader in (("nasdaq", lambda: _bars_nasdaq(symbol, days)),
                          ("yahoo", lambda: _bars_yahoo(symbol, days)),
                          ("twelvedata", lambda: _bars_twelvedata(symbol, days)),
                          ("alphavantage", lambda: _bars_alphavantage(symbol)),
                          ("stooq", lambda: _bars_stooq(symbol))):
         try:
-            rows, source = loader(), name
-            break
+            return loader(), name, errors
         except Exception as exc:  # noqa: BLE001
             errors.append(f"{name}: {type(exc).__name__}: {exc}")
+    return [], "", errors
+
+
+def history(symbol: str, days: int = 120) -> dict[str, Any]:
+    """Daily OHLCV plus the levels needed to set entries, targets, and stops."""
+    rows, source, errors = _load_bars(symbol, days)
 
     if not rows:
         return {"ok": False, "symbol": symbol.upper(), "attempts": errors}
@@ -973,6 +984,258 @@ def earnings(days: int = 14) -> dict[str, Any]:
 # cli
 # --------------------------------------------------------------------------
 
+# --------------------------------------------------------------------------
+# what the market already thinks
+# --------------------------------------------------------------------------
+
+def implied_move(symbol: str, days: int = 30) -> dict[str, Any]:
+    """What the options market prices as the move to the nearest useful expiry.
+
+    A target set from ATR is a claim about how far price can travel. The options
+    market is already quoting that claim in dollars, and it is the only estimate
+    here that other people are betting real money on. Comparing the two is the
+    cheapest reality check available: a swing target three times the 30-day
+    implied move is not an edge, it is a forecast the market disagrees with.
+
+    Priced off the at-the-money straddle rather than parsed implied vols — the
+    straddle is what you would actually pay to own the move, needs no model, and
+    survives a missing greeks field.
+    """
+    ticker = _yahoo_symbol(symbol)
+    try:
+        base = f"https://query1.finance.yahoo.com/v7/finance/options/{ticker}"
+        chain = _get(base).json()
+        result = ((chain.get("optionChain") or {}).get("result") or [None])[0]
+        if not result:
+            raise ValueError(f"no option chain for {symbol}")
+
+        spot = _num((result.get("quote") or {}).get("regularMarketPrice"))
+        expiries = [int(e) for e in (result.get("expirationDates") or [])]
+        if not spot or not expiries:
+            raise ValueError(f"no spot or expiries for {symbol}")
+
+        wanted = datetime.now(timezone.utc) + timedelta(days=days)
+        target_epoch = int(wanted.timestamp())
+        expiry = min(expiries, key=lambda e: abs(e - target_epoch))
+        expiry_date = datetime.fromtimestamp(expiry, tz=timezone.utc).date()
+        to_expiry = (expiry_date - date.today()).days
+
+        detail = _get(base, params={"date": expiry}).json()
+        options = (((detail.get("optionChain") or {}).get("result") or [{}])[0]
+                   .get("options") or [{}])[0]
+        calls, puts = options.get("calls") or [], options.get("puts") or []
+        if not calls or not puts:
+            raise ValueError(f"empty chain for {symbol} at {expiry_date}")
+
+        def at_the_money(rows: list[dict]) -> dict:
+            def distance(row: dict) -> float:
+                strike = _num(row.get("strike"))
+                return abs(strike - spot) if strike is not None else float("inf")
+            return min(rows, key=distance)
+
+        def price(row: dict) -> float | None:
+            """Mid where there is a two-sided market, last trade otherwise."""
+            bid, ask = _num(row.get("bid")), _num(row.get("ask"))
+            if bid and ask and ask >= bid:
+                return (bid + ask) / 2
+            return _num(row.get("lastPrice"))
+
+        call, put = at_the_money(calls), at_the_money(puts)
+        call_price, put_price = price(call), price(put)
+        if call_price is None or put_price is None:
+            raise ValueError(f"no usable option prices for {symbol}")
+
+        straddle = call_price + put_price
+        move_pct = round(straddle / spot * 100, 2)
+        return {
+            "ok": True, "source": "yahoo-options", "symbol": symbol.upper(),
+            "spot": round(spot, 4),
+            "expiry": expiry_date.isoformat(),
+            "days_to_expiry": to_expiry,
+            "atm_strike": _num(call.get("strike")),
+            "straddle": round(straddle, 4),
+            # One standard deviation, near enough: the straddle is roughly
+            # 0.8 sigma, so this is the move the market gives about a 1-in-3
+            # chance of being exceeded in either direction.
+            "implied_move_pct": move_pct,
+            "implied_move_usd": round(straddle, 4),
+            "implied_iv": _num(call.get("impliedVolatility")),
+            "note": (f"options price a ±{move_pct}% move by {expiry_date.isoformat()} "
+                     f"({to_expiry}d). A target further than this is a bet against "
+                     f"the options market, not a read of it."),
+        }
+    except Exception as exc:  # noqa: BLE001
+        return _fail("yahoo-options", exc)
+
+
+def target_vs_implied(symbol: str, entry: float, target: float, days: int = 30) -> dict[str, Any]:
+    """Convenience wrapper: how many implied moves away is this target?
+
+    Under 1.0 the options market already considers the move ordinary. Above
+    about 2.0 the report is claiming something the people pricing the risk do
+    not believe.
+    """
+    implied = implied_move(symbol, days)
+    if not implied.get("ok"):
+        return implied
+    move_pct = abs(target - entry) / entry * 100
+    multiple = round(move_pct / implied["implied_move_pct"], 2) if implied["implied_move_pct"] else None
+    return {**implied, "target_move_pct": round(move_pct, 2), "implied_multiples": multiple}
+
+
+def relative_strength(symbol: str, benchmark: str = "SPY", peer: str | None = None) -> dict[str, Any]:
+    """Trailing returns against a benchmark, and optionally a sector proxy.
+
+    A process that sets every entry below the current price buys whatever has
+    been falling, which is how a report ends up long the weakest names in the
+    weakest sectors and calls it value. This puts the relative move on the page
+    so that choice has to be made deliberately.
+    """
+    windows = {"1m": 21, "3m": 63, "6m": 126}
+    needed = max(windows.values()) + 5
+
+    def closes(sym: str) -> list[float]:
+        rows, _, errors = _load_bars(sym, needed)
+        if not rows:
+            raise ValueError(f"no history for {sym}: {'; '.join(errors[:2])}")
+        return [float(r["Close"]) for r in rows]
+
+    try:
+        series = {symbol.upper(): closes(symbol), benchmark.upper(): closes(benchmark)}
+        if peer:
+            series[peer.upper()] = closes(peer)
+
+        def trailing(values: list[float], back: int) -> float | None:
+            if len(values) <= back:
+                return None
+            return round((values[-1] - values[-1 - back]) / values[-1 - back] * 100, 2)
+
+        returns = {sym: {w: trailing(vals, n) for w, n in windows.items()}
+                   for sym, vals in series.items()}
+        me = returns[symbol.upper()]
+
+        def spread(other: str) -> dict[str, float | None]:
+            them = returns[other]
+            return {w: (round(me[w] - them[w], 2) if me[w] is not None and them[w] is not None else None)
+                    for w in windows}
+
+        out = {
+            "ok": True, "source": "computed", "symbol": symbol.upper(),
+            "returns_pct": returns,
+            "vs_benchmark_pct": spread(benchmark.upper()),
+            "benchmark": benchmark.upper(),
+        }
+        if peer:
+            out["vs_peer_pct"] = spread(peer.upper())
+            out["peer"] = peer.upper()
+        beats = [w for w, v in out["vs_benchmark_pct"].items() if v is not None and v > 0]
+        out["leadership"] = (
+            f"outperforming {benchmark.upper()} on {'/'.join(beats)}" if beats
+            else f"lagging {benchmark.upper()} on every window measured")
+        return out
+    except Exception as exc:  # noqa: BLE001
+        return _fail("relative_strength", exc)
+
+
+def short_interest(symbol: str) -> dict[str, Any]:
+    """Reported short interest and days to cover.
+
+    Matters in both directions and the report has been flying blind on it: a
+    crowded short is fuel under a long, and it is also the reason a short idea
+    can be right about the business and still lose. Days to cover is the number
+    to read — shares short divided by average daily volume, i.e. how long the
+    exit takes.
+    """
+    ticker = symbol.strip().upper()
+    last_error: Exception = ValueError(f"no short interest reported for {ticker}")
+    for asset_class in ("stocks", "etf"):
+        try:
+            data = _get(f"https://api.nasdaq.com/api/quote/{ticker}/short-interest",
+                        params={"assetClass": asset_class}).json()
+            rows = (((data.get("data") or {}).get("shortInterestTable") or {}).get("rows")) or []
+            if not rows:
+                continue
+            latest = rows[0]
+            shares = _clean_money(latest.get("interest"))
+            volume = _clean_money(latest.get("avgDailyShareVolume"))
+            return {
+                "ok": True, "source": "nasdaq", "symbol": ticker,
+                "settlement_date": latest.get("settlementDate"),
+                "shares_short": shares,
+                "avg_daily_volume": volume,
+                "days_to_cover": _num(latest.get("daysToCover")),
+                # Two prints, so the direction is visible rather than just the level.
+                "prior_shares_short": _clean_money(rows[1].get("interest")) if len(rows) > 1 else None,
+                "history": [
+                    {"date": r.get("settlementDate"),
+                     "shares_short": _clean_money(r.get("interest")),
+                     "days_to_cover": _num(r.get("daysToCover"))}
+                    for r in rows[:6]
+                ],
+            }
+        except Exception as exc:  # noqa: BLE001
+            last_error = exc
+    return _fail("nasdaq", last_error)
+
+
+def analysts(symbol: str) -> dict[str, Any]:
+    """Analyst recommendation trend and the recent earnings surprise record.
+
+    Estimate revisions proper are paywalled everywhere useful, so this is the
+    free proxy: the month-by-month buy/hold/sell mix, which moves when analysts
+    change their minds, and whether the company has been beating or missing.
+    Read the *change* across months, not the level — a stock nobody upgrades is
+    not the same as one being upgraded from a low base.
+    """
+    if not FINNHUB_KEY:
+        return {"ok": False, "source": "finnhub", "error": "no api key"}
+    out: dict[str, Any] = {"ok": True, "source": "finnhub", "symbol": symbol.upper()}
+    try:
+        trend = _get("https://finnhub.io/api/v1/stock/recommendation",
+                     params={"symbol": symbol.upper(), "token": FINNHUB_KEY}).json() or []
+        rows = sorted(trend, key=lambda r: r.get("period", ""), reverse=True)[:4]
+        out["recommendation_trend"] = [
+            {"period": r.get("period"), "strong_buy": r.get("strongBuy"), "buy": r.get("buy"),
+             "hold": r.get("hold"), "sell": r.get("sell"), "strong_sell": r.get("strongSell")}
+            for r in rows
+        ]
+
+        def bullish_share(row: dict) -> float | None:
+            total = sum(row.get(k) or 0 for k in
+                        ("strong_buy", "buy", "hold", "sell", "strong_sell"))
+            if not total:
+                return None
+            return round(((row.get("strong_buy") or 0) + (row.get("buy") or 0)) / total * 100, 1)
+
+        shares = [bullish_share(r) for r in out["recommendation_trend"]]
+        if len(shares) >= 2 and shares[0] is not None and shares[-1] is not None:
+            out["bullish_share_pct"] = shares[0]
+            out["bullish_share_change_pct"] = round(shares[0] - shares[-1], 1)
+            out["revision_direction"] = (
+                "improving" if shares[0] > shares[-1] else
+                "deteriorating" if shares[0] < shares[-1] else "flat")
+    except Exception as exc:  # noqa: BLE001
+        out["recommendation_error"] = f"{type(exc).__name__}: {exc}"
+
+    try:
+        surprises = _get("https://finnhub.io/api/v1/stock/earnings",
+                         params={"symbol": symbol.upper(), "token": FINNHUB_KEY}).json() or []
+        out["earnings_surprises"] = [
+            {"period": r.get("period"), "actual": r.get("actual"),
+             "estimate": r.get("estimate"), "surprise_pct": r.get("surprisePercent")}
+            for r in surprises[:4]
+        ]
+        beats = [r for r in out["earnings_surprises"] if (r.get("surprise_pct") or 0) > 0]
+        out["beats_last_4"] = len(beats)
+    except Exception as exc:  # noqa: BLE001
+        out["surprise_error"] = f"{type(exc).__name__}: {exc}"
+
+    if "recommendation_trend" not in out and "earnings_surprises" not in out:
+        return {"ok": False, "source": "finnhub", "symbol": symbol.upper(),
+                "error": out.get("recommendation_error") or out.get("surprise_error")}
+    return out
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = parser.add_subparsers(dest="cmd", required=True)
@@ -1010,6 +1273,23 @@ def main(argv: list[str] | None = None) -> int:
     p = sub.add_parser("depth", help="bid, ask, and spread for an equity")
     p.add_argument("symbol")
 
+    p = sub.add_parser("implied", help="options-implied move; --entry/--target to compare a target against it")
+    p.add_argument("symbol")
+    p.add_argument("--days", type=int, default=30, help="aim for the expiry nearest this many days out")
+    p.add_argument("--entry", type=float)
+    p.add_argument("--target", type=float)
+
+    p = sub.add_parser("relstrength", help="trailing returns vs a benchmark and an optional sector proxy")
+    p.add_argument("symbol")
+    p.add_argument("--benchmark", default="SPY")
+    p.add_argument("--peer", help="sector ETF, e.g. XLE for an energy name")
+
+    p = sub.add_parser("short", help="reported short interest and days to cover")
+    p.add_argument("symbol")
+
+    p = sub.add_parser("analysts", help="recommendation trend and earnings surprise record")
+    p.add_argument("symbol")
+
     args = parser.parse_args(argv)
 
     if args.cmd == "quote":
@@ -1032,6 +1312,16 @@ def main(argv: list[str] | None = None) -> int:
         result = profile(args.symbol)
     elif args.cmd == "depth":
         result = quote_depth(args.symbol)
+    elif args.cmd == "implied":
+        result = (target_vs_implied(args.symbol, args.entry, args.target, args.days)
+                  if args.entry is not None and args.target is not None
+                  else implied_move(args.symbol, args.days))
+    elif args.cmd == "relstrength":
+        result = relative_strength(args.symbol, args.benchmark, args.peer)
+    elif args.cmd == "short":
+        result = short_interest(args.symbol)
+    elif args.cmd == "analysts":
+        result = analysts(args.symbol)
     else:  # pragma: no cover - argparse enforces the choices
         parser.error(f"unknown command {args.cmd}")
 

@@ -30,5 +30,11 @@ jobs:
         with:
           python-version: "3.12"
 
+      # Deliberately no `pip install -r requirements.txt`. The suite is
+      # stdlib-only and runs in under a second, and the bare runner is what
+      # caught an `import market_data` sitting above its own try/except in
+      # `_current_price` — in production that would have taken down grading
+      # for every position the first time the import failed for any reason.
+      # tests/test_no_hard_dependencies.py keeps the property true.
       - name: Run the unit tests
         run: python -m unittest discover -s tests -v

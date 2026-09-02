@@ -117,8 +117,32 @@ traded on.
    If several ratios land just above their floor, be suspicious: that is the
    signature of targets fitted to clear the bar rather than levels derived from
    the chart or a valuation. Say so in `data_quality_notes` if you see it.
-6. **Write `report.json`** and validate it.
-7. **Verify** before finishing:
+
+   **Then check the stop the other way.** Pull `atr14` from
+   `market_data.py history <symbol>` and confirm the stop clears the floor for
+   this idea's horizon and asset class — 2.0 ATR for a swing stock, 1.8 for an
+   ETF, 2.5 for crypto or futures, 1.0 for anything intraday. A ratio cleared
+   by a tight
+   stop is not cleared: the trade gets taken out by ordinary daily range before
+   the thesis resolves, which is what happened to every one of the first ten
+   closed positions. Do not fix this by moving the target — widen the stop and
+   drop the idea if the ratio no longer holds.
+6. **Carry `win_probability` and `evidence` through.** Both come from the
+   candidate; neither is yours to invent, but both are yours to sanity-check.
+
+   `win_probability` is the estimated chance the target is hit before the stop.
+   Its baseline is `1 / (1 + risk_reward)` — the driftless random-walk
+   probability, which is also the break-even hit rate. If a candidate arrives
+   without one, set it from the notes' own reasoning if the notes support a
+   number, and leave it out otherwise; validation warns rather than failing, and
+   an invented probability is worse than a missing one.
+
+   `evidence` is what conviction now rests on: the score must equal the number
+   of *distinct* `kind` values listed, 1 kind for a 2 up to 4+ for a 5. If a
+   candidate claims conviction 4 on two kinds of confirmation, publish it at 3.
+   Lowering the score is the fix; dropping the idea is not.
+7. **Write `report.json`** and validate it.
+8. **Verify** before finishing:
 
 ```bash
 python -c "

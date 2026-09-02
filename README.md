@@ -29,7 +29,9 @@ to a Google Sheet.
    ├─ Phase 2b — VALIDATE  (code, not a model)
    │    Recomputes R:R, checks direction consistency, compares entries to
    │    live prices, verifies earnings dates against the real calendar,
-   │    sizes targets in ATR, and resolves every cited URL.
+   │    sizes targets and stops in ATR, measures expectancy against the
+   │    random-walk baseline, checks conviction against the evidence
+   │    listed for it, and resolves every cited URL.
    │
    ├─ Phase 2c — RED TEAM  (Opus, ~12 min)
    │    A separate pass whose only job is to attack the ideas and kill
@@ -181,6 +183,7 @@ scripts/
   build_context.py       prior picks and outcomes, so research has memory
   ensure_report.py       guarantees a publishable report.json exists
   publish_sheets.py      Sheets writer + performance grader
+  dedupe_positions.py    one-off: collapse re-pitched ideas into one position
   step_summary.py        the Actions run summary
   check_sources.py       probes every data source and capability
   check_sheets.py        write/read/delete test against the Sheet

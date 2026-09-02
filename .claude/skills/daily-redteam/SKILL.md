@@ -47,11 +47,34 @@ For each recommendation, in order:
    resistance, or a defensible valuation — or whether they are round numbers
    dressed up.
 
-5. **What breaks it that nobody mentioned?** Look for the risk absent from
+   **`stop_distance` is the one to read first.** The reward-to-risk floor can
+   be cleared by finding a better target or by moving the stop closer, and only
+   one of those is work. Every one of this report's first ten stop-outs had a
+   stop tighter than 1.6 ATR, and ideas shipped at 29:1 and 26.7:1 on stops of
+   0.19-0.38 ATR — ratios that measure nothing. A `stop_distance` warning on an
+   otherwise healthy-looking ratio means the ratio is an artifact. Widen the
+   stop and recheck the reward-to-risk; if it no longer clears the floor, the
+   idea never did.
+
+5. **Does it beat a coin flip?** Read `expectancy` against
+   `breakeven_probability` in the validation block. The baseline is
+   `1 / (1 + R:R)` — simultaneously the driftless random-walk probability of
+   touching the target first and the break-even hit rate — so every idea is
+   implicitly claiming to beat it. Ask what specifically justifies the claimed
+   edge. "Good setup" does not. A `claimed_edge` above 20 points needs a
+   mechanism named in the thesis, or the probability comes down.
+
+6. **Is conviction paid for?** `conviction_evidence` names the score the listed
+   evidence actually supports. When it disagrees with the score claimed, lower
+   the score — that is the fix, not a kill. Watch for the same confirmation
+   listed twice under different `kind` values; distinct kinds are the whole
+   point.
+
+7. **What breaks it that nobody mentioned?** Look for the risk absent from
    `key_risk`: a lockup expiry, a competitor's earnings two days earlier, an
    index rebalance, a correlated macro print, a pending legal decision.
 
-6. **Does it survive the correlation test?** Several ideas that all need the
+8. **Does it survive the correlation test?** Several ideas that all need the
    same rate path or the same sector to work are one position wearing different
    tickers. Say so, and cut the weakest of the cluster.
 

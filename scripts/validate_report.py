@@ -47,6 +47,51 @@ ATR_LIMIT = {"intraday": 2.0, "swing": 6.0}
 # Sessions per horizon, for the "is this move reachable in time" estimate.
 HORIZON_SESSIONS = {"intraday": 1, "swing": 15}
 
+# How far the stop must sit from the entry, in ATRs, before it is a thesis
+# invalidation rather than a coin flip on ordinary daily range.
+#
+# This exists because the R:R floor above can be cleared two ways — find a
+# better target, or move the stop closer — and the second is free. In this
+# report's first month it was taken repeatedly: KRE was republished three times
+# at an unchanged 76.80 entry with the stop walked 74.20 -> 75.40 -> 75.20,
+# lifting R:R from 2.19 to 4.07 while making the trade strictly worse. All ten
+# stop-outs on record had a stop tighter than 1.6 ATR; nothing filled at 2.0 ATR
+# or wider has been stopped. Ideas shipped at 29:1, 26.7:1 and 15:1 on stops of
+# 0.19-0.38 ATR, which is not an opportunity, it is a measurement of nothing.
+MIN_STOP_ATR = {"intraday": 1.0, "swing": 2.0}
+SAFE_STOP_ATR = {"intraday": 1.5, "swing": 2.5}
+
+# ...adjusted for what is actually being stopped out, because ATR measures the
+# ordinary day and not the ways each kind of instrument leaves it:
+#
+#   etf       a broad basket cannot gap on one company's news, so its ATR
+#             already describes most of its downside — it needs less cushion
+#   stock     the baseline; earnings, guidance and single-name headlines gap
+#   crypto    trades through the weekend with no halts and fat tails, so the
+#             move that takes out a stop is not drawn from the daily range
+#   futures   leveraged, gaps on the overnight session, and a stop-out is a
+#             margin event rather than a closed trade
+#
+# Applied to swing only. An intraday position is flat by the close, so the
+# overnight and weekend risk these factors price simply does not apply to it —
+# and with a 2.0 ATR target ceiling there is no room for it either.
+ASSET_STOP_FACTOR = {"etf": 0.9, "stock": 1.0, "crypto": 1.25, "futures": 1.25}
+
+
+def stop_atr_bounds(horizon: str, asset_class: str | None) -> tuple[float | None, float | None]:
+    """The (floor, guide) this idea's stop has to clear, in ATRs.
+
+    Tune `MIN_STOP_ATR` for the horizon and `ASSET_STOP_FACTOR` for the
+    instrument; the two multiply. Long-term has neither, because its downside is
+    a bear-case price rather than a stop.
+    """
+    floor, safe = MIN_STOP_ATR.get(horizon), SAFE_STOP_ATR.get(horizon)
+    if floor is None or safe is None:
+        return None, None
+    factor = ASSET_STOP_FACTOR.get(asset_class or "", 1.0) if horizon == "swing" else 1.0
+    return round(floor * factor, 2), round(safe * factor, 2)
+
+
 PASS, WARN, FAIL = "pass", "warn", "fail"
 
 
@@ -203,6 +248,94 @@ def check_target_feasibility(idea: dict, atr: float | None) -> list[dict]:
     return [_check("target_feasibility", PASS, detail)]
 
 
+def check_stop_distance(idea: dict, atr: float | None) -> list[dict]:
+    """Is the stop outside ordinary daily range, or inside the noise?
+
+    A stop closer to the entry than a day's typical movement does not test the
+    thesis, it tests the tape's willingness to sit still. It is also the cheap
+    way to clear the reward-to-risk floor, which is why the floor alone was not
+    enough — see MIN_STOP_ATR.
+    """
+    horizon = idea.get("horizon", "swing")
+    if horizon == "long_term":
+        return [_check("stop_distance", PASS,
+                       "long-term downside is a bear case, not a stop — no ATR floor applies")]
+    asset_class = idea.get("asset_class")
+    floor, safe = stop_atr_bounds(horizon, asset_class)
+    entry = (idea.get("entry") or {}).get("ideal")
+    stop = idea.get("stop")
+    if floor is None or safe is None:
+        return []
+    if entry is None or stop is None:
+        return [_check("stop_distance", FAIL, "no entry or stop, so the stop distance is undefined")]
+    if atr is None:
+        return [_check("stop_distance", WARN, "no ATR available to measure the stop against")]
+    if atr == 0:
+        return [_check("stop_distance", WARN, "ATR is zero")]
+
+    multiple = round(abs(entry - stop) / atr, 2)
+    label = f"{horizon} {asset_class}" if asset_class else horizon
+    detail = f"stop is {multiple} ATR from entry"
+    if multiple < floor:
+        return [_check("stop_distance", FAIL,
+                       detail + f" — inside the noise; a {label} stop must clear {floor} ATR")]
+    if multiple < safe:
+        return [_check("stop_distance", WARN,
+                       detail + f" — clears the {floor} ATR floor for a {label} but sits under "
+                                f"the {safe} ATR level where stop-outs have clustered")]
+    return [_check("stop_distance", PASS,
+                   detail + f", clear of the {safe} ATR guide for a {label}")]
+
+
+def check_expectancy(idea: dict, computed_rr: float | None) -> tuple[list[dict], dict[str, Any]]:
+    """Does this idea claim an edge, and is the claim stated honestly?
+
+    Reward-to-risk on its own says nothing about whether a trade makes money:
+    3:1 at a 20% hit rate loses. What matters is expectancy, and expectancy
+    needs a probability the report has never been asked to state.
+
+    The baseline is not arbitrary. For a driftless random walk, the chance of
+    touching the target before the stop is exactly `risk / (risk + reward)`,
+    which is `1 / (1 + R:R)` — and at that probability expectancy is precisely
+    zero. So the break-even hit rate and the no-edge hit rate are the same
+    number, and every published idea is implicitly claiming to beat it. Saying
+    by how much, out loud and next to the baseline, is the whole point: an idea
+    that needs a 55% hit rate on a setup that coin-flips at 25% is visible as
+    the claim it is, instead of hiding behind a healthy-looking ratio.
+
+    Returns the checks and the figures to store in the validation block.
+    """
+    if computed_rr is None or computed_rr <= 0:
+        return [], {}
+    baseline = round(1 / (1 + computed_rr), 3)
+    stated = idea.get("win_probability")
+    figures: dict[str, Any] = {"breakeven_probability": baseline}
+
+    if stated is None:
+        return [_check("expectancy", WARN,
+                       f"no win_probability stated; this idea needs better than "
+                       f"{baseline:.0%} to break even at {computed_rr}:1")], figures
+    if not 0 < stated < 1:
+        return [_check("expectancy", FAIL,
+                       f"win_probability {stated} is not a probability between 0 and 1")], figures
+
+    # Expressed in R — units of the risk taken — so it compares across ideas of
+    # different sizes and prices.
+    expectancy_r = round(stated * computed_rr - (1 - stated), 3)
+    edge = round(stated - baseline, 3)
+    figures.update(stated_win_probability=stated, expectancy_r=expectancy_r, claimed_edge=edge)
+    detail = (f"{stated:.0%} claimed vs {baseline:.0%} break-even at {computed_rr}:1 "
+              f"— expectancy {expectancy_r:+.2f}R")
+
+    if expectancy_r <= 0:
+        return [_check("expectancy", FAIL,
+                       detail + " — the idea loses money at its own stated hit rate")], figures
+    if edge > 0.20:
+        return [_check("expectancy", WARN,
+                       detail + f" — a {edge:+.0%} edge over a coin flip is a large claim; "
+                                "the thesis has to carry it")], figures
+    return [_check("expectancy", PASS, detail)], figures
+
 # Underlyings where a Robinhood futures contract exists, so a spot expression —
 # especially a bearish one — is the wrong instrument. See config/universe.md.
 FUTURES_EQUIVALENT = {
@@ -243,6 +376,51 @@ def check_instrument_choice(idea: dict) -> list[dict]:
     return [_check("instrument_choice", PASS,
                    f"{symbol} spot is correct for a long-term hold; futures roll costs make "
                    "multi-year contract exposure awkward")]
+
+
+# How many *distinct kinds* of independent confirmation a conviction score is
+# allowed to rest on. Conviction spent its first month meaning nothing: 39 of
+# 57 published ideas scored 3, which is not a judgement, it is a default. Tying
+# the score to a count of named, checkable confirmations makes it separate
+# again — and makes it auditable, since the evidence has to be on the page.
+CONVICTION_EVIDENCE = {2: 1, 3: 2, 4: 3, 5: 4}
+
+# The kinds themselves live in the schema's `evidence.kind` enum. Two entries
+# of the same kind are one confirmation: three articles about the same press
+# release are one fact, and counting them as three is how a thin idea comes to
+# look sturdy.
+
+
+def check_conviction_evidence(idea: dict) -> list[dict]:
+    """Does the evidence on the page support the conviction claimed for it?
+
+    Deliberately a warning, not a failure. The fix for an over-scored idea is a
+    lower score, not a deleted idea, and lowering it is the red team's job — so
+    this states the supported score and leaves phase 2c to apply it.
+    """
+    conviction = idea.get("conviction")
+    if conviction is None:
+        return []
+    required = CONVICTION_EVIDENCE.get(conviction)
+    if required is None:
+        return []
+
+    kinds = {e.get("kind") for e in (idea.get("evidence") or []) if e.get("kind")}
+    if not kinds:
+        return [_check("conviction_evidence", WARN,
+                       f"conviction {conviction} with no evidence listed — it needs "
+                       f"{required} independent confirmation(s) named in `evidence`")]
+    if len(kinds) < required:
+        supported = max((score for score, need in CONVICTION_EVIDENCE.items()
+                         if need <= len(kinds)), default=2)
+        return [_check("conviction_evidence", WARN,
+                       f"conviction {conviction} needs {required} independent kinds of "
+                       f"confirmation but only {len(kinds)} "
+                       f"{'is' if len(kinds) == 1 else 'are'} listed "
+                       f"({', '.join(sorted(kinds))}) — supported score is {supported}")]
+    return [_check("conviction_evidence", PASS,
+                   f"conviction {conviction} rests on {len(kinds)} independent kinds: "
+                   f"{', '.join(sorted(kinds))}")]
 
 
 def check_conviction_and_size(idea: dict) -> list[dict]:
@@ -432,10 +610,14 @@ def validate_idea(idea: dict, prices: dict, atrs: dict, calendar: dict,
     checks += check_catalyst_date(idea, today)
     checks += check_earnings_date(idea, calendar)
     checks += check_target_feasibility(idea, atr)
+    checks += check_stop_distance(idea, atr)
+    expectancy_checks, expectancy = check_expectancy(idea, computed_rr)
+    checks += expectancy_checks
     checks += check_price_freshness(idea, (quotes or {}).get(symbol))
     checks += check_spread(idea, (depths or {}).get(symbol))
     checks += check_instrument_choice(idea)
     checks += check_conviction_and_size(idea)
+    checks += check_conviction_evidence(idea)
     checks += check_sources(idea, session)
 
     verdict = FAIL if any(c["status"] == FAIL for c in checks) else (
@@ -445,6 +627,13 @@ def validate_idea(idea: dict, prices: dict, atrs: dict, calendar: dict,
         "verdict": verdict,
         "computed_risk_reward": computed_rr,
         "claimed_risk_reward": idea.get("risk_reward"),
+        # Recomputed here, never read back from the idea: the whole point is to
+        # measure the claim against a baseline the model does not get to pick.
+        **expectancy,
+        "stop_atr_multiple": (
+            round(abs((idea.get("entry") or {}).get("ideal") - idea["stop"]) / atr, 2)
+            if atr and idea.get("stop") is not None
+            and (idea.get("entry") or {}).get("ideal") is not None else None),
         "live_price": live,
         "live_price_asof": ((quotes or {}).get(symbol) or {}).get("asof"),
         "market_session": ((quotes or {}).get(symbol) or {}).get("session"),

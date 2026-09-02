@@ -350,6 +350,15 @@
             "null"
           ]
         },
+        "win_probability": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "exclusiveMinimum": 0,
+          "exclusiveMaximum": 1,
+          "description": "Estimated probability the target is reached before the stop. Reward-to-risk alone says nothing about whether an idea makes money \u2014 3:1 at a 20% hit rate loses. validate_report.py compares this against 1/(1+R:R), the driftless random-walk probability, which is also the break-even hit rate; anything above it is the edge being claimed."
+        },
         "validation": {
           "type": "object",
           "additionalProperties": true,
@@ -404,6 +413,41 @@
         "counter_argument": {
           "type": "string",
           "description": "The strongest case against, from the falsification pass"
+        },
+        "evidence": {
+          "type": "array",
+          "maxItems": 8,
+          "description": "The independent confirmations behind this idea, one entry each. Conviction is a count of these, not a feeling: validate_report.py checks the number of distinct `kind` values against the score claimed. Two entries of the same kind are one confirmation \u2014 three articles about one press release are one fact.",
+          "items": {
+            "type": "object",
+            "required": [
+              "kind",
+              "detail"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "dated_catalyst",
+                  "primary_document",
+                  "positioning",
+                  "valuation_anchor",
+                  "technical_level",
+                  "counter_argument_answered"
+                ],
+                "description": "dated_catalyst: a scheduled event verified against a calendar, not claimed. primary_document: a filing, transcript or release actually read, not a summary of one. positioning: a measured flow or crowding read \u2014 insider buys, short interest, analyst revisions, options-implied move, relative strength. valuation_anchor: a defended number for what the asset is worth. technical_level: a level from real price history, not a round number. counter_argument_answered: the strongest case against, answered with evidence."
+              },
+              "detail": {
+                "type": "string",
+                "description": "What the confirmation actually is"
+              },
+              "source": {
+                "type": "string",
+                "description": "URL, where the confirmation has one"
+              }
+            }
+          }
         },
         "sources": {
           "type": "array",
