@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-09-03T09:50:56-04:00",
-  "last_run_at": "2026-09-03T09:50:56-04:00",
+  "updated_at": "2026-09-03T18:30:50-04:00",
+  "last_run_at": "2026-09-03T18:30:50-04:00",
   "discovery_error": null,
   "open": [
     {
@@ -28,6 +28,7 @@
         "has_threshold": true,
         "has_proration_preference": false,
         "is_cash_offer": true,
+        "consideration": "cash",
         "is_common_equity": true,
         "subject_security": "Common Shares",
         "offer_price": null,
@@ -50,7 +51,10 @@
       "expiration_date": "2026-10-05",
       "withdrawal_deadline": "2026-10-05",
       "withdrawal_basis": "expiration_date",
-      "max_shares_sought": null
+      "max_shares_sought": null,
+      "documents_read": [
+        "d68073dex99a1iii.htm"
+      ]
     },
     {
       "accession": "0001104659-26-104342",
@@ -68,7 +72,7 @@
       "status": "rejected",
       "tier": null,
       "rejections": [
-        "subject security is not common equity (unidentified security)"
+        "no ticker for CIK 0001876006 in the filing or the SEC company list \u2014 cannot price the trade"
       ],
       "risk_flags": [],
       "last_scored": "2026-09-03",
@@ -77,8 +81,9 @@
         "has_threshold": true,
         "has_proration_preference": true,
         "is_cash_offer": true,
-        "is_common_equity": false,
-        "subject_security": null,
+        "consideration": "cash",
+        "is_common_equity": true,
+        "subject_security": "shares of beneficial interest",
         "offer_price": null,
         "dutch_range": null,
         "price_basis": null,
@@ -101,7 +106,10 @@
       "expiration_date": "2026-09-29",
       "withdrawal_deadline": "2026-09-29",
       "withdrawal_basis": "expiration_date",
-      "max_shares_sought": null
+      "max_shares_sought": null,
+      "documents_read": [
+        "tm2624317d1_ex99-xb.htm"
+      ]
     },
     {
       "accession": "0001104659-26-104051",
@@ -120,7 +128,7 @@
       "tier": null,
       "rejections": [
         "odd lots mentioned but no acceptance-before-proration language",
-        "not a cash offer \u2014 reads as an exchange offer for other securities",
+        "no cash consideration stated in the document",
         "subject security is not common equity (unidentified security)",
         "no expiration date could be read from the document"
       ],
@@ -131,6 +139,7 @@
         "has_threshold": true,
         "has_proration_preference": false,
         "is_cash_offer": false,
+        "consideration": "unstated",
         "is_common_equity": false,
         "subject_security": null,
         "offer_price": null,
@@ -153,7 +162,10 @@
       "expiration_date": null,
       "withdrawal_deadline": null,
       "withdrawal_basis": "expiration_date",
-      "max_shares_sought": null
+      "max_shares_sought": null,
+      "documents_read": [
+        "tm2623323d1_ex99-a1d.htm"
+      ]
     },
     {
       "accession": "0001193125-26-368756",
@@ -171,7 +183,7 @@
       "status": "rejected",
       "tier": null,
       "rejections": [
-        "not a cash offer \u2014 reads as an exchange offer for other securities"
+        "no ticker for CIK 0001954360 in the filing or the SEC company list \u2014 cannot price the trade"
       ],
       "risk_flags": [],
       "last_scored": "2026-09-03",
@@ -179,7 +191,8 @@
       "terms": {
         "has_threshold": true,
         "has_proration_preference": true,
-        "is_cash_offer": false,
+        "is_cash_offer": true,
+        "consideration": "cash",
         "is_common_equity": true,
         "subject_security": "Common Stock",
         "offer_price": 0.01,
@@ -204,7 +217,197 @@
       "expiration_date": "2026-09-24",
       "withdrawal_deadline": "2026-09-24",
       "withdrawal_basis": "expiration_date",
-      "max_shares_sought": 1051383
+      "max_shares_sought": 1051383,
+      "documents_read": [
+        "d145609dex99a1ii.htm"
+      ]
+    },
+    {
+      "accession": "0001104659-26-099271",
+      "cik": "0002031750",
+      "company": "Ares Core Infrastructure Fund",
+      "ticker": "",
+      "form": "SC TO-I",
+      "filed": "2026-08-20",
+      "url": "https://www.sec.gov/Archives/edgar/data/2031750/000110465926099271/tm2623498d1_ex99-a1ii.htm",
+      "index_url": "https://www.sec.gov/Archives/edgar/data/2031750/000110465926099271/0001104659-26-099271-index.htm",
+      "highlights": [],
+      "documents": [
+        {
+          "name": "tm2623498d1_ex99-a1ii.htm",
+          "type": "EX-99.(A)(1)(II)",
+          "url": "https://www.sec.gov/Archives/edgar/data/2031750/000110465926099271/tm2623498d1_ex99-a1ii.htm"
+        }
+      ],
+      "found_by": "\"odd lot\" / SC TO-I",
+      "first_seen": "2026-09-03",
+      "status": "rejected",
+      "tier": null,
+      "rejections": [
+        "no ticker for CIK 0002031750 in the filing or the SEC company list \u2014 cannot price the trade"
+      ],
+      "risk_flags": [],
+      "last_scored": "2026-09-03",
+      "warnings": [],
+      "documents_read": [
+        "tm2623498d1_ex99-a1ii.htm"
+      ],
+      "document": "tm2623498d1_ex99-a1ii.htm",
+      "terms": {
+        "has_threshold": true,
+        "has_proration_preference": true,
+        "is_cash_offer": true,
+        "consideration": "cash",
+        "is_common_equity": true,
+        "subject_security": "Common Shares",
+        "offer_price": 0.01,
+        "dutch_range": null,
+        "price_basis": "fixed",
+        "expiration_date": "2026-09-18",
+        "withdrawal_deadline": "2026-09-18",
+        "withdrawal_basis": "expiration_date",
+        "max_shares_sought": 12386860,
+        "preference_removed": false,
+        "record_holder_condition": null,
+        "restricted_offer": false,
+        "terminated": false,
+        "risk_flags": [
+          "foreign_private_issuer"
+        ]
+      },
+      "odd_lot_paragraph": "style=\"text-indent:20pt; margin-top:8pt; width:456pt; line-height:11.5pt;\"> Any Shareholder who (i) owns, beneficially or of record, fewer than 100 Shares in the aggregate (an \u201codd lot\u201d), (ii) properly tenders all, but not less than all, of its Shares, completes the section entitled \u201cOdd Lots\u201d in the Letter of Transmittal, and (iii) does not properly withdraw any of the tendered Shares before the Expiration Date is referred to herein as an \u201cOdd Lot Holder.\u201d To the extent that the number of Shares duly tendered and not withdrawn exceed the number of Shares offered for repurchase, all of the Shares of Odd Lot Holders will be accepted for payment before any pro rata reduction of the repurchase of Shares properly tendered and not withdrawn by Shareholders who are not Odd Lot Holders, provided that this priority to Odd Lot Holders is not available to partial tenders or to beneficial or record holders of 100 or more Shares in the aggregate, even if such holders have separate accounts or certificates representing fewer than 100 Shares. To qualify for this priority, an Odd Lot Holder must properly tender (and not withdraw) all Shares owned by such Odd Lot Holder in accordance with the procedures described in Section 4 below.",
+      "offer_price": 0.01,
+      "dutch_range": null,
+      "price_basis": "fixed",
+      "expiration_date": "2026-09-18",
+      "withdrawal_deadline": "2026-09-18",
+      "withdrawal_basis": "expiration_date",
+      "max_shares_sought": 12386860
+    },
+    {
+      "accession": "0001104659-26-099224",
+      "cik": "0001918712",
+      "company": "ARES STRATEGIC INCOME FUND",
+      "ticker": "",
+      "form": "SC TO-I",
+      "filed": "2026-08-20",
+      "url": "https://www.sec.gov/Archives/edgar/data/1918712/000110465926099224/tm2623503d1_ex99-a1ii.htm",
+      "index_url": "https://www.sec.gov/Archives/edgar/data/1918712/000110465926099224/0001104659-26-099224-index.htm",
+      "highlights": [],
+      "documents": [
+        {
+          "name": "tm2623503d1_ex99-a1ii.htm",
+          "type": "EX-99.(A)(1)(II)",
+          "url": "https://www.sec.gov/Archives/edgar/data/1918712/000110465926099224/tm2623503d1_ex99-a1ii.htm"
+        }
+      ],
+      "found_by": "\"odd lot\" / SC TO-I",
+      "first_seen": "2026-09-03",
+      "status": "rejected",
+      "tier": null,
+      "rejections": [
+        "no ticker for CIK 0001918712 in the filing or the SEC company list \u2014 cannot price the trade"
+      ],
+      "risk_flags": [],
+      "last_scored": "2026-09-03",
+      "warnings": [],
+      "documents_read": [
+        "tm2623503d1_ex99-a1ii.htm"
+      ],
+      "document": "tm2623503d1_ex99-a1ii.htm",
+      "terms": {
+        "has_threshold": true,
+        "has_proration_preference": true,
+        "is_cash_offer": true,
+        "consideration": "cash",
+        "is_common_equity": true,
+        "subject_security": "Common Shares",
+        "offer_price": 0.01,
+        "dutch_range": null,
+        "price_basis": "fixed",
+        "expiration_date": "2026-09-18",
+        "withdrawal_deadline": "2026-09-18",
+        "withdrawal_basis": "expiration_date",
+        "max_shares_sought": 19264139,
+        "preference_removed": false,
+        "record_holder_condition": null,
+        "restricted_offer": false,
+        "terminated": false,
+        "risk_flags": [
+          "foreign_private_issuer"
+        ]
+      },
+      "odd_lot_paragraph": "style=\"text-indent:20pt; margin-top:8pt; text-align:justify; width:456pt; line-height:11.5pt;\"> Any Shareholder who (i) owns, beneficially or of record, fewer than 100 Shares in the aggregate (an \u201c odd lot \u201d), (ii) properly tenders all, but not less than all, of its Shares, completes the section entitled \u201cOdd Lots\u201d in the Letter of Transmittal, and (iii) does not properly withdraw any of the tendered Shares before the Expiration Date is referred to herein as an \u201c Odd Lot Holder .\u201d To the extent that the number of Shares duly tendered and not withdrawn exceed the number of Shares offered for repurchase, all of the Shares of Odd Lot Holders will be accepted for payment before any pro rata reduction of the repurchase of Shares properly tendered and not withdrawn by Shareholders who are not Odd Lot Holders, provided that this priority to Odd Lot Holders is not available to partial tenders or to beneficial or record holders of 100 or more Shares in the aggregate, even if such holders have separate accounts or certificates representing fewer than 100 Shares. To qualify for this priority, an Odd Lot Holder must properly tender (and not withdraw) all Shares owned by such Odd Lot Holder in accordance with the procedures described in Section 4 below.",
+      "offer_price": 0.01,
+      "dutch_range": null,
+      "price_basis": "fixed",
+      "expiration_date": "2026-09-18",
+      "withdrawal_deadline": "2026-09-18",
+      "withdrawal_basis": "expiration_date",
+      "max_shares_sought": 19264139
+    },
+    {
+      "accession": "0001193125-26-351012",
+      "cik": "0002008602",
+      "company": "Franklin Lexington Private Markets Fund",
+      "ticker": "",
+      "form": "SC TO-I",
+      "filed": "2026-08-14",
+      "url": "https://www.sec.gov/Archives/edgar/data/2008602/000119312526351012/d176314dex99a1ii.htm",
+      "index_url": "https://www.sec.gov/Archives/edgar/data/2008602/000119312526351012/0001193125-26-351012-index.htm",
+      "highlights": [],
+      "documents": [
+        {
+          "name": "d176314dex99a1ii.htm",
+          "type": "EX-99.(A)(1)(II)",
+          "url": "https://www.sec.gov/Archives/edgar/data/2008602/000119312526351012/d176314dex99a1ii.htm"
+        }
+      ],
+      "found_by": "\"odd lot\" / SC TO-I",
+      "first_seen": "2026-09-03",
+      "status": "rejected",
+      "tier": null,
+      "rejections": [
+        "no 'fewer than 100 shares' odd-lot threshold in the document",
+        "odd lots mentioned but no acceptance-before-proration language"
+      ],
+      "risk_flags": [],
+      "last_scored": "2026-09-03",
+      "warnings": [],
+      "documents_read": [
+        "d176314dex99a1ii.htm"
+      ],
+      "document": "d176314dex99a1ii.htm",
+      "terms": {
+        "has_threshold": false,
+        "has_proration_preference": false,
+        "is_cash_offer": true,
+        "consideration": "cash",
+        "is_common_equity": true,
+        "subject_security": "SHARES OF BENEFICIAL INTEREST",
+        "offer_price": null,
+        "dutch_range": null,
+        "price_basis": null,
+        "expiration_date": "2026-09-14",
+        "withdrawal_deadline": "2026-09-14",
+        "withdrawal_basis": "expiration_date",
+        "max_shares_sought": null,
+        "preference_removed": false,
+        "record_holder_condition": null,
+        "restricted_offer": false,
+        "terminated": false,
+        "risk_flags": [
+          "foreign_private_issuer"
+        ]
+      },
+      "odd_lot_paragraph": null,
+      "offer_price": null,
+      "dutch_range": null,
+      "price_basis": null,
+      "expiration_date": "2026-09-14",
+      "withdrawal_deadline": "2026-09-14",
+      "withdrawal_basis": "expiration_date",
+      "max_shares_sought": null
     }
   ],
   "archive": [
@@ -258,6 +461,679 @@
       "max_shares_sought": null,
       "outcome": "expired 2026-08-24, never cleared the gates",
       "archived_on": "2026-09-03"
+    },
+    {
+      "accession": "0001104659-26-087531",
+      "cik": "0001918712",
+      "company": "ARES STRATEGIC INCOME FUND",
+      "ticker": "",
+      "form": "SC TO-I",
+      "filed": "2026-07-28",
+      "url": "https://www.sec.gov/Archives/edgar/data/1918712/000110465926087531/tm2621335-1_sctoia.htm",
+      "index_url": "https://www.sec.gov/Archives/edgar/data/1918712/000110465926087531/0001104659-26-087531-index.htm",
+      "highlights": [],
+      "documents": [
+        {
+          "name": "tm2621335-1_sctoia.htm",
+          "type": "SC TO-I/A",
+          "url": "https://www.sec.gov/Archives/edgar/data/1918712/000110465926087531/tm2621335-1_sctoia.htm"
+        }
+      ],
+      "found_by": "\"odd lot\" / SC TO-I",
+      "first_seen": "2026-09-03",
+      "status": "expired",
+      "tier": null,
+      "rejections": [
+        "odd lots mentioned but no acceptance-before-proration language",
+        "no cash consideration stated in the document",
+        "offer expired 2026-06-18"
+      ],
+      "risk_flags": [],
+      "last_scored": "2026-09-03",
+      "warnings": [],
+      "documents_read": [
+        "tm2621335-1_sctoia.htm"
+      ],
+      "document": "tm2621335-1_sctoia.htm",
+      "terms": {
+        "has_threshold": true,
+        "has_proration_preference": false,
+        "is_cash_offer": false,
+        "consideration": "unstated",
+        "is_common_equity": true,
+        "subject_security": "Shares of Beneficial Interest",
+        "offer_price": 0.01,
+        "dutch_range": null,
+        "price_basis": "fixed",
+        "expiration_date": "2026-06-18",
+        "withdrawal_deadline": "2026-06-18",
+        "withdrawal_basis": "expiration_date",
+        "max_shares_sought": null,
+        "preference_removed": false,
+        "record_holder_condition": null,
+        "restricted_offer": false,
+        "terminated": false,
+        "risk_flags": []
+      },
+      "odd_lot_paragraph": "56,892,248 Shares of the Fund were validly tendered and not withdrawn prior to the expiration of the Offer. The Fund accepted for purchase 19,767,194 Shares on a pro rata basis based on the number of tendered Shares subject to \u201codd lot\u201d priority for holders of fewer than 100 Shares as described in the Offer to Purchase, representing 34.7% of the Shares of the Fund that were validly tendered and not withdrawn prior to the expiration of the Offer.",
+      "offer_price": 0.01,
+      "dutch_range": null,
+      "price_basis": "fixed",
+      "expiration_date": "2026-06-18",
+      "withdrawal_deadline": "2026-06-18",
+      "withdrawal_basis": "expiration_date",
+      "max_shares_sought": null,
+      "outcome": "expired 2026-06-18, never cleared the gates",
+      "archived_on": "2026-09-03"
+    },
+    {
+      "accession": "0001193125-26-313901",
+      "cik": "0002012139",
+      "company": "Fortress Private Lending Fund",
+      "ticker": "",
+      "form": "SC TO-I",
+      "filed": "2026-07-23",
+      "url": "https://www.sec.gov/Archives/edgar/data/2012139/000119312526313901/ck0002012139-ex99_a1ii.htm",
+      "index_url": "https://www.sec.gov/Archives/edgar/data/2012139/000119312526313901/0001193125-26-313901-index.htm",
+      "highlights": [],
+      "documents": [
+        {
+          "name": "ck0002012139-ex99_a1ii.htm",
+          "type": "EX-99.(A)(1)(II)",
+          "url": "https://www.sec.gov/Archives/edgar/data/2012139/000119312526313901/ck0002012139-ex99_a1ii.htm"
+        },
+        {
+          "name": "ck0002012139-ex99_a1iii.htm",
+          "type": "EX-99.(A)(1)(III)",
+          "url": "https://www.sec.gov/Archives/edgar/data/2012139/000119312526313901/ck0002012139-ex99_a1iii.htm"
+        }
+      ],
+      "found_by": "\"odd lot\" / SC TO-I",
+      "first_seen": "2026-09-03",
+      "status": "expired",
+      "tier": null,
+      "rejections": [
+        "offer expired 2026-08-19"
+      ],
+      "risk_flags": [],
+      "last_scored": "2026-09-03",
+      "warnings": [],
+      "documents_read": [
+        "ck0002012139-ex99_a1ii.htm"
+      ],
+      "document": "ck0002012139-ex99_a1ii.htm",
+      "terms": {
+        "has_threshold": true,
+        "has_proration_preference": true,
+        "is_cash_offer": true,
+        "consideration": "cash",
+        "is_common_equity": true,
+        "subject_security": "Common Shares",
+        "offer_price": 0.01,
+        "dutch_range": null,
+        "price_basis": "fixed",
+        "expiration_date": "2026-08-19",
+        "withdrawal_deadline": "2026-08-19",
+        "withdrawal_basis": "expiration_date",
+        "max_shares_sought": 2214111,
+        "preference_removed": false,
+        "record_holder_condition": null,
+        "restricted_offer": false,
+        "terminated": false,
+        "risk_flags": [
+          "foreign_private_issuer"
+        ]
+      },
+      "odd_lot_paragraph": "style=\"text-indent:36pt;font-size:10pt;margin-top:0;font-family:Times New Roman;margin-bottom:12pt;text-align:justify;\"> Any Shareholder who (i) owns, beneficially or of record, fewer than 100 Shares in the aggregate (an \u201codd lot\u201d), (ii) validly tenders all, but not less than all, of its Shares, completes the section entitled \u201cOdd Lots\u201d in the Letter of Transmittal, and (iii) does not validly withdraw any of the tendered Shares before the Expiration Date is referred to herein as an \u201cOdd Lot Holder.\u201d To the extent that the number of Shares validly tendered and not validly withdrawn exceed the number of Shares offered for repurchase, all of the Shares of Odd Lot Holders will be accepted for payment before any pro rata reduction of the repurchase of Shares validly tendered and not validly withdrawn by Shareholders who are not Odd Lot Holders, provided that this priority to Odd Lot Holders is not available to partial tenders or to beneficial or record holders of 100 or more Shares in the aggregate, even if such holders have separate accounts or certificates representing fewer than 100 Shares. To qualify for this priority, an Odd Lot Holder must validly tender (and not validly withdraw) all Shares owned by such Odd Lot Holder in accordance with the procedures described in Section 4 below.",
+      "offer_price": 0.01,
+      "dutch_range": null,
+      "price_basis": "fixed",
+      "expiration_date": "2026-08-19",
+      "withdrawal_deadline": "2026-08-19",
+      "withdrawal_basis": "expiration_date",
+      "max_shares_sought": 2214111,
+      "outcome": "expired 2026-08-19, never cleared the gates",
+      "archived_on": "2026-09-03"
+    },
+    {
+      "accession": "0001661306-26-000051",
+      "cik": "0001661306",
+      "company": "Hancock Park Corporate Income, Inc.",
+      "ticker": "",
+      "form": "SC TO-I",
+      "filed": "2026-07-06",
+      "url": "https://www.sec.gov/Archives/edgar/data/1661306/000166130626000051/hpci_q2_26_to-ia_7.2.26.htm",
+      "index_url": "https://www.sec.gov/Archives/edgar/data/1661306/000166130626000051/0001661306-26-000051-index.htm",
+      "highlights": [],
+      "documents": [
+        {
+          "name": "hpci_q2_26_to-ia_7.2.26.htm",
+          "type": "SC TO-I/A",
+          "url": "https://www.sec.gov/Archives/edgar/data/1661306/000166130626000051/hpci_q2_26_to-ia_7.2.26.htm"
+        }
+      ],
+      "found_by": "\"odd lot\" / SC TO-I",
+      "first_seen": "2026-09-03",
+      "status": "expired",
+      "tier": null,
+      "rejections": [
+        "amendment removes the odd-lot preference (Frontera pattern)",
+        "no cash consideration stated in the document",
+        "offer expired 2026-06-29"
+      ],
+      "risk_flags": [],
+      "last_scored": "2026-09-03",
+      "warnings": [],
+      "documents_read": [
+        "hpci_q2_26_to-ia_7.2.26.htm"
+      ],
+      "document": "hpci_q2_26_to-ia_7.2.26.htm",
+      "terms": {
+        "has_threshold": true,
+        "has_proration_preference": true,
+        "is_cash_offer": false,
+        "consideration": "unstated",
+        "is_common_equity": true,
+        "subject_security": "Common Stock",
+        "offer_price": 6.27,
+        "dutch_range": null,
+        "price_basis": "fixed",
+        "expiration_date": "2026-06-29",
+        "withdrawal_deadline": "2026-06-29",
+        "withdrawal_basis": "expiration_date",
+        "max_shares_sought": 15582,
+        "preference_removed": true,
+        "record_holder_condition": null,
+        "restricted_offer": false,
+        "terminated": false,
+        "risk_flags": []
+      },
+      "odd_lot_paragraph": "style=\"text-indent:3.333%;font-size:10pt;margin-top:0;font-family:Times New Roman;margin-bottom:0;text-align:left;\"> This Amendment No. 1 amends and supplements the Tender Offer Statement on Schedule TO originally filed with the Securities and Exchange Commission on May 22, 2026 by Hancock Park Corporate Income, Inc., a Maryland corporation (the \u201cCompany\u201d), to purchase up to 15,582 shares (the \u201cShares\u201d) of its issued and outstanding common stock, par value $0.001 per share at a price equal to $6.27 per Share (which reflects the net asset value per share as of June 27, 2026). The tender offer was made upon and subject to the terms and conditions set forth in the Offer to Purchase, dated May 22, 2026, and the related Letter of Transmittal (together, the \u201cOffer\u201d). The Offer expired at 11:59 P.M., Central Time, on June 29, 2026, and the number of Shares validly tendered and not withdrawn exceeded the number of Shares that the Company was able to purchase under the terms of the Offer. In accordance with the terms of the Offer, the Company purchased 15,582 Shares on a pro rata basis and 95 Shares from stockholders who beneficially, or of record, owned fewer than 100 Shares in the aggregate, from the requests that were validly tendered and not withdrawn. The Shares were purchased at a price equal to $6.27 per Share for an aggregate purchase price of approximately $98,298. As described in the Offer to Purchase, stockholders who own, beneficially or of record, fewer than 100 Shares in the aggregate (an \u201codd lot\u201d), and properly tender all, but not less than all, of their odd lot Shares, those odd lot Shares will be accepted for payment before any pro rata reduction of the repurchase of Shares properly tendered and not withdrawn by stockholders who are not odd lot holders.",
+      "offer_price": 6.27,
+      "dutch_range": null,
+      "price_basis": "fixed",
+      "expiration_date": "2026-06-29",
+      "withdrawal_deadline": "2026-06-29",
+      "withdrawal_basis": "expiration_date",
+      "max_shares_sought": 15582,
+      "outcome": "expired 2026-06-29, never cleared the gates",
+      "archived_on": "2026-09-03"
+    },
+    {
+      "accession": "0001213900-26-075249",
+      "cik": "0001702780",
+      "company": "Optimum Communications, Inc.",
+      "ticker": "OPTU",
+      "form": "SC TO-I",
+      "filed": "2026-07-06",
+      "url": "https://www.sec.gov/Archives/edgar/data/1702780/000121390026075249/ea029202904ex99a5c.htm",
+      "index_url": "https://www.sec.gov/Archives/edgar/data/1702780/000121390026075249/0001213900-26-075249-index.htm",
+      "highlights": [],
+      "documents": [
+        {
+          "name": "ea029202904ex99a5c.htm",
+          "type": "EX-99.(A)(5)(C)",
+          "url": "https://www.sec.gov/Archives/edgar/data/1702780/000121390026075249/ea029202904ex99a5c.htm"
+        }
+      ],
+      "found_by": "\"odd lots\" / SC TO-I",
+      "first_seen": "2026-09-03",
+      "status": "expired",
+      "tier": null,
+      "rejections": [
+        "no 'fewer than 100 shares' odd-lot threshold in the document",
+        "odd lots mentioned but no acceptance-before-proration language",
+        "offer expired 2026-06-30"
+      ],
+      "risk_flags": [],
+      "last_scored": "2026-09-03",
+      "warnings": [],
+      "documents_read": [
+        "ea029202904ex99a5c.htm"
+      ],
+      "document": "ea029202904ex99a5c.htm",
+      "terms": {
+        "has_threshold": false,
+        "has_proration_preference": false,
+        "is_cash_offer": true,
+        "consideration": "cash",
+        "is_common_equity": true,
+        "subject_security": "Common Stock",
+        "offer_price": 2.5,
+        "dutch_range": null,
+        "price_basis": "fixed",
+        "expiration_date": "2026-06-30",
+        "withdrawal_deadline": "2026-06-30",
+        "withdrawal_basis": "expiration_date",
+        "max_shares_sought": null,
+        "preference_removed": false,
+        "record_holder_condition": null,
+        "restricted_offer": false,
+        "terminated": false,
+        "risk_flags": []
+      },
+      "odd_lot_paragraph": null,
+      "offer_price": 2.5,
+      "dutch_range": null,
+      "price_basis": "fixed",
+      "expiration_date": "2026-06-30",
+      "withdrawal_deadline": "2026-06-30",
+      "withdrawal_basis": "expiration_date",
+      "max_shares_sought": null,
+      "outcome": "expired 2026-06-30, never cleared the gates",
+      "archived_on": "2026-09-03"
+    },
+    {
+      "accession": "0001213900-26-074020",
+      "cik": "0001702780",
+      "company": "Optimum Communications, Inc.",
+      "ticker": "OPTU",
+      "form": "SC TO-I",
+      "filed": "2026-07-01",
+      "url": "https://www.sec.gov/Archives/edgar/data/1702780/000121390026074020/ea029202903ex99a5b.htm",
+      "index_url": "https://www.sec.gov/Archives/edgar/data/1702780/000121390026074020/0001213900-26-074020-index.htm",
+      "highlights": [],
+      "documents": [
+        {
+          "name": "ea029202903ex99a5b.htm",
+          "type": "EX-99.(A)(5)(B)",
+          "url": "https://www.sec.gov/Archives/edgar/data/1702780/000121390026074020/ea029202903ex99a5b.htm"
+        }
+      ],
+      "found_by": "\"odd lots\" / SC TO-I",
+      "first_seen": "2026-09-03",
+      "status": "expired",
+      "tier": null,
+      "rejections": [
+        "no 'fewer than 100 shares' odd-lot threshold in the document",
+        "odd lots mentioned but no acceptance-before-proration language",
+        "offer expired 2026-06-30"
+      ],
+      "risk_flags": [],
+      "last_scored": "2026-09-03",
+      "warnings": [],
+      "documents_read": [
+        "ea029202903ex99a5b.htm"
+      ],
+      "document": "ea029202903ex99a5b.htm",
+      "terms": {
+        "has_threshold": false,
+        "has_proration_preference": false,
+        "is_cash_offer": true,
+        "consideration": "cash",
+        "is_common_equity": true,
+        "subject_security": "Common Stock",
+        "offer_price": 0.01,
+        "dutch_range": null,
+        "price_basis": "fixed",
+        "expiration_date": "2026-06-30",
+        "withdrawal_deadline": "2026-06-30",
+        "withdrawal_basis": "expiration_date",
+        "max_shares_sought": null,
+        "preference_removed": false,
+        "record_holder_condition": null,
+        "restricted_offer": false,
+        "terminated": false,
+        "risk_flags": []
+      },
+      "odd_lot_paragraph": null,
+      "offer_price": 0.01,
+      "dutch_range": null,
+      "price_basis": "fixed",
+      "expiration_date": "2026-06-30",
+      "withdrawal_deadline": "2026-06-30",
+      "withdrawal_basis": "expiration_date",
+      "max_shares_sought": null,
+      "outcome": "expired 2026-06-30, never cleared the gates",
+      "archived_on": "2026-09-03"
+    },
+    {
+      "accession": "0001104659-26-078464",
+      "cik": "0001692705",
+      "company": "High Templar Tech Ltd",
+      "ticker": "HTT",
+      "form": "SC TO-I",
+      "filed": "2026-06-29",
+      "url": "https://www.sec.gov/Archives/edgar/data/1692705/000110465926078464/tm2618847d2_ex99-a5c.htm",
+      "index_url": "https://www.sec.gov/Archives/edgar/data/1692705/000110465926078464/0001104659-26-078464-index.htm",
+      "highlights": [],
+      "documents": [
+        {
+          "name": "tm2618847d2_ex99-a5c.htm",
+          "type": "EX-99.(A)(5)(C)",
+          "url": "https://www.sec.gov/Archives/edgar/data/1692705/000110465926078464/tm2618847d2_ex99-a5c.htm"
+        }
+      ],
+      "found_by": "\"odd lots\" / SC TO-I",
+      "first_seen": "2026-09-03",
+      "status": "expired",
+      "tier": null,
+      "rejections": [
+        "no 'fewer than 100 shares' odd-lot threshold in the document",
+        "odd lots mentioned but no acceptance-before-proration language",
+        "no cash consideration stated in the document",
+        "subject security is not common equity (Depositary Shares)",
+        "offer expired 2026-06-24"
+      ],
+      "risk_flags": [],
+      "last_scored": "2026-09-03",
+      "warnings": [],
+      "documents_read": [
+        "tm2618847d2_ex99-a5c.htm"
+      ],
+      "document": "tm2618847d2_ex99-a5c.htm",
+      "terms": {
+        "has_threshold": false,
+        "has_proration_preference": false,
+        "is_cash_offer": false,
+        "consideration": "unstated",
+        "is_common_equity": false,
+        "subject_security": "Depositary Shares",
+        "offer_price": null,
+        "dutch_range": null,
+        "price_basis": null,
+        "expiration_date": "2026-06-24",
+        "withdrawal_deadline": "2026-06-24",
+        "withdrawal_basis": "expiration_date",
+        "max_shares_sought": null,
+        "preference_removed": false,
+        "record_holder_condition": null,
+        "restricted_offer": false,
+        "terminated": false,
+        "risk_flags": []
+      },
+      "odd_lot_paragraph": null,
+      "offer_price": null,
+      "dutch_range": null,
+      "price_basis": null,
+      "expiration_date": "2026-06-24",
+      "withdrawal_deadline": "2026-06-24",
+      "withdrawal_basis": "expiration_date",
+      "max_shares_sought": null,
+      "outcome": "expired 2026-06-24, never cleared the gates",
+      "archived_on": "2026-09-03"
+    },
+    {
+      "accession": "0001104659-26-078244",
+      "cik": "0001918712",
+      "company": "ARES STRATEGIC INCOME FUND",
+      "ticker": "",
+      "form": "SC TO-I",
+      "filed": "2026-06-26",
+      "url": "https://www.sec.gov/Archives/edgar/data/1918712/000110465926078244/tm2615016-5_sctoia.htm",
+      "index_url": "https://www.sec.gov/Archives/edgar/data/1918712/000110465926078244/0001104659-26-078244-index.htm",
+      "highlights": [],
+      "documents": [
+        {
+          "name": "tm2615016-5_sctoia.htm",
+          "type": "SC TO-I/A",
+          "url": "https://www.sec.gov/Archives/edgar/data/1918712/000110465926078244/tm2615016-5_sctoia.htm"
+        }
+      ],
+      "found_by": "\"odd lot\" / SC TO-I",
+      "first_seen": "2026-09-03",
+      "status": "expired",
+      "tier": null,
+      "rejections": [
+        "odd lots mentioned but no acceptance-before-proration language",
+        "no cash consideration stated in the document",
+        "offer expired 2026-06-18"
+      ],
+      "risk_flags": [],
+      "last_scored": "2026-09-03",
+      "warnings": [],
+      "documents_read": [
+        "tm2615016-5_sctoia.htm"
+      ],
+      "document": "tm2615016-5_sctoia.htm",
+      "terms": {
+        "has_threshold": true,
+        "has_proration_preference": false,
+        "is_cash_offer": false,
+        "consideration": "unstated",
+        "is_common_equity": true,
+        "subject_security": "Shares of Beneficial Interest",
+        "offer_price": 0.01,
+        "dutch_range": null,
+        "price_basis": "fixed",
+        "expiration_date": "2026-06-18",
+        "withdrawal_deadline": "2026-06-18",
+        "withdrawal_basis": "expiration_date",
+        "max_shares_sought": null,
+        "preference_removed": false,
+        "record_holder_condition": null,
+        "restricted_offer": false,
+        "terminated": false,
+        "risk_flags": []
+      },
+      "odd_lot_paragraph": "56,891,917 Shares of the Fund were validly tendered and not withdrawn prior to the expiration of the Offer. The Fund accepted for purchase 19,767,079 Shares on a pro rata basis based on the number of tendered Shares subject to \u201codd lot\u201d priority for holders of fewer than 100 Shares as described in the Offer to Purchase, representing 34.7% of the Shares of the Fund that were validly tendered and not withdrawn prior to the expiration of the Offer.",
+      "offer_price": 0.01,
+      "dutch_range": null,
+      "price_basis": "fixed",
+      "expiration_date": "2026-06-18",
+      "withdrawal_deadline": "2026-06-18",
+      "withdrawal_basis": "expiration_date",
+      "max_shares_sought": null,
+      "outcome": "expired 2026-06-18, never cleared the gates",
+      "archived_on": "2026-09-03"
+    },
+    {
+      "accession": "0001104659-26-077545",
+      "cik": "0001918712",
+      "company": "ARES STRATEGIC INCOME FUND",
+      "ticker": "",
+      "form": "SC TO-I",
+      "filed": "2026-06-25",
+      "url": "https://www.sec.gov/Archives/edgar/data/1918712/000110465926077545/tm2615016-4_sctoia.htm",
+      "index_url": "https://www.sec.gov/Archives/edgar/data/1918712/000110465926077545/0001104659-26-077545-index.htm",
+      "highlights": [],
+      "documents": [
+        {
+          "name": "tm2615016-4_sctoia.htm",
+          "type": "SC TO-I/A",
+          "url": "https://www.sec.gov/Archives/edgar/data/1918712/000110465926077545/tm2615016-4_sctoia.htm"
+        }
+      ],
+      "found_by": "\"odd lot\" / SC TO-I",
+      "first_seen": "2026-09-03",
+      "status": "expired",
+      "tier": null,
+      "rejections": [
+        "odd lots mentioned but no acceptance-before-proration language",
+        "no cash consideration stated in the document",
+        "offer expired 2026-06-18"
+      ],
+      "risk_flags": [],
+      "last_scored": "2026-09-03",
+      "warnings": [],
+      "documents_read": [
+        "tm2615016-4_sctoia.htm"
+      ],
+      "document": "tm2615016-4_sctoia.htm",
+      "terms": {
+        "has_threshold": true,
+        "has_proration_preference": false,
+        "is_cash_offer": false,
+        "consideration": "unstated",
+        "is_common_equity": true,
+        "subject_security": "Shares of Beneficial Interest",
+        "offer_price": 0.01,
+        "dutch_range": null,
+        "price_basis": "fixed",
+        "expiration_date": "2026-06-18",
+        "withdrawal_deadline": "2026-04-30",
+        "withdrawal_basis": "explicit",
+        "max_shares_sought": null,
+        "preference_removed": false,
+        "record_holder_condition": null,
+        "restricted_offer": false,
+        "terminated": false,
+        "risk_flags": []
+      },
+      "odd_lot_paragraph": "style=\"margin-left:20pt; margin-top:8pt; width:436pt; line-height:12pt;\"> The Fund intends to accept repurchase requests for 5% of Shares outstanding as of April 30, 2026. Therefore the Fund intends to repurchase 34.7% of requested amounts. As described in the Offer to Purchase, the Fund will accept Shares tendered on or before the Expiration Date for payment on a pro rata basis based on the number of tendered Shares subject to \u201codd lot\u201d priority for holders of fewer than 100 Shares as described in the Offer to Purchase. There is no repurchase priority for repurchase requests in the case of the death or disability of a shareholder.",
+      "offer_price": 0.01,
+      "dutch_range": null,
+      "price_basis": "fixed",
+      "expiration_date": "2026-06-18",
+      "withdrawal_deadline": "2026-04-30",
+      "withdrawal_basis": "explicit",
+      "max_shares_sought": null,
+      "outcome": "expired 2026-06-18, never cleared the gates",
+      "archived_on": "2026-09-03"
+    },
+    {
+      "accession": "0001104659-26-077528",
+      "cik": "0001692705",
+      "company": "High Templar Tech Ltd",
+      "ticker": "HTT",
+      "form": "SC TO-I",
+      "filed": "2026-06-25",
+      "url": "https://www.sec.gov/Archives/edgar/data/1692705/000110465926077528/tm2618847d1_ex99-a5b.htm",
+      "index_url": "https://www.sec.gov/Archives/edgar/data/1692705/000110465926077528/0001104659-26-077528-index.htm",
+      "highlights": [],
+      "documents": [
+        {
+          "name": "tm2618847d1_ex99-a5b.htm",
+          "type": "EX-99.(A)(5)(B)",
+          "url": "https://www.sec.gov/Archives/edgar/data/1692705/000110465926077528/tm2618847d1_ex99-a5b.htm"
+        }
+      ],
+      "found_by": "\"odd lots\" / SC TO-I",
+      "first_seen": "2026-09-03",
+      "status": "expired",
+      "tier": null,
+      "rejections": [
+        "no 'fewer than 100 shares' odd-lot threshold in the document",
+        "odd lots mentioned but no acceptance-before-proration language",
+        "no cash consideration stated in the document",
+        "subject security is not common equity (Depositary Shares)",
+        "offer expired 2026-06-24"
+      ],
+      "risk_flags": [],
+      "last_scored": "2026-09-03",
+      "warnings": [],
+      "documents_read": [
+        "tm2618847d1_ex99-a5b.htm"
+      ],
+      "document": "tm2618847d1_ex99-a5b.htm",
+      "terms": {
+        "has_threshold": false,
+        "has_proration_preference": false,
+        "is_cash_offer": false,
+        "consideration": "unstated",
+        "is_common_equity": false,
+        "subject_security": "Depositary Shares",
+        "offer_price": null,
+        "dutch_range": null,
+        "price_basis": null,
+        "expiration_date": "2026-06-24",
+        "withdrawal_deadline": "2026-06-24",
+        "withdrawal_basis": "expiration_date",
+        "max_shares_sought": null,
+        "preference_removed": false,
+        "record_holder_condition": null,
+        "restricted_offer": false,
+        "terminated": false,
+        "risk_flags": []
+      },
+      "odd_lot_paragraph": null,
+      "offer_price": null,
+      "dutch_range": null,
+      "price_basis": null,
+      "expiration_date": "2026-06-24",
+      "withdrawal_deadline": "2026-06-24",
+      "withdrawal_basis": "expiration_date",
+      "max_shares_sought": null,
+      "outcome": "expired 2026-06-24, never cleared the gates",
+      "archived_on": "2026-09-03"
+    },
+    {
+      "accession": "0001193125-26-280680",
+      "cik": "0001919369",
+      "company": "VISTA CREDIT STRATEGIC LENDING CORP.",
+      "ticker": "",
+      "form": "SC TO-I",
+      "filed": "2026-06-24",
+      "url": "https://www.sec.gov/Archives/edgar/data/1919369/000119312526280680/ck0001919369-ex99_a1ii.htm",
+      "index_url": "https://www.sec.gov/Archives/edgar/data/1919369/000119312526280680/0001193125-26-280680-index.htm",
+      "highlights": [],
+      "documents": [
+        {
+          "name": "ck0001919369-ex99_a1ii.htm",
+          "type": "EX-99.(A)(1)(II)",
+          "url": "https://www.sec.gov/Archives/edgar/data/1919369/000119312526280680/ck0001919369-ex99_a1ii.htm"
+        },
+        {
+          "name": "ck0001919369-ex99_a1iii.htm",
+          "type": "EX-99.(A)(1)(III)",
+          "url": "https://www.sec.gov/Archives/edgar/data/1919369/000119312526280680/ck0001919369-ex99_a1iii.htm"
+        }
+      ],
+      "found_by": "\"odd lot\" / SC TO-I",
+      "first_seen": "2026-09-03",
+      "status": "expired",
+      "tier": null,
+      "rejections": [
+        "offer expired 2026-07-23"
+      ],
+      "risk_flags": [],
+      "last_scored": "2026-09-03",
+      "warnings": [],
+      "documents_read": [
+        "ck0001919369-ex99_a1ii.htm"
+      ],
+      "document": "ck0001919369-ex99_a1ii.htm",
+      "terms": {
+        "has_threshold": true,
+        "has_proration_preference": true,
+        "is_cash_offer": true,
+        "consideration": "cash",
+        "is_common_equity": true,
+        "subject_security": "Common Stock",
+        "offer_price": 0.01,
+        "dutch_range": null,
+        "price_basis": "fixed",
+        "expiration_date": "2026-07-23",
+        "withdrawal_deadline": "2026-07-23",
+        "withdrawal_basis": "expiration_date",
+        "max_shares_sought": null,
+        "preference_removed": false,
+        "record_holder_condition": null,
+        "restricted_offer": false,
+        "terminated": false,
+        "risk_flags": [
+          "foreign_private_issuer"
+        ]
+      },
+      "odd_lot_paragraph": "style=\"text-indent:6.667%;font-size:10pt;margin-top:0;font-family:Times New Roman;margin-bottom:0;text-align:left;\"> Any Stockholder who owns, beneficially or of record, fewer than 100 Shares in the aggregate (an \u201codd lot\u201d), properly tenders all, but not less than all, of its odd lot Shares, completes the section entitled \u201cOdd Lots\u201d in the Letter of Transmittal, and does not properly withdraw any of the tendered Shares before the Expiration Date is referred to herein as an \u201cOdd Lot Holder.\u201d To the extent that the number of Shares duly tendered (and not withdrawn) exceed the number of Shares offered for repurchase, all of the Shares of Odd Lot Holders will be accepted for payment before any pro rata reduction of the repurchase of Shares properly tendered and not withdrawn by Stockholders who are not Odd Lot Holders, provided that this priority to Odd Lot Holders is not available to partial tenders or to beneficial or record holders of 100 or more Shares in the aggregate, even if such holders have separate accounts or certificates representing fewer than 100 Shares. To qualify for this priority, an Odd Lot Holder must tender (and not withdraw) all Shares owned by such Odd Lot Holder in accordance with the procedures described in Section 4 below.",
+      "offer_price": 0.01,
+      "dutch_range": null,
+      "price_basis": "fixed",
+      "expiration_date": "2026-07-23",
+      "withdrawal_deadline": "2026-07-23",
+      "withdrawal_basis": "expiration_date",
+      "max_shares_sought": null,
+      "outcome": "expired 2026-07-23, never cleared the gates",
+      "archived_on": "2026-09-03"
     }
-  ]
+  ],
+  "funnel": {
+    "queries": 96,
+    "pages": 96,
+    "raw_hits": 103,
+    "filings": 18,
+    "documents": 39,
+    "window": "2026-06-20..2026-09-03",
+    "slices": 4,
+    "failed_queries": 0,
+    "failures": [],
+    "rejected_by": {
+      "no odd-lot language": 4,
+      "no ticker": 4,
+      "no consideration stated": 1,
+      "not common equity": 1,
+      "expired or terminated": 1
+    },
+    "unclassified_rejections": 0
+  }
 }
