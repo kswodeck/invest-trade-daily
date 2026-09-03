@@ -1,0 +1,120 @@
+name: Tax Deed Screener
+
+# Texas tax sales are the first Tuesday of each month, and counties must publish
+# their lists at least 21 days ahead. Twice a week is the right cadence for that:
+# often enough to catch a list the day it appears and to see withdrawals before
+# sale day, rare enough not to hammer four county servers.
+#
+# One cron arm, not the daily report's two. That workflow needs 6am ET and so has
+# to know which DST offset it is in; this one only needs the right *weekday*, and
+# 13:17 UTC is Monday/Thursday morning in both EDT (09:17) and EST (08:17). The
+# schedule_gate dance would buy nothing here.
+#
+# GitHub's scheduler is best-effort and has delivered this repo's crons hours
+# late. That is survivable for a list published three weeks before the sale; if
+# a run is missed entirely, dispatch it by hand.
+
+on:
+  schedule:
+    - cron: "17 13 * * 1,4"   # Mon + Thu, 09:17 EDT / 08:17 EST
+  workflow_dispatch:
+    inputs:
+      sale_date:
+        description: "Sale date (YYYY-MM-DD). Blank means the next first Tuesday."
+        required: false
+        default: ""
+      county:
+        description: "Limit to one county (Dallas/Tarrant/Johnson/Ellis). Blank means all."
+        required: false
+        default: ""
+      dry_run:
+        description: "Screen and write the files, but do not touch the Google Sheet"
+        type: boolean
+        required: false
+        default: false
+
+concurrency:
+  group: tax-deeds
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  screen:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      # The gates are arithmetic and the parsers are the thing county sites
+      # break. Both are cheap to check, and a screener publishing a shortlist
+      # from a parser that no longer works is worse than one that does not run.
+      - name: Run the unit tests
+        run: python -m unittest discover -s tests
+
+      - name: Screen the sales
+        id: screen
+        env:
+          GCP_SERVICE_ACCOUNT_JSON: ${{ secrets.GCP_SERVICE_ACCOUNT_JSON }}
+          GOOGLE_SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}
+          TAX_DEED_CONTACT_EMAIL: ${{ secrets.TAX_DEED_CONTACT_EMAIL }}
+        run: |
+          set -o pipefail
+          ARGS=""
+          if [ -n "${{ github.event.inputs.sale_date }}" ]; then
+            ARGS="$ARGS --sale-date ${{ github.event.inputs.sale_date }}"
+          fi
+          if [ -n "${{ github.event.inputs.county }}" ]; then
+            ARGS="$ARGS --county ${{ github.event.inputs.county }}"
+          fi
+          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+            ARGS="$ARGS --dry-run"
+          fi
+          # A non-zero exit means a source failed structure verification. The
+          # snapshot, the packets and the Sheet are all written before that
+          # point, so the step is allowed to record the failure without
+          # discarding the run — the commit below still happens, and the job
+          # goes red at the end so the failure is not silent.
+          python scripts/tax_deed_screen.py $ARGS || echo "sources_failed=1" >> "$GITHUB_OUTPUT"
+
+      - name: Commit the snapshot and packets
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name  "invest-trade-daily[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/tax_deeds/ reports/tax_deeds/ || true
+          if git diff --staged --quiet; then
+            echo "Nothing to commit."
+            exit 0
+          fi
+          git commit -m "tax deeds: screen $(TZ=America/New_York date +%F)"
+          git config --local --unset-all http.https://github.com/.extraheader || true
+          git remote set-url origin \
+            "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          for attempt in 1 2 3; do
+            git push origin HEAD:${{ github.ref_name }} && exit 0
+            sleep $((2 ** attempt))
+            git pull --rebase origin ${{ github.ref_name }} || true
+          done
+          echo "::error::Could not push the tax deed snapshot."
+          exit 1
+
+      - name: Fail the run if a county source broke
+        if: steps.screen.outputs.sources_failed == '1'
+        run: |
+          echo "::error::At least one county source failed verification — see the" \
+               "step summary for the URL. County sites change format without notice;" \
+               "fix config/tax_deeds.json rather than the parser."
+          exit 1
