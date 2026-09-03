@@ -1,6 +1,6 @@
 {
   "disclaimer": "NOT A TITLE SEARCH — EVERY ROW IS A CANDIDATE ONLY. This tool reads public county sale lists and appraisal district records. It cannot and does not certify title. County clerk lien records are not reliably machine-readable, so liens that survive a tax sale — federal tax liens (IRC §7425(d) gives the IRS 120 days to redeem after the sale), some HOA assessments, environmental liens, and super-priority PACE liens — may exist on any row here and go undetected. A blank in the Flags column means nothing was found by the checks that ran, never that the property is clear. Order a professional title search before you bid. Tex. Tax Code §34.015 separately requires an unexpired written statement from the county assessor-collector before a deed can be delivered.",
-  "screened_at": "2026-09-03T12:13:33-04:00",
+  "screened_at": "2026-09-03T12:23:41-04:00",
   "screened_on": "2026-09-03",
   "sale_date": "2026-10-06",
   "counties": [
@@ -101,8 +101,8 @@
       "kind": "appraisal district",
       "id": "TAD",
       "url": "https://www.tad.org/property-search/",
-      "ok": false,
-      "detail": "HTTP 403: the host refused this User-Agent. Not a format change — the page may be fine in a browser. Some county vendors block non-browser clients outright; check whether the list is published somewhere else, or export it by hand. Do not spoof a browser to get around this. All 2 configured User-Agents were refused, so this is the host's filter and not a format change."
+      "ok": true,
+      "detail": "reachable, markers present"
     },
     {
       "kind": "appraisal district",
@@ -237,7 +237,7 @@
       "sale_type": "auction",
       "ok": false,
       "rows": 0,
-      "detail": "all 3 configured locations failed:\n      https://dallas.texas.sheriffsaleauctions.com/ — could not read a sale list from this page: tables are present but none has a header row and a data row. Headers seen: None. Automatic JSON discovery also found nothing (followed 0 API reference(s) the page names and none returned a sale list). Update `column_map` for source 'dallas_auction' in config/tax_deeds.json, or export the list to data/tax_deeds/manual/dallas_auction.csv.\n      https://www.dallasact.com/act_webdev/dallas/index.jsp — the page no longer contains ['sale', 'auction'], which config/tax_deeds.json declares as its structural markers. The county changed the page; update `required_markers` and `column_map` for source 'dallas_auction'.\n      https://www.dallascounty.org/departments/tax/tax-sales.php — ConnectionError: HTTPSConnectionPool(host='www.dallascounty.org', port=443): Max retries exceeded with url: /departments/tax/tax-sales.php (Caused by NewConnectionError(\"HTTPSConnection(host='www.dallascounty.org', port=443): Failed to establish a new connection: [Errno 111] Connection refused\"))"
+      "detail": "all 3 configured locations failed:\n      https://dallas.texas.sheriffsaleauctions.com/ — could not read a sale list from this page: tables are present but none has a header row and a data row. Headers seen: None. Automatic JSON discovery also found nothing (followed 0 API reference(s) the page names and none returned a sale list). Update `column_map` for source 'dallas_auction' in config/tax_deeds.json, or export the list to data/tax_deeds/manual/dallas_auction.csv.\n      https://www.dallasact.com/act_webdev/dallas/index.jsp — the page no longer contains ['sale', 'auction'], which config/tax_deeds.json declares as its structural markers. The county changed the page; update `required_markers` and `column_map` for source 'dallas_auction'.\n      https://www.dallascounty.org/departments/tax/tax-sales.php — HTTP 404: this URL does not exist. It moved or was never right — find the current one and update it in config/tax_deeds.json."
     },
     {
       "id": "dallas_struck_off",
@@ -246,7 +246,7 @@
       "sale_type": "struck_off",
       "ok": true,
       "rows": 0,
-      "detail": "https://taxsales.lgbs.com/ · fetched 400, kept 0 · matched ['account', 'address', 'cause_number', 'county', 'minimum_opening_bid', 'sale_date', 'status'] · 40 page(s) · 400 not in Dallas",
+      "detail": "https://taxsales.lgbs.com/ · fetched 400, kept 0 · matched ['account', 'address', 'cause_number', 'county', 'minimum_opening_bid', 'sale_date', 'status'] · 40 page(s) · 400 not in Dallas (saw [('GALVESTON COUNTY', 182), ('PHILADELPHIA COUNTY', 171), ('VAN ZANDT COUNTY', 23), ('MAVERICK COUNTY', 14), ('HARDIN COUNTY', 9), ('GOLIAD COUNTY', 1)])",
       "fetched": 400,
       "dropped_county": 400,
       "dropped_date": 0,
@@ -259,7 +259,7 @@
       "sale_type": "auction",
       "ok": true,
       "rows": 0,
-      "detail": "https://taxsales.lgbs.com/ · fetched 400, kept 0 · matched ['account', 'address', 'cause_number', 'county', 'minimum_opening_bid', 'precinct', 'sale_date', 'status'] · 40 page(s) · 400 not in Tarrant",
+      "detail": "https://taxsales.lgbs.com/ · fetched 400, kept 0 · matched ['account', 'address', 'cause_number', 'county', 'minimum_opening_bid', 'precinct', 'sale_date', 'status'] · 40 page(s) · 400 not in Tarrant (saw [('GALVESTON COUNTY', 182), ('PHILADELPHIA COUNTY', 171), ('VAN ZANDT COUNTY', 23), ('MAVERICK COUNTY', 14), ('HARDIN COUNTY', 9), ('GOLIAD COUNTY', 1)])",
       "fetched": 400,
       "dropped_county": 400,
       "dropped_date": 0,
@@ -281,7 +281,7 @@
       "sale_type": "auction",
       "ok": true,
       "rows": 0,
-      "detail": "https://taxsales.lgbs.com/ · fetched 400, kept 0 · matched ['account', 'address', 'cause_number', 'county', 'minimum_opening_bid', 'sale_date', 'status'] · 40 page(s) · 400 not in Ellis",
+      "detail": "https://taxsales.lgbs.com/ · fetched 400, kept 0 · matched ['account', 'address', 'cause_number', 'county', 'minimum_opening_bid', 'sale_date', 'status'] · 40 page(s) · 400 not in Ellis (saw [('GALVESTON COUNTY', 182), ('PHILADELPHIA COUNTY', 171), ('VAN ZANDT COUNTY', 23), ('MAVERICK COUNTY', 14), ('HARDIN COUNTY', 9), ('GOLIAD COUNTY', 1)])",
       "fetched": 400,
       "dropped_county": 400,
       "dropped_date": 0,
