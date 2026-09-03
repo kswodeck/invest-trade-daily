@@ -16,6 +16,8 @@
     "max_requests_per_second": 8,
     "min_seconds_between_requests": 0.12,
     "block_backoff_seconds": 60,
+    "server_error_retries": 2,
+    "server_error_backoff_seconds": 3,
     "timeout_seconds": 20,
     "efts_url": "https://efts.sec.gov/LATEST/search-index",
     "submissions_url": "https://data.sec.gov/submissions/CIK{cik}.json",
@@ -24,10 +26,24 @@
   },
 
   "discovery": {
-    "forms": ["SC TO-I", "SC TO-T", "SC 13E4F", "SC TO-I/A"],
-    "query_terms": ["\"odd lot\"", "\"odd lots\""],
-    "lookback_days": 10,
+    "forms": [
+      "SC TO-I", "SC TO-I/A",
+      "SC TO-T", "SC TO-T/A",
+      "SC 13E4F", "SC 13E4F/A",
+      "SC 13E3", "SC 13E3/A"
+    ],
+    "_query_terms_note": [
+      "A phrase search for \"odd lot\" already matches every document containing",
+      "\"odd lot holder\", \"odd lot priority\" or \"odd lot preference\" — those",
+      "phrases contain it. Listing them separately doubled the query count and",
+      "found nothing new. The hyphenated form is kept because tokenisation of",
+      "\"odd-lot\" is not guaranteed to match the two-word phrase."
+    ],
+    "query_terms": ["\"odd lot\"", "\"odd lots\"", "\"odd-lot\""],
+    "lookback_days": 75,
+    "window_days": 25,
     "max_hits_per_query": 100,
+    "max_documents_per_filing": 8,
     "stale_after_days": 120
   },
 
@@ -44,6 +60,12 @@
     "tier_a": {"min_spread_pct": 0.03, "min_days_to_expiry": 7, "max_risk_flags": 0},
     "tier_b": {"min_spread_pct": 0.015, "max_risk_flags": 1},
     "material_flags": ["market_price_above_offer", "going_concern"]
+  },
+
+  "notify": {
+    "min_tier": "B",
+    "labels": ["odd-lot", "opportunity"],
+    "close_when_gone": true
   },
 
   "schedule": {

@@ -93,18 +93,18 @@ publishes to its own single tab on the same Sheet.
 05:37 ET  ── 30 minutes ahead of the daily report ──┐
 18:30 ET  ── after EDGAR's 17:30 filing cutoff ─────┤
                                                     │
-   ├─ DISCOVER   EDGAR full-text search for "odd lot" in SC TO-I,
-   │             SC TO-T, SC 13E4F and SC TO-I/A over a trailing
-   │             10 days. Deduplicated against the universe by
-   │             accession number.
+   ├─ DISCOVER   EDGAR full-text search over a trailing 75 days:
+   │             six phrasings across eight Schedule TO forms,
+   │             paginated. Hits are grouped into filings by
+   │             accession, keeping every matching exhibit.
    │
    ├─ RE-SCORE   Every open offer, not just the new ones. Prices
    │             move; an offer rejected on Monday for a 0.9%
    │             spread is a different trade on Thursday.
    │
-   ├─ GATE 1-4   Read the document, run the economics, flag the
-   │             risks, assign a tier. Every rejection keeps its
-   │             reason.
+   ├─ GATE 1-4   Read the filing's exhibits, run the economics,
+   │             flag the risks, assign a tier. Every rejection
+   │             keeps its reason, and the report tallies them.
    │
    ├─ PUBLISH    The "Odd Lot" tab, overwritten in place. Expired
    │             offers leave it.
@@ -144,6 +144,67 @@ them has bitten somebody:
 
 **This is research output. It places no orders and talks to no broker.**
 
+### Finding the offers in the first place
+
+A tender offer is a Schedule TO whose substance lives in its exhibits — the
+Offer to Purchase, the Letter of Transmittal, the Notice of Guaranteed Delivery,
+the letters to brokers, the summary advertisement. Every one of them says "odd
+lot", so full-text search returns them all, as separate hits sharing one
+accession number.
+
+**The filing is read, not one of its exhibits.** Keeping a single hit per
+accession means judging the offer on whichever document the search happened to
+rank first, and when that is the Letter of Transmittal — an Odd Lots checkbox
+and nothing else — the filing is rejected for "no acceptance-before-proration
+language" while the Offer to Purchase sits beside it saying exactly that. That
+is why the first live run rejected all four of its filings. Exhibits are now
+read in turn until one carries the complete terms, and the entry records which
+one supplied them.
+
+Three other things bound what discovery can see, all of them in
+`config/odd_lot.json`:
+
+- **`lookback_days`, 75.** A tender offer runs 20–40 business days. A window
+  shorter than one offer's lifetime can only see what was filed since the last
+  successful run, so a few quiet days lose everything filed in them permanently.
+  Seventy-five days makes discovery self-healing: an offer missed on Monday is
+  found on Friday, still open.
+- **Pagination.** The endpoint returns ten hits per page. Reading only the
+  first capped discovery at ten *documents* per query — and a single filing can
+  account for five of them.
+- **Date slices, and per-query isolation.** The window is queried in 25-day
+  slices, and a query that fails costs that slice rather than the pass. EFTS
+  returns 500s: one on a 75-day `SC TO-T` query took down all forty-eight
+  queries of the first wide run. A 5xx is retried (unlike a 403 or 429, where
+  retrying is what extends the block); discovery only gives up when *every*
+  query failed, which is the difference between "EDGAR is having a moment" and
+  "the endpoint is gone". Partial failures are named in the report, because a
+  thinner sweep should not read like a quiet day.
+- **Three phrasings, eight forms.** `"odd lot"`, `"odd lots"` and `"odd-lot"`,
+  across `SC TO-I`, `SC TO-T`, `SC 13E4F`, `SC 13E3` and each one's `/A`. One
+  query per pair rather than one big OR, because EFTS scores and truncates per
+  query and a busy form would crowd out a quiet one. Phrases like
+  `"odd lot holder"` are deliberately *not* listed: a phrase search for
+  `"odd lot"` already matches every document containing them, so they doubled
+  the query count and found nothing new.
+
+A filing whose filer has no ticker on file — common, since tender offers are
+often filed by a parent or an acquirer — is resolved through the SEC's own
+`company_tickers.json`, cached daily. Gate 2 rejects an offer it cannot price,
+and three of the first live run's four filings arrived without a ticker.
+
+### Where the universe went
+
+Every report ends with a funnel: how many queries ran over what window, how many
+document hits and distinct filings came back, and a tally of which gate turned
+each rejected offer away. **A screener that finds nothing looks exactly like one
+that is broken**, and this is the only thing that tells them apart — the first
+live run rejected its entire universe at Gate 1 and read as a quiet day.
+
+The tally is keyed on the rejection messages themselves, and anything it cannot
+classify is counted and flagged rather than dropped, so a reworded gate shows up
+as drift instead of silently vanishing from the funnel.
+
 ### The gates, and why each threshold is where it is
 
 Everything below lives in [`config/odd_lot.json`](config/odd_lot.json). Nothing
@@ -154,8 +215,8 @@ in the code carries a default that overrides it.
 | Check | Why |
 | --- | --- |
 | Both a "fewer than 100 shares" threshold **and** acceptance-before-proration language, in the same passage | Either half alone is a different document. A threshold with no promise is an offer that merely *defines* an odd lot; proration language with no threshold is the ordinary pro-rata sentence in every oversubscribed tender. |
-| Cash offer, not an exchange offer | An exchange offer pays in stock. There is no spread to capture, only a ratio. |
-| Common equity, not debt or preferred | Debt tenders use the identical odd-lot phrasing for *notes*. 99 notes is a $99,000 position, not a $1,000 one. |
+| Cash offer, not an exchange offer | An exchange offer pays in stock. There is no spread to capture, only a ratio. Reported as three answers — cash, exchange, or *unstated* — because "pays in stock" and "we could not find what it pays" are different findings and were being reported as the first. |
+| Common equity, not debt or preferred | Debt tenders use the identical odd-lot phrasing for *notes*. 99 notes is a $99,000 position, not a $1,000 one. Closed-end funds and BDCs — a large share of the `SC TO-I` population — call their equity *shares of beneficial interest*, and count. |
 | Currently open, not expired or terminated | Decided from the expiration date read out of the document. |
 | No amendment removing the preference | The Frontera pattern. |
 | No record-holder condition on the preference | The ITEX pattern. Read inside the odd-lot passage only — a standalone "fewer than 300 holders of record" is deregistration boilerplate that nearly every small-cap tender carries. |
@@ -202,6 +263,41 @@ spread clearing the Gate 2 floor is a Tier B spread — a 1.8% spread is a small
 version of the same trade, not evidence against it, and it does not stack with a
 flag to force a demotion. What separates B from C is whether something is wrong
 with the offer, which is what the flags are for.
+
+### How you hear about a hit
+
+Most days the screener finds nothing, so nobody opens the tab. A Tier A or B
+offer has a deadline attached, so it comes and finds you instead: the run opens
+a **GitHub issue**, which reaches you by email and mobile push through
+notification machinery you already have configured, with no new secrets and no
+third-party service.
+
+The issue is written to be decidable from the notification itself — tier,
+ticker, spread and expiry in the title; every number the gates used, the quoted
+odd-lot paragraph, a link to the filing, and the four ways to forfeit the
+preference in the body. It closes itself when the offer expires or stops
+clearing the gates.
+
+**It speaks once per offer per tier.** The screener re-scores its whole universe
+twice a day, so an alert keyed on the offer alone would fire twice a day for as
+long as the offer stayed open — and an alert that arrives every day is one you
+stop reading, which costs more than the alert was ever worth. A new qualifying
+offer speaks once. An upgrade from B to A speaks again, because that is news. A
+decay from A to B stays quiet, because you already know. The
+`(accession, tier)` pair it remembers is committed with the universe, so it
+survives the runner.
+
+**Deliberately not a failed build.** Failing the workflow is how this repo
+alarms — GitHub emails the owner on a red scheduled run, and both `Report
+Watchdog` and the daily report's stub check depend on that. But those are
+failures, and a tender offer is good news. Overloading red to mean "something
+good happened" would make the colour meaningless in the one repo where it is
+load-bearing, and you could no longer tell a broken screener from a productive
+one at a glance. Red stays reserved for breakage: a discovery outage, or a
+screen that died.
+
+Tune it in `config/odd_lot.json` under `notify` — `min_tier` (default `"B"`;
+set `"A"` for hits only), the issue `labels`, and `close_when_gone`.
 
 ### Most days there are no Tier A results
 
@@ -396,6 +492,7 @@ scripts/
   check_sheets.py        write/read/delete test against the Sheet
   odd_lot.py             odd-lot tender screener: EDGAR, gates, universe, report
   publish_odd_lot.py     the single "Odd Lot" tab, overwritten each run
+  notify_odd_lot.py      opens a GitHub issue when a Tier A or B offer appears
   report_schema.json     the contract between synthesis and publishing
   tax_deeds.py           tax deed gates, redemption law, economics, tiering
   tax_deed_sources.py    county list / CAD / lien adapters, robots + rate limit

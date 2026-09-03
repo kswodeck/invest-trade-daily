@@ -57,19 +57,19 @@ def main(argv: list[str] | None = None) -> int:
         if kept >= args.limit:
             break
         try:
-            raw = odd_lot.resolve_document(hit, client)
-        except Exception as exc:  # noqa: BLE001 - one bad document is not fatal
+            terms, document, _ = odd_lot.read_offer_documents(hit, client)
+        except Exception as exc:  # noqa: BLE001 - one bad filing is not fatal
             print(f"  skip {hit['accession']}: {type(exc).__name__}: {exc}")
             continue
 
-        terms = odd_lot.parse_offer_document(
-            raw, is_amendment=hit["form"].upper().endswith("/A"))
-        # Only keep documents that actually carry the language under test. An
-        # EFTS hit can match on a stray "odd lot" in an exhibit index.
-        if not (terms.has_threshold and terms.has_proration_preference):
-            print(f"  skip {hit['accession']}: no odd-lot preference in the primary document")
+        # Only keep documents that actually carry the language under test. A
+        # filing's other exhibits match "odd lot" without stating the terms.
+        if terms is None or not (terms.has_threshold and terms.has_proration_preference):
+            print(f"  skip {hit['accession']}: no exhibit carried the odd-lot preference")
             continue
 
+        raw = client.get(document["url"],
+                         cache_key=f"{hit['accession']}_{document['name']}")
         name = f"{hit['accession'].replace('-', '')}_{hit['form'].replace('/', '')}.html"
         (FIXTURES / name).write_text(raw, encoding="utf-8")
         manifest.append({
@@ -80,7 +80,8 @@ def main(argv: list[str] | None = None) -> int:
             "ticker": hit["ticker"],
             "form": hit["form"],
             "filed": hit["filed"],
-            "url": hit["url"],
+            "url": document["url"],
+            "document": document["name"],
             "expiration_date": terms.expiration_date,
             "offer_price": terms.offer_price,
             "fetched_on": date.today().isoformat(),

@@ -93,17 +93,33 @@ class StubDiscovery:
                 "highlights": [],
             })
 
+    #: Every real Schedule TO files its Offer to Purchase alongside a Letter of
+    #: Transmittal, and both match "odd lot" in full-text search. The decoy is
+    #: listed first because that is the case that broke: the transmittal letter
+    #: has an Odd Lots checkbox and no terms at all.
+    DECOY = "letter_of_transmittal.html"
+
     def get_json(self, url: str, *, params=None, cache_key=None):
-        """One EFTS page, in the shape parse_efts_response expects."""
-        return {"hits": {"hits": [
-            {"_id": f"{h['accession']}:{h['document']}",
-             "_source": {"ciks": [h["cik"]],
-                         "display_names": [f"{h['company']}  ({h['ticker']})"],
-                         "file_type": h["form"], "file_date": h["filed"]}}
-            for h in self.hits]}}
+        """One EFTS page, in the shape parse_efts_response expects.
+
+        Two hits per filing sharing one accession — the decoy and the real
+        offer document — which is how EDGAR actually returns a Schedule TO.
+        """
+        hits = []
+        for h in self.hits:
+            for document in (self.DECOY, h["document"]):
+                hits.append({
+                    "_id": f"{h['accession']}:{document}",
+                    "_source": {"ciks": [h["cik"]],
+                                "display_names": [f"{h['company']}  ({h['ticker']})"],
+                                "file_type": "EX-99.(A)(1)", "root_forms": [h["form"]],
+                                "file_date": h["filed"]}})
+        return {"hits": {"hits": hits, "total": {"value": len(hits)}}}
 
     def get(self, url: str, *, params=None, cache_key: str | None = None) -> str:
         self.fetched += 1
+        if url.endswith(self.DECOY):
+            return (FIXTURES / self.DECOY).read_text()
         return self.by_accession[(cache_key or "").split("_")[0]]
 
 
@@ -219,12 +235,31 @@ class PipelineEndToEnd(unittest.TestCase):
         self.assertEqual(entry["risk_flags"], [])
         self.assertEqual(entry["capital"], round(99 * 17.80, 2))
 
-    def test_each_document_is_fetched_exactly_once(self):
-        """Once per discovered filing, archived ones included — the offer that
-        turned out to be expired still had to be read to find that out."""
+    def test_the_offer_document_is_found_behind_the_transmittal_letter(self):
+        """The defect that rejected all four filings in the first live run.
+
+        Both exhibits share one accession and both match "odd lot". Keeping
+        only the first — the Letter of Transmittal, which has an Odd Lots
+        checkbox and no terms — rejects the filing for "no
+        acceptance-before-proration language" while the Offer to Purchase sits
+        beside it saying exactly that.
+        """
+        entry = self.by_ticker["MIH"]
+        self.assertEqual(entry["status"], "candidate")
+        self.assertEqual(entry["tier"], "A")
+        self.assertNotIn(StubDiscovery.DECOY, entry["document"])
+        self.assertIn("fixed_price_with_preference", entry["document"])
+
+    def test_a_filing_keeps_every_exhibit_as_a_candidate(self):
+        entry = self.by_ticker["MIH"]
+        self.assertEqual(len(entry["documents"]), 2)
+
+    def test_each_document_is_fetched_at_most_once(self):
+        """Cached by (accession, document): re-reading is free, re-fetching is
+        somebody else's rate limit."""
         tracked = len(self.universe["open"]) + len(self.universe["archive"])
-        self.assertEqual(self.client.fetched, tracked)
         self.assertEqual(tracked, len(CATALOG))
+        self.assertLessEqual(self.client.fetched, tracked * 2)
 
     def test_re_scoring_offline_needs_no_second_fetch(self):
         """Prices move daily; the document does not. An amendment arrives as a
@@ -236,6 +271,67 @@ class PipelineEndToEnd(unittest.TestCase):
             odd_lot.score_entry(dict(entry), client=None, md=md,
                                 config=CONFIG, today=TODAY)
         self.assertEqual(self.client.fetched, before)
+
+
+class PickingBetweenExhibits(unittest.TestCase):
+    """The choice must survive a filing whose labels give no hint.
+
+    `candidate_documents` ranks a document named "transmittal" last, which
+    saves a fetch in the common case — and is exactly the kind of shortcut that
+    hides a broken decision. These drive `read_offer_documents` with
+    neutrally-named exhibits so the ranking cannot help, and the reading has to
+    be what picks.
+    """
+
+    class Stub:
+        def __init__(self, files: dict[str, str]) -> None:
+            self.files, self.fetched, self.cache_hits = files, 0, 0
+
+        def get(self, url: str, *, params=None, cache_key: str | None = None) -> str:
+            self.fetched += 1
+            return (FIXTURES / self.files[url]).read_text()
+
+    def entry(self, *names: str) -> tuple[dict, "PickingBetweenExhibits.Stub"]:
+        files = {f"https://example.invalid/d{i}.htm": n for i, n in enumerate(names)}
+        return ({"accession": "0001-26-000001",
+                 "documents": [{"name": f"d{i}.htm", "type": "EX-99", "url": url}
+                               for i, url in enumerate(files)]},
+                self.Stub(files))
+
+    def test_the_offer_document_wins_however_the_exhibits_are_ordered(self):
+        for order in (("letter_of_transmittal.html", "fixed_price_with_preference.html"),
+                      ("fixed_price_with_preference.html", "letter_of_transmittal.html")):
+            with self.subTest(order=order):
+                entry, stub = self.entry(*order)
+                terms, document, read = odd_lot.read_offer_documents(entry, stub)
+                self.assertTrue(terms.has_proration_preference)
+                self.assertEqual(terms.offer_price, 18.75)
+                self.assertEqual(stub.files[document["url"]],
+                                 "fixed_price_with_preference.html")
+
+    def test_a_filing_of_nothing_but_decoys_is_still_read_and_rejected(self):
+        entry, stub = self.entry("letter_of_transmittal.html")
+        terms, _, read = odd_lot.read_offer_documents(entry, stub)
+        self.assertFalse(terms.has_proration_preference)
+        self.assertEqual(len(read), 1)
+
+    def test_reading_stops_once_a_complete_document_is_found(self):
+        """Every extra fetch is somebody else's share of the SEC rate limit."""
+        entry, stub = self.entry("fixed_price_with_preference.html",
+                                 "letter_of_transmittal.html",
+                                 "letter_of_transmittal.html")
+        odd_lot.read_offer_documents(entry, stub)
+        self.assertEqual(stub.fetched, 1)
+
+    def test_an_entry_stored_before_filings_carried_documents_still_reads(self):
+        """The universe is committed and outlives any one version of this."""
+        legacy = {"accession": "0001-26-000001", "document": "offer.htm",
+                  "url": "https://example.invalid/d0.htm"}
+        stub = self.Stub({"https://example.invalid/d0.htm":
+                          "fixed_price_with_preference.html"})
+        terms, document, _ = odd_lot.read_offer_documents(legacy, stub)
+        self.assertTrue(terms.has_proration_preference)
+        self.assertEqual(document["name"], "offer.htm")
 
 
 class RenderedReport(unittest.TestCase):

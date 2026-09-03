@@ -16,7 +16,7 @@ import json
 import sys
 import tempfile
 import unittest
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -25,9 +25,10 @@ sys.path.insert(0, str(REPO / "scripts"))
 
 import odd_lot  # noqa: E402
 from odd_lot import (  # noqa: E402
-    EftsSchemaError, OfferTerms, RateLimiter, add_discoveries, archive_expired,
-    check_user_agent, economics, gate_economics, gate_risk, load_universe, pad_cik,
-    parse_efts_response, save_universe, slot_for, terms_from_stored, tier_for,
+    REJECTION_KINDS, EftsSchemaError, OfferTerms, SecBlocked, RateLimiter, add_discoveries,
+    archive_expired, check_user_agent, economics, gate_document, gate_economics,
+    gate_risk, load_universe, pad_cik, parse_efts_response, rejection_tally,
+    date_slices, save_universe, search_filings, slot_for, terms_from_stored, tier_for,
 )
 
 ET = ZoneInfo("America/New_York")
@@ -197,6 +198,237 @@ class EftsAdapterFailsLoudly(unittest.TestCase):
         self.assertEqual(hit["form"], "SC TO-I")
         self.assertTrue(hit["url"].endswith("/000110465926000123/tm26123d1_sctoi.htm"))
         self.assertEqual(hit["highlights"], ["holders of odd lots will be accepted"])
+
+
+class DiscoveryReachesTheWholeWindow(unittest.TestCase):
+    """The two ways discovery silently returned a fraction of what exists."""
+
+    class PagedStub:
+        """EFTS with a page size of ten, like the real endpoint."""
+
+        PAGE = 10
+
+        def __init__(self, documents: list[tuple[str, str]]) -> None:
+            self.documents, self.pages = documents, 0
+
+        def get_json(self, url, *, params=None, cache_key=None):
+            self.pages += 1
+            offset = int((params or {}).get("from", 0))
+            window = self.documents[offset:offset + self.PAGE]
+            return {"hits": {
+                "total": {"value": len(self.documents)},
+                "hits": [{"_id": f"{accession}:{document}",
+                          "_source": {"ciks": ["0000320193"],
+                                      "display_names": ["ACME CORP  (ACME)"],
+                                      "file_type": "EX-99.(A)(1)",
+                                      "root_forms": ["SC TO-I"],
+                                      "file_date": "2026-09-01"}}
+                         for accession, document in window]}}
+
+    def config(self, **overrides) -> dict:
+        cfg = json.loads(json.dumps(CONFIG))
+        cfg["discovery"].update({"query_terms": ['"odd lot"'], "forms": ["SC TO-I"],
+                                 **overrides})
+        return cfg
+
+    def test_results_beyond_the_first_page_are_not_lost(self):
+        """The endpoint returns ten hits per page. Reading only the first caps
+        discovery at ten *documents*, and one filing can account for five."""
+        docs = [(f"0001-26-{i:06d}", "offer.htm") for i in range(1, 26)]
+        stub = self.PagedStub(docs)
+        filings = search_filings(stub, self.config(), today=TODAY)
+        self.assertEqual(len(filings), 25)
+        self.assertGreater(stub.pages, 1, "only one page was ever requested")
+
+    def test_a_filings_exhibits_are_kept_together_not_collapsed(self):
+        """One accession, five exhibits, all matching "odd lot" — which is what
+        a Schedule TO actually looks like in full-text search."""
+        docs = [("0001-26-000001", name) for name in
+                ("offer.htm", "transmittal.htm", "guaranteed.htm", "brokers.htm",
+                 "press.htm")]
+        filings = search_filings(self.PagedStub(docs), self.config(), today=TODAY)
+        self.assertEqual(len(filings), 1)
+        self.assertEqual(len(filings[0]["documents"]), 5)
+
+    def test_the_documents_per_filing_cap_is_honoured(self):
+        docs = [("0001-26-000001", f"ex{i}.htm") for i in range(20)]
+        filings = search_filings(self.PagedStub(docs),
+                                 self.config(max_documents_per_filing=3), today=TODAY)
+        self.assertEqual(len(filings[0]["documents"]), 3)
+
+    def test_the_funnel_counts_what_the_search_actually_saw(self):
+        docs = [(f"0001-26-{i:06d}", "offer.htm") for i in range(1, 13)]
+        stats: dict = {}
+        # One slice, so the counts below are unambiguous — this stub ignores
+        # the date range and would otherwise return the same rows per slice.
+        search_filings(self.PagedStub(docs), self.config(window_days=0),
+                       today=TODAY, stats=stats)
+        self.assertEqual(stats["raw_hits"], 12)
+        self.assertEqual(stats["filings"], 12)
+        self.assertEqual(stats["documents"], 12)
+        self.assertEqual(stats["failed_queries"], 0)
+        self.assertGreaterEqual(stats["pages"], 2)
+        self.assertIn("..", stats["window"])
+
+    def test_the_same_filing_seen_in_two_slices_is_one_entry(self):
+        """Slices are queried separately; a filing found twice is not two."""
+        docs = [("0001-26-000001", "offer.htm")]
+        stats: dict = {}
+        filings = search_filings(self.PagedStub(docs), self.config(window_days=25),
+                                 today=TODAY, stats=stats)
+        self.assertGreater(stats["slices"], 1)
+        self.assertGreater(stats["raw_hits"], 1)
+        self.assertEqual(len(filings), 1)
+        self.assertEqual(len(filings[0]["documents"]), 1)
+
+    def test_the_window_covers_more_than_one_offer_lifetime(self):
+        """A tender offer runs 20-40 business days. A window shorter than that
+        can only ever see offers filed since the last successful run, so a few
+        quiet days permanently lose everything filed in them."""
+        self.assertGreaterEqual(CONFIG["discovery"]["lookback_days"], 60)
+
+
+class OneBadQueryDoesNotLoseThePass(unittest.TestCase):
+    """EFTS is undocumented and returns 500s.
+
+    The first wide run lost all forty-eight of its queries to a single 500 on
+    the second one, and the whole discovery pass with them. A failing slice
+    now costs that slice.
+    """
+
+    class FlakyStub:
+        """Fails whichever (form, slice) pairs it is told to."""
+
+        def __init__(self, fail_on=(), fail_all=False) -> None:
+            self.fail_on, self.fail_all = set(fail_on), fail_all
+            self.calls = 0
+
+        def get_json(self, url, *, params=None, cache_key=None):
+            self.calls += 1
+            form = (params or {}).get("forms", "")
+            if self.fail_all or form in self.fail_on:
+                raise RuntimeError(f"500 Server Error for forms={form}")
+            return {"hits": {"total": {"value": 1}, "hits": [{
+                "_id": f"0001-26-{self.calls:06d}:offer.htm",
+                "_source": {"ciks": ["0000320193"], "display_names": ["ACME (ACME)"],
+                            "file_type": "EX-99", "root_forms": [form or "SC TO-I"],
+                            "file_date": "2026-09-01"}}]}}
+
+    def config(self, **overrides) -> dict:
+        cfg = json.loads(json.dumps(CONFIG))
+        cfg["discovery"].update({"query_terms": ['"odd lot"'],
+                                 "forms": ["SC TO-I", "SC TO-T", "SC 13E3"],
+                                 "lookback_days": 50, "window_days": 25, **overrides})
+        return cfg
+
+    def test_a_failing_form_costs_only_that_form(self):
+        stub = self.FlakyStub(fail_on={"SC TO-T"})
+        stats: dict = {}
+        filings = search_filings(stub, self.config(), today=TODAY, stats=stats)
+        self.assertGreater(len(filings), 0, "the surviving queries produced nothing")
+        self.assertEqual(stats["failed_queries"], stats["slices"])
+        self.assertTrue(any("SC TO-T" in f for f in stats["failures"]))
+
+    def test_the_failures_are_named_in_the_funnel(self):
+        stats: dict = {}
+        search_filings(self.FlakyStub(fail_on={"SC 13E3"}), self.config(),
+                       today=TODAY, stats=stats)
+        self.assertTrue(stats["failures"])
+        self.assertIn("SC 13E3", stats["failures"][0])
+
+    def test_every_query_failing_is_still_loud(self):
+        """"EDGAR is having a moment" and "the endpoint is gone" are different
+        answers, and only the second should stop the day."""
+        with self.assertRaises(RuntimeError):
+            search_filings(self.FlakyStub(fail_all=True), self.config(), today=TODAY)
+
+    def test_a_block_stops_everything_immediately(self):
+        """A 403 means the IP is already blocked; carrying on extends it."""
+        class Blocked(self.FlakyStub):
+            def get_json(self, url, *, params=None, cache_key=None):
+                raise SecBlocked("HTTP 429")
+
+        with self.assertRaises(SecBlocked):
+            search_filings(Blocked(), self.config(), today=TODAY)
+
+    def test_a_schema_change_is_still_loud(self):
+        class Moved(self.FlakyStub):
+            def get_json(self, url, *, params=None, cache_key=None):
+                return {"results": []}
+
+        with self.assertRaises(EftsSchemaError):
+            search_filings(Moved(), self.config(), today=TODAY)
+
+
+class DateSlices(unittest.TestCase):
+    """A wide query is one request that fails as a unit — and EFTS 500s on some."""
+
+    def test_the_window_is_covered_with_no_gaps_and_no_overlap(self):
+        slices = date_slices(date(2026, 6, 20), date(2026, 9, 3), 25)
+        self.assertEqual(slices[0][0], "2026-06-20")
+        self.assertEqual(slices[-1][1], "2026-09-03")
+        for (_, end), (start, _) in zip(slices, slices[1:]):
+            self.assertEqual(date.fromisoformat(start) - date.fromisoformat(end),
+                             timedelta(days=1))
+
+    def test_no_slice_is_wider_than_the_span(self):
+        for start, end in date_slices(date(2026, 1, 1), date(2026, 12, 31), 25):
+            self.assertLessEqual(
+                (date.fromisoformat(end) - date.fromisoformat(start)).days, 24)
+
+    def test_a_single_day_window_is_one_slice(self):
+        self.assertEqual(date_slices(date(2026, 9, 3), date(2026, 9, 3), 25),
+                         [("2026-09-03", "2026-09-03")])
+
+    def test_a_zero_span_falls_back_to_one_query(self):
+        self.assertEqual(len(date_slices(date(2026, 1, 1), date(2026, 12, 31), 0)), 1)
+
+
+class TheFunnelStaysHonest(unittest.TestCase):
+    """An unclassified rejection means the tally stopped describing the gates."""
+
+    def tally(self, *reasons: str) -> dict:
+        universe = {"open": [{"rejections": list(reasons)}], "archive": []}
+        return rejection_tally(universe)
+
+    def test_every_gate_one_rejection_is_classified(self):
+        """Generated from the gate itself rather than transcribed, so a
+        reworded rejection fails here instead of quietly landing in the
+        unclassified bucket."""
+        cases = [
+            OfferTerms(),                                             # no language
+            OfferTerms(has_threshold=True, has_proration_preference=True,
+                       preference_removed=True),
+            OfferTerms(has_threshold=True, has_proration_preference=True,
+                       record_holder_condition=300),
+            OfferTerms(has_threshold=True, has_proration_preference=True,
+                       restricted_offer=True),
+            OfferTerms(has_threshold=True, has_proration_preference=True,
+                       is_cash_offer=True, is_common_equity=True, terminated=True),
+            OfferTerms(has_threshold=True, has_proration_preference=True,
+                       is_cash_offer=True, is_common_equity=True,
+                       expiration_date="2020-01-01"),
+        ]
+        for terms in cases:
+            reasons = gate_document(terms, form="SC TO-I", today=TODAY).rejections
+            with self.subTest(reasons=reasons):
+                self.assertEqual(self.tally(*reasons)["unclassified_rejections"], 0)
+
+    def test_every_gate_two_rejection_is_classified(self):
+        econ = economics(10.00, 9.90, "2026-09-05", today=TODAY)
+        reasons = gate_economics(econ, 1_000, CONFIG).rejections
+        self.assertGreater(len(reasons), 0)
+        self.assertEqual(self.tally(*reasons)["unclassified_rejections"], 0)
+
+    def test_an_unknown_reason_is_counted_rather_than_dropped(self):
+        result = self.tally("something nobody has written yet")
+        self.assertEqual(result["unclassified_rejections"], 1)
+        self.assertEqual(result["rejected_by"], {})
+
+    def test_the_tally_is_ordered_by_size(self):
+        counts = list(self.tally("offer expired 2020-01-01", "offer expired 2020-02-01",
+                                 "no live price for ACME")["rejected_by"].values())
+        self.assertEqual(counts, sorted(counts, reverse=True))
 
 
 class Economics(unittest.TestCase):
