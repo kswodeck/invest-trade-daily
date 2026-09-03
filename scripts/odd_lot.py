@@ -707,18 +707,30 @@ RESTRICTED_OFFER = re.compile(
     r"stockholders)\s+(?:resident\s+)?in\s+the\s+United\s+States",
     re.I)
 
+# Title-level signals only. "in exchange for the Shares tendered" is how a
+# *cash* offer ordinarily describes itself, and every attempt to keep an
+# "in exchange for ..." clause narrow enough to exclude that also matched
+# "in exchange for the 99 Shares tendered". An offer that pays in securities
+# is titled an Offer to Exchange — that is what the form is for — so the title
+# is both the reliable signal and the sufficient one.
 EXCHANGE_OFFER = re.compile(
-    r"\boffer\s+to\s+exchange\b|\bexchange\s+offer\b"
-    r"|in\s+exchange\s+for\s+(?:newly\s+issued\s+|shares|units|notes|ordinary)", re.I)
+    r"\boffer(?:ing)?\s+to\s+exchange\b|\bexchange\s+offer\b", re.I)
 
 CASH_OFFER = re.compile(
     r"\boffer\s+to\s+purchase\s+for\s+cash\b|\bnet\s+to\s+the\s+seller\s+in\s+cash\b"
-    r"|\bpurchase\s+price[^.]{0,60}?\bin\s+cash\b|\bfor\s+cash\b", re.I)
+    r"|\bpurchase\s+price[^.]{0,60}?\bin\s+cash\b|\bfor\s+cash\b|\bin\s+cash\b"
+    # A fund repurchase priced at net asset value pays cash; it simply has no
+    # fixed price to read, and is rejected for that further down with a reason
+    # that says so.
+    r"|\bnet\s+asset\s+value\b", re.I)
 
 # Whichever subject marker appears first in the cover pages is the security
 # being tendered for; the rest are capitalization the document mentions later.
 COMMON_EQUITY_SUBJECT = re.compile(
-    r"\bcommon\s+(?:stock|shares)\b|\bordinary\s+shares\b|\bcommon\s+units\b", re.I)
+    r"\bcommon\s+(?:stock|shares)\b|\bordinary\s+shares\b|\bcommon\s+units\b"
+    # Closed-end funds and BDCs — a large share of the SC TO-I population —
+    # call their equity shares of beneficial interest.
+    r"|\bshares?\s+of\s+beneficial\s+interest\b", re.I)
 DEBT_OR_PREFERRED_SUBJECT = re.compile(
     r"\b\d+(?:[.\d]*)?\s*%\s+(?:senior\s+|subordinated\s+|convertible\s+|secured\s+)*"
     r"(?:notes?|bonds?|debentures?)\b|\bdebentures?\b"
@@ -820,6 +832,7 @@ class OfferTerms:
     has_threshold: bool = False
     has_proration_preference: bool = False
     is_cash_offer: bool = False
+    consideration: str = "unstated"
     is_common_equity: bool = False
     subject_security: str | None = None
     offer_price: float | None = None
@@ -973,6 +986,25 @@ def parse_dates(text: str) -> tuple[str | None, str | None, str]:
     return expiration, (withdrawal or expiration), basis
 
 
+def classify_consideration(cover: str) -> str:
+    """What the offer pays: "cash", "exchange", or "unstated".
+
+    Three answers rather than two, because "this pays in stock" and "we could
+    not find what this pays" are different findings and were being reported as
+    the first. The funnel's largest bucket was "reads as an exchange offer" for
+    documents containing no exchange language whatsoever, which makes the one
+    diagnostic that explains a quiet day untrustworthy.
+    """
+    probe = _normalize_for_match(cover)
+    exchange = EXCHANGE_OFFER.search(probe)
+    cash = CASH_OFFER.search(probe)
+    if exchange and (not cash or exchange.start() < cash.start()):
+        return "exchange"
+    if cash:
+        return "cash"
+    return "unstated"
+
+
 def classify_subject_security(cover: str) -> tuple[bool, str | None]:
     """Whether the security being tendered for is common equity, and what it is.
 
@@ -1031,8 +1063,7 @@ def parse_offer_document(raw: str, *, is_amendment: bool | None = None) -> Offer
     amendment = (bool(AMENDMENT_MARKER.search(_normalize_for_match(cover)))
                  if is_amendment is None else is_amendment)
 
-    cash_hits = len(CASH_OFFER.findall(_normalize_for_match(cover)))
-    exchange_hits = len(EXCHANGE_OFFER.findall(_normalize_for_match(cover)))
+    consideration = classify_consideration(cover)
 
     # The record-holder condition only voids the preference when it is attached
     # to it. Read inside the odd-lot passage, not the whole document.
@@ -1052,7 +1083,8 @@ def parse_offer_document(raw: str, *, is_amendment: bool | None = None) -> Offer
         odd_lot_paragraph=passage,
         has_threshold=threshold,
         has_proration_preference=preference,
-        is_cash_offer=cash_hits > 0 and cash_hits >= exchange_hits,
+        is_cash_offer=consideration == "cash",
+        consideration=consideration,
         is_common_equity=is_common,
         subject_security=subject,
         offer_price=price,
@@ -1117,8 +1149,10 @@ def gate_document(terms: OfferTerms, *, form: str, today: date) -> GateResult:
     if terms.restricted_offer:
         result.reject("offer restricted to accredited investors, QIBs, or non-US persons")
 
-    if not terms.is_cash_offer:
-        result.reject("not a cash offer — reads as an exchange offer for other securities")
+    if terms.consideration == "exchange":
+        result.reject("an exchange offer for other securities, not cash")
+    elif not terms.is_cash_offer:
+        result.reject("no cash consideration stated in the document")
     if not terms.is_common_equity:
         subject = terms.subject_security or "unidentified security"
         result.reject(f"subject security is not common equity ({subject})")
@@ -1246,8 +1280,10 @@ REJECTION_KINDS = {
     "no odd-lot language": ("no 'fewer than 100", "odd lots mentioned but no"),
     "no readable document": ("the filing carried no readable",),
     "preference removed or conditioned": ("amendment removes", "conditioned on keeping"),
-    "not a cash common-equity offer": ("not a cash offer", "not common equity",
-                                       "restricted to accredited"),
+    "an exchange offer, not cash": ("an exchange offer for other securities",),
+    "no consideration stated": ("no cash consideration stated",),
+    "not common equity": ("not common equity",),
+    "restricted to some investors": ("restricted to accredited",),
     "expired or terminated": ("offer expired", "terminated or withdrawn",
                               "no expiration date"),
     "no ticker": ("no ticker for CIK",),

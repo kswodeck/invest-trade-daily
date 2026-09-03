@@ -27,7 +27,8 @@ REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "scripts"))
 
 from odd_lot import (  # noqa: E402
-    RECORD_HOLDER_CONDITION, OfferTerms, classify_subject_security, detect_risk_flags,
+    RECORD_HOLDER_CONDITION, OfferTerms, classify_consideration,
+    classify_subject_security, detect_risk_flags,
     find_odd_lot_passage, gate_document, html_to_text, parse_dates,
     parse_offer_document, parse_prices, _normalize_for_match,
 )
@@ -127,7 +128,8 @@ class Rejections(unittest.TestCase):
     def test_exchange_offer_is_rejected(self):
         terms = parse("exchange_offer.html")
         self.assertFalse(terms.is_cash_offer)
-        self.assertIn("not a cash offer", self.reasons(terms))
+        self.assertEqual(terms.consideration, "exchange")
+        self.assertIn("an exchange offer for other securities", self.reasons(terms))
 
     def test_debt_tender_is_rejected(self):
         """Same odd-lot phrasing, different security. 99 notes is not 99 shares."""
@@ -214,6 +216,71 @@ class TheFirstLiveRun(unittest.TestCase):
                      "going_concern_offer.html"):
             with self.subTest(fixture=name):
                 self.assertFalse(parse_offer_document(fixture(name)).preference_removed)
+
+
+class WhatTheOfferPays(unittest.TestCase):
+    """Three answers, because "pays in stock" and "we could not tell" differ.
+
+    The second live run's largest rejection bucket was "reads as an exchange
+    offer" for documents with no exchange language in them at all. A funnel
+    that misattributes its biggest number is worse than no funnel, because it
+    sends you looking in the wrong place.
+    """
+
+    def test_a_cash_offer_saying_in_exchange_for_shares_is_still_cash(self):
+        """How a cash tender ordinarily describes itself. Treating a bare
+        "in exchange for" as the signal rejects real offers."""
+        for text in (
+            "Offer to Purchase for Cash Up to 1,000,000 Shares of Common Stock at "
+            "$18.75 per Share. Holders will receive $18.75 in cash in exchange for "
+            "Shares validly tendered and not withdrawn.",
+            "We will pay $12.00 per Share in cash in exchange for the 99 Shares "
+            "tendered by each Odd Lot Holder.",
+        ):
+            with self.subTest(text=text[:44]):
+                self.assertEqual(classify_consideration(text), "cash")
+
+    def test_a_real_exchange_offer_is_still_caught(self):
+        for text in (
+            "Offer to Exchange each outstanding share for 1.35 newly issued Class A "
+            "ordinary shares of Larkspur Global plc.",
+            "This exchange offer is being made for all outstanding shares.",
+        ):
+            with self.subTest(text=text[:44]):
+                self.assertEqual(classify_consideration(text), "exchange")
+
+    def test_a_fund_repurchase_at_nav_pays_cash(self):
+        """It does pay cash — it just has no fixed price to read, and is
+        rejected further down with a reason that says exactly that."""
+        self.assertEqual(classify_consideration(
+            "Offer to Purchase up to 5% of the Fund's outstanding Common Shares of "
+            "Beneficial Interest at a price equal to the net asset value per Share."),
+            "cash")
+
+    def test_a_document_stating_nothing_says_so(self):
+        self.assertEqual(classify_consideration(
+            "This document describes the procedures for tendering Shares."), "unstated")
+
+    def test_the_two_failures_get_different_rejections(self):
+        exchange = OfferTerms(has_threshold=True, has_proration_preference=True,
+                              consideration="exchange", is_common_equity=True,
+                              expiration_date="2026-12-01")
+        unstated = OfferTerms(has_threshold=True, has_proration_preference=True,
+                              consideration="unstated", is_common_equity=True,
+                              expiration_date="2026-12-01")
+        self.assertIn("an exchange offer for other securities",
+                      " ".join(gate_document(exchange, form="SC TO-I", today=TODAY).rejections))
+        self.assertIn("no cash consideration stated",
+                      " ".join(gate_document(unstated, form="SC TO-I", today=TODAY).rejections))
+
+    def test_a_fund_calls_its_equity_shares_of_beneficial_interest(self):
+        """Closed-end funds and BDCs are a large share of the SC TO-I
+        population and were all read as an unidentified security."""
+        for cover in ("Offer to Purchase Common Shares of Beneficial Interest of the Fund.",
+                      "Offer to Purchase Shares of Beneficial Interest of the Trust."):
+            with self.subTest(cover=cover[:44]):
+                is_common, subject = classify_subject_security(cover)
+                self.assertTrue(is_common, f"read as {subject!r}")
 
 
 class PassageDetection(unittest.TestCase):

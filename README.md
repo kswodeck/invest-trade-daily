@@ -215,8 +215,8 @@ in the code carries a default that overrides it.
 | Check | Why |
 | --- | --- |
 | Both a "fewer than 100 shares" threshold **and** acceptance-before-proration language, in the same passage | Either half alone is a different document. A threshold with no promise is an offer that merely *defines* an odd lot; proration language with no threshold is the ordinary pro-rata sentence in every oversubscribed tender. |
-| Cash offer, not an exchange offer | An exchange offer pays in stock. There is no spread to capture, only a ratio. |
-| Common equity, not debt or preferred | Debt tenders use the identical odd-lot phrasing for *notes*. 99 notes is a $99,000 position, not a $1,000 one. |
+| Cash offer, not an exchange offer | An exchange offer pays in stock. There is no spread to capture, only a ratio. Reported as three answers — cash, exchange, or *unstated* — because "pays in stock" and "we could not find what it pays" are different findings and were being reported as the first. |
+| Common equity, not debt or preferred | Debt tenders use the identical odd-lot phrasing for *notes*. 99 notes is a $99,000 position, not a $1,000 one. Closed-end funds and BDCs — a large share of the `SC TO-I` population — call their equity *shares of beneficial interest*, and count. |
 | Currently open, not expired or terminated | Decided from the expiration date read out of the document. |
 | No amendment removing the preference | The Frontera pattern. |
 | No record-holder condition on the preference | The ITEX pattern. Read inside the odd-lot passage only — a standalone "fewer than 300 holders of record" is deregistration boilerplate that nearly every small-cap tender carries. |
