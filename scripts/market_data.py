@@ -631,6 +631,13 @@ def history(symbol: str, days: int = 120) -> dict[str, Any]:
         def sma(n: int) -> float | None:
             return round(sum(closes[-n:]) / n, 4) if len(closes) >= n else None
 
+        # Average traded volume, in shares and in dollars. Both are liquidity
+        # floors somebody already has to enforce by hand: config/strategy.md
+        # sets a $500K average daily dollar volume minimum, and the odd-lot
+        # screener needs the share count to know a 99-share exit is fillable.
+        volumes = [v for v in (_num(r.get("Volume")) for r in rows[-30:]) if v]
+        avg_volume = round(sum(volumes) / len(volumes)) if volumes else None
+
         return {
             "ok": True,
             "source": source,
@@ -644,6 +651,8 @@ def history(symbol: str, days: int = 120) -> dict[str, Any]:
             "sma20": sma(20),
             "sma50": sma(50),
             "sma200": sma(200),
+            "avg_volume_30d": avg_volume,
+            "avg_dollar_volume_30d": round(avg_volume * last) if avg_volume else None,
             "range_high": round(max(highs), 4),
             "range_low": round(min(lows), 4),
             "pct_off_high": round((last - max(highs)) / max(highs) * 100, 2),

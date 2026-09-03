@@ -1,0 +1,167 @@
+name: Odd-Lot Tender Screener
+
+# Screens SEC tender offers for the odd-lot preference: issuers who accept the
+# shares of holders owning fewer than 100 shares ahead of any proration. Buy 99
+# shares under the offer price, tender all of them, skip the proration queue.
+#
+# Two slots a day, both declared twice because GitHub cron is UTC-only with no
+# DST awareness. scripts/odd_lot.py decides which arm does the work — from the
+# wall clock in New York and from when the universe was last re-scored, never
+# from which cron fired. See tests/test_odd_lot_screener.py::Slots.
+
+on:
+  repository_dispatch:
+    types: [run-odd-lot-screener]
+
+  schedule:
+    # 05:37 ET — thirty minutes ahead of the daily trade report, so the Sheet's
+    # odd-lot tab is current before the morning's research starts.
+    - cron: "37 9 * * *"    # 05:37 EDT  (the 04:37 EST arm is out of window)
+    - cron: "37 10 * * *"   # 05:37 EST  (06:37 in EDT, dropped by the run guard)
+    # 18:30 ET — after EDGAR's 17:30 ET filing cutoff, so same-day filings are
+    # indexed. EFTS indexes a new filing within about 60 seconds of publication.
+    - cron: "30 22 * * 1-5" # 18:30 EDT  (17:30 EST is before the cutoff, dropped)
+    - cron: "30 23 * * 1-5" # 18:30 EST  (19:30 in EDT, dropped by the run guard)
+
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Screen and print, but write neither the Sheet nor the universe"
+        type: boolean
+        required: false
+        default: false
+      force:
+        description: "Run even if the universe was re-scored in the last two hours"
+        type: boolean
+        required: false
+        default: false
+
+concurrency:
+  group: odd-lot-screener
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  screen:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
+      FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
+      ALPHAVANTAGE_API_KEY: ${{ secrets.ALPHAVANTAGE_API_KEY }}
+      TWELVEDATA_API_KEY: ${{ secrets.TWELVEDATA_API_KEY }}
+
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # The DST arms and the duplicate guard are decided in tested Python, not
+      # in shell. The daily report's gate spent two weeks getting this wrong in
+      # bash before the logic moved somewhere it could be tested.
+      - id: gate
+        name: Is this a screening slot?
+        run: |
+          set -euo pipefail
+          printf '### Odd-lot slot gate\n```\n' >> "$GITHUB_STEP_SUMMARY"
+          python scripts/odd_lot.py slot \
+            --event-name "${{ github.event_name }}" \
+            ${{ github.event.inputs.force == 'true' && '--force' || '' }} \
+            | tee -a "$GITHUB_STEP_SUMMARY"
+          printf '```\n' >> "$GITHUB_STEP_SUMMARY"
+
+      # Offer documents never change — an amendment is a new filing with its own
+      # accession — so a document fetched once should never be fetched again.
+      # The SEC's rate limit is per IP and shared across everyone on the runner,
+      # so this is politeness as much as speed.
+      - name: Restore the filing cache
+        if: steps.gate.outputs.proceed == 'true'
+        uses: actions/cache@v4
+        with:
+          path: state/odd_lot_cache
+          key: odd-lot-docs-${{ github.run_id }}
+          restore-keys: odd-lot-docs-
+
+      - name: Screen
+        id: screen
+        if: steps.gate.outputs.proceed == 'true'
+        continue-on-error: true
+        env:
+          REPORT_DATE: ${{ steps.gate.outputs.date }}
+          SLOT: ${{ steps.gate.outputs.slot }}
+        run: |
+          FLAGS=""
+          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then FLAGS="--dry-run"; fi
+          python scripts/odd_lot.py run --slot "$SLOT" $FLAGS \
+            | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Publish the Odd Lot tab
+        if: steps.gate.outputs.proceed == 'true' && github.event.inputs.dry_run != 'true'
+        env:
+          GCP_SERVICE_ACCOUNT_JSON: ${{ secrets.GCP_SERVICE_ACCOUNT_JSON }}
+          GOOGLE_SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}
+        run: python scripts/publish_odd_lot.py
+
+      - name: Commit the universe and the report
+        if: steps.gate.outputs.proceed == 'true' && github.event.inputs.dry_run != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPORT_DATE: ${{ steps.gate.outputs.date }}
+        run: |
+          git config user.name  "invest-trade-daily[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add state/odd_lot_universe.json "reports/$REPORT_DATE" || true
+          if git diff --staged --quiet; then
+            echo "Nothing changed."
+            exit 0
+          fi
+          OPEN=$(python -c "import json;print(len(json.load(open('state/odd_lot_universe.json'))['open']))" 2>/dev/null || echo "?")
+          git commit -m "odd-lot: ${REPORT_DATE} (${OPEN} offers tracked)"
+
+          git config --local --unset-all http.https://github.com/.extraheader || true
+          git remote set-url origin \
+            "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          for attempt in 1 2 3 4; do
+            if git push origin HEAD:${{ github.ref_name }}; then
+              echo "Pushed on attempt $attempt."
+              exit 0
+            fi
+            echo "Push failed (attempt $attempt); rebasing and retrying..."
+            sleep $((2 ** attempt))
+            git pull --rebase origin ${{ github.ref_name }} || true
+          done
+          echo "::error::Could not push the odd-lot universe after 4 attempts."
+          exit 1
+
+      # Deliberately last and deliberately red, on the same reasoning as the
+      # daily report's stub check: GitHub only emails about failed runs, so a
+      # discovery outage that published yesterday's universe would look exactly
+      # like the quiet day that is the normal, correct output. The Sheet write
+      # and the commit have already happened by this point.
+      - name: Fail the run if discovery never reached EDGAR
+        if: always() && steps.gate.outputs.proceed == 'true'
+        run: |
+          python - <<'PY'
+          import json, pathlib, sys
+          path = pathlib.Path("state/odd_lot_universe.json")
+          if not path.exists():
+              print("No universe file — nothing to check.")
+              sys.exit(0)
+          error = json.loads(path.read_text()).get("discovery_error")
+          if error:
+              print(f"::error title=Odd-lot discovery failed::{error}")
+              print("Today's filings were never seen. The tab holds the previous "
+                    "universe, re-priced.")
+              sys.exit(1)
+          print("Discovery reached EDGAR.")
+          PY
