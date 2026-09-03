@@ -609,6 +609,17 @@ def _key_words(path: str) -> str:
     return _norm(_HUMPS.sub(" ", str(path or "")).replace(".", " ").replace("_", " "))
 
 
+def _flatten_values(payload: Any, depth: int = 0) -> list[Any]:
+    """Every scalar in a record, however nested."""
+    if depth > 3:
+        return []
+    if isinstance(payload, dict):
+        return [v for value in payload.values() for v in _flatten_values(value, depth + 1)]
+    if isinstance(payload, list):
+        return [v for item in payload[:20] for v in _flatten_values(item, depth + 1)]
+    return [] if payload is None else [payload]
+
+
 def infer_field_map(keys: Iterable[str], column_map: dict[str, list[str]]) -> dict[str, str]:
     """Canonical field -> JSON key, using the source's own header patterns.
 
@@ -655,6 +666,12 @@ def best_record_array(payloads: Iterable[Any], column_map: dict[str, list[str]]
         row = {field: _dig(record, key) for field, key in field_map.items()}
         row = {k: v for k, v in row.items() if v not in (None, "")}
         if row:
+            # Everything the record held, mapped or not. A cross-county
+            # aggregator names the county in a field nothing maps to, and
+            # filtering on the mapped values alone silently dropped every row
+            # of three working sources.
+            row["_blob"] = " ".join(
+                str(v) for v in _flatten_values(record)).lower()
             rows.append(row)
     return rows, {"mapped": sorted(field_map), "rows": len(rows),
                   "discovered_path": path, "discovered_field_map": field_map,
@@ -690,6 +707,69 @@ _API_REF = re.compile(r"""["'`](?P<url>(?:https?://[^"'`\s]+|/)[^"'`\s]*"""
 _SCRIPT_SRC = re.compile(r"""<script[^>]+src\s*=\s*["']([^"']+)["']""", re.I)
 MAX_API_PROBES = 8
 MAX_BUNDLES = 3
+
+# A first page is not a sale list. These APIs page at 10-50 records and hand
+# back the next URL; the first live success returned exactly 10 rows per county,
+# which is a page size, not a month's docket. Bounded so a runaway `next` chain
+# cannot spin forever.
+MAX_PAGES = 40
+MAX_ROWS = 5000
+_NEXT_KEYS = ("next", "next_page", "nextPage", "next_url", "nextUrl")
+
+
+def _next_url(payload: Any, current: str) -> str | None:
+    """The following page, for the paging shapes these APIs actually use."""
+    if not isinstance(payload, dict):
+        return None
+    for key in _NEXT_KEYS:
+        value = payload.get(key)
+        if isinstance(value, str) and value.strip():
+            return urllib.parse.urljoin(current, value)
+    links = payload.get("links")
+    if isinstance(links, dict):
+        for key in _NEXT_KEYS:
+            value = links.get(key)
+            if isinstance(value, str) and value.strip():
+                return urllib.parse.urljoin(current, value)
+    return None
+
+
+def follow_pages(payload: Any, rows: list[dict], source: dict, cfg: dict,
+                 url: str) -> tuple[int, list[dict]]:
+    """Walk `next` until the list runs out. Returns (pages read, all rows)."""
+    column_map = source.get("column_map") or {}
+    seen_urls = {url}
+    # One property is one row however many times paging hands it back. A `next`
+    # that points at a page already read terminates the walk, but a URL that
+    # merely spells the same page differently (`?page=1` versus no parameter)
+    # does not — and a list that shifts between requests can repeat a record
+    # with no loop at all. So dedupe on the property, not on the URL.
+    seen_rows = {_row_key(row) for row in rows}
+    pages = 1
+    current = _next_url(payload, url)
+    while current and current not in seen_urls and pages < MAX_PAGES and len(rows) < MAX_ROWS:
+        seen_urls.add(current)
+        try:
+            body = fetch(current, cfg)
+            page = json.loads(body)
+        except (SourceError, json.JSONDecodeError):
+            break
+        more, _ = best_record_array([page], column_map)
+        fresh = [row for row in more if _row_key(row) not in seen_rows]
+        if not fresh:
+            break
+        seen_rows.update(_row_key(row) for row in fresh)
+        rows.extend(fresh)
+        pages += 1
+        current = _next_url(page, current)
+    return pages, rows
+
+
+def _row_key(row: dict) -> str:
+    """What makes this row one property, for deduplication across pages."""
+    account = td.normalize_account(row.get("account"))
+    cause = re.sub(r"[^0-9A-Za-z]", "", str(row.get("cause_number") or "")).upper()
+    return f"{account}|{cause}" if (account or cause) else str(row.get("_blob") or row)
 
 
 def candidate_api_urls(html: str, base_url: str) -> list[str]:
@@ -768,7 +848,9 @@ def discover_api_records(html: str, source: dict, cfg: dict, url: str
             continue
         rows, diag = best_record_array([payload], column_map)
         if rows:
-            diag.update(api_endpoint=candidate, probed=tried)
+            pages, rows = follow_pages(payload, rows, source, cfg, candidate)
+            diag.update(api_endpoint=candidate, probed=tried, pages=pages,
+                        rows=len(rows))
             return rows, diag
 
     return [], {"reason": f"followed {len(tried)} API reference(s) the page names and none "
@@ -1120,21 +1202,43 @@ def county_listings(county: dict, cfg: dict, sale_date: str | None = None
             continue
 
         filter_name = None if diag.get("manual") else source.get("county_filter")
-        parsed = []
+        parsed: list[dict] = []
+        dropped_county = dropped_date = 0
+        dates_seen: set[str] = set()
+
         for raw in rows:
             listing = normalize_listing(raw, county["name"], source, cfg)
-            # A cross-county aggregator returns every county it covers; keep ours.
+            # A cross-county aggregator returns every county it covers; keep
+            # ours. Prefer an explicit county field, fall back to everything the
+            # record held — mapped or not.
             if filter_name:
-                blob = " ".join(str(v) for v in raw.values()).lower()
+                blob = str(raw.get("county") or raw.get("_blob")
+                           or " ".join(str(v) for v in raw.values())).lower()
                 if filter_name.lower() not in blob and county["name"].lower() not in blob:
+                    dropped_county += 1
                     continue
+            if listing["sale_date"]:
+                dates_seen.add(listing["sale_date"])
             if sale_date and listing["sale_date"] and listing["sale_date"] != sale_date:
+                dropped_date += 1
                 continue
             parsed.append(listing)
 
         listings.extend(parsed)
-        entry.update(ok=True, rows=len(parsed),
-                     detail=f"{diag.get('source')} · matched {diag.get('mapped')}")
+        # Say where the rows went. "Fetched 10, kept 0" was invisible before,
+        # and it read exactly like a source that returned nothing at all.
+        detail = (f"{diag.get('source')} · fetched {len(rows)}, kept {len(parsed)}"
+                  f" · matched {diag.get('mapped')}")
+        if diag.get("pages", 1) > 1:
+            detail += f" · {diag['pages']} page(s)"
+        if dropped_county:
+            detail += f" · {dropped_county} not in {filter_name}"
+        if dropped_date:
+            detail += (f" · {dropped_date} for another sale date "
+                       f"(saw {sorted(dates_seen)[:6]}, wanted {sale_date})")
+        entry.update(ok=True, rows=len(parsed), fetched=len(rows),
+                     dropped_county=dropped_county, dropped_date=dropped_date,
+                     sale_dates_seen=sorted(dates_seen)[:12], detail=detail)
         report.append(entry)
     return listings, report
 
