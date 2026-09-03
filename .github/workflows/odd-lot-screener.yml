@@ -100,6 +100,10 @@ jobs:
           REPORT_DATE: ${{ steps.gate.outputs.date }}
           SLOT: ${{ steps.gate.outputs.slot }}
         run: |
+          # pipefail, or the step takes tee's exit code and reports success no
+          # matter how the screen ended — including the deliberate raise on an
+          # EFTS schema change.
+          set -o pipefail
           FLAGS=""
           if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then FLAGS="--dry-run"; fi
           python scripts/odd_lot.py run --slot "$SLOT" $FLAGS \
@@ -150,18 +154,33 @@ jobs:
       # and the commit have already happened by this point.
       - name: Fail the run if discovery never reached EDGAR
         if: always() && steps.gate.outputs.proceed == 'true'
+        env:
+          SCREEN_OUTCOME: ${{ steps.screen.outcome }}
         run: |
           python - <<'PY'
-          import json, pathlib, sys
+          import json, os, pathlib, sys
+          outcome = os.environ.get("SCREEN_OUTCOME", "")
           path = pathlib.Path("state/odd_lot_universe.json")
-          if not path.exists():
-              print("No universe file — nothing to check.")
-              sys.exit(0)
-          error = json.loads(path.read_text()).get("discovery_error")
+          error = None
+          if path.exists():
+              error = json.loads(path.read_text()).get("discovery_error")
+
           if error:
               print(f"::error title=Odd-lot discovery failed::{error}")
               print("Today's filings were never seen. The tab holds the previous "
                     "universe, re-priced.")
               sys.exit(1)
+
+          # A screen that died before writing the universe leaves no
+          # discovery_error behind to find, so the file alone would call that a
+          # clean quiet day — which is what most days look like. An EFTS schema
+          # change raises deliberately and lands exactly here.
+          if outcome != "success":
+              print(f"::error title=Odd-lot screen failed::The screen step ended "
+                    f"'{outcome}' and wrote no universe, so the tab is stale. "
+                    f"Read the step log: an EFTS schema change raises rather "
+                    f"than quietly returning zero hits.")
+              sys.exit(1)
+
           print("Discovery reached EDGAR.")
           PY

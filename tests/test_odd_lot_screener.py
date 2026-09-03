@@ -164,6 +164,18 @@ class EftsAdapterFailsLoudly(unittest.TestCase):
             parse_efts_response({"hits": {"hits": [
                 {"_id": "0001104659-26-000123:doc.htm", "_source": {"ciks": []}}]}})
 
+    def test_the_form_is_the_filing_form_not_the_exhibit_type(self):
+        """EFTS `file_type` names the *document* — EX-99.(A)(1)(III) — and the
+        first live run reported every hit as an exhibit because this preferred
+        it over `root_forms`."""
+        hit = parse_efts_response({"hits": {"hits": [{
+            "_id": "0001104659-26-000123:ex99a1iii.htm",
+            "_source": {"ciks": ["0000320193"], "display_names": ["ACME (ACME)"],
+                        "file_type": "EX-99.(A)(1)(III)", "root_forms": ["SC TO-I"],
+                        "file_date": "2026-09-01"}}]}})[0]
+        self.assertEqual(hit["form"], "SC TO-I")
+        self.assertEqual(hit["document_type"], "EX-99.(A)(1)(III)")
+
     def test_a_well_formed_hit_is_flattened(self):
         hits = parse_efts_response({"hits": {"hits": [{
             "_id": "0001104659-26-000123:tm26123d1_sctoi.htm",
@@ -512,6 +524,33 @@ class ConfigIsTheOnlySourceOfThresholds(unittest.TestCase):
                 os.environ.pop("SEC_USER_AGENT", None)
             else:
                 os.environ["SEC_USER_AGENT"] = original
+
+
+class TheScreenerAlarmCannotGoQuiet(unittest.TestCase):
+    """A screen that fails must turn the run red.
+
+    Structural assertions on the workflow rather than on Python, because both
+    bugs lived in the YAML: the step piped into `tee`, so it reported tee's
+    exit code and every failure read as success; and the alarm looked only at
+    `discovery_error` in the universe file, which a crash never gets far enough
+    to write. Together they meant an EFTS schema change — the thing the adapter
+    raises loudly for — would have produced a green run, an empty tab, and no
+    email. Text matching, because tests.yml runs stdlib-only with no yaml.
+    """
+
+    WORKFLOW = (REPO / ".github" / "workflows" / "odd-lot-screener.yml").read_text()
+
+    def test_the_screen_step_does_not_swallow_its_exit_code_through_tee(self):
+        self.assertIn("set -o pipefail", self.WORKFLOW)
+
+    def test_the_alarm_reads_the_step_outcome_and_not_only_the_universe_file(self):
+        self.assertIn("steps.screen.outcome", self.WORKFLOW)
+        self.assertIn("SCREEN_OUTCOME", self.WORKFLOW)
+
+    def test_the_screen_step_still_lets_publish_and_commit_run(self):
+        """A discovery outage should still re-price and still publish — a
+        stale-but-labelled tab beats no tab."""
+        self.assertIn("continue-on-error: true", self.WORKFLOW)
 
 
 if __name__ == "__main__":
