@@ -75,6 +75,10 @@ _session: Any = None
 _last_request: dict[str, float] = {}
 _robots: dict[str, Any] = {}
 
+# Sentinel: robots.txt gave no answer at all, as distinct from answering
+# "server error" (None), which stays a refusal.
+ALLOW_UNKNOWN = object()
+
 
 # Two hosts refused the plain UA outright on the first live run, and a 403 is
 # not a policy statement — robots.txt is, and it is honoured absolutely and
@@ -126,8 +130,16 @@ def session(cfg: dict):
     if _session is None:
         import requests  # lazy: keeps this module importable on a bare runner
         _session = requests.Session()
-        _session.headers.update({"User-Agent": user_agent(cfg),
-                                 "Accept": "text/html,application/json;q=0.9,*/*;q=0.8"})
+        # A request missing the headers every real client sends is itself a bot
+        # signal, and some county WAFs refuse on that alone. Nothing here is
+        # untrue about us — the User-Agent still says exactly who we are.
+        _session.headers.update({
+            "User-Agent": user_agent(cfg),
+            "Accept": "text/html,application/xhtml+xml,application/json;q=0.9,*/*;q=0.8",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+        })
     return _session
 
 
@@ -154,19 +166,39 @@ def robots_allows(url: str, cfg: dict) -> tuple[bool, str]:
     if root not in _robots:
         parser = urllib.robotparser.RobotFileParser()
         parser.set_url(f"{root}/robots.txt")
-        try:
-            _throttle(root, cfg)
-            resp = session(cfg).get(f"{root}/robots.txt", timeout=TIMEOUT)
+        error: Exception | None = None
+        for attempt in range(2):
+            try:
+                _throttle(root, cfg)
+                resp = session(cfg).get(f"{root}/robots.txt", timeout=TIMEOUT)
+            except Exception as exc:  # noqa: BLE001
+                error = exc
+                continue
+            error = None
             if resp.status_code >= 500:
+                # The server is speaking, and what it says is "I am broken".
+                # Be conservative: no rules could be read, so do not crawl.
                 _robots[root] = None
+                _robots[f"{root}!why"] = f"robots.txt returned HTTP {resp.status_code}"
             else:
+                # 4xx means there are no rules, which is permission.
                 parser.parse(resp.text.splitlines() if resp.status_code < 400 else [])
                 _robots[root] = parser
-        except Exception as exc:  # noqa: BLE001
-            _robots[root] = None
-            _robots[f"{root}!why"] = f"{type(exc).__name__}: {exc}"
+            break
+        if error is not None:
+            # A connection reset or timeout is not a statement of policy — it
+            # is no signal at all, and treating silence as prohibition
+            # permanently disabled two sources that plainly permit access
+            # (hazards.fema.gov among them). Retried once above; allow, and
+            # say so, rather than let a flaky hop become a standing ban.
+            _robots[root] = ALLOW_UNKNOWN
+            _robots[f"{root}!why"] = f"{type(error).__name__}: {error}"
 
     parser = _robots.get(root)
+    if parser is ALLOW_UNKNOWN:
+        return True, (f"{root}/robots.txt was unreachable twice "
+                      f"({_robots.get(f'{root}!why')}) — a network failure states no policy, "
+                      f"so this is treated as no rules rather than as a prohibition")
     if parser is None:
         why = _robots.get(f"{root}!why", "robots.txt returned a server error")
         return False, f"could not read {root}/robots.txt ({why}) — not fetching"
@@ -589,18 +621,19 @@ def infer_field_map(keys: Iterable[str], column_map: dict[str, list[str]]) -> di
     return {field: paths[index] for field, index in mapping.items()}
 
 
-def discover_json_records(html: str, source: dict) -> tuple[list[dict], dict]:
-    """Find the sale list inside a client-rendered page, and map it.
+def best_record_array(payloads: Iterable[Any], column_map: dict[str, list[str]]
+                      ) -> tuple[list[dict], dict]:
+    """The array in these payloads that most looks like a sale list.
 
-    Returns the best-scoring array of records that carries an opening bid and
-    something to identify a property by — the same bar `rows_from_tables`
-    applies, so a discovered list cannot be worse-specified than a parsed one.
+    Qualifying means carrying an opening bid and something to identify a
+    property by — the same bar `rows_from_tables` applies, so a discovered list
+    is never worse-specified than a parsed one, and navigation menus and config
+    blobs cannot pass it.
     """
-    column_map = source.get("column_map") or {}
     best: tuple[int, list[dict], dict[str, str], str] | None = None
     seen_paths: list[str] = []
 
-    for payload in embedded_json(html):
+    for payload in payloads:
         for path, records in _record_arrays(payload):
             field_map = infer_field_map(_flatten_keys(records[0]), column_map)
             if not any(f in field_map for f in IDENTIFYING_FIELDS):
@@ -613,7 +646,8 @@ def discover_json_records(html: str, source: dict) -> tuple[list[dict], dict]:
                 best = (score, records, field_map, path)
 
     if best is None:
-        return [], {"reason": "no embedded JSON array looked like a sale list"}
+        return [], {"reason": "no JSON array looked like a sale list",
+                    "candidates": seen_paths[:5]}
 
     _, records, field_map, path = best
     rows = []
@@ -625,6 +659,120 @@ def discover_json_records(html: str, source: dict) -> tuple[list[dict], dict]:
     return rows, {"mapped": sorted(field_map), "rows": len(rows),
                   "discovered_path": path, "discovered_field_map": field_map,
                   "candidates": seen_paths[:5]}
+
+
+def discover_json_records(html: str, source: dict) -> tuple[list[dict], dict]:
+    """Find the sale list inside the JSON a client-rendered page ships with."""
+    rows, diag = best_record_array(embedded_json(html), source.get("column_map") or {})
+    if not rows:
+        diag["reason"] = "no embedded JSON array looked like a sale list"
+    return rows, diag
+
+
+# --------------------------------------------------------------------------
+# discovery, part two: the page fetches its list rather than shipping it
+# --------------------------------------------------------------------------
+#
+# taxsales.lgbs.com carries no table AND no embedded records — it calls an API
+# after load. The endpoint is not a secret: it is written in the page's own
+# scripts. So collect the API-shaped URLs the page references, GET the
+# plausible ones, and score whatever comes back the same way. This is the
+# difference between "find the endpoint yourself in dev tools" and the tool
+# doing it, which is the whole point of the exercise.
+#
+# Bounded on purpose: only URLs the page itself names, only the same host, and
+# only MAX_API_PROBES of them, at the same one-per-second everything else obeys.
+# It never guesses at paths the site did not mention.
+
+_API_REF = re.compile(r"""["'`](?P<url>(?:https?://[^"'`\s]+|/)[^"'`\s]*"""
+                      r"""(?:api|rest|search|sales|properties|listings)[^"'`\s]*)["'`]""",
+                      re.I)
+_SCRIPT_SRC = re.compile(r"""<script[^>]+src\s*=\s*["']([^"']+)["']""", re.I)
+MAX_API_PROBES = 8
+MAX_BUNDLES = 3
+
+
+def candidate_api_urls(html: str, base_url: str) -> list[str]:
+    """API-shaped URLs the page names, most promising first, same host only."""
+    host = urllib.parse.urlsplit(base_url).netloc
+    found: list[str] = []
+    for match in _API_REF.finditer(html or ""):
+        raw = match.group("url")
+        if raw.startswith("//"):
+            raw = "https:" + raw
+        absolute = urllib.parse.urljoin(base_url, raw)
+        parts = urllib.parse.urlsplit(absolute)
+        if parts.scheme not in ("http", "https") or parts.netloc != host:
+            continue
+        if re.search(r"\.(?:js|css|png|jpe?g|svg|gif|woff2?|ico|map)$", parts.path, re.I):
+            continue
+        if absolute not in found:
+            found.append(absolute)
+
+    return sorted(found, key=_api_rank)
+
+
+def _api_rank(url: str) -> tuple:
+    """Most-likely-to-be-the-list first, so the probe budget is not wasted.
+
+    Scored on the path and query only. Matching the whole URL let the host name
+    decide it: every candidate on `taxsales.lgbs.com` contains "sales", so they
+    all tied and the bare `/api/` won on length — spending two probes before
+    reaching `/api/property_sales/`.
+    """
+    parts = urllib.parse.urlsplit(url.lower())
+    path = f"{parts.path}?{parts.query}"
+    return (0 if re.search(r"sale|propert|listing", path) else 1,
+            0 if "/api/" in path else 1,
+            len(path))
+
+
+def discover_api_records(html: str, source: dict, cfg: dict, url: str
+                         ) -> tuple[list[dict], dict]:
+    """Follow the page's own API references until one returns the sale list."""
+    column_map = source.get("column_map") or {}
+    tried: list[str] = []
+
+    bundles = []
+    for src in _SCRIPT_SRC.findall(html or "")[:20]:
+        absolute = urllib.parse.urljoin(url, src)
+        if urllib.parse.urlsplit(absolute).netloc == urllib.parse.urlsplit(url).netloc:
+            bundles.append(absolute)
+
+    texts = [html]
+    for bundle in bundles[:MAX_BUNDLES]:
+        try:
+            texts.append(fetch(bundle, cfg))
+        except SourceError:
+            continue
+
+    # Rank across every source of references at once. Sorting each file
+    # separately put the page's bare `/api/` ahead of the bundle's
+    # `/api/property_sales/`, spending probes on the least likely candidate.
+    seen: list[str] = []
+    for text in texts:
+        for candidate in candidate_api_urls(text, url):
+            if candidate not in seen:
+                seen.append(candidate)
+    candidates = sorted(seen, key=_api_rank)
+
+    for candidate in candidates[:MAX_API_PROBES]:
+        tried.append(candidate)
+        try:
+            body = fetch(candidate, cfg)
+        except SourceError:
+            continue
+        try:
+            payload = json.loads(body)
+        except json.JSONDecodeError:
+            continue
+        rows, diag = best_record_array([payload], column_map)
+        if rows:
+            diag.update(api_endpoint=candidate, probed=tried)
+            return rows, diag
+
+    return [], {"reason": f"followed {len(tried)} API reference(s) the page names and none "
+                          f"returned a sale list", "probed": tried}
 
 
 def rows_from_csv(text: str, column_map: dict[str, list[str]]) -> tuple[list[dict], dict]:
@@ -892,10 +1040,12 @@ def _read_source(url: str, source: dict, fmt: str, column_map: dict, cfg: dict
             # advice to go read dev tools, look for the data the page shipped
             # with itself — see discover_json_records.
             found, found_diag = discover_json_records(text, source)
+            if not found and source.get("probe_api", True):
+                found, found_diag = discover_api_records(text, source, cfg, url)
             if found:
                 found_diag["auto_discovered"] = True
                 return found, found_diag
-            diag.setdefault("discovery", found_diag.get("reason"))
+            diag["discovery"] = found_diag.get("reason")
     else:
         raise SourceError(url, f"unknown source format {fmt!r} for '{source['id']}'")
 
@@ -917,10 +1067,13 @@ def _unparseable(source: dict, diag: dict) -> str:
             f"add it as a `\"format\": \"json\"` source (or as a `fallback_urls` entry) "
             f"for '{sid}'; or export the list by hand to "
             f"{manual_path(sid).relative_to(REPO)}.")
+    discovery = f" Automatic JSON discovery also found nothing ({diag['discovery']})." \
+        if diag.get("discovery") else ""
     return (
         f"could not read a sale list from this page: {diag.get('reason')}. "
-        f"Headers seen: {diag.get('headers_seen') or diag.get('header_matched')}. "
-        f"Update `column_map` for source '{sid}' in config/tax_deeds.json.")
+        f"Headers seen: {diag.get('headers_seen') or diag.get('header_matched')}."
+        f"{discovery} Update `column_map` for source '{sid}' in config/tax_deeds.json, "
+        f"or export the list to {manual_path(sid).relative_to(REPO)}.")
 
 
 def normalize_listing(raw: dict, county: str, source: dict, cfg: dict) -> dict:
