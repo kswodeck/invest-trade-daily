@@ -80,12 +80,27 @@ jobs:
           if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
             ARGS="$ARGS --dry-run"
           fi
-          # A non-zero exit means a source failed structure verification. The
-          # snapshot, the packets and the Sheet are all written before that
-          # point, so the step is allowed to record the failure without
-          # discarding the run — the commit below still happens, and the job
-          # goes red at the end so the failure is not silent.
-          python scripts/tax_deed_screen.py $ARGS || echo "sources_failed=1" >> "$GITHUB_OUTPUT"
+          # Exit codes carry meaning, and collapsing them all into one flag is
+          # how the first live failure got reported as "a source broke" when
+          # the screener had actually refused to run at all:
+          #
+          #   0  clean run
+          #   1  ran and published, but at least one source failed verification
+          #   2  every county list failed — nothing screened, Sheet untouched
+          #   *  the screener itself crashed
+          #
+          # 1 and 2 are outcomes and must still reach the commit step, which is
+          # where the snapshot recording *which* URL broke gets saved. Anything
+          # else is a bug and fails the step immediately.
+          set +e
+          python scripts/tax_deed_screen.py $ARGS
+          CODE=$?
+          set -e
+          echo "code=$CODE" >> "$GITHUB_OUTPUT"
+          case "$CODE" in
+            0|1|2) exit 0 ;;
+            *) echo "::error::tax_deed_screen.py crashed with exit code $CODE."; exit "$CODE" ;;
+          esac
 
       - name: Commit the snapshot and packets
         if: always()
@@ -94,7 +109,13 @@ jobs:
         run: |
           git config user.name  "invest-trade-daily[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/tax_deeds/ reports/tax_deeds/ || true
+          # One path at a time. `git add a b` fails wholesale when b does not
+          # exist, and reports/tax_deeds/ only exists once a packet has been
+          # written — so a run that produced a snapshot and no packets used to
+          # commit neither, losing the record of what broke.
+          for path in data/tax_deeds/ reports/tax_deeds/; do
+            [ -e "$path" ] && git add "$path"
+          done
           if git diff --staged --quiet; then
             echo "Nothing to commit."
             exit 0
@@ -111,10 +132,19 @@ jobs:
           echo "::error::Could not push the tax deed snapshot."
           exit 1
 
-      - name: Fail the run if a county source broke
-        if: steps.screen.outputs.sources_failed == '1'
+      - name: Report what the screener concluded
+        if: steps.screen.outputs.code != '0'
         run: |
-          echo "::error::At least one county source failed verification — see the" \
-               "step summary for the URL. County sites change format without notice;" \
-               "fix config/tax_deeds.json rather than the parser."
+          if [ "${{ steps.screen.outputs.code }}" = "2" ]; then
+            echo "::error::Every county sale list failed verification, so nothing was" \
+                 "screened and the Sheet was not touched. The step summary and the" \
+                 "committed snapshot name each URL and its error. Fix" \
+                 "config/tax_deeds.json — a 403 is the host refusing the User-Agent," \
+                 "a page with no HTML table is a JavaScript app that needs its JSON" \
+                 "endpoint, and neither is a parser bug."
+          else
+            echo "::error::At least one source failed verification — see the step" \
+                 "summary for the URL. County sites change format without notice;" \
+                 "fix config/tax_deeds.json rather than the parser."
+          fi
           exit 1

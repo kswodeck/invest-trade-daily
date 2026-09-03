@@ -116,7 +116,8 @@
               "precinct",
               "pct"
             ]
-          }
+          },
+          "_verified": "2026-09-03: HTTP 403 — the host refused a non-browser User-Agent. Not a format change. Confirm the real Dallas portal URL from the Dallas County Tax Office site, or use the manual CSV drop."
         },
         {
           "id": "dallas_struck_off",
@@ -167,7 +168,8 @@
             "status": [
               "status"
             ]
-          }
+          },
+          "_verified": "2026-09-03: taxsales.lgbs.com fetched 200 but contains no HTML table — it is a JavaScript app. Find the JSON endpoint the page calls and switch this source to \"format\": \"json\"."
         }
       ]
     },
@@ -237,7 +239,8 @@
               "precinct",
               "pct"
             ]
-          }
+          },
+          "_verified": "2026-09-03: same JavaScript app as dallas_struck_off — no HTML table to parse. Needs the JSON endpoint or a manual CSV."
         }
       ]
     },
@@ -306,7 +309,8 @@
             "status": [
               "status"
             ]
-          }
+          },
+          "_verified": "2026-09-03: HTTP 403 — the host refused a non-browser User-Agent."
         }
       ]
     },
@@ -372,7 +376,8 @@
             "status": [
               "status"
             ]
-          }
+          },
+          "_verified": "2026-09-03: same JavaScript app as dallas_struck_off."
         }
       ]
     }
@@ -387,7 +392,8 @@
       "required_markers": [
         "dcad",
         "account"
-      ]
+      ],
+      "_verified": "2026-09-03: reachable, markers present."
     },
     "TAD": {
       "name": "Tarrant Appraisal District",
@@ -398,7 +404,8 @@
       "required_markers": [
         "tarrant",
         "appraisal"
-      ]
+      ],
+      "_verified": "2026-09-03: reachable, markers present."
     },
     "JohnsonCAD": {
       "name": "Johnson County Appraisal District",
@@ -409,7 +416,8 @@
       "required_markers": [
         "property",
         "search"
-      ]
+      ],
+      "_verified": "2026-09-03: reachable, markers present."
     },
     "EllisCAD": {
       "name": "Ellis Appraisal District",
@@ -420,7 +428,8 @@
       "required_markers": [
         "property",
         "search"
-      ]
+      ],
+      "_verified": "2026-09-03: esearch.elliscad.com reset the connection on robots.txt, so nothing was fetched. May be transient; re-run verify."
     }
   },
   "lien_sources": {
@@ -432,7 +441,7 @@
         "Dallas": "https://dallas.tx.publicsearch.us/",
         "Tarrant": "https://tarrant.tx.publicsearch.us/",
         "Johnson": "https://johnson.tx.publicsearch.us/",
-        "Ellis": "https://ellis.tx.publicsearch.us/"
+        "Ellis": null
       },
       "format": "clerk_search",
       "status": "unverified",
@@ -440,16 +449,19 @@
         "FEDERAL TAX LIEN",
         "INTERNAL REVENUE",
         "UNITED STATES OF AMERICA"
-      ]
+      ],
+      "_ellis": "ellis.tx.publicsearch.us does not resolve — Ellis County is not on that platform. Find where the Ellis County Clerk publishes official public records and put it here; null reports 'not configured', which is honest, where a dead hostname reported a network error.",
+      "_verified": "2026-09-03: Dallas, Tarrant and Johnson resolve but their robots.txt disallows crawling, so these checks correctly report unavailable. Do not override respect_robots_txt to get around it."
     },
     "pace_lien": {
       "check": "pace_lien",
       "on_hit": "reject",
       "urls": {
-        "_all": "https://www.texaspaceauthority.org/completed-projects/"
+        "_all": null
       },
       "format": "html_text",
-      "status": "unverified"
+      "status": "unverified",
+      "_verified": "2026-09-03: https://www.texaspaceauthority.org/completed-projects/ returned 404. Find the current project registry URL and put it here. Until then this check reports unavailable, which is a material flag — see config/tax_deeds.md."
     },
     "hoa_assessment": {
       "check": "hoa_assessment",
@@ -458,7 +470,7 @@
         "Dallas": "https://dallas.tx.publicsearch.us/",
         "Tarrant": "https://tarrant.tx.publicsearch.us/",
         "Johnson": "https://johnson.tx.publicsearch.us/",
-        "Ellis": "https://ellis.tx.publicsearch.us/"
+        "Ellis": null
       },
       "format": "clerk_search",
       "status": "unverified",
@@ -466,7 +478,9 @@
         "HOMEOWNERS ASSOCIATION",
         "PROPERTY OWNERS ASSOCIATION",
         "ASSESSMENT LIEN"
-      ]
+      ],
+      "_ellis": "ellis.tx.publicsearch.us does not resolve — Ellis County is not on that platform. Find where the Ellis County Clerk publishes official public records and put it here; null reports 'not configured', which is honest, where a dead hostname reported a network error.",
+      "_verified": "2026-09-03: Dallas, Tarrant and Johnson resolve but their robots.txt disallows crawling, so these checks correctly report unavailable. Do not override respect_robots_txt to get around it."
     },
     "municipal_lien": {
       "check": "municipal_lien",
@@ -475,7 +489,7 @@
         "Dallas": "https://dallas.tx.publicsearch.us/",
         "Tarrant": "https://tarrant.tx.publicsearch.us/",
         "Johnson": "https://johnson.tx.publicsearch.us/",
-        "Ellis": "https://ellis.tx.publicsearch.us/"
+        "Ellis": null
       },
       "format": "clerk_search",
       "status": "unverified",
@@ -486,7 +500,9 @@
         "WEED",
         "BOARD UP",
         "PARAMOUNT LIEN"
-      ]
+      ],
+      "_ellis": "ellis.tx.publicsearch.us does not resolve — Ellis County is not on that platform. Find where the Ellis County Clerk publishes official public records and put it here; null reports 'not configured', which is honest, where a dead hostname reported a network error.",
+      "_verified": "2026-09-03: Dallas, Tarrant and Johnson resolve but their robots.txt disallows crawling, so these checks correctly report unavailable. Do not override respect_robots_txt to get around it."
     }
   },
   "flood": {
@@ -503,7 +519,8 @@
       "A99",
       "V",
       "VE"
-    ]
+    ],
+    "_verified": "2026-09-03: layer 28 returned 404. `verify` now asks the MapServer for its layer list and prints the flood-looking candidates — run it and set the index it names."
   },
   "environmental": {
     "_": "TCEQ publishes datasets but no stable keyless per-parcel API; EPA Envirofacts is the reachable public one. Both are a proximity screen, not a Phase I.",
@@ -546,7 +563,8 @@
     "url": "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress",
     "benchmark": "Public_AR_Current",
     "format": "census",
-    "status": "unverified"
+    "status": "unverified",
+    "_verified": "2026-09-03: the 400 was verify's own fault — it probed the endpoint with no address. Fixed; re-run verify for a real answer."
   },
   "municipal_minimum_lot_sqft": {
     "_": "Minimum residential lot size by municipality of record, for the Gate 3 unbuildable flag. Add the cities you actually bid in; an absent city means the check reports unavailable rather than clean.",

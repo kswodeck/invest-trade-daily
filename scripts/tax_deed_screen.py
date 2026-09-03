@@ -360,6 +360,7 @@ def main(argv: list[str] | None = None, sources: Any = None) -> int:
     print(f"\nScreening {', '.join(names)} for the {sale_date} sale (today {today}).\n")
 
     verification: list[dict] = []
+    every_list_failed = False
     if not args.no_verify:
         if sources is None:
             import tax_deed_sources as sources
@@ -369,13 +370,19 @@ def main(argv: list[str] | None = None, sources: Any = None) -> int:
                 print(f"🔴 {entry['id']} — {entry['url']}\n    {entry['detail']}",
                       file=sys.stderr)
         lists = [e for e in verification if e["kind"] == "county list"]
-        if lists and not any(e["ok"] for e in lists):
-            raise SystemExit(
-                "Every county sale list failed verification — see the URLs above. "
-                "Nothing can be screened; fix config/tax_deeds.json rather than "
-                "publishing an empty tab that looks like 'no sales this month'.")
+        every_list_failed = bool(lists) and not any(e["ok"] for e in lists)
 
-    results, source_report = collect(cfg, today, sale_date, args.county, sources)
+    # When every county list is unreadable there is nothing to screen — but
+    # raising here is what made the first live run useless: it exited before
+    # writing the snapshot or the step summary, so the only record of *which*
+    # URL broke and why was in the raw job log. Carry on with an empty result
+    # set, leave the full diagnosis on disk and in the summary, and return
+    # non-zero at the end. The Sheet is still not touched, which is the part
+    # that actually mattered.
+    results: list[dict] = []
+    source_report: list[dict] = []
+    if not every_list_failed:
+        results, source_report = collect(cfg, today, sale_date, args.county, sources)
     source_report = verification + source_report
 
     for status in statements:
@@ -403,6 +410,17 @@ def main(argv: list[str] | None = None, sources: Any = None) -> int:
     if step_summary:
         with open(step_summary, "a", encoding="utf-8") as handle:
             handle.write("\n".join(summary) + "\n")
+
+    if every_list_failed:
+        print("\n".join([
+            "", "🔴 Every county sale list failed verification.", "",
+            "Nothing was screened and the Sheet was not touched — an empty `Tax Deeds` tab",
+            "reads exactly like 'no sales this month', which is the one failure that would",
+            "cost you a sale date. The snapshot above records every source and its error.",
+            "", "Fix config/tax_deeds.json, then re-run "
+            "`python scripts/tax_deed_sources.py verify`.",
+        ]), file=sys.stderr)
+        return 2
 
     if args.dry_run:
         print(f"\n--- DRY RUN: '{TAB_TITLE}' tab, {len(values)} rows ---")

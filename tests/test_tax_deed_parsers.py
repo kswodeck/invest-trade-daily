@@ -9,6 +9,7 @@ bottom cover it failing loudly rather than quietly returning nothing.
 
 from __future__ import annotations
 
+import json
 import sys
 import unittest
 from datetime import date
@@ -203,11 +204,27 @@ class StructureChangesFailLoudly(unittest.TestCase):
         self.assertEqual(rows, [])
         self.assertIn("minimum_opening_bid", diag["reason"])
 
-    def test_a_page_with_no_table_at_all_reports_why(self):
-        rows, diag = tds.rows_from_tables(tds.collect_tables("<p>Sale postponed.</p>"),
+    def test_a_page_with_no_table_at_all_is_diagnosed_as_a_javascript_page(self):
+        """Three of four counties publish through a React app, and the first
+        live run told the operator to edit `column_map` for all of them."""
+        rows, diag = tds.rows_from_tables(tds.collect_tables("<div id=root></div>"),
                                           source_for("Dallas")["column_map"])
         self.assertEqual(rows, [])
-        self.assertIn("no table", diag["reason"])
+        self.assertTrue(diag["no_tables"])
+
+        advice = tds._unparseable(source_for("Dallas"), diag)
+        self.assertIn("no HTML table at all", advice)
+        self.assertIn("rendered by JavaScript", advice)
+        self.assertIn("JSON endpoint", advice)
+        self.assertNotIn("Update `column_map`", advice)
+
+    def test_tables_that_are_present_but_unmapped_still_point_at_column_map(self):
+        html = fixture("dallas_realauction.html").replace("Opening Bid", "Starting Amount")
+        _, diag = tds.rows_from_tables(tds.collect_tables(html),
+                                       source_for("Dallas")["column_map"])
+        advice = tds._unparseable(source_for("Dallas"), diag)
+        self.assertIn("column_map", advice)
+        self.assertNotIn("JavaScript", advice)
 
     def test_load_source_raises_with_the_url_when_the_markers_are_gone(self):
         source = dict(source_for("Dallas"), id="test_marker_drift",
@@ -329,3 +346,119 @@ class ConfigurationIntegrity(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class JsonSourceFormat(unittest.TestCase):
+    """For the counties that publish through a JavaScript app.
+
+    taxsales.lgbs.com serves three of the four counties and renders its list
+    client-side, so there is no HTML table at any URL. The list is reachable
+    only as the JSON the page fetches for itself — and wiring that up has to
+    stay a config change, not a parser change.
+    """
+
+    PAYLOAD = json.dumps({"data": {"results": [
+        {"acct": "02345678", "cause": "348-612345-21",
+         "addr": {"line1": "1109 E ANNIE ST, FORT WORTH, TX 76104"},
+         "minBid": "$7,800.00", "saleDate": "10/06/2026", "county": "Tarrant"},
+        {"acct": "07654321", "cause": "236-598877-19",
+         "addr": {"line1": "4412 AVENUE N, FORT WORTH, TX 76105"},
+         "minBid": "$4,250.00", "saleDate": "10/06/2026", "county": "Tarrant"},
+    ]}})
+
+    SOURCE = {
+        "id": "tarrant_json", "sale_type": "auction", "format": "json",
+        "url": "https://agg.example.invalid/api/sales",
+        "records_path": "data.results",
+        "field_map": {"account": "acct", "cause_number": "cause",
+                      "address": "addr.line1", "minimum_opening_bid": "minBid",
+                      "sale_date": "saleDate"},
+    }
+
+    def test_records_are_read_through_a_dotted_path(self):
+        rows, diag = tds.rows_from_json(self.PAYLOAD, self.SOURCE)
+        self.assertEqual(len(rows), 2)
+        self.assertEqual(diag["rows"], 2)
+
+    def test_nested_keys_resolve(self):
+        rows, _ = tds.rows_from_json(self.PAYLOAD, self.SOURCE)
+        self.assertEqual(rows[0]["address"], "1109 E ANNIE ST, FORT WORTH, TX 76104")
+
+    def test_it_normalizes_into_the_same_shape_the_gates_expect(self):
+        rows, _ = tds.rows_from_json(self.PAYLOAD, self.SOURCE)
+        listing = tds.normalize_listing(rows[0], "Tarrant", self.SOURCE, td.load_config())
+        self.assertEqual(listing["minimum_opening_bid"], 7800.0)
+        self.assertEqual(listing["sale_date"], "2026-10-06")
+        self.assertEqual(listing["account"], "02345678")
+
+    def test_a_wrong_records_path_names_what_the_payload_actually_holds(self):
+        rows, diag = tds.rows_from_json(self.PAYLOAD, dict(self.SOURCE, records_path="items"))
+        self.assertEqual(rows, [])
+        self.assertIn("data", diag["reason"])
+
+    def test_a_missing_field_map_prints_the_keys_to_map(self):
+        source = dict(self.SOURCE)
+        del source["field_map"]
+        rows, diag = tds.rows_from_json(self.PAYLOAD, source)
+        self.assertEqual(rows, [])
+        self.assertIn("acct", diag["reason"])
+
+    def test_html_served_where_json_was_expected_says_so(self):
+        rows, diag = tds.rows_from_json("<html>login</html>", self.SOURCE)
+        self.assertEqual(rows, [])
+        self.assertIn("not JSON", diag["reason"])
+
+
+class StatusCodesGetTheRightAdvice(unittest.TestCase):
+    """Five sources failed the first live run for three unrelated reasons, and
+    every one of them was reported as `update column_map`."""
+
+    def test_a_403_is_named_as_a_refused_user_agent_not_a_format_change(self):
+        detail = tds._explain_status(403, "https://example.invalid/")
+        self.assertIn("refused this User-Agent", detail)
+        self.assertIn("Do not spoof a browser", detail)
+
+    def test_a_404_says_the_url_is_wrong(self):
+        self.assertIn("does not exist", tds._explain_status(404, "https://example.invalid/"))
+
+    def test_a_429_points_at_the_rate_limit_knob(self):
+        self.assertIn("request_interval_seconds", tds._explain_status(429, "u"))
+
+    def test_a_5xx_is_not_the_operators_problem(self):
+        self.assertIn("Nothing to fix here", tds._explain_status(503, "u"))
+
+
+class DeliberatelyUnconfiguredSources(unittest.TestCase):
+    """A URL proven not to exist is nulled, not left in place to fail nightly."""
+
+    def setUp(self):
+        self.cfg = td.load_config()
+        self.listing = {"county": "Ellis", "owner_name": "BLUE, PAT",
+                        "address": "604 W MARVIN AVE, WAXAHACHIE, TX 75165"}
+
+    def test_a_null_clerk_url_reports_unavailable_and_never_clean(self):
+        for name in ("federal_tax_lien", "hoa_assessment", "municipal_lien"):
+            with self.subTest(check=name):
+                check = tds.clerk_check(name, self.cfg["lien_sources"][name],
+                                        self.listing, self.cfg)
+                self.assertEqual(check["result"], tds.td.UNAVAILABLE)
+
+    def test_a_null_pace_url_reports_unavailable(self):
+        check = tds.pace_check(self.cfg["lien_sources"]["pace_lien"], self.listing, self.cfg)
+        self.assertEqual(check["result"], tds.td.UNAVAILABLE)
+
+    def test_an_unconfigured_source_still_costs_the_property_its_tier(self):
+        """Nulling a URL must not become a quiet way to stop flagging."""
+        from datetime import date as _date
+        checks = [tds.clerk_check(n, self.cfg["lien_sources"][n], self.listing, self.cfg)
+                  for n in ("federal_tax_lien", "hoa_assessment", "municipal_lien")]
+        checks.append(tds.pace_check(self.cfg["lien_sources"]["pace_lien"],
+                                     self.listing, self.cfg))
+        result = td.screen(
+            {"county": "Ellis", "minimum_opening_bid": 5600.0, "sale_date": "2026-10-06",
+             "status": "Active", "account": "170000012345"},
+            {"appraised_value": 52000.0, "exemptions": []},
+            checks, self.cfg, _date(2026, 9, 3))
+        self.assertEqual(result["tier"], "C")
+        self.assertIn("federal_tax_lien_unchecked", {f["code"] for f in result["flags"]})
+

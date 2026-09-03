@@ -106,6 +106,62 @@ columns are gone. A screening run verifies first, and exits non-zero if any
 source broke — because a silently empty tab reads exactly like "no sales this
 month", which is the dangerous failure.
 
+### What the first live run established (2026-09-03)
+
+Verification did its job and named five broken county sources. None of them was
+a parser bug, and the causes were three different things:
+
+| Source | Result | What it means |
+| --- | --- | --- |
+| `dallas_auction` | HTTP 403 | the host refuses a non-browser User-Agent |
+| `johnson_auction` | HTTP 403 | same |
+| `dallas_struck_off`, `tarrant_auction`, `ellis_auction` | 200, no HTML table | `taxsales.lgbs.com` is a JavaScript app |
+| `ellis.tx.publicsearch.us` | DNS NXDOMAIN | Ellis is not on that platform; the URL was invented |
+| PACE registry | HTTP 404 | the completed-projects path is wrong |
+| FEMA NFHL layer 28 | HTTP 404 | wrong layer index |
+| Census geocoder | HTTP 400 | **verify's own bug** — it probed with no address |
+
+Three lessons are now enforced in code rather than left as folklore.
+
+**A 403 is not a format change.** The page may be perfectly fine in a browser;
+the host simply refuses non-browser clients. `_explain_status` says so, and says
+explicitly not to spoof a browser to get around it — that is the same line the
+robots.txt rule draws. The ways forward are a different published location for
+the list, or the manual CSV drop.
+
+**A page with no HTML table cannot be fixed with `column_map`.** It is a
+JavaScript app that renders the list client-side, and no header pattern will
+ever match because there are no headers in the HTML. Open the page with the
+network tab, find the JSON endpoint it calls for itself, and set
+`"format": "json"` with `records_path` and `field_map` on that source. That is a
+config change, which is the point. `rows_from_json` walks dotted paths, so
+`addr.line1` works.
+
+**A dead URL is worse than a null.** `ellis.tx.publicsearch.us` was a plausible
+guess that does not resolve, and it reported as a network error every run —
+noise that looks transient and is not. Those URLs are now `null`, which reports
+"no source configured" and leaves the check `unavailable`, which is a flag. A
+null never becomes a clean screen; `test_an_unconfigured_source_still_costs_the_
+property_its_tier` holds that line.
+
+The three CADs that matter — DCAD, TAD, Johnson CAD — verified clean, which is
+the part of the pipeline that values a property.
+
+### Exit codes
+
+| Code | Meaning |
+| --- | --- |
+| 0 | clean run |
+| 1 | published, but at least one source failed verification |
+| 2 | every county list failed — nothing screened, Sheet untouched |
+| other | the screener crashed; that is a bug |
+
+1 and 2 are outcomes, not crashes, and both still write the snapshot and the
+step summary before returning. The first live failure exited before writing
+anything, so the only record of which URL broke was raw CI log — that is fixed,
+and the workflow commits the snapshot on those codes precisely so the diagnosis
+survives the run.
+
 ### Struck-off lists
 
 Properties that did not sell at auction, purchasable over the counter at the
