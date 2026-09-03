@@ -277,3 +277,67 @@ class PacketTierSwitch(unittest.TestCase):
             self.assertIn("federal tax lien | **unavailable — not screened**",
                           packet.read_text())
 
+
+
+class EveryListFailed(unittest.TestCase):
+    """The first live run hit this and left nothing behind but the job log.
+
+    Exiting before the snapshot was written meant the only record of which URL
+    broke, and why, scrolled past in raw CI output. The Sheet must still go
+    untouched — an empty `Tax Deeds` tab reads like "no sales this month",
+    which is the one failure that would cost a sale date — but the diagnosis
+    has to survive on disk.
+    """
+
+    class AllBroken(FixtureSources):
+        def verify(self, cfg):
+            self.verified = True
+            return [{"kind": "county list", "id": "dallas_auction",
+                     "url": "https://dallas.example.invalid/", "ok": False,
+                     "detail": "HTTP 403: the host refused this User-Agent"},
+                    {"kind": "county list", "id": "tarrant_auction",
+                     "url": "https://agg.example.invalid/", "ok": False,
+                     "detail": "the page contains no HTML table at all"}]
+
+        def county_listings(self, county, cfg, sale_date=None):
+            raise AssertionError("nothing should be ingested when every list failed")
+
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp())
+        self._saved = (td.SNAPSHOT_DIR, td.PACKET_DIR)
+        td.SNAPSHOT_DIR, td.PACKET_DIR = self.tmp / "data", self.tmp / "reports"
+        self._publish = screen.publish
+        screen.publish = self._fail
+
+    def tearDown(self):
+        td.SNAPSHOT_DIR, td.PACKET_DIR = self._saved
+        screen.publish = self._publish
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def _fail(self, *a, **k):
+        self.fail("the Sheet was written despite every source failing")
+
+    def _run(self):
+        out, err = io.StringIO(), io.StringIO()
+        with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+            code = screen.main(["--sale-date", SALE], sources=self.AllBroken())
+        return code, out.getvalue() + err.getvalue()
+
+    def test_it_exits_2_not_1_so_the_workflow_can_tell_them_apart(self):
+        code, _ = self._run()
+        self.assertEqual(code, 2)
+
+    def test_the_snapshot_still_records_every_source_and_its_error(self):
+        self._run()
+        payload = json.loads(next((self.tmp / "data").glob("*.json")).read_text())
+        failed = {s["id"]: s["detail"] for s in payload["sources"] if not s["ok"]}
+        self.assertEqual(set(failed), {"dallas_auction", "tarrant_auction"})
+        self.assertIn("403", failed["dallas_auction"])
+        self.assertEqual(payload["totals"]["listings"], 0)
+
+    def test_the_output_names_the_urls_and_says_the_sheet_was_spared(self):
+        _, output = self._run()
+        self.assertIn("https://dallas.example.invalid/", output)
+        self.assertIn("no sales this month", output)
+        self.assertIn("Sources that failed", output)
+

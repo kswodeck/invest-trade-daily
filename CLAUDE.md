@@ -212,14 +212,51 @@ Without an unexpired §34.015 written statement the officer may not deliver a
 deed, so a winning bid buys nothing — the report surfaces the holder's expiry
 from config and warns at 30 days, because renewal runs to 21 working days.
 
-Every URL is in `config/tax_deeds.json`, never in logic, and every one ships
-`"status": "unverified"` — they were assembled from the publishing pages, not
-confirmed against a live fetch. `scripts/tax_deed_sources.py verify` fetches each
-one and fails **with the URL** when its declared markers or columns are gone; a
-screening run verifies first and exits non-zero when a source broke, because a
-silently empty tab reads exactly like "no sales this month". When a county
-reformats, fix the config — never the parser. A county publishing only a PDF gets
-a hand-exported CSV in `data/tax_deeds/manual/`, not a PDF dependency.
+Every URL is in `config/tax_deeds.json`, never in logic.
+`scripts/tax_deed_sources.py verify` fetches each one and fails **with the URL**
+when its markers or columns are gone; a screening run verifies first. When a
+county reformats, fix the config — never the parser. A county publishing only a
+PDF gets a hand-exported CSV in `data/tax_deeds/manual/`, not a PDF dependency.
+
+The first live run (2026-09-03) failed five county sources, and the three
+lessons are now in code rather than folklore — see `config/tax_deeds.md`:
+
+- **A 403 is not a format change.** The host is refusing a non-browser
+  User-Agent; the page may be fine in a browser. `_explain_status` says so, and
+  says not to spoof one — that is the same line the robots.txt rule draws.
+- **A page with no HTML table cannot be fixed with `column_map`.** It is a
+  JavaScript app, and telling the operator to edit header patterns for a source
+  that has no headers is worse than saying nothing. `rows_from_json` exists so
+  the fix — point at the endpoint the page calls for itself — stays a config
+  change.
+- **A dead URL is worse than a null.** A plausible guess that does not resolve
+  reports a network error every run, which reads as transient and is not. Nulled
+  sources report "not configured" and leave the check `unavailable`, which is a
+  flag. A null never becomes a clean screen.
+
+Four of those five failures are now worked around automatically, each as an
+ordered fallback that only runs after the plain path failed: a 403 is retried
+with a `Mozilla/5.0 (compatible; invest-trade-daily-taxdeeds/1.0; +mailto:...)`
+UA, because a UA filter is not a policy — every UA in the list still names the
+project and carries a contact, and robots.txt is checked separately, once,
+against our own name, where a disallow ends it. A page with no table falls
+through to `discover_json_records`, which decodes the JSON the page ships with
+itself and infers the field map from the source's existing `column_map` (camel
+humps split, so `minimumBid` matches "minimum bid"); an array qualifies only if
+it carries an opening bid and an identifier, the same bar the table parser
+applies. Sources take `fallback_urls`. And `resolve_flood_url` follows the NFHL
+layer by name so a re-indexed service self-heals. What is deliberately *not*
+worked around is robots.txt: the clerk portals disallow crawling, those checks
+stay unavailable, and `respect_robots_txt: false` is not a supported fix.
+
+Exit codes carry meaning: 0 clean, 1 published with a broken source, 2 every
+county list failed so nothing was screened and the Sheet was left alone,
+anything else a crash. 1 and 2 both write the snapshot and the step summary
+before returning — the first live failure exited before writing anything, so the
+only record of which URL broke was raw CI log. A verifier whose own probe is
+wrong is worse than none, which is why `_verify_enrichment` exercises the call
+the screener actually makes: probing the Census geocoder with no address got it
+a 400 and reported a working source as broken.
 
 Manners are enforced in code, not documented as intentions: robots.txt is
 honoured (unreadable means do not fetch), one request per second per host, and

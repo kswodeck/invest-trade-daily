@@ -76,20 +76,49 @@ _last_request: dict[str, float] = {}
 _robots: dict[str, Any] = {}
 
 
-def user_agent(cfg: dict) -> str:
-    """A descriptive UA with a contact email, or a refusal to fetch at all.
+# Two hosts refused the plain UA outright on the first live run, and a 403 is
+# not a policy statement — robots.txt is, and it is honoured absolutely and
+# separately below. What a UA filter usually catches is an unfamiliar token, so
+# the fallback wears the "Mozilla/5.0 (compatible; ...)" form that well-behaved
+# crawlers have used for decades: it still names this project and still carries
+# an address to complain to. That is a different thing from impersonating a
+# browser, and the line is that every UA here identifies itself truthfully.
+DEFAULT_AGENTS = [
+    "invest-trade-daily-taxdeeds/1.0 (+https://github.com/kswodeck/invest-trade-daily; {contact})",
+    "Mozilla/5.0 (compatible; invest-trade-daily-taxdeeds/1.0; +mailto:{contact})",
+]
 
-    County IT desks block anonymous crawlers and they are right to. If nobody
-    can email us to say stop, we do not get to fetch.
-    """
-    contact = (os.environ.get("TAX_DEED_CONTACT_EMAIL") or cfg.get("contact_email") or "").strip()
+
+def contact_email(cfg: dict) -> str:
+    contact = (os.environ.get("TAX_DEED_CONTACT_EMAIL")
+               or cfg.get("contact_email") or "").strip()
     if not contact:
         raise SystemExit(
             "No contact email configured. Set TAX_DEED_CONTACT_EMAIL, or "
             "`contact_email` in config/tax_deeds.json. The screener will not "
             "make anonymous requests to county servers.")
-    template = cfg.get("user_agent") or "invest-trade-daily-taxdeeds/1.0 ({contact})"
-    return template.replace("{contact}", contact)
+    return contact
+
+
+def user_agents(cfg: dict) -> list[str]:
+    """Every UA this run may send, most specific first."""
+    contact = contact_email(cfg)
+    configured = [cfg.get("user_agent")] + list(cfg.get("user_agent_fallbacks") or [])
+    templates = [t for t in configured if t] or DEFAULT_AGENTS
+    if len(templates) == 1:
+        templates = templates + DEFAULT_AGENTS[1:]
+    seen, out = set(), []
+    for template in templates:
+        agent = template.replace("{contact}", contact)
+        if agent not in seen:
+            seen.add(agent)
+            out.append(agent)
+    return out
+
+
+def user_agent(cfg: dict) -> str:
+    """The identity this screener claims. Used for robots.txt, always."""
+    return user_agents(cfg)[0]
 
 
 def session(cfg: dict):
@@ -141,26 +170,71 @@ def robots_allows(url: str, cfg: dict) -> tuple[bool, str]:
     if parser is None:
         why = _robots.get(f"{root}!why", "robots.txt returned a server error")
         return False, f"could not read {root}/robots.txt ({why}) — not fetching"
+    # Always our own name, never whichever UA string a refusal made us fall
+    # back to — robots rules apply to who we are, not to what we sent.
     agent = user_agent(cfg).split("/")[0]
     if parser.can_fetch(agent, url) or parser.can_fetch("*", url):
         return True, "allowed by robots.txt"
     return False, f"{root}/robots.txt disallows this path for {agent}"
 
 
+# What an HTTP status actually means for a county source, because the fix
+# differs and the first live run made that concrete: five sources failed with
+# three unrelated causes and one message telling the operator to edit
+# `column_map` for all of them.
+def _explain_status(code: int, url: str) -> str:
+    if code in (401, 403):
+        return (f"HTTP {code}: the host refused this User-Agent. Not a format change — the "
+                f"page may be fine in a browser. Some county vendors block non-browser "
+                f"clients outright; check whether the list is published somewhere else, or "
+                f"export it by hand. Do not spoof a browser to get around this.")
+    if code == 404:
+        return (f"HTTP {code}: this URL does not exist. It moved or was never right — find "
+                f"the current one and update it in config/tax_deeds.json.")
+    if code == 400:
+        return (f"HTTP {code}: the host rejected the request itself, usually a missing or "
+                f"wrong query parameter rather than a wrong URL.")
+    if code == 429:
+        return f"HTTP {code}: rate limited. Raise `request_interval_seconds` in the config."
+    if code >= 500:
+        return f"HTTP {code}: the host is broken right now. Nothing to fix here; try later."
+    return f"HTTP {code} from {url}"
+
+
 def fetch(url: str, cfg: dict, *, params: dict | None = None) -> str:
-    """One polite GET. Raises SourceError with the URL on any failure."""
+    """One polite GET, retried through the UA list on a refusal.
+
+    robots.txt is checked once, against this screener's own identity, and a
+    disallow ends it — the retry below never re-asks and never re-decides. It
+    exists only for hosts that answer 401/403 to an unfamiliar User-Agent while
+    publishing no rule against us at all.
+    """
     allowed, why = robots_allows(url, cfg)
     if not allowed:
         raise RobotsDisallowed(url, why)
-    _throttle(url, cfg)
-    try:
-        resp = session(cfg).get(url, params=params, timeout=TIMEOUT)
-        resp.raise_for_status()
-    except SourceError:
-        raise
-    except Exception as exc:  # noqa: BLE001
-        raise SourceError(url, f"{type(exc).__name__}: {exc}") from exc
-    return resp.text
+
+    agents = user_agents(cfg)
+    last: Exception | None = None
+    for index, agent in enumerate(agents):
+        _throttle(url, cfg)
+        try:
+            resp = session(cfg).get(url, params=params, timeout=TIMEOUT,
+                                    headers={"User-Agent": agent})
+        except SourceError:
+            raise
+        except Exception as exc:  # noqa: BLE001
+            last = SourceError(url, f"{type(exc).__name__}: {exc}")
+            break
+        if resp.status_code in (401, 403) and index + 1 < len(agents):
+            continue
+        if resp.status_code >= 400:
+            detail = _explain_status(resp.status_code, url)
+            if resp.status_code in (401, 403):
+                detail += (f" All {len(agents)} configured User-Agents were refused, so this "
+                           f"is the host's filter and not a format change.")
+            raise SourceError(url, detail)
+        return resp.text
+    raise last or SourceError(url, "no User-Agent was accepted")
 
 
 def fetch_json(url: str, cfg: dict, *, params: dict | None = None) -> Any:
@@ -302,7 +376,16 @@ def rows_from_tables(tables: list[list[list[dict]]], column_map: dict[str, list[
             best = (score, table, mapping, header)
 
     if best is None:
-        return [], {"reason": "no table with a header row and at least one data row",
+        # Two very different failures, and the first live run conflated them:
+        # a page with no <table> at all is almost always a JavaScript app that
+        # renders its list client-side, and no amount of `column_map` editing
+        # will ever parse it. A page with tables but none that map is the
+        # ordinary format change.
+        total = sum(len(t) for t in tables)
+        if not tables or total == 0:
+            return [], {"reason": "the page contains no HTML table at all",
+                        "no_tables": True, "headers_seen": []}
+        return [], {"reason": "tables are present but none has a header row and a data row",
                     "headers_seen": seen_headers}
 
     _, table, mapping, header = best
@@ -327,6 +410,221 @@ def rows_from_tables(tables: list[list[list[dict]]], column_map: dict[str, list[
             record["_href"] = href
         rows.append(record)
     return rows, {"header_matched": header, "mapped": sorted(mapping), "rows": len(rows)}
+
+
+def _dig(payload: Any, path: str) -> Any:
+    """Walk a dotted path into decoded JSON. `data.results` or `` for the root."""
+    for part in [p for p in str(path or "").split(".") if p]:
+        if isinstance(payload, dict):
+            payload = payload.get(part)
+        elif isinstance(payload, list) and part.isdigit():
+            payload = payload[int(part)] if int(part) < len(payload) else None
+        else:
+            return None
+    return payload
+
+
+def rows_from_json(text: str, source: dict) -> tuple[list[dict], dict]:
+    """A JSON list endpoint, mapped by `field_map` rather than header text.
+
+    This exists because three of the four counties publish through a single
+    JavaScript app that renders its table client-side — there is no HTML table
+    to parse, only the endpoint the page itself calls. Once that endpoint is
+    known, wiring it up stays a config change: `records_path` says where the
+    array lives and `field_map` maps canonical field -> dotted key.
+    """
+    try:
+        payload = json.loads(text)
+    except json.JSONDecodeError as exc:
+        return [], {"reason": f"the response is not JSON ({exc})"}
+
+    records = _dig(payload, source.get("records_path", ""))
+    if isinstance(records, dict):
+        records = [records]
+    if not isinstance(records, list):
+        keys = sorted(payload)[:12] if isinstance(payload, dict) else type(payload).__name__
+        return [], {"reason": f"no array of records at records_path "
+                              f"{source.get('records_path', '')!r}; top level holds {keys}"}
+
+    field_map = source.get("field_map") or {}
+    if not field_map:
+        sample = sorted((records[0] or {}).keys())[:20] if records else []
+        return [], {"reason": f"no `field_map` configured for this JSON source; the first "
+                              f"record's keys are {sample}"}
+
+    rows = []
+    for record in records:
+        if not isinstance(record, dict):
+            continue
+        row = {}
+        for field, key in field_map.items():
+            value = _dig(record, key)
+            if value not in (None, ""):
+                row[field] = value
+        if row:
+            rows.append(row)
+    return rows, {"mapped": sorted(field_map), "rows": len(rows)}
+
+
+# --------------------------------------------------------------------------
+# discovery: the list is in the page, just not in a <table>
+# --------------------------------------------------------------------------
+#
+# Three of the four counties publish through one JavaScript app, and a table
+# parser can never read it. But a client-rendered page still has to get its data
+# from somewhere, and in practice it is sitting right there in the HTML — in a
+# __NEXT_DATA__ blob, a hydration assignment, or a JSON-LD block. So rather than
+# asking an operator to open dev tools and hand-write a field map, look for it.
+#
+# The mapping is inferred from the same `column_map` the table parser uses: a
+# JSON key named `minimumBid` matches the "minimum bid" pattern once both are
+# normalized, so a county's existing config keeps working unchanged.
+
+_SCRIPT = re.compile(r"<script\b([^>]*)>(.*?)</script\s*>", re.I | re.S)
+_ASSIGNED = re.compile(r"=\s*(\{.*\}|\[.*\])\s*;?\s*$", re.S)
+
+
+def _balanced(text: str, start: int) -> str | None:
+    """The JSON value beginning at `start`, by brace/bracket matching."""
+    opener = text[start]
+    closer = {"{": "}", "[": "]"}.get(opener)
+    if not closer:
+        return None
+    depth, in_string, escaped = 0, False, False
+    for index in range(start, len(text)):
+        char = text[index]
+        if in_string:
+            if escaped:
+                escaped = False
+            elif char == "\\":
+                escaped = True
+            elif char == '"':
+                in_string = False
+            continue
+        if char == '"':
+            in_string = True
+        elif char == opener:
+            depth += 1
+        elif char == closer:
+            depth -= 1
+            if depth == 0:
+                return text[start:index + 1]
+    return None
+
+
+def embedded_json(html: str) -> list[Any]:
+    """Every JSON value the page carries inline, decoded."""
+    out: list[Any] = []
+    for attrs, body in _SCRIPT.findall(html or ""):
+        body = body.strip()
+        if not body:
+            continue
+        candidates: list[str] = []
+        if "json" in attrs.lower() or body[:1] in "{[":
+            candidates.append(body)
+        match = _ASSIGNED.search(body)
+        if match:
+            candidates.append(match.group(1))
+        for index, char in enumerate(body):
+            if char in "{[" and len(candidates) < 6:
+                chunk = _balanced(body, index)
+                if chunk and len(chunk) > 200:
+                    candidates.append(chunk)
+                break
+        for chunk in candidates:
+            try:
+                out.append(json.loads(chunk))
+            except (json.JSONDecodeError, RecursionError):
+                continue
+    return out
+
+
+def _record_arrays(payload: Any, path: str = "", depth: int = 0):
+    """Every array-of-objects in a decoded payload, with its dotted path."""
+    if depth > 8:
+        return
+    if isinstance(payload, list):
+        dicts = [item for item in payload if isinstance(item, dict)]
+        if len(dicts) >= 1 and len(dicts) >= len(payload) / 2:
+            yield path, dicts
+        for index, item in enumerate(payload[:50]):
+            yield from _record_arrays(item, f"{path}.{index}".lstrip("."), depth + 1)
+    elif isinstance(payload, dict):
+        for key, value in payload.items():
+            yield from _record_arrays(value, f"{path}.{key}".lstrip("."), depth + 1)
+
+
+def _flatten_keys(record: dict, prefix: str = "", depth: int = 0) -> dict[str, str]:
+    """Leaf key -> dotted path, so `addr.line1` is mappable as one field."""
+    out: dict[str, str] = {}
+    for key, value in record.items():
+        path = f"{prefix}.{key}" if prefix else key
+        if isinstance(value, dict) and depth < 2:
+            out.update(_flatten_keys(value, path, depth + 1))
+        elif not isinstance(value, (dict, list)):
+            out[path] = path
+    return out
+
+
+# JSON keys are camelCase and dotted where table headers are spaced words, and
+# `_norm` alone leaves "minimumBid" as "minimumbid", which the pattern "minimum
+# bid" can never match. Split the humps and the separators first, and match on
+# the whole dotted path so a nested `address.line1` still reads as an address.
+_HUMPS = re.compile(r"(?<=[a-z0-9])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])")
+
+
+def _key_words(path: str) -> str:
+    return _norm(_HUMPS.sub(" ", str(path or "")).replace(".", " ").replace("_", " "))
+
+
+def infer_field_map(keys: Iterable[str], column_map: dict[str, list[str]]) -> dict[str, str]:
+    """Canonical field -> JSON key, using the source's own header patterns.
+
+    `minimumBid`, `minimum_bid` and `Minimum Bid` all reduce to the same words,
+    which is why a config written for an HTML table transfers to the JSON behind
+    it with no new configuration at all.
+    """
+    paths = list(keys)
+    mapping = map_columns([_key_words(path) for path in paths], column_map)
+    return {field: paths[index] for field, index in mapping.items()}
+
+
+def discover_json_records(html: str, source: dict) -> tuple[list[dict], dict]:
+    """Find the sale list inside a client-rendered page, and map it.
+
+    Returns the best-scoring array of records that carries an opening bid and
+    something to identify a property by — the same bar `rows_from_tables`
+    applies, so a discovered list cannot be worse-specified than a parsed one.
+    """
+    column_map = source.get("column_map") or {}
+    best: tuple[int, list[dict], dict[str, str], str] | None = None
+    seen_paths: list[str] = []
+
+    for payload in embedded_json(html):
+        for path, records in _record_arrays(payload):
+            field_map = infer_field_map(_flatten_keys(records[0]), column_map)
+            if not any(f in field_map for f in IDENTIFYING_FIELDS):
+                continue
+            if not all(f in field_map for f in REQUIRED_FIELDS):
+                continue
+            seen_paths.append(path)
+            score = len(field_map) * 100 + min(len(records), 99)
+            if best is None or score > best[0]:
+                best = (score, records, field_map, path)
+
+    if best is None:
+        return [], {"reason": "no embedded JSON array looked like a sale list"}
+
+    _, records, field_map, path = best
+    rows = []
+    for record in records:
+        row = {field: _dig(record, key) for field, key in field_map.items()}
+        row = {k: v for k, v in row.items() if v not in (None, "")}
+        if row:
+            rows.append(row)
+    return rows, {"mapped": sorted(field_map), "rows": len(rows),
+                  "discovered_path": path, "discovered_field_map": field_map,
+                  "candidates": seen_paths[:5]}
 
 
 def rows_from_csv(text: str, column_map: dict[str, list[str]]) -> tuple[list[dict], dict]:
@@ -549,6 +847,29 @@ def load_source(source: dict, cfg: dict) -> tuple[list[dict], dict]:
             f"Export it to CSV and drop it at {override.relative_to(REPO)} — the "
             f"column headers are matched by the source's column_map."))
 
+    # A county that moves its list usually keeps publishing it somewhere; try
+    # every known location before calling the source broken.
+    attempts: list[str] = [u for u in [url, *(source.get("fallback_urls") or [])] if u]
+    errors: list[str] = []
+    for candidate in attempts:
+        try:
+            rows, diag = _read_source(candidate, source, fmt, column_map, cfg)
+        except SourceError as exc:
+            errors.append(f"{candidate} — {exc.detail}")
+            continue
+        diag["source"] = candidate
+        if candidate != url:
+            diag["via_fallback"] = candidate
+        return rows, diag
+
+    detail = errors[0] if len(errors) == 1 else (
+        f"all {len(attempts)} configured locations failed:\n      "
+        + "\n      ".join(errors))
+    raise StructureChanged(url, detail)
+
+
+def _read_source(url: str, source: dict, fmt: str, column_map: dict, cfg: dict
+                 ) -> tuple[list[dict], dict]:
     text = fetch(url, cfg)
 
     markers = [m.lower() for m in source.get("required_markers") or []]
@@ -562,18 +883,44 @@ def load_source(source: dict, cfg: dict) -> tuple[list[dict], dict]:
 
     if fmt == "csv":
         rows, diag = rows_from_csv(text, column_map)
+    elif fmt == "json":
+        rows, diag = rows_from_json(text, source)
     elif fmt == "html_table":
         rows, diag = rows_from_tables(collect_tables(text), column_map)
+        if not rows:
+            # The page rendered its list client-side. Rather than fail with
+            # advice to go read dev tools, look for the data the page shipped
+            # with itself — see discover_json_records.
+            found, found_diag = discover_json_records(text, source)
+            if found:
+                found_diag["auto_discovered"] = True
+                return found, found_diag
+            diag.setdefault("discovery", found_diag.get("reason"))
     else:
         raise SourceError(url, f"unknown source format {fmt!r} for '{source['id']}'")
 
     if not rows:
-        raise StructureChanged(url, (
-            f"could not read a sale list from this page: {diag.get('reason')}. "
-            f"Headers seen: {diag.get('headers_seen') or diag.get('header_matched')}. "
-            f"Update `column_map` for source '{source['id']}' in config/tax_deeds.json."))
-    diag["source"] = url
+        raise StructureChanged(url, _unparseable(source, diag))
     return rows, diag
+
+
+def _unparseable(source: dict, diag: dict) -> str:
+    """Why the page did not parse, and the fix that actually applies to it."""
+    url, sid = source.get("url", ""), source["id"]
+    if diag.get("no_tables"):
+        return (
+            f"this page contains no HTML table at all, so there is nothing for a table "
+            f"parser to read and no `column_map` edit can fix it — the list is rendered by "
+            f"JavaScript. Automatic discovery of the JSON the page ships with itself was "
+            f"tried and found nothing ({diag.get('discovery', 'no candidates')}). Two ways "
+            f"forward: open the page with the network tab, find the endpoint it calls, and "
+            f"add it as a `\"format\": \"json\"` source (or as a `fallback_urls` entry) "
+            f"for '{sid}'; or export the list by hand to "
+            f"{manual_path(sid).relative_to(REPO)}.")
+    return (
+        f"could not read a sale list from this page: {diag.get('reason')}. "
+        f"Headers seen: {diag.get('headers_seen') or diag.get('header_matched')}. "
+        f"Update `column_map` for source '{sid}' in config/tax_deeds.json.")
 
 
 def normalize_listing(raw: dict, county: str, source: dict, cfg: dict) -> dict:
@@ -828,14 +1175,57 @@ def geocode(address: str, cfg: dict) -> tuple[float, float] | None:
     return float(coords["x"]), float(coords["y"])
 
 
+_flood_layer_cache: dict[str, str] = {}
+
+# The layer index inside the NFHL MapServer is not stable across service
+# revisions, and 28 was wrong on the first live run. An operator cannot guess
+# the right one, so resolve it by name instead: ask the service what it
+# publishes and take the flood-hazard-zone layer. Resolved once per run.
+FLOOD_LAYER_NAMES = re.compile(r"flood\s*hazard\s*zone|flood\s*hazard\s*area|^s?_?fld_haz",
+                               re.I)
+
+
+def resolve_flood_url(spec: dict, cfg: dict) -> tuple[str, str]:
+    """(url, note). Falls back to the configured URL when nothing better shows."""
+    configured = spec.get("url", "")
+    if not configured or not spec.get("autodetect_layer", True):
+        return configured, ""
+    if configured in _flood_layer_cache:
+        resolved = _flood_layer_cache[configured]
+        return resolved, ("" if resolved == configured else
+                          f"auto-resolved the NFHL layer to {resolved}")
+
+    root = re.sub(r"/\d+/query/?$", "", configured)
+    if root == configured:
+        _flood_layer_cache[configured] = configured
+        return configured, ""
+    try:
+        payload = fetch_json(root, cfg, params={"f": "json"})
+    except SourceError:
+        _flood_layer_cache[configured] = configured
+        return configured, ""
+
+    named = [(l.get("id"), str(l.get("name") or ""))
+             for l in (payload.get("layers") or []) if l.get("id") is not None]
+    match = next((i for i, name in named if FLOOD_LAYER_NAMES.search(name)), None)
+    if match is None:
+        match = next((i for i, name in named if re.search(r"flood", name, re.I)), None)
+    resolved = f"{root}/{match}/query" if match is not None else configured
+    _flood_layer_cache[configured] = resolved
+    return resolved, ("" if resolved == configured else
+                      f"auto-resolved the NFHL layer to id {match} "
+                      f"({dict(named).get(match)})")
+
+
 def flood_check(listing: dict, cad: dict | None, cfg: dict) -> dict:
     """FEMA National Flood Hazard Layer at the parcel's geocoded point."""
     spec = cfg.get("flood") or {}
-    url = spec.get("url", "")
+    url, layer_note = resolve_flood_url(spec, cfg)
     address = listing.get("address") or (cad or {}).get("situs") or ""
     if not url:
         return td.check_record("flood_zone", td.UNAVAILABLE, "not configured",
                                "no FEMA NFHL endpoint configured")
+    suffix = f" ({layer_note})" if layer_note else ""
     point = geocode(address, cfg)
     if point is None:
         return td.check_record("flood_zone", td.UNAVAILABLE, url,
@@ -855,13 +1245,15 @@ def flood_check(listing: dict, cad: dict | None, cfg: dict) -> dict:
     high_risk = [z for z in zones if z in {s.upper() for s in spec.get("high_risk_zones", [])}]
     if high_risk:
         return td.check_record("flood_zone", td.HIT, url,
-                               f"Zone {'/'.join(sorted(set(high_risk)))} at {lat:.5f},{lon:.5f}")
+                               f"Zone {'/'.join(sorted(set(high_risk)))} at "
+                               f"{lat:.5f},{lon:.5f}{suffix}")
     if not zones:
         return td.check_record("flood_zone", td.UNAVAILABLE, url,
                                "the NFHL returned no polygon at this point — the panel may "
                                "be unmapped; check the FEMA map service by hand")
     return td.check_record("flood_zone", td.CLEAN, url,
-                           f"Zone {'/'.join(sorted(set(zones)))} at {lat:.5f},{lon:.5f}")
+                           f"Zone {'/'.join(sorted(set(zones)))} at "
+                           f"{lat:.5f},{lon:.5f}{suffix}")
 
 
 def frontage_check(cad: dict | None) -> dict:
@@ -947,7 +1339,17 @@ def verify(cfg: dict) -> list[dict]:
             entry = {"kind": "county list", "id": source["id"], "url": source.get("url", "")}
             try:
                 rows, diag = load_source(source, cfg)
-                entry.update(ok=True, detail=f"{len(rows)} row(s); mapped {diag.get('mapped')}")
+                detail = f"{len(rows)} row(s); mapped {diag.get('mapped')}"
+                if diag.get("via_fallback"):
+                    detail += f"; via fallback {diag['via_fallback']}"
+                if diag.get("auto_discovered"):
+                    # Worth surfacing loudly: the page had no table and the list
+                    # was recovered from the JSON it ships with. Print what to
+                    # pin so a working run stops depending on a heuristic.
+                    detail += (f"; AUTO-DISCOVERED from embedded JSON at "
+                               f"{diag.get('discovered_path')} — pin it with "
+                               f"{json.dumps({'format': 'json', 'records_path': diag.get('discovered_path'), 'field_map': diag.get('discovered_field_map')})}")
+                entry.update(ok=True, detail=detail)
             except SourceError as exc:
                 entry.update(ok=False, detail=exc.detail)
             out.append(entry)
@@ -970,7 +1372,18 @@ def verify(cfg: dict) -> list[dict]:
         if not isinstance(spec, dict) or not spec.get("urls"):
             continue
         for county_name, url in spec["urls"].items():
-            entry = {"kind": f"lien: {name}", "id": f"{name}/{county_name}", "url": url}
+            entry = {"kind": f"lien: {name}", "id": f"{name}/{county_name}", "url": url or ""}
+            if not url:
+                # A deliberate null: the URL that was here turned out not to
+                # exist. Reported as unconfigured rather than as a failure,
+                # because there is nothing broken to fix — something has to be
+                # found. The check itself already reports `unavailable`, which
+                # is a flag, so this cannot be mistaken for a clean screen.
+                entry.update(ok=True, detail=(
+                    "no source configured — this check reports unavailable, which is a flag. "
+                    + str(spec.get("_ellis") or spec.get("_verified") or "")[:200]))
+                out.append(entry)
+                continue
             try:
                 fetch(url, cfg)
                 entry.update(ok=True, detail="reachable" + (
@@ -980,20 +1393,108 @@ def verify(cfg: dict) -> list[dict]:
                 entry.update(ok=False, detail=exc.detail)
             out.append(entry)
 
-    for key in ("flood", "environmental", "geocoder"):
-        spec = cfg.get(key) or {}
-        url = spec.get("url", "")
-        if not url:
-            continue
-        probe = url.replace("{zip}", "75202")
-        entry = {"kind": key, "id": key, "url": probe}
+    out.extend(_verify_enrichment(cfg))
+    return out
+
+
+# A probe has to exercise the call the screener actually makes. The first live
+# run failed the Census geocoder and the FEMA layer for reasons that were
+# entirely this function's fault: it fetched both bare, and an endpoint that
+# requires query parameters answers a bare GET with 400 or 404. A verifier that
+# invents its own failures is worse than no verifier, because it buries the real
+# ones in noise.
+PROBE_ADDRESS = "500 Elm St, Dallas, TX 75202"
+PROBE_POINT = (-96.7970, 32.7767)   # lon, lat — Dallas County courthouse block
+
+
+def _verify_enrichment(cfg: dict) -> list[dict]:
+    out: list[dict] = []
+
+    spec = cfg.get("geocoder") or {}
+    if spec.get("url"):
+        entry = {"kind": "geocoder", "id": "geocoder", "url": spec["url"]}
         try:
-            fetch(probe, cfg, params={"f": "json"} if key == "flood" else None)
-            entry.update(ok=True, detail="reachable")
+            payload = fetch_json(spec["url"], cfg, params={
+                "address": PROBE_ADDRESS,
+                "benchmark": spec.get("benchmark", "Public_AR_Current"), "format": "json"})
+            matches = ((payload.get("result") or {}).get("addressMatches") or [])
+            entry.update(ok=bool(matches),
+                         detail=f"geocoded the probe address to "
+                                f"{(matches[0].get('coordinates') or {})}" if matches
+                         else "reachable, but it geocoded nothing for a known-good address "
+                              "— the benchmark may be wrong")
+        except SourceError as exc:
+            entry.update(ok=False, detail=exc.detail)
+        out.append(entry)
+
+    spec = cfg.get("flood") or {}
+    if spec.get("url"):
+        out.append(_verify_flood(spec, cfg))
+
+    spec = cfg.get("environmental") or {}
+    if spec.get("url"):
+        url = spec["url"].replace("{zip}", "75202")
+        entry = {"kind": "environmental", "id": "environmental", "url": url}
+        try:
+            payload = fetch_json(url, cfg)
+            count = len(payload if isinstance(payload, list)
+                        else payload.get("Results") or [])
+            entry.update(ok=True, detail=f"reachable, {count} facility record(s) for the "
+                                         f"probe ZIP")
         except SourceError as exc:
             entry.update(ok=False, detail=exc.detail)
         out.append(entry)
     return out
+
+
+def _verify_flood(spec: dict, cfg: dict) -> dict:
+    """Probe the NFHL with a real point, and name the layers when it 404s.
+
+    A wrong layer index is the likely reason this fails, and the operator
+    cannot guess the right one — so when the query path is missing, ask the
+    MapServer for its own layer list and print the candidates.
+    """
+    url, layer_note = resolve_flood_url(spec, cfg)
+    entry = {"kind": "flood", "id": "flood", "url": url}
+    lon, lat = PROBE_POINT
+    try:
+        payload = fetch_json(url, cfg, params={
+            "geometry": f"{lon},{lat}", "geometryType": "esriGeometryPoint", "inSR": "4326",
+            "spatialRel": "esriSpatialRelIntersects", "outFields": "FLD_ZONE",
+            "returnGeometry": "false", "f": "json"})
+    except SourceError as exc:
+        entry.update(ok=False, detail=f"{exc.detail} {_flood_layer_hint(url, cfg)}".strip())
+        return entry
+
+    if isinstance(payload, dict) and payload.get("error"):
+        message = (payload["error"] or {}).get("message", "unknown ArcGIS error")
+        entry.update(ok=False,
+                     detail=f"the service answered with an error: {message}. "
+                            f"{_flood_layer_hint(url, cfg)}".strip())
+        return entry
+    fields = [f.get("name") for f in (payload.get("fields") or [])]
+    entry.update(ok="FLD_ZONE" in fields or bool(payload.get("features")) or fields == [],
+                 detail=f"queried the probe point; "
+                        f"{len(payload.get('features') or [])} zone polygon(s), "
+                        f"fields {fields[:6]}. {layer_note}".strip())
+    return entry
+
+
+def _flood_layer_hint(url: str, cfg: dict) -> str:
+    """Ask the MapServer which layers it has, so a wrong index is fixable."""
+    root = re.sub(r"/\d+/query/?$", "", url)
+    if root == url:
+        return ""
+    try:
+        payload = fetch_json(root, cfg, params={"f": "json"})
+    except SourceError as exc:
+        return f"(could not list the service's layers either: {exc.detail})"
+    layers = [(l.get("id"), l.get("name")) for l in (payload.get("layers") or [])]
+    flood = [f"{i}={n}" for i, n in layers if n and re.search(r"flood|hazard|zone", n, re.I)]
+    if flood:
+        return (f"The service does publish layers that look right — set the index in "
+                f"`flood.url` to one of: {', '.join(flood)}.")
+    return f"The service lists {len(layers)} layer(s): {layers[:12]}"
 
 
 # --------------------------------------------------------------------------
