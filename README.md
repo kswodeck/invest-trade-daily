@@ -172,11 +172,21 @@ Three other things bound what discovery can see, all of them in
 - **Pagination.** The endpoint returns ten hits per page. Reading only the
   first capped discovery at ten *documents* per query — and a single filing can
   account for five of them.
-- **Six phrasings, eight forms.** `"odd lot"`, `"odd lots"`, `"odd-lot"`,
-  `"odd lot holder"`, `"odd lot priority"`, `"odd lot preference"`, across
-  `SC TO-I`, `SC TO-T`, `SC 13E4F`, `SC 13E3` and each one's `/A`. One query
-  per pair rather than one big OR, because EFTS scores and truncates per query
-  and a busy form would crowd out a quiet one.
+- **Date slices, and per-query isolation.** The window is queried in 25-day
+  slices, and a query that fails costs that slice rather than the pass. EFTS
+  returns 500s: one on a 75-day `SC TO-T` query took down all forty-eight
+  queries of the first wide run. A 5xx is retried (unlike a 403 or 429, where
+  retrying is what extends the block); discovery only gives up when *every*
+  query failed, which is the difference between "EDGAR is having a moment" and
+  "the endpoint is gone". Partial failures are named in the report, because a
+  thinner sweep should not read like a quiet day.
+- **Three phrasings, eight forms.** `"odd lot"`, `"odd lots"` and `"odd-lot"`,
+  across `SC TO-I`, `SC TO-T`, `SC 13E4F`, `SC 13E3` and each one's `/A`. One
+  query per pair rather than one big OR, because EFTS scores and truncates per
+  query and a busy form would crowd out a quiet one. Phrases like
+  `"odd lot holder"` are deliberately *not* listed: a phrase search for
+  `"odd lot"` already matches every document containing them, so they doubled
+  the query count and found nothing new.
 
 A filing whose filer has no ticker on file — common, since tender offers are
 often filed by a parent or an acquirer — is resolved through the SEC's own

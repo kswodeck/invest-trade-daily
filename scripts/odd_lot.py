@@ -242,20 +242,31 @@ class SecClient:
                 self.cache_hits += 1
                 return path.read_text(encoding="utf-8", errors="replace")
 
-        self.limiter.acquire()
-        session = self._requests_session()
-        resp = session.get(url, params=params, timeout=self.cfg["timeout_seconds"])
-        self.fetched += 1
+        attempts = self.cfg.get("server_error_retries", 2)
+        for attempt in range(attempts + 1):
+            self.limiter.acquire()
+            session = self._requests_session()
+            resp = session.get(url, params=params, timeout=self.cfg["timeout_seconds"])
+            self.fetched += 1
 
-        if resp.status_code in (403, 429):
-            wait = self.cfg["block_backoff_seconds"]
-            # Deliberately no retry loop. A 403 means the IP is already blocked
-            # for ~10 minutes and every further request restarts that clock.
-            time.sleep(wait)
-            raise SecBlocked(
-                f"HTTP {resp.status_code} from {url}. Backed off {wait}s. "
-                f"The SEC blocks the IP for ~10 minutes; do not retry immediately."
-            )
+            if resp.status_code in (403, 429):
+                wait = self.cfg["block_backoff_seconds"]
+                # Deliberately no retry loop. A 403 means the IP is already
+                # blocked for ~10 minutes and every further request restarts
+                # that clock. A 5xx below is the opposite case: the request was
+                # allowed, the server simply failed it, and EFTS does that
+                # often enough that not retrying loses real filings.
+                time.sleep(wait)
+                raise SecBlocked(
+                    f"HTTP {resp.status_code} from {url}. Backed off {wait}s. "
+                    f"The SEC blocks the IP for ~10 minutes; do not retry immediately."
+                )
+
+            if resp.status_code >= 500 and attempt < attempts:
+                time.sleep(self.cfg.get("server_error_backoff_seconds", 3) * (attempt + 1))
+                continue
+            break
+
         resp.raise_for_status()
 
         if cache_key:
@@ -472,48 +483,101 @@ def _efts_page(client: SecClient, config: dict[str, Any], *, term: str, form: st
     return hits, total
 
 
+def date_slices(start: date, end: date, span: int) -> list[tuple[str, str]]:
+    """The window, cut into slices of at most `span` days, oldest first.
+
+    A single wide query is one request that can fail as a unit, and EFTS
+    returns a 500 on some of them — a 75-day `SC TO-T` query is what killed a
+    whole discovery pass. Slices bound the blast radius of any one failure and
+    keep each result set small enough to page through honestly.
+    """
+    if span <= 0:
+        return [(start.isoformat(), end.isoformat())]
+    slices, cursor = [], start
+    while cursor <= end:
+        stop = min(cursor + timedelta(days=span - 1), end)
+        slices.append((cursor.isoformat(), stop.isoformat()))
+        cursor = stop + timedelta(days=1)
+    return slices
+
+
+def _search_slice(client: SecClient, config: dict[str, Any], *, term: str, form: str,
+                  start: str, end: str, cap: int) -> tuple[list[dict[str, Any]], int]:
+    """Every page for one (term, form, date-slice). Returns (hits, pages)."""
+    hits: list[dict[str, Any]] = []
+    offset = pages = 0
+    while offset < cap:
+        page, total = _efts_page(client, config, term=term, form=form,
+                                 start=start, end=end, offset=offset)
+        pages += 1
+        hits.extend(page)
+        offset += len(page)
+        if not page or offset >= total:
+            break
+    return hits, pages
+
+
 def search_filings(client: SecClient, config: dict[str, Any], *,
                    today: date | None = None,
                    stats: dict[str, Any] | None = None) -> list[dict[str, Any]]:
     """Every odd-lot-mentioning tender filing in the window, one entry per filing.
 
-    One query per (term, form) pair rather than one big OR: EFTS scores and
-    truncates per query, so a busy form would otherwise crowd a quiet one out
-    of the results entirely.
+    One query per (term, form, date-slice) rather than one big OR: EFTS scores
+    and truncates per query, so a busy form would otherwise crowd a quiet one
+    out of the results entirely.
 
-    Paginated, because the endpoint returns ten hits per page. Reading only the
-    first page silently caps discovery at ten documents per query — and since a
-    single filing can account for five of them, that is a handful of filings.
+    **A failed query does not fail the pass.** EFTS is undocumented and returns
+    500s, and the first wide run lost all forty-eight of its queries to one of
+    them on the second. Each is isolated and counted; discovery only gives up
+    when every query failed, which is the difference between "EDGAR is having
+    a moment" and "the endpoint is gone".
     """
     disc = config["discovery"]
     today = today or datetime.now(ET).date()
-    start = (today - timedelta(days=disc["lookback_days"])).isoformat()
-    end = today.isoformat()
+    start = today - timedelta(days=disc["lookback_days"])
+    slices = date_slices(start, today, disc.get("window_days", 25))
     cap = disc["max_hits_per_query"]
     max_documents = disc.get("max_documents_per_filing", 8)
 
     filings: dict[str, dict[str, Any]] = {}
-    queries = raw_hits = 0
+    queries = pages = raw_hits = 0
+    failures: list[str] = []
 
     for term in disc["query_terms"]:
         for form in disc["forms"]:
-            offset = 0
-            while offset < cap:
-                hits, total = _efts_page(client, config, term=term, form=form,
-                                         start=start, end=end, offset=offset)
+            for slice_start, slice_end in slices:
                 queries += 1
+                try:
+                    hits, page_count = _search_slice(
+                        client, config, term=term, form=form,
+                        start=slice_start, end=slice_end, cap=cap)
+                except SecBlocked:
+                    raise           # stop immediately; the IP is blocked
+                except EftsSchemaError:
+                    raise           # the endpoint moved; that must be loud
+                except Exception as exc:  # noqa: BLE001
+                    failures.append(f"{form} {term} {slice_start}..{slice_end}: "
+                                    f"{type(exc).__name__}: {exc}")
+                    continue
+                pages += page_count
                 raw_hits += len(hits)
                 for hit in hits:
                     _merge_hit(filings, hit, f"{term} / {form}", max_documents)
-                offset += len(hits)
-                if not hits or offset >= total:
-                    break
+
+    if failures and len(failures) == queries:
+        raise RuntimeError(
+            f"every one of {queries} full-text queries failed. First: {failures[0]}")
 
     if stats is not None:
-        stats.update({"queries": queries, "raw_hits": raw_hits,
-                      "filings": len(filings),
-                      "documents": sum(len(f["documents"]) for f in filings.values()),
-                      "window": f"{start}..{end}"})
+        stats.update({
+            "queries": queries, "pages": pages, "raw_hits": raw_hits,
+            "filings": len(filings),
+            "documents": sum(len(f["documents"]) for f in filings.values()),
+            "window": f"{start.isoformat()}..{today.isoformat()}",
+            "slices": len(slices),
+            "failed_queries": len(failures),
+            "failures": failures[:5],
+        })
 
     return sorted(filings.values(), key=lambda f: (f["filed"], f["accession"]), reverse=True)
 
@@ -1774,6 +1838,8 @@ def render_report(universe: dict[str, Any], report_date: date,
             f"`{funnel.get('window', '?')}` returned **{funnel.get('raw_hits', 0)}** "
             f"document hit(s) across **{funnel.get('filings', 0)}** filing(s) "
             f"(**{funnel.get('documents', 0)}** exhibits kept as candidates)",
+            f"- searched as **{funnel.get('slices', 1)}** date slice(s), "
+            f"**{funnel.get('pages', 0)}** result page(s) read",
             f"- **{len(universe['open'])}** offers open, "
             f"**{len(universe['archive'])}** archived",
             "",
@@ -1783,6 +1849,15 @@ def render_report(universe: dict[str, Any], report_date: date,
             out += ["| Turned away for | Count |", "| --- | --- |"]
             out += [f"| {label} | {count} |" for label, count in rejected_by.items()]
             out.append("")
+        if funnel.get("failed_queries"):
+            out += [
+                f"> ⚠ **{funnel['failed_queries']} of {funnel.get('queries', 0)} "
+                f"queries failed**, so this sweep is thinner than it looks. EFTS "
+                f"returns 500s; a failed slice is retried on the next run rather "
+                f"than losing the pass.",
+                "",
+            ]
+            out += [f"> - `{f}`" for f in funnel.get("failures", [])] + [""]
         if funnel.get("unclassified_rejections"):
             out += [f"> ⚠ {funnel['unclassified_rejections']} rejection(s) did not "
                     f"match any known reason — `REJECTION_KINDS` has drifted from "
