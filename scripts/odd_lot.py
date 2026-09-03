@@ -318,7 +318,11 @@ def _efts_hit(raw: dict[str, Any]) -> dict[str, Any]:
         "cik": cik,
         "company": _company_from_display_name(names[0] if names else ""),
         "ticker": _ticker_from_display_name(names[0] if names else ""),
-        "form": src.get("file_type") or src.get("form") or (forms[0] if forms else ""),
+        # `file_type` is the *document's* type — EX-99.(A)(1)(III) and friends —
+        # not the filing's form. The first live run reported every hit as an
+        # exhibit because this preferred it. `root_forms` carries the form.
+        "form": (forms[0] if forms else "") or src.get("form") or src.get("file_type") or "",
+        "document_type": src.get("file_type") or "",
         "filed": src.get("file_date") or "",
         "document": document,
         "url": document_url(cik, accession, document),
@@ -483,6 +487,16 @@ PRORATION_PREFERENCE = re.compile(
 
 ODD_LOT_MARKER = re.compile(r"\bodd\s+lots?\b|\bodd[- ]lot\s+holders?\b", re.I)
 
+# Whether a document is an amendment is read from the document itself. Neither
+# EFTS field reliably carries the "/A": file_type names the exhibit, and
+# root_forms is the *root* form, which is "SC TO-I" for an SC TO-I/A. Since
+# that flag is what arms the Frontera check below, deriving it from a form
+# string would leave the check silently disarmed in production.
+AMENDMENT_MARKER = re.compile(
+    r"\bamendment\s+no\.?\s*\d+\b|\bamends\s+and\s+supplements\b"
+    r"|\bamendment\s+to\s+(?:the\s+)?(?:schedule\s+to|offer\s+to\s+purchase)\b"
+    r"|\bthis\s+amendment\s+amends\b", re.I)
+
 # An SC TO-I/A taking the preference away — the Frontera Energy pattern.
 PREFERENCE_REMOVED = re.compile(
     r"(?:odd\s+lots?|odd[- ]lot\s+(?:priority|preference|provision)\w*)[^.]{0,220}?"
@@ -498,11 +512,18 @@ PREFERENCE_REMOVED = re.compile(
 # below a floor — the ITEX SC TO-I pattern. Only counts inside the odd-lot
 # passage: a standalone "fewer than 300 holders of record" is deregistration
 # boilerplate that nearly every small-cap tender document carries.
+#
+# The captured number must be followed by a word meaning *people*. An earlier
+# version anchored on "of record" appearing anywhere nearby and then took the
+# next number, which matched the odd-lot definition itself — "a holder of
+# record of fewer than 100 Shares" — and rejected the four commonest ways of
+# writing the preference as if they were the condition that voids it. The
+# first live run rejected its entire universe that way.
 RECORD_HOLDER_CONDITION = re.compile(
-    r"(?:held\s+of\s+record\s+by|holders?\s+of\s+record|record\s+holders?|persons?\s+of\s+record)"
-    r"[^.]{0,140}?(?:fewer|less)\s+than\s+(\d{2,5})"
-    r"|(?:fewer|less)\s+than\s+(\d{2,5})\s+(?:persons|holders|shareholders|stockholders|"
-    r"record\s+holders)[^.]{0,80}?\bof\s+record",
+    r"(?:fewer|less)\s+than\s+(\d{2,5})\s+(?:record\s+)?"
+    r"(?:persons|holders|shareholders|stockholders|beneficial\s+owners)\b"
+    r"|(?:below|under|beneath)\s+(\d{2,5})\s+(?:record\s+)?"
+    r"(?:persons|holders|shareholders|stockholders|beneficial\s+owners)\b",
     re.I)
 
 # Narrow on purpose. Every tender offer carries jurisdictional boilerplate
@@ -822,8 +843,12 @@ def detect_risk_flags(probe: str) -> list[str]:
     return sorted(found)
 
 
-def parse_offer_document(raw: str, *, is_amendment: bool = False) -> OfferTerms:
-    """Everything the gates need from one offer-to-purchase document."""
+def parse_offer_document(raw: str, *, is_amendment: bool | None = None) -> OfferTerms:
+    """Everything the gates need from one offer-to-purchase document.
+
+    `is_amendment` overrides the reading; left as None it is read from the
+    document, which is the only source that cannot be wrong about it.
+    """
     text = html_to_text(raw)
     probe = _normalize_for_match(text)
     cover = text[:COVER_CHARS]
@@ -832,6 +857,9 @@ def parse_offer_document(raw: str, *, is_amendment: bool = False) -> OfferTerms:
     price, dutch, basis = parse_prices(text)
     expiration, withdrawal, wbasis = parse_dates(text)
     is_common, subject = classify_subject_security(cover)
+
+    amendment = (bool(AMENDMENT_MARKER.search(_normalize_for_match(cover)))
+                 if is_amendment is None else is_amendment)
 
     cash_hits = len(CASH_OFFER.findall(_normalize_for_match(cover)))
     exchange_hits = len(EXCHANGE_OFFER.findall(_normalize_for_match(cover)))
@@ -864,7 +892,7 @@ def parse_offer_document(raw: str, *, is_amendment: bool = False) -> OfferTerms:
         withdrawal_deadline=withdrawal,
         withdrawal_basis=wbasis,
         max_shares_sought=max_shares,
-        preference_removed=bool(is_amendment and PREFERENCE_REMOVED.search(probe)),
+        preference_removed=bool(amendment and PREFERENCE_REMOVED.search(probe)),
         record_holder_condition=record_floor,
         restricted_offer=bool(RESTRICTED_OFFER.search(probe)),
         terminated=bool(TERMINATED.search(probe)),
@@ -1205,7 +1233,7 @@ def score_entry(entry: dict[str, Any], *, client: SecClient | None, md: Any,
             entry["rejections"] = [f"could not fetch the offer document: "
                                    f"{type(exc).__name__}: {exc}"]
             return entry
-        terms = parse_offer_document(raw, is_amendment=entry["form"].upper().endswith("/A"))
+        terms = parse_offer_document(raw)
         entry["terms"] = {k: v for k, v in asdict(terms).items() if k != "odd_lot_paragraph"}
         entry["odd_lot_paragraph"] = terms.odd_lot_paragraph
         entry["offer_price"] = terms.offer_price

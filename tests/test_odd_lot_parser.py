@@ -27,9 +27,9 @@ REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "scripts"))
 
 from odd_lot import (  # noqa: E402
-    OfferTerms, classify_subject_security, detect_risk_flags, find_odd_lot_passage,
-    gate_document, html_to_text, parse_dates, parse_offer_document, parse_prices,
-    _normalize_for_match,
+    RECORD_HOLDER_CONDITION, OfferTerms, classify_subject_security, detect_risk_flags,
+    find_odd_lot_passage, gate_document, html_to_text, parse_dates,
+    parse_offer_document, parse_prices, _normalize_for_match,
 )
 
 FIXTURES = REPO / "tests" / "fixtures" / "odd_lot"
@@ -153,6 +153,67 @@ class Rejections(unittest.TestCase):
         terms = parse("restricted_to_qibs.html")
         self.assertTrue(terms.restricted_offer)
         self.assertIn("restricted to accredited investors", self.reasons(terms))
+
+
+class TheFirstLiveRun(unittest.TestCase):
+    """The two defects the 2026-09-03 premarket run surfaced.
+
+    Both were invisible to the constructed fixtures because both live in the
+    seam between EDGAR's response and the parser — the place a fixture written
+    from the same assumptions as the code cannot reach.
+    """
+
+    def test_a_record_holder_floor_counts_people_not_shares(self):
+        """"a holder of record of fewer than 100 Shares" is the preference
+        itself, not the condition that voids it.
+
+        The first live run rejected all four of its filings, two of them as the
+        ITEX pattern with a floor of "100" — which is the odd-lot threshold. The
+        capture must be followed by a word meaning people, or the screener
+        rejects the commonest ways of writing the thing it looks for.
+        """
+        for text in (
+            "If you are a holder of record of fewer than 100 Shares and you tender all",
+            "Shares held of record by a shareholder who owns fewer than 100 Shares",
+            "Any record holder who owns fewer than 100 Shares and tenders all of them",
+            "Persons of record owning fewer than 100 shares may tender all such shares",
+        ):
+            with self.subTest(text=text[:48]):
+                self.assertIsNone(
+                    RECORD_HOLDER_CONDITION.search(_normalize_for_match(text)),
+                    "the odd-lot definition was read as a record-holder floor")
+
+    def test_a_genuine_record_holder_floor_is_still_caught(self):
+        """The fix must not buy its precision by going blind."""
+        for text, expected in (
+            ("would result in the Shares being held of record by fewer than 300 persons", "300"),
+            ("if it would reduce the number of holders of record below 300 holders", "300"),
+            ("voided if fewer than 500 shareholders of record would remain", "500"),
+        ):
+            with self.subTest(text=text[:48]):
+                match = RECORD_HOLDER_CONDITION.search(_normalize_for_match(text))
+                self.assertIsNotNone(match, "a real ITEX-pattern condition was missed")
+                self.assertEqual(next(g for g in match.groups() if g), expected)
+
+    def test_an_amendment_is_recognised_from_the_document_not_the_form_string(self):
+        """What arms the Frontera check must not depend on EFTS's form field.
+
+        `file_type` is the exhibit type (EX-99.(A)(1)(III)) and `root_forms` is
+        the *root* form, "SC TO-I" even for an SC TO-I/A. Deriving the flag
+        from either leaves the check disarmed in production while every test
+        that passes the flag by hand still passes.
+        """
+        terms = parse_offer_document(fixture("amendment_removes_preference.html"))
+        self.assertTrue(terms.preference_removed)
+        self.assertFalse(gate_document(terms, form="SC TO-I", today=TODAY).passed,
+                         "rejected on the document, whatever the form string says")
+
+    def test_an_original_offer_is_never_read_as_an_amendment(self):
+        for name in ("fixed_price_with_preference.html",
+                     "dutch_auction_with_preference.html",
+                     "going_concern_offer.html"):
+            with self.subTest(fixture=name):
+                self.assertFalse(parse_offer_document(fixture(name)).preference_removed)
 
 
 class PassageDetection(unittest.TestCase):
