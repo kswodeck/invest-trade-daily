@@ -740,6 +740,7 @@ def _next_url(payload: Any, current: str) -> str | None:
 # the field name the API itself uses as the query key. `query_params` in config
 # pins it once it is known, and skips the probing entirely.
 COUNTY_PARAM_GUESSES = ("county", "county_name", "county__name", "search", "q")
+MAX_NARROW_PROBES = 10
 
 
 def _narrow_to_county(url: str, payload: Any, rows: list[dict], diag: dict,
@@ -773,10 +774,18 @@ def _narrow_to_county(url: str, payload: Any, rows: list[dict], diag: dict,
         return url, payload, rows, diag, {}
 
     key = (diag.get("discovered_field_map") or {}).get("county")
-    for param in dict.fromkeys([key, *COUNTY_PARAM_GUESSES]):
-        if not param:
-            continue
-        result = request({param: wanted})
+    observed = [str(row["county"]) for row in rows if row.get("county")]
+    values = county_value_variants(wanted, observed)
+    params = [p for p in dict.fromkeys([key, *COUNTY_PARAM_GUESSES]) if p]
+
+    # Bounded: every value against the API's own field name, then the best
+    # value against the guesses. Fully crossing the two would be 25 requests at
+    # one per second for a filter that usually works on the first try.
+    attempts = [(params[0], value) for value in values]
+    attempts += [(param, values[0]) for param in params[1:]]
+
+    for param, value in attempts[:MAX_NARROW_PROBES]:
+        result = request({param: value})
         if not result:
             continue
         target, fresh, found, found_diag = result
@@ -785,9 +794,43 @@ def _narrow_to_county(url: str, payload: Any, rows: list[dict], diag: dict,
         # ignores an unknown query key returns the unfiltered list, and taking
         # that would look like success while changing nothing.
         if matched and matched >= len(found) * 0.9:
-            found_diag["narrowed_by"] = param
-            return target, fresh, found, found_diag, {param: wanted}
+            found_diag["narrowed_by"] = f"{param}={value}"
+            return target, fresh, found, found_diag, {param: value}
+    diag["narrowing_failed"] = [f"{p}={v}" for p, v in attempts[:MAX_NARROW_PROBES]]
     return url, payload, rows, diag, {}
+
+
+def county_value_variants(wanted: str, observed: Iterable[str]) -> list[str]:
+    """How this API spells a county name, learned from what it just sent.
+
+    The live feed returns `GALVESTON COUNTY` and `PHILADELPHIA COUNTY` — it is
+    nationwide, and it stores the name uppercased with a suffix. Querying it for
+    `Tarrant` finds nothing. Rather than hardcode that shape, read it off the
+    records: whatever form the data is in is the form the filter wants.
+    """
+    variants: list[str] = []
+    for sample in list(observed)[:20]:
+        text = str(sample).strip()
+        if not text:
+            continue
+        suffix = ""
+        match = re.search(r"\s+(COUNTY|County|county|PARISH|Parish)$", text)
+        if match:
+            suffix = match.group(0)
+        body = text[:len(text) - len(suffix)] if suffix else text
+        if body.isupper():
+            candidate = f"{wanted.upper()}{suffix.upper() if suffix else ''}"
+        elif body.islower():
+            candidate = f"{wanted.lower()}{suffix.lower() if suffix else ''}"
+        else:
+            candidate = f"{wanted}{suffix}"
+        if candidate not in variants:
+            variants.append(candidate)
+
+    for candidate in (wanted, f"{wanted} County", wanted.upper(), f"{wanted.upper()} COUNTY"):
+        if candidate not in variants:
+            variants.append(candidate)
+    return variants
 
 
 def follow_pages(payload: Any, rows: list[dict], source: dict, cfg: dict,
@@ -1303,6 +1346,10 @@ def county_listings(county: dict, cfg: dict, sale_date: str | None = None
             top = sorted(counties_seen.items(), key=lambda kv: -kv[1])[:6]
             detail += (f" · {dropped_county} not in {filter_name}"
                        + (f" (saw {top})" if top else " (no county field in the records)"))
+            if diag.get("narrowing_failed"):
+                detail += (f" · could not narrow server-side, tried "
+                           f"{diag['narrowing_failed']} — set `query_params` on this source "
+                           f"to the key and value this API actually wants")
         if dropped_date:
             detail += (f" · {dropped_date} for another sale date "
                        f"(saw {sorted(dates_seen)[:6]}, wanted {sale_date})")

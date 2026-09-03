@@ -956,3 +956,79 @@ class AsksTheApiToFilterRatherThanPagingTheState(unittest.TestCase):
         listings, _ = tds.county_listings(self.county, self.cfg, "2026-10-06")
         self.assertEqual(len(listings), 1)
 
+
+
+class LearnsHowTheApiSpellsACountyName(unittest.TestCase):
+    """The live feed is nationwide and stores `GALVESTON COUNTY`.
+
+    Querying it for `Tarrant` finds nothing, and hardcoding "uppercase plus
+    COUNTY" would be a guess about one vendor. The records themselves say what
+    shape the data is in, and that is the shape the filter wants.
+    """
+
+    def test_it_copies_the_case_and_suffix_it_was_shown(self):
+        self.assertEqual(
+            tds.county_value_variants("Tarrant", ["GALVESTON COUNTY", "MAVERICK COUNTY"])[0],
+            "TARRANT COUNTY")
+
+    def test_title_case_is_followed_too(self):
+        self.assertEqual(tds.county_value_variants("Tarrant", ["Galveston County"])[0],
+                         "Tarrant County")
+
+    def test_a_bare_name_stays_bare(self):
+        self.assertEqual(tds.county_value_variants("Tarrant", ["Galveston"])[0], "Tarrant")
+
+    def test_the_usual_shapes_are_still_tried_when_nothing_was_observed(self):
+        variants = tds.county_value_variants("Tarrant", [])
+        self.assertIn("Tarrant", variants)
+        self.assertIn("TARRANT COUNTY", variants)
+
+    def test_probing_is_bounded(self):
+        self.assertLessEqual(tds.MAX_NARROW_PROBES, 10)
+
+
+class NationwideFeedIsNarrowedByTheLearnedValue(unittest.TestCase):
+    def _rec(self, i, county):
+        return {"cause_nbr": f"C{i}", "account_nbr": str(i), "prop_address_one": f"{i} MAIN",
+                "minimum_bid": "$7,800.00", "sale_date": "2026-10-06",
+                "status": "Active", "county": county}
+
+    def setUp(self):
+        self.cfg = td.load_config()
+        self.county = next(c for c in td.counties(self.cfg) if c["name"] == "Tarrant")
+        self.county["sources"][0] = dict(self.county["sources"][0], required_markers=[])
+        self.elsewhere = [self._rec(i, "GALVESTON COUNTY") for i in range(10)]
+        self.ours = [self._rec(100 + i, "TARRANT COUNTY") for i in range(3)]
+        self.served = []
+        self._fetch = tds.fetch
+        tds.fetch = self._fake
+
+    def tearDown(self):
+        tds.fetch = self._fetch
+
+    def _fake(self, url, cfg, **kw):
+        self.served.append(url)
+        if "/api/property_sales/" in url:
+            # Only the value the data is actually stored in matches.
+            if "county=TARRANT+COUNTY" in url or "county=TARRANT%20COUNTY" in url:
+                return json.dumps({"count": 3, "next": None, "results": self.ours})
+            return json.dumps({"count": 10, "next": None, "results": self.elsewhere})
+        return '<html><script>var A="/api/property_sales/";</script></html>'
+
+    def test_the_learned_spelling_is_what_finds_the_rows(self):
+        listings, report = tds.county_listings(self.county, self.cfg, "2026-10-06")
+        self.assertEqual([l["account"] for l in listings], ["100", "101", "102"])
+
+    def test_it_is_the_first_thing_tried(self):
+        tds.county_listings(self.county, self.cfg, "2026-10-06")
+        narrowed = [u for u in self.served if "county=" in u]
+        self.assertTrue(narrowed[0].endswith("county=TARRANT+COUNTY"), narrowed[:3])
+
+    def test_a_failure_to_narrow_says_what_it_tried_and_what_to_pin(self):
+        self.ours = []
+        _, report = tds.county_listings(self.county, self.cfg, "2026-10-06")
+        detail = report[0]["detail"]
+        self.assertIn("could not narrow server-side", detail)
+        self.assertIn("query_params", detail)
+        self.assertIn("GALVESTON COUNTY", detail)
+
