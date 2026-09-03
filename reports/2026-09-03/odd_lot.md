@@ -1,6 +1,6 @@
 # Odd-lot tender screener — 2026-09-03
 
-Run 2026-09-03 06:39 ET (premarket slot). 4 offers tracked, 0 clear every gate: 0 Tier A, 0 Tier B, 0 Tier C.
+Run 2026-09-03 09:50 ET (premarket slot). 4 offers tracked, 0 clear every gate: 0 Tier A, 0 Tier B, 0 Tier C.
 
 **No Tier A opportunities today.** That is the ordinary result — an odd-lot tender with a 3%+ spread and a clean condition set is rare, and the thresholds below are not moved to produce one.
 
@@ -21,9 +21,9 @@ _None._
 | Ticker | Form | Filed | Reason |
 | --- | --- | --- | --- |
 | NFJ | EX-99.(A)(1)(III) | 2026-09-01 | odd lots mentioned but no acceptance-before-proration language |
-| — | EX-99.(B) | 2026-09-01 | odd-lot preference conditioned on keeping at least 100 holders of record (ITEX pattern); subject security is not common equity (unidentified security) |
+| — | EX-99.(B) | 2026-09-01 | subject security is not common equity (unidentified security) |
 | — | EX-99 | 2026-09-01 | odd lots mentioned but no acceptance-before-proration language; not a cash offer — reads as an exchange offer for other securities; subject security is not common equity (unidentified security); no expiration date could be read from the document |
-| — | EX-99.(A)(1)(II) | 2026-08-26 | odd-lot preference conditioned on keeping at least 100 holders of record (ITEX pattern); not a cash offer — reads as an exchange offer for other securities |
+| — | EX-99.(A)(1)(II) | 2026-08-26 | not a cash offer — reads as an exchange offer for other securities |
 
 ## Expired today
 
