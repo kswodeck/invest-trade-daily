@@ -268,6 +268,42 @@ class SecClient:
         return json.loads(self.get(url, params=params, cache_key=cache_key))
 
 
+_ticker_by_cik: dict[str, str] | None = None
+
+
+def ticker_for_cik(cik: str, client: SecClient) -> str:
+    """The ticker for a CIK, from the SEC's own company list.
+
+    EFTS renders a filer as `ACME CORP (ACME) (CIK 0000123456)`, but only when
+    it has a ticker on file for the entity that filed — and a tender offer is
+    frequently filed under a holding company or an acquirer that has none. In
+    the first live run three of four filings arrived without one, and Gate 2
+    rejects an offer it cannot price, so each was dropped before any of its
+    terms were considered.
+
+    The map is a single 1MB fetch, cached for the day like every other
+    document.
+    """
+    global _ticker_by_cik
+    if _ticker_by_cik is None:
+        try:
+            data = client.get_json(
+                client.cfg["tickers_url"],
+                cache_key=f"company_tickers_{date.today().isoformat()}.json")
+        except Exception:  # noqa: BLE001 - a missing map is not a failed run
+            _ticker_by_cik = {}
+        else:
+            rows = data.values() if isinstance(data, dict) else data
+            _ticker_by_cik = {}
+            for row in rows:
+                try:
+                    _ticker_by_cik.setdefault(pad_cik(row["cik_str"]),
+                                              str(row["ticker"]).upper())
+                except (KeyError, TypeError, ValueError):
+                    continue
+    return _ticker_by_cik.get(pad_cik(cik), "")
+
+
 def pad_cik(cik: Any) -> str:
     """Zero-pad a CIK to the 10 digits data.sec.gov requires. Unpadded 404s."""
     digits = re.sub(r"\D", "", str(cik))
@@ -383,33 +419,103 @@ def parse_efts_response(payload: Any) -> list[dict[str, Any]]:
     return [_efts_hit(row) for row in rows]
 
 
+# A tender offer is filed as a Schedule TO with the substance in its exhibits:
+# the Offer to Purchase, the Letter of Transmittal, the Notice of Guaranteed
+# Delivery, the letters to brokers, the summary advertisement. Every one of
+# them says "odd lot", so full-text search returns them all — as separate hits
+# sharing one accession number.
+#
+# Keeping one of those and discarding the rest, which is what this did, means
+# the filing is judged on whichever exhibit the search happened to rank first.
+# When that is the Letter of Transmittal — which has an Odd Lots checkbox and
+# nothing else — the offer is rejected for "no acceptance-before-proration
+# language" while the Offer to Purchase sitting beside it says exactly that.
+# That is the reason the first live run rejected all four of its filings.
+
+def _merge_hit(filings: dict[str, dict[str, Any]], hit: dict[str, Any],
+               found_by: str, max_documents: int) -> None:
+    """Fold one EFTS hit into its filing, keeping the document as a candidate."""
+    filing = filings.get(hit["accession"])
+    if filing is None:
+        filing = {k: v for k, v in hit.items() if k not in ("document", "document_type")}
+        filing["documents"] = []
+        filing["found_by"] = found_by
+        filings[hit["accession"]] = filing
+
+    if not hit.get("document"):
+        return
+    if any(d["name"] == hit["document"] for d in filing["documents"]):
+        return
+    if len(filing["documents"]) >= max_documents:
+        return
+    filing["documents"].append({
+        "name": hit["document"],
+        "type": hit.get("document_type") or "",
+        "url": hit["url"],
+    })
+
+
+def _efts_page(client: SecClient, config: dict[str, Any], *, term: str, form: str,
+               start: str, end: str, offset: int) -> tuple[list[dict[str, Any]], int]:
+    """One page of results, and the total the search says it has."""
+    params = {"q": term, "forms": form, "dateRange": "custom",
+              "startdt": start, "enddt": end}
+    if offset:
+        params["from"] = offset
+    payload = client.get_json(config["sec"]["efts_url"], params=params)
+    hits = parse_efts_response(payload)
+    total = 0
+    try:
+        total = int(payload["hits"]["total"]["value"])
+    except (KeyError, TypeError, ValueError):
+        total = len(hits) + offset  # no total reported; stop when a page runs short
+    return hits, total
+
+
 def search_filings(client: SecClient, config: dict[str, Any], *,
-                   today: date | None = None) -> list[dict[str, Any]]:
-    """Every odd-lot-mentioning tender filing in the trailing window, deduplicated.
+                   today: date | None = None,
+                   stats: dict[str, Any] | None = None) -> list[dict[str, Any]]:
+    """Every odd-lot-mentioning tender filing in the window, one entry per filing.
 
     One query per (term, form) pair rather than one big OR: EFTS scores and
-    truncates per query, and a busy form would otherwise crowd a quiet one out
-    of the result set entirely.
+    truncates per query, so a busy form would otherwise crowd a quiet one out
+    of the results entirely.
+
+    Paginated, because the endpoint returns ten hits per page. Reading only the
+    first page silently caps discovery at ten documents per query — and since a
+    single filing can account for five of them, that is a handful of filings.
     """
     disc = config["discovery"]
     today = today or datetime.now(ET).date()
     start = (today - timedelta(days=disc["lookback_days"])).isoformat()
     end = today.isoformat()
+    cap = disc["max_hits_per_query"]
+    max_documents = disc.get("max_documents_per_filing", 8)
 
-    seen: dict[str, dict[str, Any]] = {}
+    filings: dict[str, dict[str, Any]] = {}
+    queries = raw_hits = 0
+
     for term in disc["query_terms"]:
         for form in disc["forms"]:
-            payload = client.get_json(config["sec"]["efts_url"], params={
-                "q": term,
-                "forms": form,
-                "dateRange": "custom",
-                "startdt": start,
-                "enddt": end,
-            })
-            for hit in parse_efts_response(payload):
-                hit["found_by"] = f"{term} / {form}"
-                seen.setdefault(hit["accession"], hit)
-    return sorted(seen.values(), key=lambda h: (h["filed"], h["accession"]), reverse=True)
+            offset = 0
+            while offset < cap:
+                hits, total = _efts_page(client, config, term=term, form=form,
+                                         start=start, end=end, offset=offset)
+                queries += 1
+                raw_hits += len(hits)
+                for hit in hits:
+                    _merge_hit(filings, hit, f"{term} / {form}", max_documents)
+                offset += len(hits)
+                if not hits or offset >= total:
+                    break
+
+    if stats is not None:
+        stats.update({"queries": queries, "raw_hits": raw_hits,
+                      "filings": len(filings),
+                      "documents": sum(len(f["documents"]) for f in filings.values()),
+                      "window": f"{start}..{end}"})
+
+    return sorted(filings.values(), key=lambda f: (f["filed"], f["accession"]), reverse=True)
 
 
 # --------------------------------------------------------------------------
@@ -1067,6 +1173,49 @@ def tier_for(econ: dict[str, Any], flags: list[str], config: dict[str, Any]) -> 
     return "B" if econ["spread_pct"] >= b["min_spread_pct"] else "C"
 
 
+# Which gate is doing the rejecting. A screener that finds nothing looks
+# identical to one that is broken, and the difference is entirely in where the
+# universe is being lost — the first live run rejected everything at Gate 1 and
+# read as a quiet day. Keyed by the leading words of each rejection so the
+# tally follows the messages rather than a parallel list of codes that drifts.
+REJECTION_KINDS = {
+    "no odd-lot language": ("no 'fewer than 100", "odd lots mentioned but no"),
+    "no readable document": ("the filing carried no readable",),
+    "preference removed or conditioned": ("amendment removes", "conditioned on keeping"),
+    "not a cash common-equity offer": ("not a cash offer", "not common equity",
+                                       "restricted to accredited"),
+    "expired or terminated": ("offer expired", "terminated or withdrawn",
+                              "no expiration date"),
+    "no ticker": ("no ticker for CIK",),
+    "no price": ("no live price", "no offer price"),
+    "spread too thin": ("spread ",),
+    "capital over the cap": ("99 shares costs",),
+    "too close to expiry": ("days to expiry",),
+    "illiquid": ("exit-liquidity floor", "exit liquidity unknown"),
+    "sub-dollar": ("sub-dollar floor",),
+    "SEC blocked the fetch": ("SEC blocked",),
+    "fetch failed": ("could not fetch",),
+}
+
+
+def rejection_tally(universe: dict[str, Any]) -> dict[str, Any]:
+    """How many offers each gate turned away, and the leftovers it could not
+    classify — an unclassified rejection means a message changed and this
+    tally quietly stopped describing the funnel."""
+    counts: dict[str, int] = {}
+    unclassified = 0
+    for entry in universe["open"]:
+        for reason in entry.get("rejections") or []:
+            for label, prefixes in REJECTION_KINDS.items():
+                if any(p in reason for p in prefixes):
+                    counts[label] = counts.get(label, 0) + 1
+                    break
+            else:
+                unclassified += 1
+    return {"rejected_by": dict(sorted(counts.items(), key=lambda kv: -kv[1])),
+            "unclassified_rejections": unclassified}
+
+
 # --------------------------------------------------------------------------
 # the universe
 # --------------------------------------------------------------------------
@@ -1200,9 +1349,74 @@ def fetch_liquidity(symbol: str, md: Any) -> float | None:
     return hist.get("avg_volume_30d") if hist.get("ok") else None
 
 
-def resolve_document(entry: dict[str, Any], client: SecClient) -> str:
-    """The offer document's raw text, cached by accession and filename."""
-    return client.get(entry["url"], cache_key=f"{entry['accession']}_{entry['document']}")
+def terms_completeness(terms: OfferTerms) -> tuple[int, int, int, int]:
+    """How usable a reading of one document is, for picking between exhibits.
+
+    Ordered so that the preference language dominates: a document that states
+    the odd-lot terms is the Offer to Purchase, and a document that merely
+    mentions odd lots is the Letter of Transmittal standing next to it. Price
+    and expiry break ties between two documents that both carry the language.
+    """
+    return (
+        int(terms.has_threshold and terms.has_proration_preference),
+        int(terms.offer_price is not None),
+        int(terms.expiration_date is not None),
+        int(terms.odd_lot_paragraph is not None),
+    )
+
+
+def candidate_documents(entry: dict[str, Any]) -> list[dict[str, Any]]:
+    """Every exhibit worth reading for this filing, best guess first.
+
+    The order is only a cost optimisation — every document is read either way
+    until one carries the full odd-lot terms. Guessing from the exhibit label
+    alone is not safe: issuers letter their exhibits inconsistently, and the
+    (a)(1) block that usually holds the Offer to Purchase sometimes holds the
+    transmittal letter instead.
+    """
+    documents = entry.get("documents")
+    if not documents:
+        # An entry stored before filings carried a document list.
+        return ([{"name": entry.get("document") or "", "type": "",
+                  "url": entry.get("url") or ""}] if entry.get("url") else [])
+
+    def rank(doc: dict[str, Any]) -> tuple[int, str]:
+        label = f"{doc.get('type', '')} {doc.get('name', '')}".lower()
+        if "transmittal" in label or "guaranteed" in label:
+            return (2, label)          # never the offer document
+        if "offer" in label or "(a)(1)(i)" in label or "otp" in label:
+            return (0, label)          # usually is
+        return (1, label)
+
+    return sorted(documents, key=rank)
+
+
+def read_offer_documents(entry: dict[str, Any], client: SecClient,
+                         ) -> tuple[OfferTerms | None, dict[str, Any] | None, list[str]]:
+    """Read the filing's exhibits, return the best reading and which gave it.
+
+    Stops early on a document carrying the complete terms. Anything less keeps
+    looking, because a filing is only as good as its best exhibit and the first
+    one back is frequently the wrong one.
+    """
+    best: tuple[tuple[int, ...], OfferTerms, dict[str, Any]] | None = None
+    read: list[str] = []
+
+    for doc in candidate_documents(entry):
+        if not doc.get("url"):
+            continue
+        raw = client.get(doc["url"], cache_key=f"{entry['accession']}_{doc['name']}")
+        read.append(doc["name"])
+        terms = parse_offer_document(raw)
+        score = terms_completeness(terms)
+        if best is None or score > best[0]:
+            best = (score, terms, doc)
+        if score[0] and score[1] and score[2]:
+            break
+
+    if best is None:
+        return None, None, read
+    return best[1], best[2], read
 
 
 def score_entry(entry: dict[str, Any], *, client: SecClient | None, md: Any,
@@ -1223,7 +1437,7 @@ def score_entry(entry: dict[str, Any], *, client: SecClient | None, md: Any,
     # --- Gate 1: the document -------------------------------------------
     if client is not None:
         try:
-            raw = resolve_document(entry, client)
+            terms, document, read = read_offer_documents(entry, client)
         except SecBlocked as exc:
             entry["status"] = "deferred"
             entry["rejections"] = [f"SEC blocked the fetch: {exc}"]
@@ -1233,7 +1447,15 @@ def score_entry(entry: dict[str, Any], *, client: SecClient | None, md: Any,
             entry["rejections"] = [f"could not fetch the offer document: "
                                    f"{type(exc).__name__}: {exc}"]
             return entry
-        terms = parse_offer_document(raw)
+        entry["documents_read"] = read
+        if terms is None:
+            entry["status"] = "rejected"
+            entry["rejections"] = ["the filing carried no readable document"]
+            return entry
+        # Which exhibit actually supplied the terms, so a rejection can be
+        # checked against the document it was read from.
+        entry["document"] = (document or {}).get("name") or entry.get("document")
+        entry["url"] = (document or {}).get("url") or entry.get("url")
         entry["terms"] = {k: v for k, v in asdict(terms).items() if k != "odd_lot_paragraph"}
         entry["odd_lot_paragraph"] = terms.odd_lot_paragraph
         entry["offer_price"] = terms.offer_price
@@ -1264,9 +1486,18 @@ def score_entry(entry: dict[str, Any], *, client: SecClient | None, md: Any,
 
     # --- Gate 2: the economics ------------------------------------------
     symbol = entry.get("ticker") or ""
+    if not symbol and client is not None:
+        # EFTS only names a ticker when the *filer* has one on file, and a
+        # tender offer is often filed by a parent or an acquirer that does not.
+        symbol = ticker_for_cik(entry["cik"], client)
+        if symbol:
+            entry["ticker"] = symbol
+            entry["ticker_source"] = "sec_company_tickers"
     if not symbol:
         entry["status"] = "rejected"
-        entry["rejections"] = ["no ticker on the filing — cannot price the trade"]
+        entry["rejections"] = [
+            f"no ticker for CIK {entry.get('cik')} in the filing or the SEC "
+            f"company list — cannot price the trade"]
         return entry
 
     price, asof, source = fetch_quote(symbol, md)
@@ -1531,6 +1762,32 @@ def render_report(universe: dict[str, Any], report_date: date,
                        f"{entry.get('outcome', '')}")
         out.append("")
 
+    funnel = universe.get("funnel") or {}
+    if funnel:
+        out += [
+            "## Where the universe went",
+            "",
+            "A screener that finds nothing reads exactly like one that is broken. "
+            "This is the difference.",
+            "",
+            f"- **{funnel.get('queries', 0)}** full-text queries over "
+            f"`{funnel.get('window', '?')}` returned **{funnel.get('raw_hits', 0)}** "
+            f"document hit(s) across **{funnel.get('filings', 0)}** filing(s) "
+            f"(**{funnel.get('documents', 0)}** exhibits kept as candidates)",
+            f"- **{len(universe['open'])}** offers open, "
+            f"**{len(universe['archive'])}** archived",
+            "",
+        ]
+        rejected_by = funnel.get("rejected_by") or {}
+        if rejected_by:
+            out += ["| Turned away for | Count |", "| --- | --- |"]
+            out += [f"| {label} | {count} |" for label, count in rejected_by.items()]
+            out.append("")
+        if funnel.get("unclassified_rejections"):
+            out += [f"> ⚠ {funnel['unclassified_rejections']} rejection(s) did not "
+                    f"match any known reason — `REJECTION_KINDS` has drifted from "
+                    f"the gates.", ""]
+
     out += [
         "## Thresholds in force",
         "",
@@ -1649,12 +1906,13 @@ def run_screen(*, config: dict[str, Any], today: date, discover: bool = True,
         md = _market_data()
 
     universe["discovery_error"] = None
+    funnel: dict[str, Any] = {}
     if discover and client is not None:
         # A schema change is not caught here. EFTS is undocumented and the SEC
         # can move it; if it has, the screener is blind and every later day
         # would report a quiet week for tender offers. That has to be loud.
         try:
-            hits = search_filings(client, config, today=today)
+            hits = search_filings(client, config, today=today, stats=funnel)
         except EftsSchemaError:
             raise
         except Exception as exc:  # noqa: BLE001 - a dead network is not a crash
@@ -1663,8 +1921,9 @@ def run_screen(*, config: dict[str, Any], today: date, discover: bool = True,
             print("Discovery failed — re-scoring the existing universe anyway. "
                   "Yesterday's offers still expire and still move on price.")
         else:
-            print(f"Discovery: {len(hits)} filings in the trailing "
-                  f"{config['discovery']['lookback_days']} days, "
+            print(f"Discovery: {funnel.get('queries', 0)} queries over "
+                  f"{funnel.get('window', '?')} returned {funnel.get('raw_hits', 0)} "
+                  f"document hit(s) across {len(hits)} filing(s); "
                   f"{len(add_discoveries(universe, hits))} new.")
 
     # Archived twice, on either side of scoring, and both passes earn their
@@ -1686,6 +1945,9 @@ def run_screen(*, config: dict[str, Any], today: date, discover: bool = True,
     print(f"Scored {len(universe['open'])} open offer(s): "
           f"{tiers.count('A')} Tier A, {tiers.count('B')} Tier B, {tiers.count('C')} Tier C, "
           f"{sum(1 for e in universe['open'] if e.get('status') == 'rejected')} rejected.")
+
+    funnel.update(rejection_tally(universe))
+    universe["funnel"] = funnel
     if client is not None:
         print(f"SEC requests: {client.fetched} fetched, {client.cache_hits} served from cache.")
     universe["last_run_at"] = datetime.now(ET).isoformat(timespec="seconds")

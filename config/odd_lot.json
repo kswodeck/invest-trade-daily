@@ -24,10 +24,19 @@
   },
 
   "discovery": {
-    "forms": ["SC TO-I", "SC TO-T", "SC 13E4F", "SC TO-I/A"],
-    "query_terms": ["\"odd lot\"", "\"odd lots\""],
-    "lookback_days": 10,
+    "forms": [
+      "SC TO-I", "SC TO-I/A",
+      "SC TO-T", "SC TO-T/A",
+      "SC 13E4F", "SC 13E4F/A",
+      "SC 13E3", "SC 13E3/A"
+    ],
+    "query_terms": [
+      "\"odd lot\"", "\"odd lots\"", "\"odd-lot\"",
+      "\"odd lot holder\"", "\"odd lot priority\"", "\"odd lot preference\""
+    ],
+    "lookback_days": 75,
     "max_hits_per_query": 100,
+    "max_documents_per_filing": 8,
     "stale_after_days": 120
   },
 

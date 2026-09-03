@@ -93,18 +93,18 @@ publishes to its own single tab on the same Sheet.
 05:37 ET  ── 30 minutes ahead of the daily report ──┐
 18:30 ET  ── after EDGAR's 17:30 filing cutoff ─────┤
                                                     │
-   ├─ DISCOVER   EDGAR full-text search for "odd lot" in SC TO-I,
-   │             SC TO-T, SC 13E4F and SC TO-I/A over a trailing
-   │             10 days. Deduplicated against the universe by
-   │             accession number.
+   ├─ DISCOVER   EDGAR full-text search over a trailing 75 days:
+   │             six phrasings across eight Schedule TO forms,
+   │             paginated. Hits are grouped into filings by
+   │             accession, keeping every matching exhibit.
    │
    ├─ RE-SCORE   Every open offer, not just the new ones. Prices
    │             move; an offer rejected on Monday for a 0.9%
    │             spread is a different trade on Thursday.
    │
-   ├─ GATE 1-4   Read the document, run the economics, flag the
-   │             risks, assign a tier. Every rejection keeps its
-   │             reason.
+   ├─ GATE 1-4   Read the filing's exhibits, run the economics,
+   │             flag the risks, assign a tier. Every rejection
+   │             keeps its reason, and the report tallies them.
    │
    ├─ PUBLISH    The "Odd Lot" tab, overwritten in place. Expired
    │             offers leave it.
@@ -143,6 +143,57 @@ them has bitten somebody:
   the low end is what the spread is computed from.
 
 **This is research output. It places no orders and talks to no broker.**
+
+### Finding the offers in the first place
+
+A tender offer is a Schedule TO whose substance lives in its exhibits — the
+Offer to Purchase, the Letter of Transmittal, the Notice of Guaranteed Delivery,
+the letters to brokers, the summary advertisement. Every one of them says "odd
+lot", so full-text search returns them all, as separate hits sharing one
+accession number.
+
+**The filing is read, not one of its exhibits.** Keeping a single hit per
+accession means judging the offer on whichever document the search happened to
+rank first, and when that is the Letter of Transmittal — an Odd Lots checkbox
+and nothing else — the filing is rejected for "no acceptance-before-proration
+language" while the Offer to Purchase sits beside it saying exactly that. That
+is why the first live run rejected all four of its filings. Exhibits are now
+read in turn until one carries the complete terms, and the entry records which
+one supplied them.
+
+Three other things bound what discovery can see, all of them in
+`config/odd_lot.json`:
+
+- **`lookback_days`, 75.** A tender offer runs 20–40 business days. A window
+  shorter than one offer's lifetime can only see what was filed since the last
+  successful run, so a few quiet days lose everything filed in them permanently.
+  Seventy-five days makes discovery self-healing: an offer missed on Monday is
+  found on Friday, still open.
+- **Pagination.** The endpoint returns ten hits per page. Reading only the
+  first capped discovery at ten *documents* per query — and a single filing can
+  account for five of them.
+- **Six phrasings, eight forms.** `"odd lot"`, `"odd lots"`, `"odd-lot"`,
+  `"odd lot holder"`, `"odd lot priority"`, `"odd lot preference"`, across
+  `SC TO-I`, `SC TO-T`, `SC 13E4F`, `SC 13E3` and each one's `/A`. One query
+  per pair rather than one big OR, because EFTS scores and truncates per query
+  and a busy form would crowd out a quiet one.
+
+A filing whose filer has no ticker on file — common, since tender offers are
+often filed by a parent or an acquirer — is resolved through the SEC's own
+`company_tickers.json`, cached daily. Gate 2 rejects an offer it cannot price,
+and three of the first live run's four filings arrived without a ticker.
+
+### Where the universe went
+
+Every report ends with a funnel: how many queries ran over what window, how many
+document hits and distinct filings came back, and a tally of which gate turned
+each rejected offer away. **A screener that finds nothing looks exactly like one
+that is broken**, and this is the only thing that tells them apart — the first
+live run rejected its entire universe at Gate 1 and read as a quiet day.
+
+The tally is keyed on the rejection messages themselves, and anything it cannot
+classify is counted and flagged rather than dropped, so a reworded gate shows up
+as drift instead of silently vanishing from the funnel.
 
 ### The gates, and why each threshold is where it is
 
