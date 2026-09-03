@@ -170,3 +170,98 @@ skips, in EST the 10:00Z one is dropped as too early.
 Leave them. They cost nothing when the external trigger wins the race — the
 gate sees a published report on the branch tip and skips in about ten seconds —
 and they are the fallback if the external scheduler is the thing that breaks.
+
+## The odd-lot screener, on the same footing
+
+`Odd-Lot Tender Screener` runs twice a day and has exactly the same problem, so
+it gets exactly the same treatment: two UTC arms per slot, a window, and a
+duplicate guard. The differences are worth knowing.
+
+| | Daily Trade Report | Odd-Lot Tender Screener |
+| --- | --- | --- |
+| Slots | 06:07 ET | 05:37 ET and 18:30 ET |
+| Crons | `7 10`, `7 11` | `37 9`, `37 10`, `30 22 * * 1-5`, `30 23 * * 1-5` |
+| Windows | 6–11 ET | 5–11 ET and 18–23 ET |
+| What drops the second DST arm | today's report already on the branch tip | the universe was re-scored under two hours ago |
+| Decided by | `scripts/schedule_gate.py` | `scripts/odd_lot.py slot` |
+
+The morning slot is **30 minutes ahead of the report** so the Sheet's odd-lot
+tab is already current when the research phase starts. The evening slot is after
+EDGAR's **17:30 ET filing cutoff**, which is why its window opens at 18:00 and
+not 17:00 — a run at 17:30 would find nothing that a run at 17:00 had not.
+
+The duplicate guard is a recency check rather than an output check, because the
+screener has no equivalent of "today's report is published": it produces a fresh
+answer every time it runs, and running twice would be wasteful rather than
+wrong. `scripts/odd_lot.py slot` reads `last_run_at` out of
+`state/odd_lot_universe.json`, which the previous run committed.
+
+Both slots use the same 30-minute-early logic in **EST and EDT** — every arm is
+covered by `tests/test_odd_lot_screener.py::Slots::test_each_cron_arm_lands_where_it_is_meant_to`,
+which resolves all four crons to New York time in both regimes.
+
+### Triggering it externally, alongside the report
+
+Everything in [What actually fixes it](#what-actually-fixes-it) applies
+unchanged — the same fine-grained token with **Actions: Read and write** works
+for both workflows, because it is scoped to the repository rather than to a
+workflow. Add three more cron-job.org entries next to the existing one:
+
+| Title | Time (`America/New_York`) | Days |
+| --- | --- | --- |
+| `invest-trade-daily 6am ET` | 06:00 | every day |
+| `odd-lot screener premarket` | 05:30 | every day |
+| `odd-lot screener evening` | 18:30 | Mon–Fri |
+
+The external times are the round ones, `05:30` and `18:30`; the GitHub crons sit
+seven minutes later at `05:37` because `:00` and `:30` are the busiest minutes on
+GitHub's scheduler. Either way the morning screen lands exactly thirty minutes
+ahead of the report.
+
+Each one is the same POST as before, with the workflow file name changed:
+
+```
+POST https://api.github.com/repos/kswodeck/invest-trade-daily/actions/workflows/odd-lot-screener.yml/dispatches
+Accept: application/vnd.github+json
+Authorization: Bearer <TOKEN>
+Content-Type: application/json
+
+{"ref": "main", "inputs": {}}
+```
+
+`204 No Content` means accepted. There is no `respect_window` input here: a
+`workflow_dispatch` is treated as deliberate and runs whatever the hour, and the
+two-hour recency guard is what makes it safe to repeat. If you want a dispatch
+that *does* defer to the window, use `repository_dispatch` with type
+`run-odd-lot-screener` instead — but that needs a Contents-scoped token, which is
+the thing [the table above](#the-token-actions-not-contents) says not to hand to
+a third party.
+
+For the Cloudflare Worker route, add the arms to the same `wrangler.toml` and
+switch on `event.cron`:
+
+```toml
+[triggers]
+crons = [
+  "0 10 * * *", "0 11 * * *",       # daily report, 06:00 ET
+  "30 9 * * *", "30 10 * * *",      # odd-lot premarket, 05:30 ET
+  "30 22 * * 1-5", "30 23 * * 1-5", # odd-lot evening, 18:30 ET
+]
+```
+
+```js
+const WORKFLOW = (cron) =>
+  cron.startsWith("0 1") ? "daily-report.yml" : "odd-lot-screener.yml";
+```
+
+Both odd-lot arms fire every day; the gate drops whichever one is not the
+intended hour in the current DST regime, in about fifteen seconds.
+
+### If you only set up one external trigger
+
+Set up the report's. The odd-lot screener degrades far more gracefully than the
+report does: its output is a list of offers that are open for days or weeks, so
+a screen delivered four hours late is four hours stale rather than wrong, and
+the next slot picks it up. A trade report framed as the 6am pre-open view is a
+lie if it is researched at noon, which is why that one has a hard cutoff and
+this one does not.
