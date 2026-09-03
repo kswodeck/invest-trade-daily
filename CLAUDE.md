@@ -234,6 +234,21 @@ lessons are now in code rather than folklore — see `config/tax_deeds.md`:
   sources report "not configured" and leave the check `unavailable`, which is a
   flag. A null never becomes a clean screen.
 
+Four of those five failures are now worked around automatically, each as an
+ordered fallback that only runs after the plain path failed: a 403 is retried
+with a `Mozilla/5.0 (compatible; invest-trade-daily-taxdeeds/1.0; +mailto:...)`
+UA, because a UA filter is not a policy — every UA in the list still names the
+project and carries a contact, and robots.txt is checked separately, once,
+against our own name, where a disallow ends it. A page with no table falls
+through to `discover_json_records`, which decodes the JSON the page ships with
+itself and infers the field map from the source's existing `column_map` (camel
+humps split, so `minimumBid` matches "minimum bid"); an array qualifies only if
+it carries an opening bid and an identifier, the same bar the table parser
+applies. Sources take `fallback_urls`. And `resolve_flood_url` follows the NFHL
+layer by name so a re-indexed service self-heals. What is deliberately *not*
+worked around is robots.txt: the clerk portals disallow crawling, those checks
+stay unavailable, and `respect_robots_txt: false` is not a supported fix.
+
 Exit codes carry meaning: 0 clean, 1 published with a broken source, 2 every
 county list failed so nothing was screened and the Sheet was left alone,
 anything else a crash. 1 and 2 both write the snapshot and the step summary

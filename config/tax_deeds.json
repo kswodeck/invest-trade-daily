@@ -117,7 +117,12 @@
               "pct"
             ]
           },
-          "_verified": "2026-09-03: HTTP 403 — the host refused a non-browser User-Agent. Not a format change. Confirm the real Dallas portal URL from the Dallas County Tax Office site, or use the manual CSV drop."
+          "_verified": "2026-09-03: HTTP 403 — the host refused a non-browser User-Agent. Not a format change. Confirm the real Dallas portal URL from the Dallas County Tax Office site, or use the manual CSV drop.",
+          "fallback_urls": [
+            "https://www.dallasact.com/act_webdev/dallas/index.jsp",
+            "https://www.dallascounty.org/departments/tax/tax-sales.php"
+          ],
+          "_fallbacks": "Tried in order after the primary URL fails. Unverified alternates — strictly additive: if the primary works these are never fetched, and `verify` reports on any that get used."
         },
         {
           "id": "dallas_struck_off",
@@ -169,7 +174,11 @@
               "status"
             ]
           },
-          "_verified": "2026-09-03: taxsales.lgbs.com fetched 200 but contains no HTML table — it is a JavaScript app. Find the JSON endpoint the page calls and switch this source to \"format\": \"json\"."
+          "_verified": "2026-09-03: taxsales.lgbs.com fetched 200 but contains no HTML table — it is a JavaScript app. Find the JSON endpoint the page calls and switch this source to \"format\": \"json\".",
+          "fallback_urls": [
+            "https://www.dallascounty.org/departments/tax/tax-sales.php"
+          ],
+          "_fallbacks": "Tried in order after the primary URL fails. Unverified alternates — strictly additive: if the primary works these are never fetched, and `verify` reports on any that get used."
         }
       ]
     },
@@ -240,7 +249,11 @@
               "pct"
             ]
           },
-          "_verified": "2026-09-03: same JavaScript app as dallas_struck_off — no HTML table to parse. Needs the JSON endpoint or a manual CSV."
+          "_verified": "2026-09-03: same JavaScript app as dallas_struck_off — no HTML table to parse. Needs the JSON endpoint or a manual CSV.",
+          "fallback_urls": [
+            "https://www.tarrantcountytx.gov/en/constables.html"
+          ],
+          "_fallbacks": "Tried in order after the primary URL fails. Unverified alternates — strictly additive: if the primary works these are never fetched, and `verify` reports on any that get used."
         }
       ]
     },
@@ -310,7 +323,12 @@
               "status"
             ]
           },
-          "_verified": "2026-09-03: HTTP 403 — the host refused a non-browser User-Agent."
+          "_verified": "2026-09-03: HTTP 403 — the host refused a non-browser User-Agent.",
+          "fallback_urls": [
+            "https://www.johnsoncountytx.org/departments/constables",
+            "https://taxsales.lgbs.com/"
+          ],
+          "_fallbacks": "Tried in order after the primary URL fails. Unverified alternates — strictly additive: if the primary works these are never fetched, and `verify` reports on any that get used."
         }
       ]
     },
@@ -377,7 +395,11 @@
               "status"
             ]
           },
-          "_verified": "2026-09-03: same JavaScript app as dallas_struck_off."
+          "_verified": "2026-09-03: same JavaScript app as dallas_struck_off.",
+          "fallback_urls": [
+            "https://www.co.ellis.tx.us/166/Tax-Assessor-Collector"
+          ],
+          "_fallbacks": "Tried in order after the primary URL fails. Unverified alternates — strictly additive: if the primary works these are never fetched, and `verify` reports on any that get used."
         }
       ]
     }
@@ -520,7 +542,9 @@
       "V",
       "VE"
     ],
-    "_verified": "2026-09-03: layer 28 returned 404. `verify` now asks the MapServer for its layer list and prints the flood-looking candidates — run it and set the index it names."
+    "_verified": "2026-09-03: layer 28 returned 404. `verify` now asks the MapServer for its layer list and prints the flood-looking candidates — run it and set the index it names.",
+    "autodetect_layer": true,
+    "_autodetect": "The NFHL layer index is not stable across service revisions and 28 was wrong on the first live run. With this on, the screener asks the MapServer for its layer list and takes the flood-hazard-zone layer by name, so a re-indexed service self-heals."
   },
   "environmental": {
     "_": "TCEQ publishes datasets but no stable keyless per-parcel API; EPA Envirofacts is the reachable public one. Both are a proximity screen, not a Phase I.",
@@ -580,5 +604,9 @@
     "WAXAHACHIE": 7000,
     "ENNIS": 6000,
     "MIDLOTHIAN": 7500
-  }
+  },
+  "user_agent_fallbacks": [
+    "Mozilla/5.0 (compatible; invest-trade-daily-taxdeeds/1.0; +mailto:{contact})"
+  ],
+  "_user_agent": "Tried in order until one is not refused. robots.txt is a separate and absolute check, always evaluated against the first (our own) identity — a 403 on a UA string is a filter, not a policy. Every entry must name this project and carry a contact address; do not add one that impersonates a browser without identifying itself."
 }

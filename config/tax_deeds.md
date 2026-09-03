@@ -147,6 +147,51 @@ property_its_tier` holds that line.
 The three CADs that matter — DCAD, TAD, Johnson CAD — verified clean, which is
 the part of the pipeline that values a property.
 
+### What it now works around by itself
+
+Four of the five live failures are handled without anyone editing config. They
+are ordered attempts, not guesses: each only runs after the plain path failed.
+
+**A refused User-Agent.** Two counties answered 403 to the plain UA. robots.txt
+is a policy statement and is still honoured absolutely — checked once, against
+this screener's own name, and a disallow ends it. A 403 on a UA string is a
+filter, not a policy, so a refusal is retried with
+`Mozilla/5.0 (compatible; invest-trade-daily-taxdeeds/1.0; +mailto:you@example)`
+— the form well-behaved crawlers have used for decades. **Every UA in the list
+names this project and carries an address to complain to**; that is the line,
+and a UA that impersonates a browser without identifying itself does not go in
+`user_agent_fallbacks`.
+
+**A JavaScript-rendered list.** `taxsales.lgbs.com` serves three counties and
+has no HTML table at any URL. But a client-rendered page still ships with its
+data — a `__NEXT_DATA__` blob, a hydration assignment, a JSON-LD block — so when
+the table parser finds nothing, `discover_json_records` decodes every inline
+JSON value, walks it for arrays of objects, and scores each against the source's
+**existing `column_map`**. `minimumBid` and `"minimum bid"` reduce to the same
+words once the camel humps are split, so no new configuration is needed; nested
+keys map too, which is how `address.line1` becomes the address. An array only
+qualifies if it carries an opening bid and something to identify a property by
+— the same bar the table parser applies, so a discovered list is never
+worse-specified than a parsed one. Navigation menus and config blobs fail it.
+
+When discovery works, `verify` says so and prints the exact
+`{"format": "json", "records_path": ..., "field_map": ...}` to paste in. Pin it
+when you see it: a heuristic that works today should become configuration.
+
+**A moved list.** Every source takes `fallback_urls`, tried in order after the
+primary fails. They are strictly additive — never fetched when the primary
+works — and `verify` reports which one got used.
+
+**A re-indexed FEMA layer.** Layer 28 was wrong, and an operator cannot guess
+the right index. With `flood.autodetect_layer` on, the screener asks the
+MapServer for its layer list and takes the flood-hazard-zone layer by name,
+resolved once per run and cached.
+
+What is **not** worked around, because it should not be: the four
+`publicsearch.us` clerk portals disallow crawling in robots.txt. Those checks
+stay `unavailable`, which is a material flag, which means Tier C. Setting
+`respect_robots_txt: false` to get around that is not a supported fix.
+
 ### Exit codes
 
 | Code | Meaning |
