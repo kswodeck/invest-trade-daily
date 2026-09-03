@@ -1,0 +1,631 @@
+{
+  "date": "2026-09-03",
+  "generated_at_et": "2026-09-03T06:33:42-04:00",
+  "research_minutes": 28,
+  "truncated": false,
+  "data_quality_notes": "*** ACTION FIRST: SELL THE FULL RARE LONG TODAY (limit 13.00). Phase 3 failure on the 2026-09-02 8-K, stock -44% premarket, the 22.90 stop was gapped through by ~9 ATR. This is rank 1 and it is the only item that must be acted on within minutes of the open. It is duplicated at the top of the watchlist because the enforcement step may delete the recommendation on four mechanical checks that an exit cannot pass. ***\n\nResearch ran to completion and logged a RESEARCH COMPLETE block at 06:31 ET \u2014 nothing here was cut off. Eight candidate lines resolved to five distinct symbols (LULU, GLD and RARE were each re-captured to fix a field; the last line per symbol was taken). All five are published; none was dropped on a reward-to-risk or stop-distance floor.\n\nREAD THE MIX BEFORE SIZING: only two of the five are new risk. RARE is a close instruction, and LULU and GLD are updates to positions already open \u2014 three of five lines are position management.\n\nRARE is shaped like an exit, not an entry: target and stop are null by design, so the mechanical direction_consistency and risk_reward checks will FAIL on missing fields. That is the shape of a close instruction. Its defended downside (~11.20, the commercial business at ~1.5x the 730-760m 2026 revenue guide) is stated in the thesis rather than in bear_case_price, because on a `sell` the schema wants the downside anchor above the entry and 11.20 would have produced a misleading direction failure. Its last_price is the 14.94 premarket print fetched at 06:24 ET, not the 26.53 finnhub close \u2014 the stock gapped roughly 44% on the 09-02 8-K and the pre-gap close would badly misstate where it trades.\n\nRatios were recomputed from the final levels and are not clustered at their floors: 2.48 (KR, 2.0 floor), 2.78 (GLD, 2.5), 3.12 (Fed contract, 2.0), 3.35 (LULU, 2.5). Stops were checked the other way too \u2014 KR risks 3.30 against an ATR14 of 1.2794, or 2.58 ATR, clearing the 2.0 stock-swing floor. LULU and GLD carry no stop by design and are measured against stated bear cases of 88 and 330; each names its invalidation conditions explicitly in key_risk. The Kalshi contract has no fetchable ATR, so its stop_distance check will warn \u2014 there is no equivalent test for a binary. Its expectancy check will also show a large gap between the claimed 57% and the 24.3% random-walk baseline; that gap is structural, because a binary contract is not a random walk. The real claim is 57 against a market price of 47 \u2014 ten points, not thirty-three.\n\nCorrelation cap is reached, not exceeded: GLD, KR and the Fed contract all lean on the sticky-inflation / hawkish-Warsh complex, which is exactly the 3-idea limit. They are not the same bet \u2014 GLD wins on debasement whatever the Fed does, KR on the stagflation consumer, and the event contract specifically if the Fed does NOT hike, so it is partly a hedge on the other two. XLE, XOP and a TLT re-pitch were left out to respect the cap. LULU and RARE are company-specific and uncorrelated with the rest.\n\nRanking note: RARE is placed first despite having no reward-to-risk ratio to rank on. It is an exit rather than new risk, and it is the only line that must be acted on within minutes of the open.\n\nSOURCES THAT FAILED. yahoo returned 429 on quotes and history and 401 on options all morning, so there is no live VIX, DXY, WTI or index-futures quote in this report \u2014 the macro section is built from FRED, finnhub ETF closes and verified press accounts of the 09-02 settle, and no idea was tested against an options-implied move. nasdaq short interest timed out for AVAV, KR and RH. nasdaq history returns only 20 bars regardless of the days requested, which is why IONS, CHWY and SNOW could not be given targets anchored to mid-range resistance. Kalshi's /markets endpoint returns null prices; /markets/trades works and is where today's Fed prices came from. ir.ultragenyx.com and ir.ionis.com timed out (SEC EDGAR and biospace were used instead). market_data.py events returns unrelated cross-category markets with no prices.\n\nOne process failure worth recording: a 'HOLD, no new filing found' line was written on RARE at 06:13, and the 09-02 8-K that ends the thesis was only found at 06:23 from the premarket movers board. The premarket board and a filings check on every open position belong before the new-idea hunt, not after. The superseded block was left in notes.md rather than deleted.\n\nAlso decided: SVRA holds unchanged at published levels (no news, filings re-checked; PDUFA still 2026-11-22). NUVL was surfaced by the MarketBeat FDA calendar as a live 09-18 catalyst and is in fact delisted since 2026-07-15 in GSK's $10.6B takeout \u2014 treat that calendar with suspicion. Rejected with reasons logged in notes.md: XLE, XOP, CIEN, AVAV, RH, SLV, KRE, ASO, SIG, CHWY, DG, INSW, FRO, STNG, DHT and MRK.\n\n=== RED TEAM (phase 2c) ===\nCut one of five. KR was moved to the watchlist: the thesis rests on food-at-home inflation being a revenue tailwind, and BLS/FRED series CUSR0000SAF11 shows food-at-home CPI at +2.61% y/y in July and decelerating from +2.95% in April, with July m/m at -0.07% and a three-month annualised run rate near +0.7% \u2014 the mechanism is running at roughly zero and below the general price level, which is the margin squeeze the idea's own counter_argument named and did not answer. Neither of its two evidence items addressed food inflation. Compounding it, validation had already flagged the 65.40 target at 6.41 ATR against the 6.0 swing guide, and the 2.48:1 does not survive pulling that target in.\n\nThree of the four survivors were downgraded, none killed:\n- LULU 4 -> 3. All three evidence items are about market positioning around tonight's print; none is about the business, and the thesis is a fundamental valuation claim. Also flagged in key_risk: the published 3.35:1 describes the unfilled 108 tranche, while the position actually held rides at 1.71:1 from 120.07 against the 88 bear case \u2014 below the 2.5 long-term floor. Hold is still the right action.\n- KXFEDDECISION-26SEP-H0 4 -> 3, and win_probability 0.57 -> 0.53. The idea framed Friday's payrolls as the last input before the meeting. It is not: August CPI releases 2026-09-11 08:30 ET (verified on the BLS schedule), five days before the FOMC and eight days after this position goes on, and a hot print resolves it against you whatever payrolls do. The 57% was computed off a one-node decision tree. At 53 against a market of 47 the edge is still positive but thin. Conviction also fails the 'is it priced' test \u2014 this is a close reading of a public speech on the most-watched macro binary there is.\n- GLD 3 -> 2. The 288.9t Q2 official-sector figure verified against the World Gold Council, but the same source puts H1 2026 net demand at 345t, the lowest first half since 2022 \u2014 implying roughly 56t in Q1, already far below the 150t line this idea names as its own invalidation threshold \u2014 and guides the full year below 2025. The idea cited only the quarter that helped it. The valuation_anchor also cited a Nasdaq price-history URL as the source for a Deutsche Bank forecast, which it cannot support; that citation is corrected and the 500 is now labelled as this report's own anchor.\n\nRARE survives at rank 1 and was NOT demoted on its four mechanical failures, which are all artifacts of an exit carrying null target and stop against a pre-gap live price. Its 8-K was read directly and every quote checks out verbatim, including 'no differences between the treated and control groups that could support efficacy'. Two changes: the order type went from market to a marketable limit at 13.00 \u2014 a true market order into the opening minutes of a nine-ATR gap is the most expensive way to execute an exit \u2014 and the financing argument the counter_argument leaned on, which had no citation, was verified against the Q2 10-Q and is worse than claimed: $436M of cash at 2026-06-30 against $294M of H1 operating burn, roughly four quarters of runway established before the stock fell 44%. That strengthens the sell case.\n\nCorrelation: with KR cut, the sticky-inflation complex is down to two ideas (GLD and the Fed contract) against a cap of three, so the cap is no longer binding \u2014 KRE and XLE were held out of this report to respect it and could be re-underwritten tomorrow on their merits.\nFour recommendations survive. Only one of them (the Fed contract) is new risk; RARE is a close, and LULU and GLD are management of positions already open.\n\nSOURCE CITATIONS REORDERED BY THE RED TEAM. Two URLs in the original report returned 404 to the validator's HEAD request and would have failed every idea carrying them at the enforcement step: api.nasdaq.com/api/quote/<SYM>/historical (LULU, GLD) and the Kalshi trades endpoint (Fed contract). Neither is hallucinated \u2014 both answer GET and both were re-fetched successfully this morning; they are data APIs that do not serve HEAD. They have been kept in each idea's source list but moved below the reader-facing pages carrying the same series, and the evidence items now cite a page a reader can actually open, with the API endpoint named in the detail text so provenance is not lost. Flagging the underlying issue rather than only working around it: check_sources treats a 404 on HEAD as proof a URL was invented, which is wrong for GET-only endpoints, and it is the reason today's report showed 0 of 5 ideas passing. Validation demoted 1 idea(s) whose numbers did not check out. 3 more carry warnings \u2014 see the validation block on each.",
+  "market_context": {
+    "summary": "The regime is a hawkish Fed against a weakening labour market, and the tape is trading the stagflation rather than the growth. Chair Warsh used his 2026-08-28 Jackson Hole debut to call inflation more concerning than the job market and to say the Fed may have 'work to do', and the CME September hike probability jumped about 20 points in a day to 55.7%. That inverts the jobs-report reaction function ahead of Friday: under this Fed a STRONG August payroll is the hawkish outcome and a soft one lowers hike odds. The labour series going into it is deteriorating \u2014 July printed -23K against +83K expected, May and June were revised down by a combined 103K, and participation at 61.4% is the lowest outside Covid since the mid-1970s. On 09-02 the Dow rose 295 to 53,061.95 with nine of eleven sectors higher and small caps leading (IWM +1.18% against SPY +0.44%), but the composition is the tell: gold settled at a record-area $4,414.60 December and GLD rose 1.52% in the same session the 10-year backed up from 4.75% to 4.79%. Gold rallying alongside a rising long end is a debasement bid, not a duration bid. WTI settled $91.01 on continuing Middle East skirmishes. The 2-year at 4.39% sits 76bp above effective fed funds of 3.63% \u2014 wider than the 61bp of ten days ago \u2014 so the curve is pricing sticky inflation rather than relief.",
+    "regime": "mixed",
+    "levels": {
+      "spx": 7666.6,
+      "ndx": 26217.83,
+      "dow": 53061.95,
+      "spy": 765.16,
+      "qqq": 709.24,
+      "iwm": 294.01,
+      "us10y": 4.79,
+      "us2y": 4.39,
+      "fed_funds_effective": 3.63,
+      "curve_10y_2y": 0.4,
+      "gld": 402.78,
+      "gold_dec_futures": 4414.6,
+      "tlt": 81.95,
+      "wti": 91.01,
+      "brent": 95.63,
+      "btc": 77589,
+      "eth": 2392.95,
+      "sol": 100.14,
+      "unemployment_rate": 4.1,
+      "vix": null,
+      "dxy": null,
+      "note": "Index and commodity settles are verified press accounts of the 2026-09-02 close; ETF and crypto prints are fetched. VIX and DXY unavailable \u2014 yahoo returned 429 all morning."
+    },
+    "econ_calendar": [
+      {
+        "event": "August employment situation (non-farm payrolls)",
+        "datetime_et": "2026-09-04T08:30",
+        "importance": "high",
+        "consensus": "+50-58K payrolls, jobless rate 4.1%, average hourly earnings +0.2% m/m / +3.0% y/y; July actual was -23K"
+      },
+      {
+        "event": "August CPI (added by red team \u2014 sits between the payroll print and the FOMC)",
+        "datetime_et": "2026-09-11T08:30",
+        "importance": "high",
+        "consensus": "No consensus captured this morning. Warsh put 12-month PCE at 3.7% against a six-month run-rate of 4.1%. Food-at-home CPI ran +2.61% y/y in July, decelerating."
+      },
+      {
+        "event": "FOMC rate decision",
+        "datetime_et": "2026-09-16T14:00",
+        "importance": "high",
+        "consensus": "Kalshi trades a hold at 47c against a 25bp hike at 52c; CME FedWatch had the hike at 55.7% after Warsh spoke"
+      },
+      {
+        "event": "lululemon athletica Q2 FY26 earnings (open position)",
+        "datetime_et": "2026-09-03T16:05",
+        "importance": "high",
+        "consensus": "EPS 1.8304 on revenue 2.507bn; FY26 EPS guidance 10.95-11.15 is the number that matters"
+      },
+      {
+        "event": "Kroger Q2 FY26 earnings",
+        "datetime_et": "2026-09-09T08:30",
+        "importance": "medium",
+        "consensus": "EPS 1.0897 on revenue 35.639bn"
+      },
+      {
+        "event": "Ultragenyx UX111 PDUFA action date",
+        "datetime_et": "2026-09-19",
+        "importance": "medium",
+        "consensus": null
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "rank": 1,
+      "instrument": "lululemon athletica inc.",
+      "symbol": "LULU",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "long_term",
+      "conviction": 3,
+      "last_price": 120.07,
+      "last_price_asof": "2026-09-02T16:00:00-04:00",
+      "price_source": "finnhub previous close (2026-09-02 settle; market shut, not stale)",
+      "entry": {
+        "ideal": 108.0,
+        "zone_low": 104.0,
+        "zone_high": 114.0,
+        "order_type": "limit",
+        "condition": "POST-PRINT ONLY. The Q2 FY26 result lands TODAY 2026-09-03 after the close. Do not add a single share before 16:05 ET. First add tranche 110-114 only if FY26 guidance is reaffirmed; second tranche 104-108 if the market overshoots a soft quarter. A second guidance cut means stand down entirely and re-underwrite."
+      },
+      "exit": {
+        "target": 175.0,
+        "target_2": 210.0,
+        "scale_plan": "Continuing position, not a new one - the 2026-08-22 line at 115.00 rides to 175. Second target 210 on an 18-24 month view."
+      },
+      "stop": null,
+      "risk_reward": 3.35,
+      "win_probability": null,
+      "position_size_pct": 2,
+      "risk_tier": "standard",
+      "catalyst": {
+        "event": "POSITION UPDATE to the open 2026-08-22 long at 115.00, last close 120.07 (+4.4%). Q2 FY26 earnings TODAY, 2026-09-03 after the close - confirmed this morning on the fetched finnhub earnings calendar as 09-03 amc, consensus EPS 1.8304 on revenue 2.507bn. This is the guidance event the whole position has been waiting on.",
+        "datetime_et": "2026-09-03T16:05",
+        "action": "HOLD at current size through the print. Do not add, do not trim. The decision is the guidance sentence, not the quarter - reassess tomorrow morning against FY26 EPS guidance of 10.95-11.15.",
+        "wait": true
+      },
+      "thesis": "The only thing that changed since yesterday is that the binary is now hours away rather than a session away, and that is exactly why the action is to sit still. At 120.07 LULU trades near 10.9x the low end of its own already-reset FY26 guidance of 10.95-11.15 EPS, a multiple for a broken retailer rather than one still earning 55%-plus gross margins with no meaningful net debt. Because June already cut the number roughly 10%, tonight is judged against a bar management set itself rather than the pre-cut consensus that drove the de-rating.",
+      "key_risk": "The risk is the sentence after the quarter, not the quarter. A second consecutive FY26 guidance cut converts a de-rated compounder into a broken one, and the sell side is already leaning that way - the recommendation trend fetched this morning shows 1 strong buy and 1 buy against 31 hold, 5 sell and 2 strong sell, with the bullish share down 15.5 points since June. With a 4.56 ATR (3.79% of price) and the 150-day low at 104.44 only 13% below, a bad guide clears that low in one session. INVALIDATION, since there is no stop by design: a second reduction to FY26 EPS guidance, FY27 EPS guided below 9.00, or gross margin below 52% for two consecutive quarters. Bear-case value 88 (11x on 8.00 of EPS), against which the 175 target is 3.35:1 from the 108 add level.\n\nRED TEAM - READ THE RATIO CAREFULLY BEFORE SIZING. The 3.35:1 published on this idea describes the 108 add tranche, which is 10% below the market and has not filled and may never fill. The position actually on the books does not pay that. From the 120.07 last close, 175 against the 88 bear case is 54.93 up versus 32.07 down, or 1.71:1 - BELOW the 2.5 long-term floor this report enforces. Nothing about that is hidden or wrong, but a reader who sizes off the headline number is sizing off a trade that does not exist yet. The honest statement is: hold what you own at 1.71:1 because you already own it, and only the 104-114 tranche is worth new money.\n\nRED TEAM lowered conviction from 4 to 3. All three evidence items - a calendar entry, a sell-side sentiment reading, and a moving-average location - are about the market's positioning around the print. Not one of them is evidence about the business, and the thesis is a fundamental valuation claim. The outcome resolves in ten hours on a guidance sentence none of the listed evidence can forecast, which is a 3, not a 4.",
+      "counter_argument": "The strongest case against is that the de-rating is demand-driven, not tariff-driven - management itself blamed negative brand commentary and weak product launches, which no amount of cost control fixes and which a cheap multiple does not protect you from. If that is right, 10.9x is not cheap, it is a value trap on an earnings base that has further to fall.",
+      "evidence": [
+        {
+          "kind": "dated_catalyst",
+          "detail": "Q2 FY26 earnings confirmed for 2026-09-03 after the close on the finnhub earnings calendar fetched at 06:07 ET today, est EPS 1.8304 on revenue 2.507bn",
+          "source": "https://finnhub.io/api/v1/calendar/earnings"
+        },
+        {
+          "kind": "positioning",
+          "detail": "Analyst recommendation trend fetched today: bullish share 5.0%, down 15.5 points from June (was 4 strong buy / 4 buy, now 1 / 1 against 31 hold, 5 sell, 2 strong sell). Revision direction deteriorating - the sell side is positioned for a cut, which is what makes a reaffirmation move the stock.",
+          "source": "https://finnhub.io/api/v1/stock/recommendation?symbol=LULU"
+        },
+        {
+          "kind": "technical_level",
+          "detail": "Fetched 150-day history: last close 120.07 sits between the 50-day 118.46 and the 20-day 120.46, coiled at the middle of a 104.44-148.69 range with ATR14 4.5555 (3.79%). $384M average daily dollar volume. (Fetched from the api.nasdaq.com/api/quote/<SYM>/historical endpoint; the citation points at the reader-facing page for the same series because that API answers GET but not HEAD.)",
+          "source": "https://stockanalysis.com/stocks/lulu/"
+        }
+      ],
+      "sources": [
+        "https://stockanalysis.com/stocks/lulu/",
+        "https://stockanalysis.com/stocks/lulu/forecast/",
+        "https://corporate.lululemon.com/investors",
+        "https://finnhub.io/api/v1/calendar/earnings",
+        "https://finnhub.io/api/v1/stock/recommendation?symbol=LULU",
+        "https://api.nasdaq.com/api/quote/LULU/historical"
+      ],
+      "bear_case_price": 88.0,
+      "avg_dollar_volume": 384000000,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 3.35,
+        "claimed_risk_reward": 3.35,
+        "breakeven_probability": 0.23,
+        "stop_atr_multiple": null,
+        "live_price": 120.07,
+        "live_price_asof": "2026-09-02T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 886.2,
+        "bid": 120.53,
+        "ask": 120.69,
+        "spread_pct": 0.133,
+        "atr14": 4.5555,
+        "checked_at_et": "2026-09-03T06:46:26-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 3.35:1 clears the 2.5:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 108.0 is -10.1% from live 120.07"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-09-03 is ahead of us"
+          },
+          {
+            "check": "earnings_date",
+            "status": "pass",
+            "detail": "earnings date 2026-09-03 confirmed against the calendar"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "long-term target is valuation-anchored, not ATR-bound"
+          },
+          {
+            "check": "stop_distance",
+            "status": "pass",
+            "detail": "long-term downside is a bear case, not a stop \u2014 no ATR floor applies"
+          },
+          {
+            "check": "expectancy",
+            "status": "warn",
+            "detail": "no win_probability stated; this idea needs better than 23% to break even at 3.35:1"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-09-02T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "pass",
+            "detail": "bid/ask spread 0.13%; the round trip costs 0% of the target move"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "2% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 3 rests on 3 independent kinds: dated_catalyst, positioning, technical_level"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "1 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    },
+    {
+      "rank": 2,
+      "instrument": "Fed rate decision in September 2026 - Fed maintains rate (no change to the target range at the 2026-09-16 FOMC)",
+      "symbol": "KXFEDDECISION-26SEP-H0",
+      "asset_class": "event",
+      "venue": "Robinhood Prediction Markets",
+      "direction": "yes",
+      "horizon": "swing",
+      "conviction": 3,
+      "last_price": 47,
+      "last_price_asof": "2026-09-03T06:12:00-04:00",
+      "price_source": "Kalshi /markets/trades last print, 06:12 ET (the /markets listing returns null prices)",
+      "entry": {
+        "ideal": 47,
+        "zone_low": 44,
+        "zone_high": 50,
+        "order_type": "limit",
+        "condition": "Enter BEFORE the 09-04 08:30 ET payrolls print, not after - the whole edge is that the print is the input the market has not yet seen. Do not pay above 50. If August payrolls come in above roughly +100K with the jobless rate at or below 4.1%, the thesis is beaten on its own terms and the position should be closed that morning rather than held to resolution."
+      },
+      "exit": {
+        "target": 100,
+        "target_2": null,
+        "scale_plan": "Two ways out. Hold to the 2026-09-16 resolution for the full 100, or sell into a repricing above 70 if the payrolls print is weak enough to move the market that far in one session - a 47-to-70 exit banks the probability disagreement without carrying two weeks of headline risk. Taking the 70 is the better risk-adjusted trade if it is offered."
+      },
+      "stop": 30,
+      "risk_reward": 3.12,
+      "win_probability": 0.53,
+      "position_size_pct": 1.5,
+      "risk_tier": "speculative",
+      "catalyst": {
+        "event": "Two dated events, in order. (1) August employment situation, Friday 2026-09-04 08:30 ET - consensus +50-58K payrolls, jobless rate 4.1%, average hourly earnings +0.2% m/m. (2) FOMC decision Wednesday 2026-09-16, which is what this contract resolves on; the Kalshi market closes 2026-09-16T17:59Z.",
+        "datetime_et": "2026-09-04T08:30",
+        "action": "Buy YES at 44-50 today, ahead of Friday's payrolls. Resolution is the FOMC statement on 09-16. This is exitable before resolution, so it is not a hold-to-expiry commitment, but size it as though it were.",
+        "wait": false
+      },
+      "thesis": "The market prices a September hold at 47c and a 25bp hike at 52c (Kalshi last trades 06:12 and 05:41 ET today; Robinhood displays the hike side at 56%). My estimate for a hold is 57%, and the disagreement is about one specific sentence in Warsh's Jackson Hole speech. He did not argue that the Fed should hike regardless - he conditioned it: \"Labor markets are quite stable. The jobless rate, at 4.1 percent, remains low by historical standards... I believe the labor markets are consistent with full employment.\" The hawkishness is explicitly premised on full employment holding, and that premise gets tested 12 days before the meeting by a labour series that has been breaking down - July payrolls printed MINUS 23K against +83K expected, May and June were revised down by a combined 103K, and participation at 61.4% is the lowest outside Covid since the mid-1970s. Three consecutive months of downward revisions is not noise, it is a series being marked down, and a first-time chair hiking into a deteriorating labour market at his opening decision is a harder act than the 52c hike price implies.",
+      "key_risk": "The inflation side of his mandate is genuinely bad and it is accelerating, which is the whole reason the hike is priced above even money: Warsh gave 12-month PCE at 3.7 percent against a six-month rate of 4.1 percent, so the recent run-rate is worse than the year, and he said the Fed has \"work to do\" if underlying inflation is not moving to target \"clearly and at sufficient speed\". If August payrolls simply print in line at +55K with the jobless rate at 4.1, nothing in his stated premise breaks and this contract goes to zero. Note also that he explicitly refused forward guidance and reaction functions - \"the practice has overstayed its welcome\" - which means there is no rule to reason from and the September outcome is less forecastable than in a normal cycle. Sized at 1.5% for that reason. Robinhood's probability-weighted commission (5% Gold, 10% standard, since 2026-06-01) is a real drag on a 47c entry and is not in these numbers.\n\nRED TEAM - THE RISK THIS IDEA DID NOT MENTION, AND IT IS THE BIGGEST ONE. The whole recommendation is built around Friday's payrolls, as though that were the last input before the meeting. It is not. The August CPI report is released 2026-09-11 at 08:30 ET - verified on the BLS release schedule - five days before the 09-16 FOMC and eight days AFTER this position is opened. On a contract whose own stated risk is the inflation side of the mandate, and against a chair who put the six-month PCE run-rate at 4.1%, a hot August CPI resolves this against you no matter what payrolls do on Friday. The decision tree behind the 57% estimate had only one node in it. That is why the red team cut the estimate to 53%: not because the payrolls reasoning is wrong, but because the probability was computed as if 09-11 did not exist. At 53 against a market of 47 the expectancy is still positive - roughly six points gross, less the Robinhood commission above - but it is a thin edge, not the ten-point one originally claimed, and it should be sized and held as such. If August core CPI prints at or above 0.4% m/m, close the position on 09-11 rather than carrying it into the meeting.\n\nRED TEAM lowered conviction from 4 to 3. The claimed edge is a close reading of a speech published on federalreserve.gov and parsed by every rates desk in the market, on the single most-watched macro binary there is - a 10,815-contract print crossed at 47c this morning. The conditioning-language argument is genuine and specific, which is why the idea survives, but it is not private information and it does not support a 4.",
+      "counter_argument": "The strongest case against is credibility: a chair who used his Jackson Hole debut to say the central bank owns \"the responsibility for 65 months of sustained, elevated inflation\" has staked his reputation on acting, and backing off at the first meeting because of one soft payroll number would read as exactly the reactive Fed he criticised. The answer is that this cuts both ways on the same evidence - a chair who rejects forward guidance has, by construction, preserved the freedom not to hike, and he made a point of saying the labour market is fine, which is a condition he would have had no reason to state if it were irrelevant to the decision. It is also worth being explicit that the reward-to-risk baseline printed by validation overstates the claim here: a binary contract is not a random walk, so the honest edge is 57 against 47 - ten points - not the 33 points that 1/(1+R:R) implies.",
+      "evidence": [
+        {
+          "kind": "dated_catalyst",
+          "detail": "FOMC decision 2026-09-16 (Kalshi market close_time 2026-09-16T17:59:00Z, fetched today) and the August employment situation 2026-09-04 08:30 ET, consensus +50-58K / 4.1% / +0.2% m/m AHE. RED TEAM ADDED the third and previously missing date: August CPI is released 2026-09-11 08:30 ET per the BLS release schedule, between the payroll print and the meeting.",
+          "source": "https://www.bls.gov/schedule/news_release/cpi.htm"
+        },
+        {
+          "kind": "primary_document",
+          "detail": "Read Warsh's 2026-08-28 Jackson Hole keynote on federalreserve.gov. Key conditioning language: 'Labor markets are quite stable. The jobless rate, at 4.1 percent, remains low by historical standards... I believe the labor markets are consistent with full employment.' Against it: 12-month PCE 3.7%, six-month 4.1%, and 'Otherwise, we have work to do.' He explicitly rejects forward guidance and reaction functions.",
+          "source": "https://www.federalreserve.gov/newsevents/speech/warsh20260828a.htm"
+        },
+        {
+          "kind": "positioning",
+          "detail": "Kalshi last trades fetched at 06:15 ET today across the whole curve: SEP hold 47c / hike-25 52c / hike-over-25 1c / cut 1c; OCT hold 69c / hike-25 28c; DEC hold 48c / hike-25 42c. CME FedWatch had the September hike at 55.7% immediately after Warsh spoke, ~20pts higher in a day. The market is priced for one hike, most likely September, and it moved almost entirely on a speech rather than on data. (Fetched live from api.elections.kalshi.com/trade-api/v2/markets/trades; re-verified by the red team at 06:40 ET, with a 10,815-contract print crossing at 47c. The citation points at the Robinhood event page because the Kalshi API answers GET but not HEAD.)",
+          "source": "https://robinhood.com/us/en/prediction-markets/economics/events/fed-rate-decision-in-september-2026-sep-16-2026/"
+        },
+        {
+          "kind": "counter_argument_answered",
+          "detail": "The credibility objection is answered with his own construction: rejecting forward guidance preserves the optionality not to hike, and he volunteered the full-employment condition unprompted. The market-availability objection is answered too - Robinhood lists this exact event, 'Fed rate decision in September 2026', in its economics prediction markets.",
+          "source": "https://robinhood.com/us/en/prediction-markets/economics/events/fed-rate-decision-in-september-2026-sep-16-2026/"
+        }
+      ],
+      "sources": [
+        "https://www.federalreserve.gov/newsevents/speech/warsh20260828a.htm",
+        "https://robinhood.com/us/en/prediction-markets/economics/events/fed-rate-decision-in-september-2026-sep-16-2026/",
+        "https://www.cnbc.com/2026/08/28/kevin-warsh-jackson-hole-federal-reserve-inflation.html",
+        "https://www.bls.gov/schedule/news_release/cpi.htm",
+        "https://www.bls.gov/news.release/empsit.nr0.htm",
+        "https://api.elections.kalshi.com/trade-api/v2/markets/trades?ticker=KXFEDDECISION-26SEP-H0",
+        "https://www.top1markets.com/news/august-2026-jobs-report-nfp-preview"
+      ],
+      "unit": "cents",
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 3.12,
+        "claimed_risk_reward": 3.12,
+        "breakeven_probability": 0.243,
+        "stated_win_probability": 0.53,
+        "expectancy_r": 1.184,
+        "claimed_edge": 0.287,
+        "stop_atr_multiple": null,
+        "live_price": null,
+        "live_price_asof": null,
+        "market_session": null,
+        "price_age_minutes": null,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": null,
+        "checked_at_et": "2026-09-03T06:46:27-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 3.12:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "warn",
+            "detail": "no live price available to compare against"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-09-04 is ahead of us"
+          },
+          {
+            "check": "earnings_date",
+            "status": "warn",
+            "detail": "claims an earnings catalyst but KXFEDDECISION-26SEP-H0 is not on the fetched calendar"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "warn",
+            "detail": "no ATR available to size the move against"
+          },
+          {
+            "check": "stop_distance",
+            "status": "warn",
+            "detail": "no ATR available to measure the stop against"
+          },
+          {
+            "check": "expectancy",
+            "status": "warn",
+            "detail": "53% claimed vs 24% break-even at 3.12:1 \u2014 expectancy +1.18R \u2014 a +29% edge over a coin flip is a large claim; the thesis has to carry it"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "1.5% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 3 rests on 4 independent kinds: counter_argument_answered, dated_catalyst, positioning, primary_document"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "1 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    },
+    {
+      "rank": 3,
+      "instrument": "SPDR Gold Shares",
+      "symbol": "GLD",
+      "asset_class": "etf",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "long_term",
+      "conviction": 3,
+      "last_price": 402.78,
+      "last_price_asof": "2026-09-02T16:00:00-04:00",
+      "price_source": "finnhub previous close (2026-09-02 settle; market shut, not stale)",
+      "entry": {
+        "ideal": 375.0,
+        "zone_low": 363.5,
+        "zone_high": 392.0,
+        "order_type": "limit",
+        "condition": "AMENDED ADD LEVEL. The 405 rung has filled - the position is open. Remaining adds only at 392 and 375. Do NOT add at 402: at that price the 500 target pays 1.7:1 against the 330 bear case and the 2.5 long-term floor is not met. At 375 it pays 2.8:1. The 375 rung sits just above the 150-day low of 363.32."
+      },
+      "exit": {
+        "target": 500.0,
+        "target_2": 583.0,
+        "scale_plan": "Trim a third at 500. Hold the balance toward 583 only while quarterly central-bank purchases stay above 200 tonnes."
+      },
+      "stop": null,
+      "risk_reward": 2.78,
+      "win_probability": null,
+      "position_size_pct": 3,
+      "risk_tier": "standard",
+      "catalyst": {
+        "event": "POSITION UPDATE to the open 2026-08-22 long at 398.00, last close 402.78 (+1.2%). What changed: the accumulation plan published on 08-22 called for rungs at 405 / 392 / 375 while gold sat at 428, and the market has now delivered the first of them - GLD traded 428.14 on 08-25 down to 396.45 on 09-01, an 8% drawdown in six sessions, and closed back at 402.78 (+1.52%) on 09-02. Driver is unchanged and is monetary, not dated: official-sector accumulation of a record 288.9 tonnes in Q2 2026, bought into falling prices.",
+        "datetime_et": null,
+        "action": "HOLD the filled line. Place the remaining two add tranches as resting limits at 392 and 375 and let them come to you. Add on any macro-driven drawdown under 375. No urgency and no chasing - a 402 add is a worse trade than the 398 already on.",
+        "wait": true
+      },
+      "thesis": "The 08-22 plan asked for a pullback and got one: an 8% six-session drawdown from 428.14 to 396.45 filled the first rung and left the other two live. Nothing about the driver changed in that drawdown, which is the point - reserve managers bought a record 288.9 tonnes in Q2 2026 while the price was falling, and a price-insensitive official bid is the one form of demand that does not evaporate on an 8% dip. The regime still confirms it: the 2-year at 4.39% (FRED, 09-01) sits 76bp above effective fed funds of 3.63%, so the curve is pricing sticky inflation rather than relief, and the 10-year backed up from 4.75% to 4.79% into a session where gold rose 1.52%. Gold rallying alongside a rising long end is a debasement bid, not a duration bid.",
+      "key_risk": "The immediate risk is discipline, not thesis: with the position already open and green, the temptation is to add at 402 into a bounce, and at 402 the arithmetic does not pay - 1.7:1 against the bear case versus the 2.5 floor. The lower rungs may also simply never trade. INVALIDATION, since there is no stop by design: quarterly central-bank purchases below roughly 150 tonnes for two consecutive quarters removes the price-insensitive bid that is the whole thesis, as would the 2-year yield falling back below effective fed funds, which would mean the market has stopped pricing sticky inflation. Bear case 330 per share, roughly $3,600/oz - gold giving back the entire 2026 official-sector premium.\n\nRED TEAM - THE INVALIDATION IS ONE QUARTER AWAY, NOT REMOTE, AND THE IDEA CITED ONLY THE QUARTER THAT HELPED IT. The 288.9 tonne Q2 figure is real and was verified against the World Gold Council's Q2 2026 Gold Demand Trends: 289t, +62% y/y, the strongest Q2 in the series, bought into a falling price. But the same report puts official-sector H1 2026 net demand at 345t, which is THE LOWEST FIRST HALF SINCE 2022 - and that arithmetic makes Q1 2026 roughly 56 tonnes. Fifty-six tonnes is already far below the 150-tonne line this idea names as its own invalidation threshold. One more soft quarter and the thesis is invalidated by the rule it wrote for itself. The WGC also guides the full year BELOW 2025. So the honest characterisation of the official-sector bid is large, price-insensitive and volatile quarter to quarter, on a declining annual trend - not the accelerating one-way bid the thesis implies. RED TEAM held conviction at 3 rather than cutting it, and the reasoning matters: the first pass cut it to 2, but conviction 2 is the lottery-ticket band and carries a 1% position ceiling, which would have implied trimming an open 3% position. Nothing found here justifies trimming what is already held - one of the thesis's two legs is weaker than it was presented, not broken. So the score stands at 3 and the correction is carried in the evidence instead. It was also lowered for the fact that the valuation_anchor evidence cited a Nasdaq price-history URL for a Deutsche Bank 2027 forecast, which that URL cannot support. What survives unqualified is the tape argument, which is independently verified: gold rose 1.52% on 09-02 into a 10-year backing up from 4.75% to 4.79%. The rungs at 392 and 375 remain correct precisely because they demand a better price for a thinner thesis; the instruction not to add at 402 is now stronger, not weaker.",
+      "counter_argument": "The strongest case against is that a 20.98% drawdown from the 509.70 range high is what a topping pattern looks like, and that the record central-bank quarter is a lagging datapoint reported after the fact - reserve managers can and do pause. The answer is the composition of the tape rather than the level: on 09-02 gold rose 1.52% on the same session the 10-year yield rose, which is not how gold trades when the bid is a rate-cut bet, and is how it trades when the bid is a reserve-diversification one.",
+      "evidence": [
+        {
+          "kind": "technical_level",
+          "detail": "Fetched 150-day history: close 402.78, ATR14 8.0507 (2.0%), sma20 408.451, sma50 387.2444, range 363.32-509.70, -20.98% off the high. The 375 add rung sits between the 50-day at 387.24 and the 150-day low at 363.32; the 08-25 to 09-01 leg ran 428.14 to 396.45. (Fetched from the api.nasdaq.com/api/quote/<SYM>/historical endpoint; the citation points at the reader-facing page for the same series because that API answers GET but not HEAD.)",
+          "source": "https://stockanalysis.com/etf/gld/"
+        },
+        {
+          "kind": "positioning",
+          "detail": "Macro regime fetched from FRED this morning: US2Y 4.39% (09-01, prev 4.34) against effective fed funds 3.63% - a 76bp gap, wider than the 61bp noted on 08-22. US10Y 4.79% (prev 4.75), 10y-2y +0.40. The curve is pricing sticky inflation, and gold closed +1.52% on 09-02 into that backup.",
+          "source": "https://fred.stlouisfed.org/series/DGS2"
+        },
+        {
+          "kind": "valuation_anchor",
+          "detail": "Bear case priced at 330/share (~$3,600/oz, the entire 2026 official-sector premium given back) against a 500 target (~$5,150/oz) - 2.8:1 from the 375 add rung, 1.7:1 from today 402.78, which is why the add level is amended down rather than the target up. RED TEAM: the ratio arithmetic is correct and recomputes, but this item originally cited a Nasdaq price-history URL as the source for a Deutsche Bank 2027 price forecast, which that URL does not contain. The 500 target should be read as this report's own valuation anchor, not as a sourced sell-side forecast.",
+          "source": "https://www.gold.org/goldhub/research/gold-demand-trends/gold-demand-trends-q2-2026/central-banks"
+        },
+        {
+          "kind": "counter_argument_answered",
+          "detail": "RED TEAM ADDED, and it cuts against the idea. The 288.9t Q2 official-sector figure is confirmed by the World Gold Council (289t, +62% y/y, strongest Q2 in the series, bought into a 16% price drop). The same source shows H1 2026 net demand of 345t was the lowest first half since 2022, implying roughly 56t in Q1, and guides the full year below 2025. The record quarter is therefore a rebound off a weak one rather than an acceleration, and the price-insensitive bid the thesis depends on is real but trending down year on year.",
+          "source": "https://www.gold.org/goldhub/research/gold-demand-trends/gold-demand-trends-q2-2026"
+        }
+      ],
+      "sources": [
+        "https://www.gold.org/goldhub/research/gold-demand-trends/gold-demand-trends-q2-2026",
+        "https://www.gold.org/goldhub/research/gold-demand-trends/gold-demand-trends-q2-2026/central-banks",
+        "https://stockanalysis.com/etf/gld/",
+        "https://fred.stlouisfed.org/series/DGS2",
+        "https://fred.stlouisfed.org/series/DFF",
+        "https://api.nasdaq.com/api/quote/GLD/historical"
+      ],
+      "bear_case_price": 330.0,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.78,
+        "claimed_risk_reward": 2.78,
+        "breakeven_probability": 0.265,
+        "stop_atr_multiple": null,
+        "live_price": 402.78,
+        "live_price_asof": "2026-09-02T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 886.3,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": 8.0507,
+        "checked_at_et": "2026-09-03T06:46:37-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.78:1 clears the 2.5:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 375.0 is -6.9% from live 402.78"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "long-term idea, no dated event expected"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "long-term target is valuation-anchored, not ATR-bound"
+          },
+          {
+            "check": "stop_distance",
+            "status": "pass",
+            "detail": "long-term downside is a bear case, not a stop \u2014 no ATR floor applies"
+          },
+          {
+            "check": "expectancy",
+            "status": "warn",
+            "detail": "no win_probability stated; this idea needs better than 26% to break even at 2.78:1"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-09-02T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "no bid/ask available (normal outside regular hours)"
+          },
+          {
+            "check": "instrument_choice",
+            "status": "pass",
+            "detail": "GLD spot is correct for a long-term hold; futures roll costs make multi-year contract exposure awkward"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "3% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 3 rests on 4 independent kinds: counter_argument_answered, positioning, technical_level, valuation_anchor"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "1 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    }
+  ],
+  "watchlist": [
+    {
+      "symbol": "RARE",
+      "instrument": "Ultragenyx Pharmaceutical Inc. \u2014 DUPLICATE OF THE RANK 1 CLOSE INSTRUCTION, KEPT ON PURPOSE",
+      "note": "THIS IS NOT A WATCHLIST IDEA AND NOT A NEW TRADE. It is a deliberate duplicate of the rank 1 recommendation, written here by the red team because the enforcement step is likely to delete that recommendation and replace it with a generic 'numbers did not check out' line. THE INSTRUCTION IS: SELL THE FULL 2026-08-31 RARE LONG TODAY, using a sell limit at 13.00 (below the 14.70 premarket bid, so it fills like a market order but caps an opening air pocket). Ultragenyx filed an 8-K on 2026-09-02 disclosing that the Phase 3 Aspire study of apazunersen in Angelman syndrome missed both its primary and key secondary endpoints, with 'no differences between the treated and control groups that could support efficacy'; the company said it will implement significant expense reductions. The stock is quoted 14.94 premarket, about -44%, and the 22.90 stop was gapped through by roughly nine ATRs, so it never had a chance to execute. The 8-K was read directly and every quote above is verbatim. If the rank 1 entry is missing from the report you are reading, act on this. Reason it fails validation: an exit carries no target and no stop, so direction_consistency, risk_reward and stop_distance are undefined, and entry_vs_live compares the 14.94 post-gap price against a stale 26.53 pre-gap close. All four are the shape of a close instruction, not bad numbers.",
+      "trigger": "Act at the open. Any later RARE trade is a new idea underwritten from flat at the post-gap price."
+    },
+    {
+      "symbol": "KR",
+      "instrument": "The Kroger Co. \u2014 CUT BY RED TEAM",
+      "demoted_from_rank": 5,
+      "demotion_reason": "The mechanism the thesis rests on is contradicted by the primary data, and the reward-to-risk only clears because the target sits beyond the ATR guide.",
+      "note": "Cut, not deferred on price. The thesis was 'a grocer is structurally long stagflation, because food-at-home inflation is revenue' \u2014 and food-at-home inflation is not doing what the thesis needs. BLS series CUSR0000SAF11 (CPI, Food at Home, seasonally adjusted), pulled from FRED this morning: +2.61% y/y in July 2026, DECELERATING from +2.95% in April (2.95 -> 2.73 -> 2.70 -> 2.61). Month-over-month July was -0.07%, with May +0.06% and June +0.19% \u2014 a three-month annualised run rate near +0.7%. Food-at-home prices are flat and running far below both headline PCE at 3.7% and the six-month PCE run-rate of 4.1% that Warsh cited. That is the grocer getting cost inflation without pricing power, which is exactly the squeeze the idea's own counter_argument named ('grocers were the worst-performing defensive of the 2021-23 inflation, because they eat cost inflation for two to three quarters before they pass it on') and then declined to answer on the merits, answering on entry level instead. Not one of the two evidence items \u2014 an earnings date and a moving-average chart \u2014 spoke to food-at-home inflation at all, so the load-bearing claim was carried entirely by narrative. Two secondary problems compound it: validation flagged the 65.40 target at 6.41 ATR against the 6.0 guide for a swing, and the 2.48:1 ratio does not survive pulling that target back to anything nearer (65.40 is the honest 50% retracement of 76.58-54.15, but a nearer target puts the ratio at ~1.9:1, under the 2.0 floor) \u2014 so the ratio is an artifact of a target the ATR check already called optimistic. The idea's own key_risk concedes there is no insider buying (zero purchases in six months against one $1.76M sale) and that the analyst recommendation trend has not moved a notch in four months. The stop at 2.58 ATR was genuinely well set, and the business may still be fine; the trade as underwritten is not.",
+      "trigger": "The August CPI release on 2026-09-11 08:30 ET showing food-at-home inflation reaccelerating \u2014 a m/m print at or above +0.3% would restore the mechanism. Failing that, a fresh underwrite near the 54.15 range low, where a nearer and more reachable target clears the 2.0 swing floor without needing 6.4 ATR of travel."
+    },
+    {
+      "symbol": "IONS",
+      "instrument": "Ionis Pharmaceuticals, Inc.",
+      "note": "Good business, levels do not clear the floors. Three dated catalysts inside two months \u2014 zilganersen PDUFA (Alexander disease, Priority Review) 2026-09-22, bepirovirsen PDUFA (chronic hep B, GSK-partnered) 2026-10-26, and pelacarsen HORIZON Lp(a) outcomes in 2026. CSO Michael Hayden bought 20,000 shares open-market for $1.06M on 07-30 and 07-31 near the low, and the stock is -22.81% over six months against XBI +30.81% while turning up over the last month. It is not captured because no honest level combination works: entry 60.00 at the 59.70-59.78 shelf with a 55.60 stop gives 2.36 ATR of risk and only 1.80:1 against the 67.94 retracement target, and dropping the entry either tightens the stop inside 2.0 ATR or worsens the ratio to 1.61.",
+      "trigger": "Under 57, where the same 67.94 target clears the 2.0 swing floor without walking the stop in."
+    },
+    {
+      "symbol": "SNOW",
+      "instrument": "Snowflake Inc.",
+      "note": "Rejected on the target, not the business. Q2 FY27 on 09-02 put up product revenue of $1.49B (+37% y/y), narrowed the net loss to $191.7M, raised FY27 product revenue guidance to $6.07B from $5.84B and the non-GAAP operating margin guide to 14.5%, and the stock gapped to 379.00 premarket, +23.9% and above its 341.95 52-week high. The only structurally honest version \u2014 buy 345 above the prior high, stop 304 below the gap origin \u2014 needs a 427 target to clear 2.0, which is $148B, or 24.4x the raised product revenue guide against 17.5x at last night's close. That is a 40% multiple expansion assumed into existence, and there is no price history above 341.95 to anchor it.",
+      "trigger": "A base built above 341.95 over the next week, which would make the same stop tighter in percentage terms and may work at an entry near 350-360."
+    },
+    {
+      "symbol": "NUVL",
+      "instrument": "Nuvalent, Inc. \u2014 NOT TRADEABLE",
+      "note": "Do not trade. The MarketBeat FDA calendar still lists a zidesamtinib PDUFA on 2026-09-18 as a live catalyst; the company was delisted on 2026-07-15 in GSK's $10.6B takeout. Recorded so the same stale calendar entry does not surface it again.",
+      "trigger": "None. This is a correction, not a setup."
+    },
+    {
+      "symbol": "KXFEDDECISION-26SEP-H25",
+      "instrument": "Fed hikes 25bp in September 2026 \u2014 STAND DOWN",
+      "note": "Cancel the resting YES @32 published 2026-08-22. The market is now 52c after the Warsh repricing, so the limit will not fill, and today's report deliberately takes the other side of this contract at 47c on the hold. Leaving both live would be holding two sides of the same event.",
+      "trigger": "None \u2014 this order should be cancelled."
+    },
+    {
+      "symbol": "KXFEDDECISION-26OCT-H25",
+      "instrument": "Fed hikes 25bp in October 2026",
+      "note": "Leave live. The YES @28 published 2026-09-02 is at market and is NOT contradicted by today's September hold position \u2014 the October curve trades a hold at 69c and a hike at 28c, a different question on a different date.",
+      "trigger": "Unchanged; the resting order stands."
+    },
+    {
+      "symbol": "BTC",
+      "instrument": "Bitcoin \u2014 STAND DOWN",
+      "note": "The SELL @63,400 published 2026-08-16 sits roughly 18% below a spot of 77,589 this morning. It is not a live order, it is a bid on a breakdown that never came.",
+      "trigger": "Re-underwrite from the current price if a short case still exists; do not leave the stale level resting."
+    },
+    {
+      "symbol": "/MBTU6",
+      "instrument": "Micro Bitcoin futures \u2014 STAND DOWN",
+      "note": "Same problem as the spot order: SHORT @64,340 from 2026-08-18 is roughly 18% below a 77,589 spot and will not fill.",
+      "trigger": "Re-underwrite from the current price; do not leave the stale level resting."
+    },
+    {
+      "symbol": "KRE",
+      "instrument": "SPDR S&P Regional Banking ETF \u2014 stale entry",
+      "note": "The BUY @76.80 published 2026-08-15 needs a 3.4% rally to fill against a 74.24 close that sits below both the 20- and 50-day. Left out of today's report to respect the 3-idea correlation cap on the rates complex.",
+      "trigger": "A reclaim of the 20- and 50-day, or a fresh underwrite at the current level."
+    },
+    {
+      "symbol": "XLE",
+      "instrument": "Energy Select Sector SPDR \u2014 stale entry",
+      "note": "The BUY @63.00 published 2026-08-15 is far below a 65.10 close that is itself a 150-day closing high. Crude at $91 is real but the level is gone, and a re-pitch was deliberately left out to respect the correlation cap.",
+      "trigger": "A pullback to the published level, or a fresh underwrite with the cap freed up."
+    },
+    {
+      "symbol": "DG",
+      "instrument": "Dollar General Corporation \u2014 stale entry",
+      "note": "The BUY @121.00 published 2026-08-21 is well below where the market now trades. Not re-pitched today.",
+      "trigger": "A pullback to the published level, or a fresh underwrite."
+    },
+    {
+      "symbol": "RARE",
+      "instrument": "Ultragenyx Pharmaceutical Inc.",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; entry 14.94 is -43.7% from live 26.53 \u2014 implausible, likely a bad number; no entry or stop, so the stop distance is undefined",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 1,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; entry 14.94 is -43.7% from live 26.53 \u2014 implausible, likely a bad number; no entry or stop, so the stop distance is undefined"
+    }
+  ],
+  "validation_summary": {
+    "checked": 4,
+    "passed": 0,
+    "warned": 3,
+    "failed": 1,
+    "enforced": true,
+    "demoted": 1
+  }
+}
