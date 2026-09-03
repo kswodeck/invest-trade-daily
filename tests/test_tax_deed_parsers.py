@@ -10,6 +10,7 @@ bottom cover it failing loudly rather than quietly returning nothing.
 from __future__ import annotations
 
 import json
+import re
 import sys
 import unittest
 from datetime import date
@@ -802,4 +803,79 @@ class RobotsUnreachableIsNotAProhibition(unittest.TestCase):
         allowed, why = tds.robots_allows("https://example.invalid/x", self.cfg)
         self.assertFalse(allowed)
         self.assertIn("disallows", why)
+
+
+
+class PagingAndFilteringAreVisible(unittest.TestCase):
+    """Three sources fetched 10 rows each and kept none, and said nothing.
+
+    Two bugs behind one silence: the aggregator names the county in a field
+    nothing mapped, so filtering on the mapped values dropped every row; and 10
+    was the API's page size rather than the month's docket.
+    """
+
+    FIELDS = {"cause_nbr": "C-{a}", "account_nbr": "{a}", "prop_address_one": "{a} MAIN ST",
+              "minimum_bid": "$7,800.00", "status": "Active", "precinct": "1"}
+
+    def _record(self, county, account, sale_date="2026-10-06"):
+        record = {k: v.format(a=account) for k, v in self.FIELDS.items()}
+        record.update(county=county, sale_date=sale_date)
+        return record
+
+    def setUp(self):
+        self.cfg = td.load_config()
+        self.county = next(c for c in td.counties(self.cfg) if c["name"] == "Tarrant")
+        self.county["sources"][0] = dict(self.county["sources"][0], required_markers=[])
+        self.pages = {
+            1: {"count": 5, "next": "/api/property_sales/?page=2",
+                "results": [self._record("Tarrant", "111"), self._record("Dallas", "222")]},
+            2: {"count": 5, "next": "/api/property_sales/?page=3",
+                "results": [self._record("Tarrant", "333"), self._record("Ellis", "444")]},
+            3: {"count": 5, "next": None,
+                "results": [self._record("Tarrant", "555", "2026-11-03")]},
+        }
+        self.shell = ('<html><body><div id=root></div>'
+                      '<script>var A="/api/property_sales/";</script></body></html>')
+        self._fetch = tds.fetch
+        tds.fetch = self._fake
+
+    def tearDown(self):
+        tds.fetch = self._fetch
+
+    def _fake(self, url, cfg, **kw):
+        if "/api/property_sales/" in url:
+            found = re.search(r"page=(\d+)", url)
+            return json.dumps(self.pages[int(found.group(1)) if found else 1])
+        return self.shell
+
+    def test_every_page_is_followed_not_just_the_first(self):
+        listings, report = tds.county_listings(self.county, self.cfg, "2026-10-06")
+        self.assertIn("3 page(s)", report[0]["detail"])
+
+    def test_the_county_filter_reads_a_field_nothing_mapped(self):
+        listings, report = tds.county_listings(self.county, self.cfg, "2026-10-06")
+        self.assertEqual([l["account"] for l in listings], ["111", "333"])
+        self.assertEqual(report[0]["dropped_county"], 2)
+
+    def test_rows_for_another_sale_date_are_dropped_and_counted(self):
+        _, report = tds.county_listings(self.county, self.cfg, "2026-10-06")
+        self.assertEqual(report[0]["dropped_date"], 1)
+        self.assertIn("2026-11-03", report[0]["sale_dates_seen"])
+
+    def test_the_report_says_where_every_row_went(self):
+        """`fetched 10, kept 0` read exactly like a source returning nothing."""
+        _, report = tds.county_listings(self.county, self.cfg, "2026-10-06")
+        detail = report[0]["detail"]
+        self.assertIn("fetched 5, kept 2", detail)
+        self.assertIn("not in Tarrant", detail)
+        self.assertIn("another sale date", detail)
+
+    def test_paging_is_bounded(self):
+        self.assertLessEqual(tds.MAX_PAGES, 40)
+        self.assertLessEqual(tds.MAX_ROWS, 5000)
+
+    def test_a_next_that_loops_back_terminates(self):
+        self.pages[3]["next"] = "/api/property_sales/?page=1"
+        listings, report = tds.county_listings(self.county, self.cfg, "2026-10-06")
+        self.assertEqual(len(listings), 2)
 
