@@ -660,3 +660,146 @@ class EveryCountyHasSomewhereElseToLook(unittest.TestCase):
             with self.subTest(source=sid):
                 self.assertTrue(by_id[sid].get("fallback_urls"))
 
+
+
+class FollowsThePagesOwnApiReferences(unittest.TestCase):
+    """The LGBS case: no table, and no records in the HTML either.
+
+    The page fetches its list after load, and the endpoint is not a secret — it
+    is written in the page's own scripts. Reading those is the difference
+    between "go find it in dev tools" and the tool finding it, which is the
+    whole point.
+    """
+
+    API = json.dumps({"count": 2, "results": [
+        {"causeNumber": "348-612345-21", "accountNumber": "02345678",
+         "minimumBid": "$7,800.00", "saleDate": "10/06/2026", "county": "Tarrant",
+         "address": {"line1": "1109 E ANNIE ST"},
+         "legalDescription": "HYDE JACKSON BLOCK 7 LOT 15", "style": "TARRANT VS WHITE"},
+        {"causeNumber": "236-598877-19", "accountNumber": "07654321",
+         "minimumBid": "$4,250.00", "saleDate": "10/06/2026", "county": "Tarrant",
+         "address": {"line1": "4412 AVENUE N"},
+         "legalDescription": "POLYTECHNIC HEIGHTS BLOCK 22 LOT 3", "style": "TARRANT VS GREY"}]})
+
+    def setUp(self):
+        self.cfg = td.load_config()
+        self.source = dict(source_for("Tarrant"), id="probe_test", required_markers=[])
+        self.shell = fixture("lgbs_api_shell.html")
+        self.bundle = fixture("lgbs_bundle.js")
+        self.served = []
+        self._fetch = tds.fetch
+        tds.fetch = self._fake
+
+    def tearDown(self):
+        tds.fetch = self._fetch
+
+    def _fake(self, url, cfg, **kw):
+        self.served.append(url)
+        if url.endswith("main.4f2a1c.js"):
+            return self.bundle
+        if "/api/property_sales/" in url and "detail" not in url:
+            return self.API
+        if url.rstrip("/") == self.source["url"].rstrip("/"):
+            return self.shell
+        raise tds.SourceError(url, "HTTP 404: this URL does not exist")
+
+    def test_the_list_is_found_without_any_config_change(self):
+        rows, diag = tds.load_source(self.source, self.cfg)
+        self.assertEqual(len(rows), 2)
+        self.assertTrue(diag["auto_discovered"])
+        self.assertEqual(diag["api_endpoint"],
+                         "https://taxsales.lgbs.com/api/property_sales/")
+
+    def test_a_reference_only_present_in_a_js_bundle_is_followed(self):
+        tds.load_source(self.source, self.cfg)
+        self.assertIn("https://taxsales.lgbs.com/static/js/main.4f2a1c.js", self.served)
+
+    def test_the_likeliest_endpoint_is_probed_first(self):
+        """A bare /api/ used to be tried ahead of /api/property_sales/."""
+        tds.load_source(self.source, self.cfg)
+        probes = [u for u in self.served if "/api/" in u]
+        self.assertTrue(probes[0].endswith("/api/property_sales/"), probes)
+
+    def test_discovered_rows_normalize_like_any_other(self):
+        rows, _ = tds.load_source(self.source, self.cfg)
+        listing = tds.normalize_listing(rows[0], "Tarrant", self.source, self.cfg)
+        self.assertEqual(listing["minimum_opening_bid"], 7800.0)
+        self.assertEqual(listing["sale_date"], "2026-10-06")
+
+    def test_only_same_host_urls_are_probed(self):
+        """A third-party analytics script is referenced and must be left alone."""
+        tds.load_source(self.source, self.cfg)
+        self.assertFalse([u for u in self.served if "othersite.example" in u])
+
+    def test_assets_are_never_probed(self):
+        tds.load_source(self.source, self.cfg)
+        self.assertFalse([u for u in self.served if u.endswith((".png", ".svg"))])
+
+    def test_the_probe_budget_is_bounded(self):
+        self.assertLessEqual(tds.MAX_API_PROBES, 8)
+        self.assertLessEqual(tds.MAX_BUNDLES, 3)
+
+    def test_probing_can_be_switched_off_per_source(self):
+        source = dict(self.source, probe_api=False)
+        with self.assertRaises(tds.StructureChanged):
+            tds.load_source(source, self.cfg)
+        self.assertFalse([u for u in self.served if "/api/" in u])
+
+
+class RobotsUnreachableIsNotAProhibition(unittest.TestCase):
+    """A connection reset states no policy; an HTTP 5xx does."""
+
+    def setUp(self):
+        tds._robots.clear()
+        self._session = tds.session
+        self.cfg = td.load_config()
+        self.cfg["contact_email"] = "someone@example.com"
+
+    def tearDown(self):
+        tds.session = self._session
+        tds._robots.clear()
+
+    def _serve(self, behaviour):
+        class FakeSession:
+            def get(self, url, **kw):
+                return behaviour(url)
+        tds.session = lambda cfg: FakeSession()
+
+    def test_a_connection_reset_allows_after_a_retry(self):
+        """hazards.fema.gov reset on robots.txt and was banned for it."""
+        calls = []
+
+        def reset(url):
+            calls.append(url)
+            raise ConnectionError("Connection aborted. ConnectionResetError(104)")
+
+        self._serve(reset)
+        allowed, why = tds.robots_allows("https://hazards.fema.gov/x/query", self.cfg)
+        self.assertTrue(allowed)
+        self.assertIn("states no policy", why)
+        self.assertEqual(len(calls), 2, "it must retry once before deciding")
+
+    def test_a_server_error_still_refuses(self):
+        class Resp:
+            status_code, text = 503, ""
+        self._serve(lambda url: Resp())
+        allowed, why = tds.robots_allows("https://example.invalid/x", self.cfg)
+        self.assertFalse(allowed)
+        self.assertIn("not fetching", why)
+
+    def test_a_404_means_no_rules_which_is_permission(self):
+        class Resp:
+            status_code, text = 404, ""
+        self._serve(lambda url: Resp())
+        allowed, _ = tds.robots_allows("https://example.invalid/x", self.cfg)
+        self.assertTrue(allowed)
+
+    def test_a_real_disallow_is_still_obeyed(self):
+        class Resp:
+            status_code = 200
+            text = "User-agent: *\nDisallow: /"
+        self._serve(lambda url: Resp())
+        allowed, why = tds.robots_allows("https://example.invalid/x", self.cfg)
+        self.assertFalse(allowed)
+        self.assertIn("disallows", why)
+

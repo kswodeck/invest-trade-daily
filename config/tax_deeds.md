@@ -178,6 +178,16 @@ When discovery works, `verify` says so and prints the exact
 `{"format": "json", "records_path": ..., "field_map": ...}` to paste in. Pin it
 when you see it: a heuristic that works today should become configuration.
 
+**A list the page fetches rather than ships.** `taxsales.lgbs.com` has no table
+*and* no records in its HTML — it calls an API after load. That endpoint is not
+a secret: it is written in the page's own scripts. So when embedded discovery
+finds nothing, `discover_api_records` collects the API-shaped URLs the page and
+its same-origin bundles reference, GETs the most likely ones, and scores the
+replies the same way. Bounded on purpose — only URLs the site itself names, only
+its own host, at most `MAX_API_PROBES` of them, at the same one request per
+second — and it never guesses at paths the site did not mention. Set
+`"probe_api": false` on a source to switch it off.
+
 **A moved list.** Every source takes `fallback_urls`, tried in order after the
 primary fails. They are strictly additive — never fetched when the primary
 works — and `verify` reports which one got used.
@@ -186,6 +196,14 @@ works — and `verify` reports which one got used.
 the right index. With `flood.autodetect_layer` on, the screener asks the
 MapServer for its layer list and takes the flood-hazard-zone layer by name,
 resolved once per run and cached.
+
+**An unreachable robots.txt.** `hazards.fema.gov` and `esearch.elliscad.com`
+reset the connection on `/robots.txt`, and the original rule — anything
+unreadable means do not fetch — turned that into a standing ban on two sources
+that plainly permit access. A connection reset is not a statement of policy; it
+is no signal at all. So a network-level failure is retried once and then treated
+as "no rules", with the reason recorded. An HTTP 5xx still refuses, because
+there the server is speaking and what it says is that it is broken.
 
 What is **not** worked around, because it should not be: the four
 `publicsearch.us` clerk portals disallow crawling in robots.txt. Those checks
