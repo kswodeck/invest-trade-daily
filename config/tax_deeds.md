@@ -199,6 +199,14 @@ narrowing is only accepted when nearly every row that comes back is actually
 this county's. Pin it with `query_params` on the source once you see which key
 worked, and the probing is skipped.
 
+The value it queries with is learned, not guessed. The live feed turned out to
+be **nationwide** — Galveston, Maverick, and Philadelphia County among the first
+400 rows — and it stores names as `TARRANT COUNTY`, uppercase with a suffix. A
+query for `Tarrant` finds nothing. So `county_value_variants` reads the shape off
+the records the API just returned and asks in that shape first, falling back to
+the usual spellings. Hardcoding "uppercase plus COUNTY" would have been a guess
+about one vendor; reading it is not.
+
 **A moved list.** Every source takes `fallback_urls`, tried in order after the
 primary fails. They are strictly additive — never fetched when the primary
 works — and `verify` reports which one got used.
