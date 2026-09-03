@@ -37,6 +37,8 @@ TODAY = date(2026, 9, 3)
 CATALOG = [
     ("fixed_price_with_preference.html", "MIH", "SC TO-I", 17.80, 620_000),
     ("dutch_auction_with_preference.html", "CLDR", "SC TO-I", 8.05, 310_000),
+    # Clean economics, but the auditor doubts the company survives to settle.
+    ("going_concern_offer.html", "BRTX", "SC TO-I", 6.05, 220_000),
     ("amendment_removes_preference.html", "NBEL", "SC TO-I/A", 5.85, 900_000),
     ("record_holder_condition.html", "PDMX", "SC TO-I", 4.05, 140_000),
     ("exchange_offer.html", "LKSP", "SC TO-T", 21.00, 480_000),
@@ -156,10 +158,10 @@ class PipelineEndToEnd(unittest.TestCase):
     def tearDownClass(cls):
         cls.tmp.cleanup()
 
-    def test_the_two_clean_offers_are_the_only_candidates(self):
+    def test_only_the_offers_clearing_every_gate_are_candidates(self):
         candidates = sorted(e["ticker"] for e in self.universe["open"]
                             if e["status"] == "candidate")
-        self.assertEqual(candidates, ["CLDR", "MIH", "WTMB"])
+        self.assertEqual(candidates, ["BRTX", "CLDR", "MIH", "WTMB"])
 
     def test_every_rejection_carries_a_reason(self):
         for entry in self.universe["open"]:
@@ -185,21 +187,31 @@ class PipelineEndToEnd(unittest.TestCase):
         self.assertEqual(entry["offer_price"], 8.20)
         self.assertAlmostEqual(entry["spread_pct"], (8.20 - 8.05) / 8.05, places=6)
 
-    def test_two_shortfalls_together_are_tier_c(self):
-        """CLDR is a 1.86% spread *and* a minimum-tender condition. Either alone
-        would be Tier B; together they are two shortfalls, which is C."""
+    def test_a_thin_spread_with_one_minor_flag_is_tier_b(self):
+        """CLDR is a 1.86% spread *and* a minimum-tender condition. The spread
+        qualifies it for B rather than counting against it, so one minor flag
+        leaves it in B."""
         entry = self.by_ticker["CLDR"]
         self.assertEqual(entry["risk_flags"], ["minimum_tender_condition"])
         self.assertLess(entry["spread_pct"], 0.03)
-        self.assertEqual(entry["tier"], "C")
+        self.assertEqual(entry["tier"], "B")
 
-    def test_a_single_shortfall_is_tier_b(self):
+    def test_a_thin_spread_alone_is_tier_b(self):
         """WTMB clears every gate and misses Tier A only on spread."""
         entry = self.by_ticker["WTMB"]
         self.assertEqual(entry["risk_flags"], [])
         self.assertGreaterEqual(entry["days_to_expiry"], 7)
         self.assertLess(entry["spread_pct"], 0.03)
         self.assertEqual(entry["tier"], "B")
+
+    def test_a_material_flag_is_tier_c_despite_clean_economics(self):
+        """BRTX has a 5.8% spread and 78 days, which would be Tier A on the
+        numbers alone. Going-concern language is what puts it in C."""
+        entry = self.by_ticker["BRTX"]
+        self.assertEqual(entry["risk_flags"], ["going_concern"])
+        self.assertGreater(entry["spread_pct"], 0.03)
+        self.assertGreaterEqual(entry["days_to_expiry"], 7)
+        self.assertEqual(entry["tier"], "C")
 
     def test_the_clean_fixed_price_offer_reaches_tier_a(self):
         entry = self.by_ticker["MIH"]
@@ -286,8 +298,9 @@ class OddLotTab(unittest.TestCase):
 
     def test_live_offers_come_first_and_in_tier_order(self):
         tiers = [self.col(r, "Tier") for r in self.rows if self.col(r, "Tier")]
-        self.assertEqual(tiers, ["A", "B", "C"])
-        self.assertEqual([t for _, t in self.spec["tiers"]], ["A", "B", "C"])
+        self.assertEqual(tiers, ["A", "B", "B", "C"])
+        self.assertEqual([t for _, t in self.spec["tiers"]], tiers)
+        self.assertEqual(sorted(tiers), tiers, "tiers must not interleave")
 
     def test_a_rejected_row_keeps_the_economics_that_rejected_it(self):
         """A $8,415 capital rejection is only useful next to the price that
@@ -304,6 +317,11 @@ class OddLotTab(unittest.TestCase):
         disagrees with the offer, not merely that the spread is thin."""
         row = next(r for r in self.rows if self.col(r, "Ticker") == "EXPN")
         self.assertIn("market price above offer", self.col(row, "Risk flags"))
+
+    def test_a_material_flag_row_is_tinted_as_tier_c(self):
+        row = next(r for r in self.rows if self.col(r, "Ticker") == "BRTX")
+        self.assertEqual(self.col(row, "Tier"), "C")
+        self.assertIn("going concern", self.col(row, "Risk flags"))
 
     def test_the_dutch_range_is_shown_next_to_the_price_it_resolves_to(self):
         row = next(r for r in self.rows if self.col(r, "Ticker") == "CLDR")

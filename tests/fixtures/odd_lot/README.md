@@ -7,9 +7,10 @@ Two kinds of fixture live here, and the difference matters.
 Constructed documents, each built around one clause pattern the parser has to
 get right: a fixed-price offer, a Dutch auction, the Frontera-style amendment
 that removes the preference, the ITEX-style record-holder condition, an
-exchange offer, a debt tender, an expired offer, and the near-misses that must
-*not* pass (odd lots defined but never given priority; a pro-rata sentence with
-no odd-lot threshold).
+exchange offer, a debt tender, an expired offer, an offer whose auditor doubts
+it survives to settle, and the near-misses that must *not* pass (odd lots
+defined but never given priority; a pro-rata sentence with no odd-lot
+threshold).
 
 **They are not transcripts of any filing.** Nothing here is quoted from an
 issuer document, and nothing in them should be cited as if it were. They are

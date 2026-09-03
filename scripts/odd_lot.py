@@ -1004,13 +1004,19 @@ def gate_risk(terms: OfferTerms, econ: dict[str, Any]) -> list[str]:
 
 
 def tier_for(econ: dict[str, Any], flags: list[str], config: dict[str, Any]) -> str:
-    """GATE 4 — A, B, or C, by how far short of Tier A the offer falls.
+    """GATE 4 — A, B, or C.
 
     Tier A is the clean case: a wide spread, room on the calendar, and nothing
-    flagged. Tier B is an offer that misses Tier A on exactly one of those —
-    a thinner spread, a tighter timeline, or a single minor flag — which is
-    what makes B a real category rather than a consolation prize. Everything
-    else is C: informational, printed so the day's work is visible, not traded.
+    flagged. Tier C is what the flags decide — a material flag, or more than
+    one flag of any kind. Tier B is everything else that cleared the gates: a
+    thinner spread, a tighter timeline, or a single minor flag, in any
+    combination.
+
+    The spread is a **qualifier for B, not a discriminator within it**. Any
+    spread at or above the Gate 2 floor is a Tier B spread; a 1.8% spread is
+    not evidence against an offer, it is just a smaller version of the same
+    trade. What separates B from C is whether something is wrong with the
+    offer, and that is what the flags are for.
 
     Two flags are never minor. `market_price_above_offer` means the market
     disagrees with the offer outright, and `going_concern` means the
@@ -1021,18 +1027,16 @@ def tier_for(econ: dict[str, Any], flags: list[str], config: dict[str, Any]) -> 
     a, b = tiers["tier_a"], tiers["tier_b"]
     material = set(tiers.get("material_flags", []))
 
-    missed = sum((
-        econ["spread_pct"] < a["min_spread_pct"],
-        econ["days_to_expiry"] < a["min_days_to_expiry"],
-        len(flags) > a["max_risk_flags"],
-    ))
-    if missed == 0:
-        return "A"
-    if material & set(flags):
+    # Asked first: a material flag beats a wide spread and a long calendar.
+    if (material & set(flags)) or len(flags) > b["max_risk_flags"]:
         return "C"
-    if missed <= b["max_criteria_missed"] and len(flags) <= b["max_risk_flags"]:
-        return "B"
-    return "C"
+    if (econ["spread_pct"] >= a["min_spread_pct"]
+            and econ["days_to_expiry"] >= a["min_days_to_expiry"]
+            and len(flags) <= a["max_risk_flags"]):
+        return "A"
+    # Normally unreachable — Gate 2 rejects anything under its own floor — but
+    # the two floors are separate config entries and can be set apart.
+    return "B" if econ["spread_pct"] >= b["min_spread_pct"] else "C"
 
 
 # --------------------------------------------------------------------------
@@ -1277,8 +1281,8 @@ def score_entry(entry: dict[str, Any], *, client: SecClient | None, md: Any,
 
 TIER_HEADINGS = {
     "A": "Tier A — spread ≥3%, ≥7 days, no flags",
-    "B": "Tier B — thinner spread, tighter timeline, or one minor flag",
-    "C": "Tier C — two or more shortfalls, or a material flag (informational only)",
+    "B": "Tier B — spread ≥1.5%, with a tighter timeline or one minor flag",
+    "C": "Tier C — a material flag, or more than one (informational only)",
 }
 
 DISCLAIMER = (

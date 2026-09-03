@@ -42,7 +42,7 @@
 
   "tiers": {
     "tier_a": {"min_spread_pct": 0.03, "min_days_to_expiry": 7, "max_risk_flags": 0},
-    "tier_b": {"max_criteria_missed": 1, "max_risk_flags": 1},
+    "tier_b": {"min_spread_pct": 0.015, "max_risk_flags": 1},
     "material_flags": ["market_price_above_offer", "going_concern"]
   },
 

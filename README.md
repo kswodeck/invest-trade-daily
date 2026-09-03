@@ -187,14 +187,21 @@ of financing" is the sentence a clean offer uses to say it has no financing
 condition, and reading it as one would cost that offer its Tier A on the
 strength of a promise that it has none.
 
-**Gate 4 — tiering**, by how far short of Tier A an offer falls:
+**Gate 4 — tiering.**
 
 - **Tier A** — spread ≥3%, ≥7 days to expiry, zero flags.
-- **Tier B** — misses Tier A on exactly one of those: a thinner spread, a
-  tighter timeline, or a single minor flag.
-- **Tier C** — anything else. Informational, printed so the day's work is
-  visible, not traded. `market_price_above_offer` and `going_concern` are never
-  minor and send an offer to C on their own.
+- **Tier B** — spread ≥1.5%, with at most one minor flag. A tighter timeline
+  and a thinner spread both live here, in any combination.
+- **Tier C** — a material flag, or more than one flag of any kind.
+  Informational, printed so the day's work is visible, not traded.
+  `market_price_above_offer` and `going_concern` are never minor and send an
+  offer to C on their own, however good the numbers look.
+
+The spread is a **qualifier for Tier B, not a discriminator within it**. Any
+spread clearing the Gate 2 floor is a Tier B spread — a 1.8% spread is a smaller
+version of the same trade, not evidence against it, and it does not stack with a
+flag to force a demotion. What separates B from C is whether something is wrong
+with the offer, which is what the flags are for.
 
 ### Most days there are no Tier A results
 

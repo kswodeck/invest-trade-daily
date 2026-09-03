@@ -243,6 +243,13 @@ class GateTwo(unittest.TestCase):
 
 
 class Tiering(unittest.TestCase):
+    """B is decided by the flags, not by how thin the spread is.
+
+    A spread at or above the Gate 2 floor is a Tier B spread, full stop — a
+    1.8% spread is a smaller version of the same trade, not evidence against
+    it. What separates B from C is whether something is wrong with the offer.
+    """
+
     def tier(self, spread_pct: float, days: int, flags: list[str]) -> str:
         econ = {"spread_pct": spread_pct, "days_to_expiry": days}
         return tier_for(econ, flags, CONFIG)
@@ -259,17 +266,45 @@ class Tiering(unittest.TestCase):
     def test_one_minor_flag_alone_is_tier_b(self):
         self.assertEqual(self.tier(0.04, 21, ["minimum_tender_condition"]), "B")
 
-    def test_two_shortfalls_is_tier_c(self):
-        self.assertEqual(self.tier(0.02, 5, []), "C")
+    def test_a_thin_spread_with_one_minor_flag_is_still_tier_b(self):
+        """The spread does not stack with a flag to make a demotion.
+
+        This is the case the "1.5-3%" reading got wrong: it counted a thin
+        spread as a shortfall, so a 1.8% spread plus one minor flag became two
+        shortfalls and fell to C. A 1.8% spread with a minimum-tender condition
+        is a Tier B trade — one thing to check, at a smaller size.
+        """
+        self.assertEqual(self.tier(0.018, 21, ["minimum_tender_condition"]), "B")
+
+    def test_a_thin_spread_and_a_tight_timeline_is_still_tier_b(self):
+        self.assertEqual(self.tier(0.016, 5, []), "B")
+
+    def test_everything_soft_at_once_is_still_tier_b(self):
+        self.assertEqual(self.tier(0.016, 4, ["minimum_tender_condition"]), "B")
 
     def test_two_flags_is_tier_c(self):
+        """One thing to check is a Tier B trade; two is a different offer."""
         self.assertEqual(
-            self.tier(0.04, 21, ["minimum_tender_condition", "financing_condition"]), "C")
+            self.tier(0.08, 60, ["minimum_tender_condition", "financing_condition"]), "C")
 
     def test_a_material_flag_alone_is_tier_c(self):
-        """A going concern is never a minor flag: it is the counterparty."""
+        """A going concern is never a minor flag: it is the counterparty. And
+        neither beats a wide spread on a long calendar."""
         self.assertEqual(self.tier(0.06, 30, ["going_concern"]), "C")
         self.assertEqual(self.tier(0.06, 30, ["market_price_above_offer"]), "C")
+
+    def test_the_tier_b_spread_floor_is_a_floor_not_a_band(self):
+        """Its upper end is Tier A's requirement, not a ceiling on B."""
+        self.assertEqual(CONFIG["tiers"]["tier_b"]["min_spread_pct"],
+                         CONFIG["economics"]["min_spread_pct"],
+                         "Tier B's spread floor is the gate's floor — anything "
+                         "published is a Tier B spread")
+        self.assertNotIn("max_spread_pct", CONFIG["tiers"]["tier_b"])
+
+    def test_a_spread_under_the_floor_cannot_be_tiered(self):
+        """Unreachable through Gate 2, but the two floors are separate config
+        entries and can be set apart."""
+        self.assertEqual(self.tier(0.004, 30, []), "C")
 
 
 class Universe(unittest.TestCase):
