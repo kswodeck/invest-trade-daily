@@ -1,6 +1,6 @@
 {
   "disclaimer": "NOT A TITLE SEARCH — EVERY ROW IS A CANDIDATE ONLY. This tool reads public county sale lists and appraisal district records. It cannot and does not certify title. County clerk lien records are not reliably machine-readable, so liens that survive a tax sale — federal tax liens (IRC §7425(d) gives the IRS 120 days to redeem after the sale), some HOA assessments, environmental liens, and super-priority PACE liens — may exist on any row here and go undetected. A blank in the Flags column means nothing was found by the checks that ran, never that the property is clear. Order a professional title search before you bid. Tex. Tax Code §34.015 separately requires an unexpired written statement from the county assessor-collector before a deed can be delivered.",
-  "screened_at": "2026-09-03T12:00:18-04:00",
+  "screened_at": "2026-09-03T12:13:33-04:00",
   "screened_on": "2026-09-03",
   "sale_date": "2026-10-06",
   "counties": [
@@ -67,14 +67,14 @@
       "id": "dallas_struck_off",
       "url": "https://taxsales.lgbs.com/",
       "ok": true,
-      "detail": "10 row(s); mapped ['account', 'address', 'cause_number', 'minimum_opening_bid', 'sale_date', 'status']; AUTO-DISCOVERED from embedded JSON at results — pin it with {\"format\": \"json\", \"records_path\": \"results\", \"field_map\": {\"cause_number\": \"cause_nbr\", \"account\": \"account_nbr\", \"address\": \"prop_address_one\", \"minimum_opening_bid\": \"minimum_bid\", \"sale_date\": \"sale_date\", \"status\": \"status\"}}"
+      "detail": "400 row(s); mapped ['account', 'address', 'cause_number', 'county', 'minimum_opening_bid', 'sale_date', 'status']; AUTO-DISCOVERED from embedded JSON at results — pin it with {\"format\": \"json\", \"records_path\": \"results\", \"field_map\": {\"county\": \"county\", \"cause_number\": \"cause_nbr\", \"account\": \"account_nbr\", \"address\": \"prop_address_one\", \"minimum_opening_bid\": \"minimum_bid\", \"sale_date\": \"sale_date\", \"status\": \"status\"}}"
     },
     {
       "kind": "county list",
       "id": "tarrant_auction",
       "url": "https://taxsales.lgbs.com/",
       "ok": true,
-      "detail": "10 row(s); mapped ['account', 'address', 'cause_number', 'minimum_opening_bid', 'precinct', 'sale_date', 'status']; AUTO-DISCOVERED from embedded JSON at results — pin it with {\"format\": \"json\", \"records_path\": \"results\", \"field_map\": {\"cause_number\": \"cause_nbr\", \"account\": \"account_nbr\", \"address\": \"prop_address_one\", \"minimum_opening_bid\": \"minimum_bid\", \"sale_date\": \"sale_date\", \"status\": \"status\", \"precinct\": \"precinct\"}}"
+      "detail": "400 row(s); mapped ['account', 'address', 'cause_number', 'county', 'minimum_opening_bid', 'precinct', 'sale_date', 'status']; AUTO-DISCOVERED from embedded JSON at results — pin it with {\"format\": \"json\", \"records_path\": \"results\", \"field_map\": {\"county\": \"county\", \"cause_number\": \"cause_nbr\", \"account\": \"account_nbr\", \"address\": \"prop_address_one\", \"minimum_opening_bid\": \"minimum_bid\", \"sale_date\": \"sale_date\", \"status\": \"status\", \"precinct\": \"precinct\"}}"
     },
     {
       "kind": "county list",
@@ -88,7 +88,7 @@
       "id": "ellis_auction",
       "url": "https://taxsales.lgbs.com/",
       "ok": true,
-      "detail": "10 row(s); mapped ['account', 'address', 'cause_number', 'minimum_opening_bid', 'sale_date', 'status']; AUTO-DISCOVERED from embedded JSON at results — pin it with {\"format\": \"json\", \"records_path\": \"results\", \"field_map\": {\"cause_number\": \"cause_nbr\", \"account\": \"account_nbr\", \"address\": \"prop_address_one\", \"minimum_opening_bid\": \"minimum_bid\", \"sale_date\": \"sale_date\", \"status\": \"status\"}}"
+      "detail": "400 row(s); mapped ['account', 'address', 'cause_number', 'county', 'minimum_opening_bid', 'sale_date', 'status']; AUTO-DISCOVERED from embedded JSON at results — pin it with {\"format\": \"json\", \"records_path\": \"results\", \"field_map\": {\"county\": \"county\", \"cause_number\": \"cause_nbr\", \"account\": \"account_nbr\", \"address\": \"prop_address_one\", \"minimum_opening_bid\": \"minimum_bid\", \"sale_date\": \"sale_date\", \"status\": \"status\"}}"
     },
     {
       "kind": "appraisal district",
@@ -101,8 +101,8 @@
       "kind": "appraisal district",
       "id": "TAD",
       "url": "https://www.tad.org/property-search/",
-      "ok": true,
-      "detail": "reachable, markers present"
+      "ok": false,
+      "detail": "HTTP 403: the host refused this User-Agent. Not a format change — the page may be fine in a browser. Some county vendors block non-browser clients outright; check whether the list is published somewhere else, or export it by hand. Do not spoof a browser to get around this. All 2 configured User-Agents were refused, so this is the host's filter and not a format change."
     },
     {
       "kind": "appraisal district",
@@ -237,25 +237,33 @@
       "sale_type": "auction",
       "ok": false,
       "rows": 0,
-      "detail": "all 3 configured locations failed:\n      https://dallas.texas.sheriffsaleauctions.com/ — could not read a sale list from this page: tables are present but none has a header row and a data row. Headers seen: None. Automatic JSON discovery also found nothing (followed 0 API reference(s) the page names and none returned a sale list). Update `column_map` for source 'dallas_auction' in config/tax_deeds.json, or export the list to data/tax_deeds/manual/dallas_auction.csv.\n      https://www.dallasact.com/act_webdev/dallas/index.jsp — the page no longer contains ['sale', 'auction'], which config/tax_deeds.json declares as its structural markers. The county changed the page; update `required_markers` and `column_map` for source 'dallas_auction'.\n      https://www.dallascounty.org/departments/tax/tax-sales.php — HTTP 404: this URL does not exist. It moved or was never right — find the current one and update it in config/tax_deeds.json."
+      "detail": "all 3 configured locations failed:\n      https://dallas.texas.sheriffsaleauctions.com/ — could not read a sale list from this page: tables are present but none has a header row and a data row. Headers seen: None. Automatic JSON discovery also found nothing (followed 0 API reference(s) the page names and none returned a sale list). Update `column_map` for source 'dallas_auction' in config/tax_deeds.json, or export the list to data/tax_deeds/manual/dallas_auction.csv.\n      https://www.dallasact.com/act_webdev/dallas/index.jsp — the page no longer contains ['sale', 'auction'], which config/tax_deeds.json declares as its structural markers. The county changed the page; update `required_markers` and `column_map` for source 'dallas_auction'.\n      https://www.dallascounty.org/departments/tax/tax-sales.php — ConnectionError: HTTPSConnectionPool(host='www.dallascounty.org', port=443): Max retries exceeded with url: /departments/tax/tax-sales.php (Caused by NewConnectionError(\"HTTPSConnection(host='www.dallascounty.org', port=443): Failed to establish a new connection: [Errno 111] Connection refused\"))"
     },
     {
       "id": "dallas_struck_off",
       "county": "Dallas",
       "url": "https://taxsales.lgbs.com/",
       "sale_type": "struck_off",
-      "ok": false,
+      "ok": true,
       "rows": 0,
-      "detail": "all 2 configured locations failed:\n      https://taxsales.lgbs.com/ — ConnectTimeout: HTTPSConnectionPool(host='taxsales.lgbs.com', port=443): Max retries exceeded with url: / (Caused by ConnectTimeoutError(<HTTPSConnection(host='taxsales.lgbs.com', port=443) at 0x7f4bd95b2c90>, 'Connection to taxsales.lgbs.com timed out. (connect timeout=30)'))\n      https://www.dallascounty.org/departments/tax/tax-sales.php — HTTP 404: this URL does not exist. It moved or was never right — find the current one and update it in config/tax_deeds.json."
+      "detail": "https://taxsales.lgbs.com/ · fetched 400, kept 0 · matched ['account', 'address', 'cause_number', 'county', 'minimum_opening_bid', 'sale_date', 'status'] · 40 page(s) · 400 not in Dallas",
+      "fetched": 400,
+      "dropped_county": 400,
+      "dropped_date": 0,
+      "sale_dates_seen": []
     },
     {
       "id": "tarrant_auction",
       "county": "Tarrant",
       "url": "https://taxsales.lgbs.com/",
       "sale_type": "auction",
-      "ok": false,
+      "ok": true,
       "rows": 0,
-      "detail": "all 2 configured locations failed:\n      https://taxsales.lgbs.com/ — ConnectTimeout: HTTPSConnectionPool(host='taxsales.lgbs.com', port=443): Max retries exceeded with url: / (Caused by ConnectTimeoutError(<HTTPSConnection(host='taxsales.lgbs.com', port=443) at 0x7f4bd940d730>, 'Connection to taxsales.lgbs.com timed out. (connect timeout=30)'))\n      https://www.tarrantcountytx.gov/en/constables.html — could not read a sale list from this page: tables are present but none has a header row and a data row. Headers seen: [['']]. Automatic JSON discovery also found nothing (followed 1 API reference(s) the page names and none returned a sale list). Update `column_map` for source 'tarrant_auction' in config/tax_deeds.json, or export the list to data/tax_deeds/manual/tarrant_auction.csv."
+      "detail": "https://taxsales.lgbs.com/ · fetched 400, kept 0 · matched ['account', 'address', 'cause_number', 'county', 'minimum_opening_bid', 'precinct', 'sale_date', 'status'] · 40 page(s) · 400 not in Tarrant",
+      "fetched": 400,
+      "dropped_county": 400,
+      "dropped_date": 0,
+      "sale_dates_seen": []
     },
     {
       "id": "johnson_auction",
@@ -273,7 +281,11 @@
       "sale_type": "auction",
       "ok": true,
       "rows": 0,
-      "detail": "https://taxsales.lgbs.com/ · matched ['account', 'address', 'cause_number', 'minimum_opening_bid', 'sale_date', 'status']"
+      "detail": "https://taxsales.lgbs.com/ · fetched 400, kept 0 · matched ['account', 'address', 'cause_number', 'county', 'minimum_opening_bid', 'sale_date', 'status'] · 40 page(s) · 400 not in Ellis",
+      "fetched": 400,
+      "dropped_county": 400,
+      "dropped_date": 0,
+      "sale_dates_seen": []
     }
   ],
   "totals": {
