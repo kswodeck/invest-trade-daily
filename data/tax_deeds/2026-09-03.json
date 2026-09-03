@@ -1,0 +1,243 @@
+{
+  "disclaimer": "NOT A TITLE SEARCH — EVERY ROW IS A CANDIDATE ONLY. This tool reads public county sale lists and appraisal district records. It cannot and does not certify title. County clerk lien records are not reliably machine-readable, so liens that survive a tax sale — federal tax liens (IRC §7425(d) gives the IRS 120 days to redeem after the sale), some HOA assessments, environmental liens, and super-priority PACE liens — may exist on any row here and go undetected. A blank in the Flags column means nothing was found by the checks that ran, never that the property is clear. Order a professional title search before you bid. Tex. Tax Code §34.015 separately requires an unexpired written statement from the county assessor-collector before a deed can be delivered.",
+  "screened_at": "2026-09-03T11:48:24-04:00",
+  "screened_on": "2026-09-03",
+  "sale_date": "2026-10-06",
+  "counties": [
+    "Dallas",
+    "Tarrant",
+    "Johnson",
+    "Ellis"
+  ],
+  "thresholds": {
+    "MAX_OPENING_BID": 20000,
+    "MAX_BID_TO_VALUE": 0.6,
+    "TIER_A_BID_TO_VALUE": 0.35,
+    "QUIET_TITLE_BUDGET": 3500,
+    "HOLDING_MONTHS": 7,
+    "REJECT_FLOOD_ZONE": true,
+    "EFFECTIVE_TAX_RATE": 0.023,
+    "MONTHLY_CARRY": 75,
+    "POST_JUDGMENT_YEARS": 1.0,
+    "TEARDOWN_IMPROVEMENT_VALUE": 5000,
+    "STATEMENT_WARN_DAYS": 30,
+    "TIER_B_MAX_MINOR_FLAGS": 2,
+    "PACKET_TIERS": "A,B"
+  },
+  "bidder_statement": [
+    {
+      "county": "Dallas",
+      "expires": null,
+      "days_left": null,
+      "state": "missing",
+      "message": "No §34.015 written statement on file for Dallas. Without an unexpired statement from the Dallas County Assessor-Collector the officer may not deliver a deed — a winning bid produces nothing. Form 50-307, notarized: https://comptroller.texas.gov/forms/50-307.pdf"
+    },
+    {
+      "county": "Tarrant",
+      "expires": null,
+      "days_left": null,
+      "state": "missing",
+      "message": "No §34.015 written statement on file for Tarrant. Without an unexpired statement from the Tarrant County Assessor-Collector the officer may not deliver a deed — a winning bid produces nothing. Form 50-307, notarized: https://comptroller.texas.gov/forms/50-307.pdf"
+    },
+    {
+      "county": "Johnson",
+      "expires": null,
+      "days_left": null,
+      "state": "missing",
+      "message": "No §34.015 written statement on file for Johnson. Without an unexpired statement from the Johnson County Assessor-Collector the officer may not deliver a deed — a winning bid produces nothing. Form 50-307, notarized: https://comptroller.texas.gov/forms/50-307.pdf"
+    },
+    {
+      "county": "Ellis",
+      "expires": null,
+      "days_left": null,
+      "state": "missing",
+      "message": "No §34.015 written statement on file for Ellis. Without an unexpired statement from the Ellis County Assessor-Collector the officer may not deliver a deed — a winning bid produces nothing. Form 50-307, notarized: https://comptroller.texas.gov/forms/50-307.pdf"
+    }
+  ],
+  "sources": [
+    {
+      "kind": "county list",
+      "id": "dallas_auction",
+      "url": "https://dallas.texas.sheriffsaleauctions.com/",
+      "ok": false,
+      "detail": "all 3 configured locations failed:\n      https://dallas.texas.sheriffsaleauctions.com/ — could not read a sale list from this page: tables are present but none has a header row and a data row. Headers seen: None. Update `column_map` for source 'dallas_auction' in config/tax_deeds.json.\n      https://www.dallasact.com/act_webdev/dallas/index.jsp — the page no longer contains ['sale', 'auction'], which config/tax_deeds.json declares as its structural markers. The county changed the page; update `required_markers` and `column_map` for source 'dallas_auction'.\n      https://www.dallascounty.org/departments/tax/tax-sales.php — HTTP 404: this URL does not exist. It moved or was never right — find the current one and update it in config/tax_deeds.json."
+    },
+    {
+      "kind": "county list",
+      "id": "dallas_struck_off",
+      "url": "https://taxsales.lgbs.com/",
+      "ok": false,
+      "detail": "all 2 configured locations failed:\n      https://taxsales.lgbs.com/ — this page contains no HTML table at all, so there is nothing for a table parser to read and no `column_map` edit can fix it — the list is rendered by JavaScript. Automatic discovery of the JSON the page ships with itself was tried and found nothing (no embedded JSON array looked like a sale list). Two ways forward: open the page with the network tab, find the endpoint it calls, and add it as a `\"format\": \"json\"` source (or as a `fallback_urls` entry) for 'dallas_struck_off'; or export the list by hand to data/tax_deeds/manual/dallas_struck_off.csv.\n      https://www.dallascounty.org/departments/tax/tax-sales.php — HTTP 404: this URL does not exist. It moved or was never right — find the current one and update it in config/tax_deeds.json."
+    },
+    {
+      "kind": "county list",
+      "id": "tarrant_auction",
+      "url": "https://taxsales.lgbs.com/",
+      "ok": false,
+      "detail": "all 2 configured locations failed:\n      https://taxsales.lgbs.com/ — this page contains no HTML table at all, so there is nothing for a table parser to read and no `column_map` edit can fix it — the list is rendered by JavaScript. Automatic discovery of the JSON the page ships with itself was tried and found nothing (no embedded JSON array looked like a sale list). Two ways forward: open the page with the network tab, find the endpoint it calls, and add it as a `\"format\": \"json\"` source (or as a `fallback_urls` entry) for 'tarrant_auction'; or export the list by hand to data/tax_deeds/manual/tarrant_auction.csv.\n      https://www.tarrantcountytx.gov/en/constables.html — could not read a sale list from this page: tables are present but none has a header row and a data row. Headers seen: [['']]. Update `column_map` for source 'tarrant_auction' in config/tax_deeds.json."
+    },
+    {
+      "kind": "county list",
+      "id": "johnson_auction",
+      "url": "https://www.johnsoncountytx.org/public-safety/constables/constable-sale",
+      "ok": false,
+      "detail": "all 3 configured locations failed:\n      https://www.johnsoncountytx.org/public-safety/constables/constable-sale — HTTP 403: the host refused this User-Agent. Not a format change — the page may be fine in a browser. Some county vendors block non-browser clients outright; check whether the list is published somewhere else, or export it by hand. Do not spoof a browser to get around this. All 2 configured User-Agents were refused, so this is the host's filter and not a format change.\n      https://www.johnsoncountytx.org/departments/constables — HTTP 403: the host refused this User-Agent. Not a format change — the page may be fine in a browser. Some county vendors block non-browser clients outright; check whether the list is published somewhere else, or export it by hand. Do not spoof a browser to get around this. All 2 configured User-Agents were refused, so this is the host's filter and not a format change.\n      https://taxsales.lgbs.com/ — the page no longer contains ['constable'], which config/tax_deeds.json declares as its structural markers. The county changed the page; update `required_markers` and `column_map` for source 'johnson_auction'."
+    },
+    {
+      "kind": "county list",
+      "id": "ellis_auction",
+      "url": "https://taxsales.lgbs.com/",
+      "ok": false,
+      "detail": "all 2 configured locations failed:\n      https://taxsales.lgbs.com/ — this page contains no HTML table at all, so there is nothing for a table parser to read and no `column_map` edit can fix it — the list is rendered by JavaScript. Automatic discovery of the JSON the page ships with itself was tried and found nothing (no embedded JSON array looked like a sale list). Two ways forward: open the page with the network tab, find the endpoint it calls, and add it as a `\"format\": \"json\"` source (or as a `fallback_urls` entry) for 'ellis_auction'; or export the list by hand to data/tax_deeds/manual/ellis_auction.csv.\n      https://www.co.ellis.tx.us/166/Tax-Assessor-Collector — the page no longer contains ['tax sale'], which config/tax_deeds.json declares as its structural markers. The county changed the page; update `required_markers` and `column_map` for source 'ellis_auction'."
+    },
+    {
+      "kind": "appraisal district",
+      "id": "DCAD",
+      "url": "https://www.dallascad.org/SearchAddr.aspx",
+      "ok": true,
+      "detail": "reachable, markers present"
+    },
+    {
+      "kind": "appraisal district",
+      "id": "TAD",
+      "url": "https://www.tad.org/property-search/",
+      "ok": true,
+      "detail": "reachable, markers present"
+    },
+    {
+      "kind": "appraisal district",
+      "id": "JohnsonCAD",
+      "url": "https://esearch.johnsoncad.com/",
+      "ok": true,
+      "detail": "reachable, markers present"
+    },
+    {
+      "kind": "appraisal district",
+      "id": "EllisCAD",
+      "url": "https://esearch.elliscad.com/",
+      "ok": false,
+      "detail": "could not read https://esearch.elliscad.com/robots.txt (ConnectionError: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))) — not fetching"
+    },
+    {
+      "kind": "lien: federal_tax_lien",
+      "id": "federal_tax_lien/Dallas",
+      "url": "https://dallas.tx.publicsearch.us/",
+      "ok": false,
+      "detail": "https://dallas.tx.publicsearch.us/robots.txt disallows this path for invest-trade-daily-taxdeeds"
+    },
+    {
+      "kind": "lien: federal_tax_lien",
+      "id": "federal_tax_lien/Tarrant",
+      "url": "https://tarrant.tx.publicsearch.us/",
+      "ok": false,
+      "detail": "https://tarrant.tx.publicsearch.us/robots.txt disallows this path for invest-trade-daily-taxdeeds"
+    },
+    {
+      "kind": "lien: federal_tax_lien",
+      "id": "federal_tax_lien/Johnson",
+      "url": "https://johnson.tx.publicsearch.us/",
+      "ok": false,
+      "detail": "https://johnson.tx.publicsearch.us/robots.txt disallows this path for invest-trade-daily-taxdeeds"
+    },
+    {
+      "kind": "lien: federal_tax_lien",
+      "id": "federal_tax_lien/Ellis",
+      "url": "",
+      "ok": true,
+      "detail": "no source configured — this check reports unavailable, which is a flag. ellis.tx.publicsearch.us does not resolve — Ellis County is not on that platform. Find where the Ellis County Clerk publishes official public records and put it here; null reports 'not configured', wh"
+    },
+    {
+      "kind": "lien: pace_lien",
+      "id": "pace_lien/_all",
+      "url": "",
+      "ok": true,
+      "detail": "no source configured — this check reports unavailable, which is a flag. 2026-09-03: https://www.texaspaceauthority.org/completed-projects/ returned 404. Find the current project registry URL and put it here. Until then this check reports unavailable, which is a material f"
+    },
+    {
+      "kind": "lien: hoa_assessment",
+      "id": "hoa_assessment/Dallas",
+      "url": "https://dallas.tx.publicsearch.us/",
+      "ok": false,
+      "detail": "https://dallas.tx.publicsearch.us/robots.txt disallows this path for invest-trade-daily-taxdeeds"
+    },
+    {
+      "kind": "lien: hoa_assessment",
+      "id": "hoa_assessment/Tarrant",
+      "url": "https://tarrant.tx.publicsearch.us/",
+      "ok": false,
+      "detail": "https://tarrant.tx.publicsearch.us/robots.txt disallows this path for invest-trade-daily-taxdeeds"
+    },
+    {
+      "kind": "lien: hoa_assessment",
+      "id": "hoa_assessment/Johnson",
+      "url": "https://johnson.tx.publicsearch.us/",
+      "ok": false,
+      "detail": "https://johnson.tx.publicsearch.us/robots.txt disallows this path for invest-trade-daily-taxdeeds"
+    },
+    {
+      "kind": "lien: hoa_assessment",
+      "id": "hoa_assessment/Ellis",
+      "url": "",
+      "ok": true,
+      "detail": "no source configured — this check reports unavailable, which is a flag. ellis.tx.publicsearch.us does not resolve — Ellis County is not on that platform. Find where the Ellis County Clerk publishes official public records and put it here; null reports 'not configured', wh"
+    },
+    {
+      "kind": "lien: municipal_lien",
+      "id": "municipal_lien/Dallas",
+      "url": "https://dallas.tx.publicsearch.us/",
+      "ok": false,
+      "detail": "https://dallas.tx.publicsearch.us/robots.txt disallows this path for invest-trade-daily-taxdeeds"
+    },
+    {
+      "kind": "lien: municipal_lien",
+      "id": "municipal_lien/Tarrant",
+      "url": "https://tarrant.tx.publicsearch.us/",
+      "ok": false,
+      "detail": "https://tarrant.tx.publicsearch.us/robots.txt disallows this path for invest-trade-daily-taxdeeds"
+    },
+    {
+      "kind": "lien: municipal_lien",
+      "id": "municipal_lien/Johnson",
+      "url": "https://johnson.tx.publicsearch.us/",
+      "ok": false,
+      "detail": "https://johnson.tx.publicsearch.us/robots.txt disallows this path for invest-trade-daily-taxdeeds"
+    },
+    {
+      "kind": "lien: municipal_lien",
+      "id": "municipal_lien/Ellis",
+      "url": "",
+      "ok": true,
+      "detail": "no source configured — this check reports unavailable, which is a flag. ellis.tx.publicsearch.us does not resolve — Ellis County is not on that platform. Find where the Ellis County Clerk publishes official public records and put it here; null reports 'not configured', wh"
+    },
+    {
+      "kind": "geocoder",
+      "id": "geocoder",
+      "url": "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress",
+      "ok": true,
+      "detail": "geocoded the probe address to {'x': -96.808013443084, 'y': 32.779499353271}"
+    },
+    {
+      "kind": "flood",
+      "id": "flood",
+      "url": "https://hazards.fema.gov/gis/nfhl/rest/services/public/NFHL/MapServer/28/query",
+      "ok": false,
+      "detail": "could not read https://hazards.fema.gov/robots.txt (ConnectionError: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))) — not fetching (could not list the service's layers either: could not read https://hazards.fema.gov/robots.txt (ConnectionError: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))) — not fetching)"
+    },
+    {
+      "kind": "environmental",
+      "id": "environmental",
+      "url": "https://data.epa.gov/efservice/frs_program_facility/postal_code/75202/JSON",
+      "ok": true,
+      "detail": "reachable, 89 facility record(s) for the probe ZIP"
+    }
+  ],
+  "totals": {
+    "listings": 0,
+    "candidates": 0,
+    "rejected": 0,
+    "tier_a": 0,
+    "tier_b": 0,
+    "tier_c": 0
+  },
+  "results": []
+}
