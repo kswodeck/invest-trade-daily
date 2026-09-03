@@ -27,9 +27,10 @@ SCRIPTS = REPO / "scripts"
 # function that needs it, so importing the module costs nothing.
 PURE_MODULES = [
     "add_candidate", "build_context", "check_sheets", "dedupe_positions",
-    "ensure_report", "exposure", "note_late_run", "publish_sheets",
-    "refresh_prices", "report_runs", "report_state", "schedule_gate",
-    "step_summary", "validate_report", "watchlist", "weekly_digest",
+    "ensure_report", "exposure", "note_late_run", "odd_lot", "publish_odd_lot",
+    "publish_sheets", "refresh_prices", "report_runs", "report_state",
+    "schedule_gate", "step_summary", "validate_report", "watchlist",
+    "weekly_digest",
 ]
 
 # Modules that legitimately need the network stack at import time.

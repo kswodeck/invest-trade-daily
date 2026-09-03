@@ -1,0 +1,54 @@
+{
+  "_comment": [
+    "Odd-lot tender offer screener. Every threshold below is explained, with its",
+    "rationale, in the 'Odd-lot tender screener' section of README.md. Change a",
+    "number here rather than in scripts/odd_lot.py — nothing in the code carries",
+    "a default that silently overrides this file.",
+    "",
+    "SEC_USER_AGENT (the repo secret) overrides sec.user_agent when it is set.",
+    "That precedence is deliberate: the value below is a committed placeholder",
+    "and the secret is the real contact address. The SEC blocks an IP for ~10",
+    "minutes when the User-Agent is missing or generic, so this is not cosmetic."
+  ],
+
+  "sec": {
+    "user_agent": "InvestingResearch kris@example.com",
+    "max_requests_per_second": 8,
+    "min_seconds_between_requests": 0.12,
+    "block_backoff_seconds": 60,
+    "timeout_seconds": 20,
+    "efts_url": "https://efts.sec.gov/LATEST/search-index",
+    "submissions_url": "https://data.sec.gov/submissions/CIK{cik}.json",
+    "tickers_url": "https://www.sec.gov/files/company_tickers.json",
+    "archives_url": "https://www.sec.gov/Archives/edgar/data/{cik}/{accession}/"
+  },
+
+  "discovery": {
+    "forms": ["SC TO-I", "SC TO-T", "SC 13E4F", "SC TO-I/A"],
+    "query_terms": ["\"odd lot\"", "\"odd lots\""],
+    "lookback_days": 10,
+    "max_hits_per_query": 100,
+    "stale_after_days": 120
+  },
+
+  "economics": {
+    "shares_tendered": 99,
+    "min_spread_pct": 0.015,
+    "max_capital": 5000,
+    "min_days_to_expiry": 4,
+    "min_avg_volume_30d": 50000,
+    "min_market_price": 1.00
+  },
+
+  "tiers": {
+    "tier_a": {"min_spread_pct": 0.03, "min_days_to_expiry": 7, "max_risk_flags": 0},
+    "tier_b": {"max_criteria_missed": 1, "max_risk_flags": 1},
+    "material_flags": ["market_price_above_offer", "going_concern"]
+  },
+
+  "schedule": {
+    "premarket_window_et": "5-11",
+    "evening_window_et": "18-23",
+    "min_minutes_between_runs": 120
+  }
+}

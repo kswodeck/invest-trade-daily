@@ -10,11 +10,15 @@ on:
     paths:
       - "scripts/**"
       - "tests/**"
+      # config/odd_lot.json is read by the screener's tests, so a threshold
+      # edited there can fail them without a line of Python changing.
+      - "config/odd_lot.json"
       - ".github/workflows/tests.yml"
   pull_request:
     paths:
       - "scripts/**"
       - "tests/**"
+      - "config/odd_lot.json"
   workflow_dispatch:
 
 jobs:

@@ -83,6 +83,167 @@ emails you about red runs, so a green run publishing zero ideas would be the one
 morning you'd hear nothing about. The Sheet write and the commit both happen
 before that failure, so you keep the record either way.
 
+## Odd-lot tender screener
+
+A second, independent daily job. It has nothing to do with the trade-idea
+pipeline above — no model runs, no research phase, no conviction score — and it
+publishes to its own single tab on the same Sheet.
+
+```
+05:37 ET  ── 30 minutes ahead of the daily report ──┐
+18:30 ET  ── after EDGAR's 17:30 filing cutoff ─────┤
+                                                    │
+   ├─ DISCOVER   EDGAR full-text search for "odd lot" in SC TO-I,
+   │             SC TO-T, SC 13E4F and SC TO-I/A over a trailing
+   │             10 days. Deduplicated against the universe by
+   │             accession number.
+   │
+   ├─ RE-SCORE   Every open offer, not just the new ones. Prices
+   │             move; an offer rejected on Monday for a 0.9%
+   │             spread is a different trade on Thursday.
+   │
+   ├─ GATE 1-4   Read the document, run the economics, flag the
+   │             risks, assign a tier. Every rejection keeps its
+   │             reason.
+   │
+   ├─ PUBLISH    The "Odd Lot" tab, overwritten in place. Expired
+   │             offers leave it.
+   │
+   └─ COMMIT     state/odd_lot_universe.json and
+                 reports/<date>/odd_lot.md are the history.
+```
+
+### What an odd-lot tender is
+
+Some issuer tender offers give preferential treatment to small holders: if you
+own **fewer than 100 shares**, your shares are accepted for payment **before**
+any proration of everyone else's. When an offer is oversubscribed, a 1,000-share
+holder might get 300 shares taken; a 99-share holder gets all 99. The trade is
+to buy 99 shares below the offer price, tender them, and collect the spread
+without standing in the proration queue.
+
+The rules are terms of each offer, not a market convention, and every one of
+them has bitten somebody:
+
+- **Fewer than 100 shares**, owned beneficially or of record. 100 is not an odd
+  lot; 99 is.
+- **You must tender every share you own.** A partial tender forfeits the
+  preference entirely.
+- **Ownership aggregates across all accounts by SSN.** You cannot split 150
+  shares across two brokers and claim two odd lots.
+- **The issuer can remove the preference mid-offer.** Frontera Energy did
+  exactly that by amendment in September 2024. This is why `SC TO-I/A`
+  amendments are read rather than skipped, and why an amendment that removes it
+  is a hard rejection.
+- **The preference can be conditioned.** An ITEX `SC TO-I` voided it if the
+  purchase would leave the stock held of record by fewer than 300 persons — a
+  preference that evaporates precisely when it is used. Also a hard rejection.
+- **In a Dutch auction, shares are accepted at or below the final price.** The
+  low end of the range is the only price a tender is guaranteed to clear at, so
+  the low end is what the spread is computed from.
+
+**This is research output. It places no orders and talks to no broker.**
+
+### The gates, and why each threshold is where it is
+
+Everything below lives in [`config/odd_lot.json`](config/odd_lot.json). Nothing
+in the code carries a default that overrides it.
+
+**Gate 1 — the document.** Any failure rejects, with the reason recorded.
+
+| Check | Why |
+| --- | --- |
+| Both a "fewer than 100 shares" threshold **and** acceptance-before-proration language, in the same passage | Either half alone is a different document. A threshold with no promise is an offer that merely *defines* an odd lot; proration language with no threshold is the ordinary pro-rata sentence in every oversubscribed tender. |
+| Cash offer, not an exchange offer | An exchange offer pays in stock. There is no spread to capture, only a ratio. |
+| Common equity, not debt or preferred | Debt tenders use the identical odd-lot phrasing for *notes*. 99 notes is a $99,000 position, not a $1,000 one. |
+| Currently open, not expired or terminated | Decided from the expiration date read out of the document. |
+| No amendment removing the preference | The Frontera pattern. |
+| No record-holder condition on the preference | The ITEX pattern. Read inside the odd-lot passage only — a standalone "fewer than 300 holders of record" is deregistration boilerplate that nearly every small-cap tender carries. |
+| Not restricted to accredited investors, QIBs, or non-US persons | You cannot tender into an offer you are not eligible for. |
+
+**Gate 2 — the economics.** Any failure rejects.
+
+| Threshold | Default | Why this number |
+| --- | --- | --- |
+| `min_spread_pct` | 1.5% | Below this the spread is inside execution noise: the bid-ask on a thin small cap, plus the commission-free but not price-free reality of a market order, eats it. |
+| `max_capital` | $5,000 | 99 shares of a $50 stock is $4,950. The cap is what keeps this a small mechanical trade rather than a concentrated position in a company you have not researched. |
+| `min_days_to_expiry` | 4 days | Broker tender deadlines run **ahead** of the offer's own deadline, often by a full business day, and the instruction has to be entered and processed. Four days is the smallest window in which the trade is actually placeable. |
+| `min_avg_volume_30d` | 50,000 shares | Exit liquidity. If the offer is amended, terminated, or you miss the tender deadline, you own 99 shares outright and need somewhere to sell them. |
+| `min_market_price` | $1.00 | A hard floor with no exceptions. Sub-dollar stocks carry delisting mechanics and spreads measured in percent, and a 3% spread on a $0.40 stock is one tick. |
+
+**Gate 3 — risk flags.** These never reject. They cost the offer its tier and
+are printed alongside it:
+
+financing condition · minimum-tender condition · litigation or regulatory
+condition · **market price above offer price** · foreign private issuer
+(withholding-tax complexity) · going-concern language.
+
+*Market price above offer price* earns its prominence: it means the market
+disagrees with the offer outright — expecting a raised bid, or pricing in a
+contested deal — and the spread it produces is negative.
+
+Flags are checked for negation. "The Offer is **not** conditioned on the receipt
+of financing" is the sentence a clean offer uses to say it has no financing
+condition, and reading it as one would cost that offer its Tier A on the
+strength of a promise that it has none.
+
+**Gate 4 — tiering**, by how far short of Tier A an offer falls:
+
+- **Tier A** — spread ≥3%, ≥7 days to expiry, zero flags.
+- **Tier B** — misses Tier A on exactly one of those: a thinner spread, a
+  tighter timeline, or a single minor flag.
+- **Tier C** — anything else. Informational, printed so the day's work is
+  visible, not traded. `market_price_above_offer` and `going_concern` are never
+  minor and send an offer to C on their own.
+
+### Most days there are no Tier A results
+
+That is the correct output, and the report says so in those words. An odd-lot
+tender with a 3%+ spread and a clean condition set is genuinely rare. **The
+thresholds are not lowered, the date window is not widened, and Tier C is not
+promoted, to produce content.** An empty report is a valid report; a full one
+produced by moving a threshold is worse than nothing, because it looks the same.
+
+The `Rejected` section exists for the same reason. Seeing what was filtered and
+why is the only way to know whether a threshold is doing its job or throwing
+away the entire universe.
+
+### SEC fair access
+
+EDGAR is free and keyless, and the obligations that come with it are enforced in
+one place, [`scripts/odd_lot.py`](scripts/odd_lot.py)'s `SecClient`:
+
+- **A contact User-Agent on every request**, `<Tool name> <contact email>`. The
+  `SEC_USER_AGENT` secret overrides the placeholder in config. A missing or
+  generic User-Agent (`Mozilla/5.0`, `python-requests/2.28`) returns 403 and
+  blocks the IP for about ten minutes — and on a shared GitHub runner, that is
+  somebody else's outage too. `check_user_agent` refuses to start without one.
+- **8 requests/second**, under the SEC's 10, held by a sliding-window limiter
+  with a 0.12s spacing floor. The limit is per IP and aggregated across
+  machines, so the headroom is not politeness theatre.
+- **60-second backoff on 403 or 429, and no retry.** Retrying extends the block.
+- **CIKs zero-padded to 10 digits.** An unpadded CIK 404s, which reads as "this
+  company has no filings" rather than as an error.
+- **Documents cached and never re-fetched.** An offer document cannot change; an
+  amendment arrives as a new filing with its own accession.
+
+The EFTS full-text search endpoint is undocumented and the SEC reserves the
+right to change it, so it sits behind an adapter that **raises** on an
+unexpected response shape rather than returning zero hits. A silent zero would
+be indistinguishable from a quiet week, which is the normal result.
+
+### Running it by hand
+
+```bash
+python scripts/odd_lot.py run --dry-run     # screen and print, write nothing
+python scripts/odd_lot.py universe          # what is currently tracked
+python scripts/odd_lot.py rescore           # re-price without re-discovering
+python scripts/publish_odd_lot.py --dry-run # render the tab without writing it
+python tests/test_odd_lot_pipeline.py --demo  # a full run, offline, on fixtures
+```
+
+Actions → **Odd-Lot Tender Screener** → *Run workflow* does the same on a runner.
+
 ## Scope
 
 Only instruments you can actually trade in Robinhood are recommended:
@@ -166,6 +327,7 @@ dry_run: true             # writes reports/ but not the Sheet
   weekly-digest.yml      Sunday scorecard: hit rate by conviction and horizon
   keepalive.yml          stops GitHub disabling the cron after 60 idle days
   data-sources-check.yml manual probe of every data source and the Sheet
+  odd-lot-screener.yml   twice-daily odd-lot tender screen, 05:37 and 18:30 ET
 .claude/skills/
   daily-research/        Phase 1 prompt contract
   daily-synthesis/       Phase 2 prompt contract
@@ -173,6 +335,7 @@ dry_run: true             # writes reports/ but not the Sheet
 config/
   strategy.md            horizon, sizing, conviction, ranking rules
   universe.md            Robinhood venue constraints
+  odd_lot.json           SEC contact, capital cap, and every screener threshold
 scripts/
   market_data.py         keyless-first data CLI Claude calls during research
   add_candidate.py       validates and captures a candidate during research
@@ -187,25 +350,35 @@ scripts/
   step_summary.py        the Actions run summary
   check_sources.py       probes every data source and capability
   check_sheets.py        write/read/delete test against the Sheet
+  odd_lot.py             odd-lot tender screener: EDGAR, gates, universe, report
+  publish_odd_lot.py     the single "Odd Lot" tab, overwritten each run
   report_schema.json     the contract between synthesis and publishing
 reports/<date>/
   prior_context.md       what was recommended before and how it went
   candidates.jsonl       captured candidates — the research deliverable
   notes.md               raw research log (checkpointed)
   report.json            final structured output
+  odd_lot.md             that day's odd-lot screen, tiers and rejections
 state/
   open_positions.json    picks still being tracked for performance
+  odd_lot_universe.json  open tender offers and the archive of closed ones
+tests/fixtures/odd_lot/
+  *.html                 constructed language patterns for the parser
+  real/                  actual filings, fetched on demand — see its README
 ```
 
 ## Tuning it
 
-Two files change behavior with no code edits, and both are read fresh on every
+Three files change behavior with no code edits, and all are read fresh on every
 run:
 
 - **`config/strategy.md`** — how many ideas, the reward-to-risk floors per
   horizon, position size caps, the conviction rubric, and how the research
   budget is divided.
 - **`config/universe.md`** — what is tradeable and what is excluded.
+- **`config/odd_lot.json`** — the screener's SEC contact string, capital cap,
+  spread and liquidity floors, tier boundaries, and schedule windows. Each one
+  is explained in [the section above](#the-gates-and-why-each-threshold-is-where-it-is).
 
 ## Disclaimer
 
