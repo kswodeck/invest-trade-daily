@@ -734,6 +734,62 @@ def _next_url(payload: Any, current: str) -> str | None:
     return None
 
 
+# These endpoints serve every county their firm covers. Paging the whole state
+# at one request per second is not a plan — the first live success walked 40
+# pages, 400 rows, and none of them were ours. So ask the API to filter, using
+# the field name the API itself uses as the query key. `query_params` in config
+# pins it once it is known, and skips the probing entirely.
+COUNTY_PARAM_GUESSES = ("county", "county_name", "county__name", "search", "q")
+
+
+def _narrow_to_county(url: str, payload: Any, rows: list[dict], diag: dict,
+                      source: dict, cfg: dict):
+    """Re-request the endpoint filtered to this county, if that is possible."""
+    column_map = source.get("column_map") or {}
+    wanted = source.get("county_filter")
+    pinned = source.get("query_params") or {}
+
+    def request(params: dict):
+        query = urllib.parse.urlencode(params)
+        joiner = "&" if urllib.parse.urlsplit(url).query else "?"
+        target = f"{url}{joiner}{query}"
+        try:
+            body = fetch(target, cfg)
+            fresh = json.loads(body)
+        except (SourceError, json.JSONDecodeError):
+            return None
+        found, found_diag = best_record_array([fresh], column_map)
+        return (target, fresh, found, found_diag) if found else None
+
+    if pinned:
+        result = request(pinned)
+        return (*result, pinned) if result else (url, payload, rows, diag, {})
+
+    if not wanted:
+        return url, payload, rows, diag, {}
+
+    # Already ours? Then the endpoint is county-scoped and needs no narrowing.
+    if any(wanted.lower() in str(row.get("county", "")).lower() for row in rows):
+        return url, payload, rows, diag, {}
+
+    key = (diag.get("discovered_field_map") or {}).get("county")
+    for param in dict.fromkeys([key, *COUNTY_PARAM_GUESSES]):
+        if not param:
+            continue
+        result = request({param: wanted})
+        if not result:
+            continue
+        target, fresh, found, found_diag = result
+        matched = sum(1 for row in found if wanted.lower() in str(row.get("county", "")).lower())
+        # Accept only if the parameter actually did something. An API that
+        # ignores an unknown query key returns the unfiltered list, and taking
+        # that would look like success while changing nothing.
+        if matched and matched >= len(found) * 0.9:
+            found_diag["narrowed_by"] = param
+            return target, fresh, found, found_diag, {param: wanted}
+    return url, payload, rows, diag, {}
+
+
 def follow_pages(payload: Any, rows: list[dict], source: dict, cfg: dict,
                  url: str) -> tuple[int, list[dict]]:
     """Walk `next` until the list runs out. Returns (pages read, all rows)."""
@@ -848,9 +904,11 @@ def discover_api_records(html: str, source: dict, cfg: dict, url: str
             continue
         rows, diag = best_record_array([payload], column_map)
         if rows:
-            pages, rows = follow_pages(payload, rows, source, cfg, candidate)
-            diag.update(api_endpoint=candidate, probed=tried, pages=pages,
-                        rows=len(rows))
+            endpoint, payload, rows, diag, params = _narrow_to_county(
+                candidate, payload, rows, diag, source, cfg)
+            pages, rows = follow_pages(payload, rows, source, cfg, endpoint)
+            diag.update(api_endpoint=endpoint, probed=tried, pages=pages,
+                        rows=len(rows), query_params=params)
             return rows, diag
 
     return [], {"reason": f"followed {len(tried)} API reference(s) the page names and none "
@@ -1205,6 +1263,7 @@ def county_listings(county: dict, cfg: dict, sale_date: str | None = None
         parsed: list[dict] = []
         dropped_county = dropped_date = 0
         dates_seen: set[str] = set()
+        counties_seen: dict[str, int] = {}
 
         for raw in rows:
             listing = normalize_listing(raw, county["name"], source, cfg)
@@ -1212,8 +1271,15 @@ def county_listings(county: dict, cfg: dict, sale_date: str | None = None
             # ours. Prefer an explicit county field, fall back to everything the
             # record held — mapped or not.
             if filter_name:
-                blob = str(raw.get("county") or raw.get("_blob")
-                           or " ".join(str(v) for v in raw.values())).lower()
+                if raw.get("county"):
+                    counties_seen[str(raw["county"])[:40]] = \
+                        counties_seen.get(str(raw["county"])[:40], 0) + 1
+                # Both, not either: the mapped `county` field can hold a numeric
+                # id rather than a name, and then the name is only findable in
+                # the rest of the record.
+                blob = " ".join(str(v) for v in (
+                    raw.get("county"), raw.get("_blob"),
+                    *(v for k, v in raw.items() if k != "_blob"))).lower()
                 if filter_name.lower() not in blob and county["name"].lower() not in blob:
                     dropped_county += 1
                     continue
@@ -1232,7 +1298,11 @@ def county_listings(county: dict, cfg: dict, sale_date: str | None = None
         if diag.get("pages", 1) > 1:
             detail += f" · {diag['pages']} page(s)"
         if dropped_county:
-            detail += f" · {dropped_county} not in {filter_name}"
+            # Name what did come back. "400 not in Tarrant" leaves you unable to
+            # tell a statewide feed from a county field holding a numeric id.
+            top = sorted(counties_seen.items(), key=lambda kv: -kv[1])[:6]
+            detail += (f" · {dropped_county} not in {filter_name}"
+                       + (f" (saw {top})" if top else " (no county field in the records)"))
         if dropped_date:
             detail += (f" · {dropped_date} for another sale date "
                        f"(saw {sorted(dates_seen)[:6]}, wanted {sale_date})")

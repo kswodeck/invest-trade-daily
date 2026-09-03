@@ -188,6 +188,17 @@ its own host, at most `MAX_API_PROBES` of them, at the same one request per
 second — and it never guesses at paths the site did not mention. Set
 `"probe_api": false` on a source to switch it off.
 
+**A statewide feed.** These endpoints serve every county the firm covers, and
+paging the whole state at one request per second is not a plan — the first
+success walked 40 pages, fetched 400 rows and kept none of them. So when the
+first page holds none of this county's rows, `_narrow_to_county` re-requests it
+filtered, using the field name the API itself uses as the query key before
+falling back to a short list of guesses. A parameter the API *ignores* returns
+the unfiltered list, which would look like success while changing nothing, so a
+narrowing is only accepted when nearly every row that comes back is actually
+this county's. Pin it with `query_params` on the source once you see which key
+worked, and the probing is skipped.
+
 **A moved list.** Every source takes `fallback_urls`, tried in order after the
 primary fails. They are strictly additive — never fetched when the primary
 works — and `verify` reports which one got used.
