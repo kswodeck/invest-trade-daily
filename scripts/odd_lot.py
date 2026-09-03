@@ -1304,6 +1304,84 @@ def score_entry(entry: dict[str, Any], *, client: SecClient | None, md: Any,
 
 
 # --------------------------------------------------------------------------
+# who to tell, and when
+# --------------------------------------------------------------------------
+#
+# The whole point of the screener is that most days it finds nothing, which
+# means nobody will read a report that says so. A Tier A or B offer has a
+# deadline attached and is the one day the tab is worth opening — so it has to
+# come and find you.
+#
+# Everything here is a pure decision over the universe. It knows nothing about
+# GitHub, email, or any other channel; `scripts/notify_odd_lot.py` carries it.
+
+TIER_RANK = {"A": 3, "B": 2, "C": 1}
+
+
+def _tier_at_least(tier: str | None, floor: str) -> bool:
+    return TIER_RANK.get(tier or "", 0) >= TIER_RANK.get(floor, 99)
+
+
+def notifications_due(universe: dict[str, Any], config: dict[str, Any]) -> list[dict[str, Any]]:
+    """Qualifying offers nobody has been told about yet.
+
+    Deduplicated on `(accession, tier)`, which is the rule that makes this
+    liveable. The screener re-scores the whole universe twice a day, so keying
+    on the accession alone would be two emails a day for as long as an offer
+    stays open — and an alert that arrives every day is one you stop reading,
+    which costs more than the alert was ever worth.
+
+    A tier that *improves* re-notifies, because "the B I mentioned is now an A"
+    is news. A tier that decays does not: you already know about the offer, and
+    the tab and the report carry the current state.
+    """
+    floor = config["notify"]["min_tier"]
+    due = []
+    for entry in universe["open"]:
+        if entry.get("status") != "candidate" or not _tier_at_least(entry.get("tier"), floor):
+            continue
+        told = entry.get("notified") or {}
+        if TIER_RANK.get(entry["tier"], 0) > TIER_RANK.get(told.get("tier", ""), 0):
+            due.append(entry)
+    return due
+
+
+def record_notified(entry: dict[str, Any], *, issue: int | None = None,
+                    now: datetime | None = None) -> dict[str, Any]:
+    """Mark an entry as announced at its current tier."""
+    entry["notified"] = {
+        "tier": entry.get("tier"),
+        "at": (now or datetime.now(ET)).isoformat(timespec="seconds"),
+        "issue": issue,
+    }
+    return entry
+
+
+def notifications_to_close(universe: dict[str, Any], config: dict[str, Any]) -> list[dict[str, Any]]:
+    """Announced offers that have since expired or stopped qualifying.
+
+    Closing is the quiet half of the lifecycle: it takes the offer off the open
+    list without sending anything, so the record of what was announced stays
+    honest without a second alert saying an opportunity went away.
+    """
+    if not config["notify"].get("close_when_gone", True):
+        return []
+    floor = config["notify"]["min_tier"]
+    gone = []
+    for entry in universe["archive"]:
+        told = entry.get("notified") or {}
+        if told.get("issue") and not told.get("closed"):
+            gone.append(entry)
+    for entry in universe["open"]:
+        told = entry.get("notified") or {}
+        if not told.get("issue") or told.get("closed"):
+            continue
+        if entry.get("status") != "candidate" or not _tier_at_least(entry.get("tier"), floor):
+            gone.append(entry)
+    return gone
+
+
+# --------------------------------------------------------------------------
 # the report
 # --------------------------------------------------------------------------
 

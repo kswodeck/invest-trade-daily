@@ -42,6 +42,7 @@ concurrency:
 
 permissions:
   contents: write
+  issues: write   # a Tier A/B offer opens an issue; see scripts/notify_odd_lot.py
 
 jobs:
   screen:
@@ -115,6 +116,19 @@ jobs:
           GCP_SERVICE_ACCOUNT_JSON: ${{ secrets.GCP_SERVICE_ACCOUNT_JSON }}
           GOOGLE_SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}
         run: python scripts/publish_odd_lot.py
+
+      # Before the commit, so the "already told you about this one" state lands
+      # in the same commit as the universe that produced it. An alert that
+      # cannot remember what it sent becomes two alerts a day per offer, which
+      # is an alert you stop reading.
+      - name: Announce any Tier A or B offer
+        if: steps.gate.outputs.proceed == 'true' && github.event.inputs.dry_run != 'true'
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -o pipefail
+          python scripts/notify_odd_lot.py | tee -a "$GITHUB_STEP_SUMMARY"
 
       - name: Commit the universe and the report
         if: steps.gate.outputs.proceed == 'true' && github.event.inputs.dry_run != 'true'

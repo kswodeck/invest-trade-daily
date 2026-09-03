@@ -203,6 +203,41 @@ version of the same trade, not evidence against it, and it does not stack with a
 flag to force a demotion. What separates B from C is whether something is wrong
 with the offer, which is what the flags are for.
 
+### How you hear about a hit
+
+Most days the screener finds nothing, so nobody opens the tab. A Tier A or B
+offer has a deadline attached, so it comes and finds you instead: the run opens
+a **GitHub issue**, which reaches you by email and mobile push through
+notification machinery you already have configured, with no new secrets and no
+third-party service.
+
+The issue is written to be decidable from the notification itself — tier,
+ticker, spread and expiry in the title; every number the gates used, the quoted
+odd-lot paragraph, a link to the filing, and the four ways to forfeit the
+preference in the body. It closes itself when the offer expires or stops
+clearing the gates.
+
+**It speaks once per offer per tier.** The screener re-scores its whole universe
+twice a day, so an alert keyed on the offer alone would fire twice a day for as
+long as the offer stayed open — and an alert that arrives every day is one you
+stop reading, which costs more than the alert was ever worth. A new qualifying
+offer speaks once. An upgrade from B to A speaks again, because that is news. A
+decay from A to B stays quiet, because you already know. The
+`(accession, tier)` pair it remembers is committed with the universe, so it
+survives the runner.
+
+**Deliberately not a failed build.** Failing the workflow is how this repo
+alarms — GitHub emails the owner on a red scheduled run, and both `Report
+Watchdog` and the daily report's stub check depend on that. But those are
+failures, and a tender offer is good news. Overloading red to mean "something
+good happened" would make the colour meaningless in the one repo where it is
+load-bearing, and you could no longer tell a broken screener from a productive
+one at a glance. Red stays reserved for breakage: a discovery outage, or a
+screen that died.
+
+Tune it in `config/odd_lot.json` under `notify` — `min_tier` (default `"B"`;
+set `"A"` for hits only), the issue `labels`, and `close_when_gone`.
+
 ### Most days there are no Tier A results
 
 That is the correct output, and the report says so in those words. An odd-lot
@@ -396,6 +431,7 @@ scripts/
   check_sheets.py        write/read/delete test against the Sheet
   odd_lot.py             odd-lot tender screener: EDGAR, gates, universe, report
   publish_odd_lot.py     the single "Odd Lot" tab, overwritten each run
+  notify_odd_lot.py      opens a GitHub issue when a Tier A or B offer appears
   report_schema.json     the contract between synthesis and publishing
   tax_deeds.py           tax deed gates, redemption law, economics, tiering
   tax_deed_sources.py    county list / CAD / lien adapters, robots + rate limit
