@@ -1,0 +1,566 @@
+{
+  "_": "Texas tax deed screener configuration. Prose lives in config/tax_deeds.md. Every URL the screener touches is here, not in code, because county sites change format without notice and the fix must never be a code change. Nothing here is verified: run `python scripts/tax_deed_sources.py verify` and fix what it names.",
+  "contact_email": "",
+  "user_agent": "invest-trade-daily-taxdeeds/1.0 (+https://github.com/kswodeck/invest-trade-daily; {contact})",
+  "request_interval_seconds": 1.0,
+  "respect_robots_txt": true,
+  "thresholds": {
+    "MAX_OPENING_BID": 20000,
+    "MAX_BID_TO_VALUE": 0.6,
+    "TIER_A_BID_TO_VALUE": 0.35,
+    "QUIET_TITLE_BUDGET": 3500,
+    "HOLDING_MONTHS": 7,
+    "REJECT_FLOOD_ZONE": true,
+    "EFFECTIVE_TAX_RATE": 0.023,
+    "MONTHLY_CARRY": 75,
+    "POST_JUDGMENT_YEARS": 1.0,
+    "TEARDOWN_IMPROVEMENT_VALUE": 5000,
+    "STATEMENT_WARN_DAYS": 30,
+    "TIER_B_MAX_MINOR_FLAGS": 2,
+    "PACKET_TIERS": "A,B"
+  },
+  "bidder_statement": {
+    "_": "Tex. Tax Code 34.015. The officer may not deliver a deed without an unexpired written statement from that county's assessor-collector. One per county; each county issues its own. Fill in `expires` from the statement you actually hold. Null means you do not hold one, which the report reports as a blocker.",
+    "holder_name": "",
+    "counties": {
+      "Dallas": {
+        "issued": null,
+        "expires": null,
+        "reference": ""
+      },
+      "Tarrant": {
+        "issued": null,
+        "expires": null,
+        "reference": ""
+      },
+      "Johnson": {
+        "issued": null,
+        "expires": null,
+        "reference": ""
+      },
+      "Ellis": {
+        "issued": null,
+        "expires": null,
+        "reference": ""
+      }
+    },
+    "form_url": "https://comptroller.texas.gov/forms/50-307.pdf"
+  },
+  "counties": [
+    {
+      "name": "Dallas",
+      "order": 1,
+      "sale_venue": "online",
+      "sale_location": "RealAuction online portal, linked from the Dallas County Tax Office site",
+      "cad": "DCAD",
+      "registration_note": "Register at least 5 business days before the sale. Deposit 5% of your anticipated maximum bid: ACH 5 business days ahead, or wire 48 hours ahead. No cash, no international funds.",
+      "written_statement_note": "$10 check to John R. Ames, Tax Assessor/Collector, Attn: Special Inventory, 500 Elm St Ste 3300, Dallas TX 75202. Notarized Form 50-307. Allow 21 working days minimum.",
+      "reference_urls": [
+        "https://www.dallascounty.org/departments/tax/",
+        "https://www.dallasact.com/"
+      ],
+      "sources": [
+        {
+          "id": "dallas_auction",
+          "sale_type": "auction",
+          "url": "https://dallas.texas.sheriffsaleauctions.com/",
+          "format": "html_table",
+          "status": "unverified",
+          "required_markers": [
+            "sale",
+            "auction"
+          ],
+          "column_map": {
+            "cause_number": [
+              "cause",
+              "case"
+            ],
+            "account": [
+              "account",
+              "property id",
+              "parcel"
+            ],
+            "address": [
+              "address",
+              "property address",
+              "situs"
+            ],
+            "legal_description": [
+              "legal",
+              "description"
+            ],
+            "minimum_opening_bid": [
+              "minimum bid",
+              "opening bid",
+              "min bid",
+              "judgment"
+            ],
+            "adjudged_value": [
+              "adjudged",
+              "appraised",
+              "assessed"
+            ],
+            "sale_date": [
+              "sale date",
+              "auction date"
+            ],
+            "owner_name": [
+              "owner",
+              "defendant",
+              "style"
+            ],
+            "status": [
+              "status"
+            ],
+            "precinct": [
+              "precinct",
+              "pct"
+            ]
+          }
+        },
+        {
+          "id": "dallas_struck_off",
+          "sale_type": "struck_off",
+          "url": "https://taxsales.lgbs.com/",
+          "format": "html_table",
+          "status": "unverified",
+          "county_filter": "Dallas",
+          "required_markers": [
+            "tax sale"
+          ],
+          "column_map": {
+            "cause_number": [
+              "cause",
+              "case"
+            ],
+            "account": [
+              "account",
+              "property id",
+              "parcel"
+            ],
+            "address": [
+              "address",
+              "situs"
+            ],
+            "legal_description": [
+              "legal",
+              "description"
+            ],
+            "minimum_opening_bid": [
+              "minimum bid",
+              "opening bid",
+              "resale price",
+              "min bid"
+            ],
+            "adjudged_value": [
+              "adjudged",
+              "appraised"
+            ],
+            "sale_date": [
+              "sale date"
+            ],
+            "owner_name": [
+              "owner",
+              "defendant",
+              "style"
+            ],
+            "status": [
+              "status"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tarrant",
+      "order": 2,
+      "sale_venue": "in_person",
+      "sale_location": "Courthouse steps, approximately 10:00 am, first Tuesday. Sales run by Linebarger Goggan Blair & Sampson.",
+      "cad": "TAD",
+      "registration_note": "Separate written approval application to Tarrant County confirming no delinquent Tarrant property taxes. In person: bring the approval and certified funds.",
+      "written_statement_note": "Tarrant requires its own 34.015 statement plus a bidder approval application. Apply well ahead; processing runs weeks, not days.",
+      "reference_urls": [
+        "https://www.tarrantcountytx.gov/en/constables.html",
+        "https://www.tarrantcountytx.gov/en/tax.html"
+      ],
+      "sources": [
+        {
+          "id": "tarrant_auction",
+          "sale_type": "auction",
+          "url": "https://taxsales.lgbs.com/",
+          "format": "html_table",
+          "status": "unverified",
+          "county_filter": "Tarrant",
+          "required_markers": [
+            "tax sale"
+          ],
+          "column_map": {
+            "cause_number": [
+              "cause",
+              "case"
+            ],
+            "account": [
+              "account",
+              "property id",
+              "parcel"
+            ],
+            "address": [
+              "address",
+              "situs"
+            ],
+            "legal_description": [
+              "legal",
+              "description"
+            ],
+            "minimum_opening_bid": [
+              "minimum bid",
+              "opening bid",
+              "min bid",
+              "judgment"
+            ],
+            "adjudged_value": [
+              "adjudged",
+              "appraised"
+            ],
+            "sale_date": [
+              "sale date"
+            ],
+            "owner_name": [
+              "owner",
+              "defendant",
+              "style"
+            ],
+            "status": [
+              "status"
+            ],
+            "precinct": [
+              "precinct",
+              "pct"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Johnson",
+      "order": 3,
+      "sale_venue": "in_person",
+      "sale_location": "Courthouse steps, first Tuesday. Constable sale.",
+      "cad": "JohnsonCAD",
+      "registration_note": "Confirm bidder registration requirements with the constable's office before the sale date.",
+      "written_statement_note": "Obtain the 34.015 statement from the Johnson County Tax Assessor-Collector.",
+      "reference_urls": [
+        "https://www.johnsoncountytx.org/public-safety/constables/constable-sale"
+      ],
+      "sources": [
+        {
+          "id": "johnson_auction",
+          "sale_type": "auction",
+          "url": "https://www.johnsoncountytx.org/public-safety/constables/constable-sale",
+          "format": "html_table",
+          "status": "unverified",
+          "required_markers": [
+            "constable",
+            "sale"
+          ],
+          "column_map": {
+            "cause_number": [
+              "cause",
+              "case"
+            ],
+            "account": [
+              "account",
+              "property id",
+              "parcel",
+              "r#"
+            ],
+            "address": [
+              "address",
+              "situs",
+              "location"
+            ],
+            "legal_description": [
+              "legal",
+              "description",
+              "property"
+            ],
+            "minimum_opening_bid": [
+              "minimum bid",
+              "opening bid",
+              "min bid",
+              "judgment"
+            ],
+            "adjudged_value": [
+              "adjudged",
+              "appraised"
+            ],
+            "sale_date": [
+              "sale date",
+              "date of sale"
+            ],
+            "owner_name": [
+              "owner",
+              "defendant",
+              "style"
+            ],
+            "status": [
+              "status"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Ellis",
+      "order": 4,
+      "sale_venue": "in_person",
+      "sale_location": "Courthouse steps, first Tuesday. Constable sale.",
+      "cad": "EllisCAD",
+      "registration_note": "Confirm bidder registration requirements with the Ellis County constable and tax assessor-collector.",
+      "written_statement_note": "Obtain the 34.015 statement from the Ellis County Tax Assessor-Collector.",
+      "reference_urls": [
+        "https://www.co.ellis.tx.us/",
+        "https://www.co.ellis.tx.us/166/Tax-Assessor-Collector"
+      ],
+      "sources": [
+        {
+          "id": "ellis_auction",
+          "sale_type": "auction",
+          "url": "https://taxsales.lgbs.com/",
+          "format": "html_table",
+          "status": "unverified",
+          "county_filter": "Ellis",
+          "required_markers": [
+            "tax sale"
+          ],
+          "column_map": {
+            "cause_number": [
+              "cause",
+              "case"
+            ],
+            "account": [
+              "account",
+              "property id",
+              "parcel"
+            ],
+            "address": [
+              "address",
+              "situs"
+            ],
+            "legal_description": [
+              "legal",
+              "description"
+            ],
+            "minimum_opening_bid": [
+              "minimum bid",
+              "opening bid",
+              "min bid",
+              "judgment"
+            ],
+            "adjudged_value": [
+              "adjudged",
+              "appraised"
+            ],
+            "sale_date": [
+              "sale date"
+            ],
+            "owner_name": [
+              "owner",
+              "defendant",
+              "style"
+            ],
+            "status": [
+              "status"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "appraisal_districts": {
+    "DCAD": {
+      "name": "Dallas Central Appraisal District",
+      "account_url": "https://www.dallascad.org/AcctDetailRes.aspx?ID={account}",
+      "search_url": "https://www.dallascad.org/SearchAddr.aspx",
+      "format": "html_labels",
+      "status": "unverified",
+      "required_markers": [
+        "dcad",
+        "account"
+      ]
+    },
+    "TAD": {
+      "name": "Tarrant Appraisal District",
+      "account_url": "https://www.tad.org/property/{account}",
+      "search_url": "https://www.tad.org/property-search/",
+      "format": "html_labels",
+      "status": "unverified",
+      "required_markers": [
+        "tarrant",
+        "appraisal"
+      ]
+    },
+    "JohnsonCAD": {
+      "name": "Johnson County Appraisal District",
+      "account_url": "https://esearch.johnsoncad.com/Property/View/{account}",
+      "search_url": "https://esearch.johnsoncad.com/",
+      "format": "html_labels",
+      "status": "unverified",
+      "required_markers": [
+        "property",
+        "search"
+      ]
+    },
+    "EllisCAD": {
+      "name": "Ellis Appraisal District",
+      "account_url": "https://esearch.elliscad.com/Property/View/{account}",
+      "search_url": "https://esearch.elliscad.com/",
+      "format": "html_labels",
+      "status": "unverified",
+      "required_markers": [
+        "property",
+        "search"
+      ]
+    }
+  },
+  "lien_sources": {
+    "_": "County clerk records are not reliably machine-readable, which is the whole reason this tool cannot certify title. Expect `unavailable` here and read it as `not screened`, never as `clean`.",
+    "federal_tax_lien": {
+      "check": "federal_tax_lien",
+      "on_hit": "reject",
+      "urls": {
+        "Dallas": "https://dallas.tx.publicsearch.us/",
+        "Tarrant": "https://tarrant.tx.publicsearch.us/",
+        "Johnson": "https://johnson.tx.publicsearch.us/",
+        "Ellis": "https://ellis.tx.publicsearch.us/"
+      },
+      "format": "clerk_search",
+      "status": "unverified",
+      "query_terms": [
+        "FEDERAL TAX LIEN",
+        "INTERNAL REVENUE",
+        "UNITED STATES OF AMERICA"
+      ]
+    },
+    "pace_lien": {
+      "check": "pace_lien",
+      "on_hit": "reject",
+      "urls": {
+        "_all": "https://www.texaspaceauthority.org/completed-projects/"
+      },
+      "format": "html_text",
+      "status": "unverified"
+    },
+    "hoa_assessment": {
+      "check": "hoa_assessment",
+      "on_hit": "flag",
+      "urls": {
+        "Dallas": "https://dallas.tx.publicsearch.us/",
+        "Tarrant": "https://tarrant.tx.publicsearch.us/",
+        "Johnson": "https://johnson.tx.publicsearch.us/",
+        "Ellis": "https://ellis.tx.publicsearch.us/"
+      },
+      "format": "clerk_search",
+      "status": "unverified",
+      "query_terms": [
+        "HOMEOWNERS ASSOCIATION",
+        "PROPERTY OWNERS ASSOCIATION",
+        "ASSESSMENT LIEN"
+      ]
+    },
+    "municipal_lien": {
+      "check": "municipal_lien",
+      "on_hit": "flag",
+      "urls": {
+        "Dallas": "https://dallas.tx.publicsearch.us/",
+        "Tarrant": "https://tarrant.tx.publicsearch.us/",
+        "Johnson": "https://johnson.tx.publicsearch.us/",
+        "Ellis": "https://ellis.tx.publicsearch.us/"
+      },
+      "format": "clerk_search",
+      "status": "unverified",
+      "query_terms": [
+        "CITY OF",
+        "DEMOLITION",
+        "MOWING",
+        "WEED",
+        "BOARD UP",
+        "PARAMOUNT LIEN"
+      ]
+    }
+  },
+  "flood": {
+    "_": "FEMA National Flood Hazard Layer, public ArcGIS REST. Layer 28 is the flood hazard zone polygons.",
+    "url": "https://hazards.fema.gov/gis/nfhl/rest/services/public/NFHL/MapServer/28/query",
+    "format": "arcgis",
+    "status": "unverified",
+    "high_risk_zones": [
+      "A",
+      "AE",
+      "AH",
+      "AO",
+      "AR",
+      "A99",
+      "V",
+      "VE"
+    ]
+  },
+  "environmental": {
+    "_": "TCEQ publishes datasets but no stable keyless per-parcel API; EPA Envirofacts is the reachable public one. Both are a proximity screen, not a Phase I.",
+    "url": "https://data.epa.gov/efservice/frs_program_facility/postal_code/{zip}/JSON",
+    "format": "epa_frs",
+    "status": "unverified",
+    "manual_reference_url": "https://www.tceq.texas.gov/agency/data/lookup-data",
+    "suspect_land_use_codes": [
+      "C1",
+      "C2",
+      "C3",
+      "C4",
+      "F1",
+      "F2",
+      "L1",
+      "L2",
+      "IND",
+      "COM"
+    ],
+    "suspect_use_keywords": [
+      "service station",
+      "gas station",
+      "filling station",
+      "fuel",
+      "dry clean",
+      "laundr",
+      "auto repair",
+      "body shop",
+      "salvage",
+      "industrial",
+      "manufactur",
+      "plating",
+      "chemical",
+      "petroleum",
+      "landfill"
+    ]
+  },
+  "geocoder": {
+    "_": "US Census geocoder, public and keyless. Only used to turn a situs address into a point for the FEMA flood query; nothing is sent anywhere else.",
+    "url": "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress",
+    "benchmark": "Public_AR_Current",
+    "format": "census",
+    "status": "unverified"
+  },
+  "municipal_minimum_lot_sqft": {
+    "_": "Minimum residential lot size by municipality of record, for the Gate 3 unbuildable flag. Add the cities you actually bid in; an absent city means the check reports unavailable rather than clean.",
+    "DALLAS": 5000,
+    "FORT WORTH": 5000,
+    "ARLINGTON": 6000,
+    "GRAND PRAIRIE": 6000,
+    "IRVING": 6000,
+    "MESQUITE": 6000,
+    "GARLAND": 7000,
+    "CLEBURNE": 6000,
+    "BURLESON": 6000,
+    "WAXAHACHIE": 7000,
+    "ENNIS": 6000,
+    "MIDLOTHIAN": 7500
+  }
+}

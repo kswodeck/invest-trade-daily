@@ -284,6 +284,39 @@ can. Validation fails that case outright.
 See [`config/strategy.md`](config/strategy.md) and
 [`config/universe.md`](config/universe.md) to tune this.
 
+## Texas tax deed screener
+
+A separate, twice-weekly module sharing this repo's Sheets credentials and
+nothing else. Texas tax sales are the first Tuesday of each month and counties
+publish their lists at least 21 days ahead; `Tax Deed Screener` ingests those
+lists for **Dallas, Tarrant, Johnson and Ellis**, applies disqualifying filters,
+and writes a shortlist to its own `Tax Deeds` tab plus a due-diligence packet per
+surviving property. It never touches the trade report's tabs.
+
+**It does not certify title and it cannot.** County clerk lien records are not
+reliably machine-readable. Every row is a candidate requiring a professional
+title search before any bid, and the checks that could not run are a column of
+their own next to the ones that did — a blank Flags cell means the checks that
+ran found nothing, never that the property is clear.
+
+Two things surprise people, and both are the tool working rather than failing:
+everything grades **Tier C** while the county clerk portals stay unscrapeable,
+because an unscreened federal tax lien is a material flag; and **occupancy is
+flagged unknown on every row**, because it cannot be determined remotely and is
+never inferred.
+
+Every county URL lives in [`config/tax_deeds.json`](config/tax_deeds.json) and
+ships **unverified** — run `python scripts/tax_deed_sources.py verify` before the
+first real run and expect to fix URLs and column names. County sites change
+format without notice; the fix is always config, never the parser. Full
+documentation: **[`config/tax_deeds.md`](config/tax_deeds.md)**.
+
+```bash
+python scripts/tax_deed_sources.py verify     # fetch every source, check structure
+python scripts/tax_deed_screen.py --dry-run   # full run, Sheet untouched
+python scripts/tax_deeds.py statement         # §34.015 written statement status
+```
+
 ## Setup
 
 The workflow cannot run until you provision four secrets and a Google Sheet.
@@ -301,6 +334,7 @@ Quick version:
 | `FINNHUB_API_KEY`           | no       | Free tier. Better quotes, earnings calendar      |
 | `TWELVEDATA_API_KEY`        | no       | Free tier. Backup daily OHLCV                    |
 | `ALPHAVANTAGE_API_KEY`      | no       | Free tier. Last-resort OHLCV                     |
+| `TAX_DEED_CONTACT_EMAIL`    | no       | Required only by the tax deed screener           |
 
 Everything degrades gracefully: with zero optional keys the pipeline still runs
 on Nasdaq, CoinGecko, SEC EDGAR, Kalshi, and Claude's own web search.
@@ -335,6 +369,7 @@ dry_run: true             # writes reports/ but not the Sheet
   keepalive.yml          stops GitHub disabling the cron after 60 idle days
   data-sources-check.yml manual probe of every data source and the Sheet
   odd-lot-screener.yml   twice-daily odd-lot tender screen, 05:37 and 18:30 ET
+  tax-deeds.yml          twice-weekly Texas tax deed screener (separate module)
 .claude/skills/
   daily-research/        Phase 1 prompt contract
   daily-synthesis/       Phase 2 prompt contract
@@ -343,6 +378,8 @@ config/
   strategy.md            horizon, sizing, conviction, ranking rules
   universe.md            Robinhood venue constraints
   odd_lot.json           SEC contact, capital cap, and every screener threshold
+  tax_deeds.json         county sources, gates and the §34.015 statement
+  tax_deeds.md           how the tax deed screener is configured
 scripts/
   market_data.py         keyless-first data CLI Claude calls during research
   add_candidate.py       validates and captures a candidate during research
@@ -360,6 +397,9 @@ scripts/
   odd_lot.py             odd-lot tender screener: EDGAR, gates, universe, report
   publish_odd_lot.py     the single "Odd Lot" tab, overwritten each run
   report_schema.json     the contract between synthesis and publishing
+  tax_deeds.py           tax deed gates, redemption law, economics, tiering
+  tax_deed_sources.py    county list / CAD / lien adapters, robots + rate limit
+  tax_deed_screen.py     the tax deed run: ingest, screen, publish
 reports/<date>/
   prior_context.md       what was recommended before and how it went
   candidates.jsonl       captured candidates — the research deliverable
@@ -369,6 +409,11 @@ reports/<date>/
 state/
   open_positions.json    picks still being tracked for performance
   odd_lot_universe.json  open tender offers and the archive of closed ones
+data/tax_deeds/
+  <date>.json            tax deed run snapshot, every listing including rejects
+  manual/                drop-box for counties that publish only a PDF
+reports/tax_deeds/<sale>/
+  <county>_<account>.md  due-diligence packet per Tier A/B candidate
 tests/fixtures/odd_lot/
   *.html                 constructed language patterns for the parser
   real/                  actual filings, fetched on demand — see its README

@@ -10,15 +10,18 @@ on:
     paths:
       - "scripts/**"
       - "tests/**"
-      # config/odd_lot.json is read by the screener's tests, so a threshold
-      # edited there can fail them without a line of Python changing.
+      # These are read by their screeners' tests, so a threshold or a county
+      # column pattern edited there can fail them without a line of Python
+      # changing.
       - "config/odd_lot.json"
+      - "config/tax_deeds.json"
       - ".github/workflows/tests.yml"
   pull_request:
     paths:
       - "scripts/**"
       - "tests/**"
       - "config/odd_lot.json"
+      - "config/tax_deeds.json"
   workflow_dispatch:
 
 jobs:

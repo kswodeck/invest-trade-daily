@@ -160,6 +160,79 @@ Consequences worth knowing before you go debugging:
 Logic changes here need a test in `tests/` — run with
 `python -m unittest discover -s tests`.
 
+## Texas tax deed screener
+
+A separate twice-weekly module — Dallas, Tarrant, Johnson, Ellis. It shares the
+daily report's Sheets credentials and nothing else: its own `Tax Deeds` tab, its
+own workflow, its own config. Do not write it into the report pipeline.
+
+**It does not certify title and it cannot.** County clerk lien records are not
+reliably machine-readable. Every row is a candidate requiring a professional
+title search before a bid, and no code, comment or output may imply otherwise —
+`test_no_output_claims_clear_title` fails the build over the phrase. The
+corollary is the one people get wrong: a blank Flags cell means the checks that
+*ran* found nothing, never that the property is clear, which is why "Checks Run"
+and "Checks Unavailable" are columns of their own.
+
+Four rules are load-bearing:
+
+- **Unavailable is never clean.** A lien check that could not run leaves a flag
+  behind, and a check that never ran at all is treated identically to one that
+  failed — the two are indistinguishable from the property's point of view.
+  `gate2_liens` reads the absence of a check as `unavailable`, not as a pass.
+- **So everything grading Tier C is the tool working.** Unscreened federal tax
+  lien and PACE checks are *material* flags and material means Tier C. The clerk
+  portals are session-gated and publish no keyless query endpoint, so until a
+  working `query_url` is configured nothing will ever be Tier A. That is the
+  screener reporting it screened none of the disqualifiers. Do not soften it by
+  downgrading the severity.
+- **Occupancy is flagged unknown on every row, always, and never inferred.**
+  Because it is on every row it cannot rank rows, so it carries severity
+  `universal` and the tiering ignores it — otherwise Tier A would be unreachable
+  and the tiers would mean nothing. It still shows in Flags and still puts the
+  drive-by on every checklist. Never remove it to tidy up a report.
+- **Redemption and ownership are costed differently on purpose**, and getting it
+  wrong made a good trade read as a loss. You do not buy a quiet title action on
+  a property that is still redeemable, so the redemption case excludes that
+  budget; and §34.21(b) makes the former owner reimburse the recording fee and
+  the taxes, penalties, interest and costs the purchaser paid, so those wash and
+  are excluded from *both* sides. Counting them as a cost with no matching
+  reimbursement turned a 17% redemption into a headline -8%. What remains is the
+  carry the statute does not repay — insurance and utilities on a vacant parcel.
+  It is still conservative: §34.21(a) takes the 25% premium on the aggregate
+  total, where `gate4_economics` takes it on the bid alone.
+
+Statute the gates encode, in one place: homestead, agricultural and mineral
+property redeem for two years (25% year one, 50% year two) and are rejected at
+Gate 1 for exactly that reason; everything else is 180 days at 25%. Redemption
+reconstitutes junior liens the sale had eliminated, so a redeemed property does
+not come back clean. A federal tax lien rejects rather than prices because IRC
+§7425(d) gives the IRS 120 days from the sale to redeem, and that right survives.
+Without an unexpired §34.015 written statement the officer may not deliver a
+deed, so a winning bid buys nothing — the report surfaces the holder's expiry
+from config and warns at 30 days, because renewal runs to 21 working days.
+
+Every URL is in `config/tax_deeds.json`, never in logic, and every one ships
+`"status": "unverified"` — they were assembled from the publishing pages, not
+confirmed against a live fetch. `scripts/tax_deed_sources.py verify` fetches each
+one and fails **with the URL** when its declared markers or columns are gone; a
+screening run verifies first and exits non-zero when a source broke, because a
+silently empty tab reads exactly like "no sales this month". When a county
+reformats, fix the config — never the parser. A county publishing only a PDF gets
+a hand-exported CSV in `data/tax_deeds/manual/`, not a PDF dependency.
+
+Manners are enforced in code, not documented as intentions: robots.txt is
+honoured (unreadable means do not fetch), one request per second per host, and
+without `TAX_DEED_CONTACT_EMAIL` the module refuses to fetch rather than go
+anonymous.
+
+The tab is rewritten in full every run — stale listings are dangerous, since a
+property pulled on Friday is still a live-looking row on Monday. Each run's
+snapshot goes to `data/tax_deeds/<date>.json` including the rejects and the
+reason for each.
+
+Logic changes here need a test in `tests/` — the same suite as everything else.
+
 ## Data access
 
 Use `scripts/market_data.py` before reaching for raw web scraping — it is

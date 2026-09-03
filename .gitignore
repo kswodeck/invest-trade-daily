@@ -21,3 +21,7 @@ client_secret*.json
 # with its own accession — so the cache is pure speed and SEC politeness.
 # actions/cache carries it between runs; a cold start costs nothing but time.
 state/odd_lot_cache/
+
+# Tax deed CAD lookups are derived, TTL'd and regenerate on demand — caching
+# them across runs is worth it, committing them is not.
+data/tax_deeds/cache/

@@ -1,0 +1,220 @@
+# Texas tax deed screener — configuration
+
+Twice-weekly module, separate from the daily trade report. It ingests the tax
+sale lists Dallas, Tarrant, Johnson and Ellis counties publish, applies
+disqualifying filters, and produces a shortlist with a due-diligence packet per
+surviving property.
+
+## It does not certify title, and it cannot
+
+County clerk lien records are not reliably machine-readable. Every output row is
+a **candidate** requiring a professional title search before any bid. That
+sentence is in row 1 of the sheet, at the top of every packet, in the run
+summary, and in the snapshot JSON. `tests/test_tax_deeds.py` fails the build if
+any generated output claims clear, clean, marketable or insurable title.
+
+The corollary matters more than the disclaimer: **a blank Flags column means the
+checks that ran found nothing, never that the property is clear.** Which checks
+actually ran is a column of its own, next to the ones that did not.
+
+## Files
+
+| Path | What it is |
+| --- | --- |
+| `config/tax_deeds.json` | every URL, threshold and the §34.015 statement |
+| `scripts/tax_deeds.py` | gates, redemption law, economics, tiering, rendering |
+| `scripts/tax_deed_sources.py` | fetching, robots, rate limit, parsers, verification |
+| `scripts/tax_deed_screen.py` | the run: ingest → enrich → screen → publish |
+| `data/tax_deeds/<date>.json` | the run snapshot, every listing including rejects |
+| `data/tax_deeds/manual/<source>.csv` | operator drop-box for PDF-only counties |
+| `reports/tax_deeds/<sale>/<county>_<acct>.md` | packet per Tier A/B candidate |
+| Google Sheet tab `Tax Deeds` | the shortlist, rewritten in full each run |
+
+## Running it
+
+```bash
+python scripts/tax_deed_sources.py verify        # fetch every source, check structure
+python scripts/tax_deed_screen.py --dry-run      # full run, Sheet untouched
+python scripts/tax_deed_screen.py --sale-date 2026-10-06 --county Dallas
+python scripts/tax_deeds.py thresholds           # what the gates are set to
+python scripts/tax_deeds.py statement            # §34.015 status per county
+```
+
+Credentials are the daily report's: `GCP_SERVICE_ACCOUNT_JSON` and
+`GOOGLE_SHEET_ID`. It creates its own tab and never writes to an existing one.
+`TAX_DEED_CONTACT_EMAIL` is additionally required — see Manners below.
+
+## Thresholds
+
+Resolved **environment → config file → built-in default**, so a workflow can
+widen a gate for one run without a commit.
+
+| Knob | Default | What it does |
+| --- | --- | --- |
+| `MAX_OPENING_BID` | 20000 | Gate 1 rejects a larger minimum bid |
+| `MAX_BID_TO_VALUE` | 0.60 | Gate 1 rejects above it; also the recommended max bid |
+| `TIER_A_BID_TO_VALUE` | 0.35 | Tier A ceiling |
+| `QUIET_TITLE_BUDGET` | 3500 | in the ownership case only |
+| `HOLDING_MONTHS` | 7 | 180-day redemption plus a month |
+| `REJECT_FLOOD_ZONE` | true | false demotes a flood hit to a material flag |
+| `EFFECTIVE_TAX_RATE` | 0.023 | DFW ad valorem, for holding and post-judgment taxes |
+| `MONTHLY_CARRY` | 75 | insurance and utilities on a vacant parcel |
+| `POST_JUDGMENT_YEARS` | 1.0 | years of taxes assumed accrued since judgment |
+| `TEARDOWN_IMPROVEMENT_VALUE` | 5000 | below it, a parcel with a structure is flagged |
+| `STATEMENT_WARN_DAYS` | 30 | §34.015 expiry warning |
+| `TIER_B_MAX_MINOR_FLAGS` | 2 | more than this drops to Tier C |
+| `PACKET_TIERS` | `A,B` | which tiers get a due-diligence packet |
+
+## §34.015 — fill this in
+
+`bidder_statement.counties.<County>.expires` is the expiry of the written
+statement *you hold* from that county's assessor-collector. Null means you hold
+none, and the report says so on the sheet, in the summary and in every packet.
+
+This is the one blocker that is entirely yours to fix and entirely invisible
+until the deed does not arrive: without an unexpired statement the officer **may
+not deliver a deed**, so a winning bid buys nothing. Notarized Form 50-307,
+`comptroller.texas.gov/forms/50-307.pdf`. Processing runs to a minimum of 21
+working days in some counties, which is why the warning fires at 30 days.
+
+An individual may not bid or purchase in the name of another individual
+(§34.011). Knowing violation is a Class B misdemeanor.
+
+## Sources
+
+Every URL is here; none is in the logic, and `test_no_url_is_hardcoded_in_the_
+screening_logic` keeps it that way. Each source declares:
+
+- `format` — `html_table`, `csv`, or `pdf`
+- `required_markers` — strings that must still be on the page
+- `column_map` — canonical field → header patterns, **in precedence order**
+  (`minimum_opening_bid` lists "minimum bid" before "judgment" because a
+  judgment amount is only a last-resort stand-in for an opening bid)
+- `county_filter` — for aggregators that carry several counties on one page
+- `sale_type` — `auction` or `struck_off`
+
+**Every source ships marked `"status": "unverified"`.** They were assembled from
+the county and law-firm pages that publish these lists, not confirmed against a
+live fetch — the environment this was built in cannot reach county hosts. Run
+`python scripts/tax_deed_sources.py verify` before the first real run and expect
+to fix URLs and column names. That is the intended workflow, not a defect: county
+sites change format without notice, and the fix is always config, never the
+parser.
+
+Verification fetches each source and fails **with the URL** when its markers or
+columns are gone. A screening run verifies first, and exits non-zero if any
+source broke — because a silently empty tab reads exactly like "no sales this
+month", which is the dangerous failure.
+
+### Struck-off lists
+
+Properties that did not sell at auction, purchasable over the counter at the
+original minimum bid with no auction to attend. Captured as `sale_type:
+struck_off` and shown in the Sale Type column. Dallas has one configured; add
+the others as you find where each county publishes them.
+
+### PDF-only counties
+
+Several constable offices publish only a PDF and this repo carries no PDF
+dependency. Rather than pretend to parse one, such a source errors with the path
+to drop a hand-exported CSV: `data/tax_deeds/manual/<source_id>.csv`, matched by
+the same `column_map`. A manual file, when present, wins over the live fetch.
+
+## Manners
+
+Non-negotiable, and enforced in code:
+
+- **robots.txt is honoured.** A disallowed path is not fetched at all, and the
+  check that needed it reports `unavailable`. A missing robots.txt allows; one
+  that returns a server error does not, because the rules exist and we could not
+  read them.
+- **One request per second per host**, globally.
+- **The User-Agent names the project and carries a contact email.** Without
+  `TAX_DEED_CONTACT_EMAIL` (or `contact_email` here) the module refuses to make
+  a request rather than fetch anonymously.
+
+## The gates
+
+**Gate 1 — hard disqualifiers, rejected with the reason logged.** Opening bid
+over the cap; homestead or agricultural exemption on the CAD record; mineral-only
+interest; mobile home without the land; sale date passed or listing withdrawn; no
+CAD match; bid-to-value over the cap. The exemption classes go because §34.21(a)
+gives them a two-year redemption, and you cannot sell, re-tenant or remodel
+through it.
+
+**Gate 2 — liens.** A property passes only if every check returned clean, **or
+returned unavailable and left a flag behind.** Federal tax lien or PACE hit
+rejects outright. HOA hits flag. A check that never ran is treated identically to
+one that failed, because the two are indistinguishable from the property's point
+of view.
+
+**Gate 3 — physical.** FEMA flood zone; road frontage; municipal minimum lot
+size; teardown-level improvement value. Occupancy is flagged unknown on every
+row and never inferred — see below.
+
+**Gate 4 — economics.** Both outcomes, because both are acceptable: redeemed
+pays 25% of the bid over ≤180 days; not redeemed leaves you the equity against
+CAD value net of estimated costs.
+
+The two are costed differently on purpose. You do not buy a quiet title action on
+a property that is still redeemable, so the redemption case excludes that budget.
+And §34.21(b) makes the former owner reimburse the deed recording fee and the
+taxes, penalties, interest and costs you paid — so those wash, and are excluded
+from **both** sides of the redemption case. Counting them as a cost with no
+matching reimbursement is what turned a 17% redemption into a headline -8% loss.
+What is left is the carry the statute does not repay: insurance and utilities
+over `HOLDING_MONTHS`.
+
+It is still conservative. §34.21(a) computes the 25% premium on the *aggregate
+total* — the bid plus the recording fee plus the taxes reimbursed — where this
+takes it on the bid alone, as the spec does.
+
+**Gate 5 — tiering.** A: no flags, bid-to-value < 0.35. B: no material flags, one
+or two minor, bid-to-value < 0.60. C: passes the hard gates but carries material
+flags — informational only.
+
+## Two consequences worth knowing before you go debugging
+
+**Everything grading Tier C is the tool working.** Unavailable federal-tax-lien
+and PACE checks are *material* flags, and material flags mean Tier C. The clerk
+portals are session-gated and publish no keyless query endpoint, so unless you
+configure a `query_url` that actually works, every property carries two material
+flags and nothing is ever Tier A or B. That is the screener reporting it screened
+none of the disqualifiers — not a bug, and not something to soften by
+downgrading the severity.
+
+The consequence is that the default `PACKET_TIERS=A,B` writes no packets at all
+in that state, and the run says so rather than leaving you to notice an empty
+directory. Set `PACKET_TIERS=A,B,C` to get one per candidate and read the flag
+list yourself — that is the honest way to work an unscreened shortlist, and it
+does not require pretending a property cleared a check that never ran.
+
+**Occupancy is flagged on every single row.** It cannot be determined remotely
+and is never inferred. Because it is on every row it cannot rank rows, so it
+carries severity `universal` and the tiering ignores it — otherwise Tier A would
+be unreachable and the tiers would mean nothing. It still shows in the Flags
+column and still puts the drive-by on every checklist. Do not remove it to tidy
+up a report; it is the reason the drive-by is there.
+
+## Redemption, in one place
+
+| Property | Period | Premium |
+| --- | --- | --- |
+| Homestead, agricultural, mineral | 2 years | 25% year one, 50% year two |
+| Everything else | 180 days | 25% |
+
+The former owner may not occupy, possess, or receive rents during redemption
+(§34.21(h)); the purchaser may evict, subject to servicemember protections and
+bona fide leases. **Redemption reconstitutes junior liens the sale had otherwise
+eliminated — a redeemed property does not come back clean.** And where a federal
+tax lien was of record, IRC §7425(d) / 28 U.S.C. §2410 give the IRS 120 days from
+the sale to redeem, or the state period, whichever is longer. That right survives
+the sale, which is why a federal tax lien hit rejects rather than prices.
+
+## Non-goals
+
+No bidding, no auction account automation, no payment handling. Nothing in the
+code, comments or output may claim clear title.
+
+Logic changes here need a test in `tests/` — run with
+`python -m unittest discover -s tests`.

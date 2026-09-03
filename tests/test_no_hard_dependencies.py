@@ -29,11 +29,16 @@ PURE_MODULES = [
     "add_candidate", "build_context", "check_sheets", "dedupe_positions",
     "ensure_report", "exposure", "note_late_run", "odd_lot", "publish_odd_lot",
     "publish_sheets", "refresh_prices", "report_runs", "report_state",
-    "schedule_gate", "step_summary", "validate_report", "watchlist",
-    "weekly_digest",
+    "schedule_gate", "step_summary", "tax_deed_screen", "tax_deed_sources",
+    "tax_deeds", "validate_report", "watchlist", "weekly_digest",
 ]
 
 # Modules that legitimately need the network stack at import time.
+#
+# `tax_deed_sources` fetches county pages but is deliberately not on this list:
+# half of it is HTML and CSV parsing, and those parsers are the part that has to
+# be tested against archived county formats on the bare runner. So it imports
+# `requests` inside the one function that opens a session.
 NETWORK_MODULES = ["market_data", "check_sources"]
 
 # Kept free of `.format` placeholders: the source below is full of braces of
