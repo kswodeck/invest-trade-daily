@@ -879,3 +879,80 @@ class PagingAndFilteringAreVisible(unittest.TestCase):
         listings, report = tds.county_listings(self.county, self.cfg, "2026-10-06")
         self.assertEqual(len(listings), 2)
 
+
+
+class AsksTheApiToFilterRatherThanPagingTheState(unittest.TestCase):
+    """These endpoints serve every county their firm covers.
+
+    The first live success walked 40 pages, fetched 400 rows and kept none of
+    them — paging a statewide feed at one request per second is not a plan. So
+    ask the API to narrow, using the field name the API itself uses as the key.
+    """
+
+    def _rec(self, i, county):
+        return {"cause_nbr": f"C{i}", "account_nbr": str(i), "prop_address_one": f"{i} MAIN",
+                "minimum_bid": "$7,800.00", "sale_date": "2026-10-06",
+                "status": "Active", "county": county}
+
+    def setUp(self):
+        self.cfg = td.load_config()
+        self.county = next(c for c in td.counties(self.cfg) if c["name"] == "Tarrant")
+        self.county["sources"][0] = dict(self.county["sources"][0], required_markers=[])
+        self.statewide = [self._rec(i, "Anderson") for i in range(10)]
+        self.ours = [self._rec(100 + i, "Tarrant") for i in range(3)]
+        self.honoured = "county"
+        self.served = []
+        self._fetch = tds.fetch
+        tds.fetch = self._fake
+
+    def tearDown(self):
+        tds.fetch = self._fetch
+
+    def _fake(self, url, cfg, **kw):
+        self.served.append(url)
+        if "/api/property_sales/" in url:
+            found = re.search(r"[?&](county|county_name|county__name|search|q)=([A-Za-z]+)", url)
+            if found and found.group(1) == self.honoured and found.group(2) == "Tarrant":
+                return json.dumps({"count": 3, "next": None, "results": self.ours})
+            # An API that does not know a query key ignores it and returns
+            # everything — which must not read as a successful narrowing.
+            return json.dumps({"count": 10, "next": None, "results": self.statewide})
+        return '<html><script>var A="/api/property_sales/";</script></html>'
+
+    def test_it_re_requests_narrowed_and_keeps_the_result(self):
+        listings, report = tds.county_listings(self.county, self.cfg, "2026-10-06")
+        self.assertEqual([l["account"] for l in listings], ["100", "101", "102"])
+        self.assertIn("fetched 3, kept 3", report[0]["detail"])
+
+    def test_a_parameter_the_api_ignores_is_not_taken_for_success(self):
+        self.honoured = "nothing-matches-this"
+        listings, report = tds.county_listings(self.county, self.cfg, "2026-10-06")
+        self.assertEqual(listings, [])
+        self.assertIn("not in Tarrant", report[0]["detail"])
+
+    def test_an_already_county_scoped_endpoint_is_left_alone(self):
+        self.statewide = self.ours
+        tds.county_listings(self.county, self.cfg, "2026-10-06")
+        self.assertFalse([u for u in self.served if "county=" in u],
+                         "no narrowing should be attempted when page one is already ours")
+
+    def test_a_pinned_query_param_skips_the_probing(self):
+        self.county["sources"][0] = dict(self.county["sources"][0],
+                                         query_params={"county": "Tarrant"})
+        listings, _ = tds.county_listings(self.county, self.cfg, "2026-10-06")
+        self.assertEqual(len(listings), 3)
+        probes = [u for u in self.served if "=" in u.split("/api/")[-1]]
+        self.assertEqual(len(probes), 1, probes)
+
+    def test_the_report_names_the_counties_that_did_come_back(self):
+        """`400 not in Tarrant` cannot tell a statewide feed from a numeric id."""
+        self.honoured = "nothing-matches-this"
+        _, report = tds.county_listings(self.county, self.cfg, "2026-10-06")
+        self.assertIn("Anderson", report[0]["detail"])
+
+    def test_a_county_field_holding_an_id_still_matches_on_the_rest_of_the_record(self):
+        self.honoured = "nothing-matches-this"
+        self.statewide = [dict(self._rec(1, "057"), prop_address_one="1 MAIN ST, TARRANT")]
+        listings, _ = tds.county_listings(self.county, self.cfg, "2026-10-06")
+        self.assertEqual(len(listings), 1)
+
