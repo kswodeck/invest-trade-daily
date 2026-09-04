@@ -1246,8 +1246,15 @@ def load_source(source: dict, cfg: dict) -> tuple[list[dict], dict]:
     errors: list[str] = []
     for attempt in [a for a in attempts if a["url"]]:
         candidate = attempt["url"]
+        # Everything downstream — discovery, and the server-side narrowing in
+        # particular — reads the filter off the source. It has to be the filter
+        # belonging to the URL being tried, or Johnson pages forty pages of a
+        # nationwide feed and drops all four hundred rows client-side for want
+        # of a `?county=` it never sent.
+        effective = dict(source, county_filter=attempt["county_filter"],
+                         required_markers=attempt["required_markers"])
         try:
-            rows, diag = _read_source(candidate, source, fmt, column_map, cfg,
+            rows, diag = _read_source(candidate, effective, fmt, column_map, cfg,
                                       attempt["required_markers"])
         except SourceError as exc:
             errors.append(f"{candidate} — {exc.detail}")

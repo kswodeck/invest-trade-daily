@@ -1557,3 +1557,54 @@ class VerifyExercisesTheSameAccessorTheChecksDo(unittest.TestCase):
         self.assertFalse(dallas["ok"])
         self.assertIn("robots.txt", dallas["detail"])
 
+
+
+class ThePerUrlFilterReachesTheServerSideNarrowing(unittest.TestCase):
+    """Johnson reached the aggregate and still kept nothing.
+
+    The client-side filter used the URL's own county, but `_narrow_to_county`
+    read it off the source — which is None for Johnson, because the filter
+    belongs to its fallback. So it paged forty pages of a nationwide feed and
+    dropped all four hundred rows for want of a `?county=` it never sent.
+    """
+
+    def _rec(self, i, county):
+        return {"cause_nbr": f"C{i}", "account_nbr": str(i), "prop_address_one": f"{i} MAIN",
+                "minimum_bid": "$7,800.00", "sale_date": "2026-10-06",
+                "status": "Active", "county": county}
+
+    def setUp(self):
+        self.cfg = td.load_config()
+        self.elsewhere = [self._rec(i, "GALVESTON COUNTY") for i in range(10)]
+        self.ours = [self._rec(100 + i, "JOHNSON COUNTY") for i in range(4)]
+        self.served = []
+        self._fetch = tds.fetch
+        tds.fetch = self._fake
+
+    def tearDown(self):
+        tds.fetch = self._fetch
+
+    def _fake(self, url, cfg, **kw):
+        self.served.append(url)
+        if "johnsoncountytx.org" in url:
+            raise tds.SourceError(url, "HTTP 403: the host refused this User-Agent")
+        if "/api/property_sales/" in url:
+            if "county=JOHNSON+COUNTY" in url or "county=JOHNSON%20COUNTY" in url:
+                return json.dumps({"count": 4, "next": None, "results": self.ours})
+            return json.dumps({"count": 10, "next": None, "results": self.elsewhere})
+        return ('<html><body><div id=root></div>'
+                '<script>var A="/api/property_sales/";</script></body></html>')
+
+    def test_the_fallbacks_filter_drives_the_narrowing(self):
+        county = next(c for c in td.counties(self.cfg) if c["name"] == "Johnson")
+        listings, report = tds.county_listings(county, self.cfg, "2026-10-06")
+        self.assertEqual(len(listings), 4)
+        self.assertTrue([u for u in self.served
+                         if "county=JOHNSON" in u.replace("%20", "+")],
+                        "no narrowed request was made")
+
+    def test_it_is_reported_as_coming_through_the_fallback(self):
+        county = next(c for c in td.counties(self.cfg) if c["name"] == "Johnson")
+        _, report = tds.county_listings(county, self.cfg, "2026-10-06")
+        self.assertIn("fetched 4, kept 4", report[0]["detail"])
+
