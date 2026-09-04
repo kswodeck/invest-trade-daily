@@ -346,6 +346,36 @@ Tier A used to demand *zero* minor flags, which one unchecked flood zone — and
 those are routine — was enough to deny forever. A tier nothing can reach ranks
 nothing.
 
+## When the appraisal district will not answer
+
+The CADs are the good value source and the flakiest part of the pipeline:
+Tarrant rate-limited 365 straight lookups, Ellis reset the connection, and
+Dallas stopped after 94. Without a value nothing can be priced or ranked, so
+there are three layers before giving up.
+
+**Ask the district's own search.** Guessing a detail-page URL is what failed for
+Tarrant and Ellis — 470 lookups, not one match. Every district publishes a
+search box, so `cad_search` asks it for the account, probes the parameter names
+until one answers, keeps the one that worked, and follows the result link. Only
+links on the district's own host that actually mention the account are followed.
+
+**Back off when told to.** An HTTP 429 doubles that host's interval, up to 8
+seconds, and holds it for the rest of the run. `host_interval_seconds` pins one
+ahead of time.
+
+**Fall back to the adjudged value.** The county's sale list often publishes it —
+the figure the court set in the tax suit, and the one §34.01(p) measures a
+struck-off resale against. It is a real published number rather than an
+estimate, so it is a legitimate second source. Every output names which was
+used (`Value Source` on the sheet, `Value source` in the packet) because an
+adjudged value is a judgment-date figure and can be years stale where a CAD roll
+is current, and a property priced this way keeps a **material** flag: the
+homestead, agricultural and mineral checks all read the CAD record and none of
+them ran.
+
+The cap still applies to it. Pricing on the fallback must not become a way
+around Gate 1.
+
 ## Enrichment is rationed
 
 A CAD lookup, a geocode and a flood query is three requests per property at one

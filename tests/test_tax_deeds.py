@@ -126,11 +126,38 @@ class Gate1HardDisqualifiers(unittest.TestCase):
 
     def test_no_cad_match_flags_rather_than_hiding_the_property(self):
         """An unreachable appraisal district says nothing about the property."""
-        result = td.screen(listing(), None, checks(), cfg(), TODAY)
+        result = td.screen(listing(adjudged_value=None), None, checks(), cfg(), TODAY)
         self.assertEqual(result["status"], "candidate")
         self.assertIn("no_cad_match", codes(result["flags"]))
         self.assertEqual(result["tier"], "C")
         self.assertIsNone(result["economics"])
+
+    def test_the_countys_adjudged_value_prices_it_when_the_cad_cannot(self):
+        """Tarrant rate-limited 365 lookups and Ellis reset the connection.
+
+        The sale list often carries the adjudged value — the figure the court
+        set in the tax suit — which is a real published number, so a dead
+        appraisal district no longer means an unpriceable property.
+        """
+        result = td.screen(listing(adjudged_value=74300.0), None, checks(), cfg(), TODAY)
+        self.assertEqual(result["status"], "candidate")
+        self.assertEqual(result["economics"]["value_source"], "adjudged")
+        self.assertAlmostEqual(result["economics"]["bid_to_value"], 8450 / 74300, places=4)
+        detail = next(f["detail"] for f in result["flags"] if f["code"] == "no_cad_match")
+        self.assertIn("adjudged value", detail)
+        self.assertIn("may be years stale", detail)
+
+    def test_the_cad_is_preferred_over_the_adjudged_value_when_both_exist(self):
+        result = td.screen(listing(adjudged_value=999999.0), cad(), checks(), cfg(), TODAY)
+        self.assertEqual(result["economics"]["value_source"], "cad")
+        self.assertEqual(result["economics"]["cad_value"], 74300.0)
+
+    def test_an_adjudged_value_still_enforces_the_bid_to_value_cap(self):
+        """Pricing on the fallback must not become a way around the gate."""
+        result = td.screen(listing(minimum_opening_bid=9000.0, adjudged_value=10000.0),
+                           None, checks(), cfg(), TODAY)
+        self.assertEqual(result["status"], "rejected")
+        self.assertIn("bid_to_value_over_cap", codes(result["rejections"]))
 
     def test_a_struck_off_listing_needs_no_sale_date(self):
         """There is no auction, so there is no date. That is the category."""
@@ -312,8 +339,12 @@ class Gate4Economics(unittest.TestCase):
         self.assertAlmostEqual(econ["redemption_payout"], 8450 * 1.25, places=2)
         self.assertAlmostEqual(econ["redemption_payout_year_two"], 8450 * 1.50, places=2)
 
-    def test_nothing_is_priced_without_a_cad_value(self):
-        self.assertIsNone(td.gate4_economics(listing(), cad(appraised_value=None), cfg()))
+    def test_nothing_is_priced_without_any_value_at_all(self):
+        self.assertIsNone(td.gate4_economics(listing(adjudged_value=None),
+                                             cad(appraised_value=None), cfg()))
+
+    def test_the_value_source_is_always_recorded(self):
+        self.assertEqual(self.econ["value_source"], "cad")
 
 
 class Gate5Tiering(unittest.TestCase):
@@ -410,7 +441,9 @@ class SheetOutput(unittest.TestCase):
 
     def test_the_header_lands_on_the_frozen_row(self):
         self.assertEqual(self.values[td.HEADER_ROW - 1], td.HEADERS)
-        self.assertEqual(len(td.HEADERS), 21)
+        self.assertEqual(len(td.HEADERS), 22)
+        self.assertEqual(td.HEADERS[td.COL_TIER], "Tier")
+        self.assertIn("Value Source", td.HEADERS)
 
     def test_counties_are_blocked_in_dallas_tarrant_johnson_ellis_order(self):
         banners = [self.values[row][0] for row in self.spec["county_rows"]]

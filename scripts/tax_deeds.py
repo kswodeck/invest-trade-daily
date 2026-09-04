@@ -455,10 +455,30 @@ def gate1_hard_disqualifiers(listing: dict, cad: dict | None, cfg: dict,
         out.append(rejection(1, "withdrawn", f"county list status is {listing['status']!r}"))
 
     if not cad:
-        flags.append(flag("no_cad_match", MATERIAL,
-                          "no appraisal district record matched this account, so the "
-                          "property cannot be valued and nothing below could be checked "
-                          "against it — value it by hand before bidding"))
+        value, source = valuation(listing, cad)
+        if source == "adjudged":
+            # Priced, but on the court's judgment-date figure rather than a
+            # current roll. Still a material flag: it can be years stale, and
+            # the exemption checks below never ran at all.
+            flags.append(flag("no_cad_match", MATERIAL,
+                              f"no appraisal district record matched this account. Priced on "
+                              f"the county's adjudged value of ${value:,.0f} instead, which "
+                              f"is a judgment-date figure and may be years stale — and the "
+                              f"homestead, agricultural and mineral checks never ran"))
+        else:
+            flags.append(flag("no_cad_match", MATERIAL,
+                              "no appraisal district record matched this account, so the "
+                              "property cannot be valued and nothing below could be checked "
+                              "against it — value it by hand before bidding"))
+            return out, flags
+
+        bid_now = listing.get("minimum_opening_bid")
+        if bid_now is not None and value:
+            cap = threshold(cfg, "MAX_BID_TO_VALUE")
+            if bid_now / value > cap:
+                out.append(rejection(1, "bid_to_value_over_cap",
+                                     f"bid-to-value {bid_now / value:.2f} against the adjudged "
+                                     f"value is over the {cap:.2f} cap (MAX_BID_TO_VALUE)"))
         return out, flags
 
     homestead = is_homestead(cad)
@@ -483,11 +503,11 @@ def gate1_hard_disqualifiers(listing: dict, cad: dict | None, cfg: dict,
     if mobile:
         out.append(rejection(1, "mobile_home_without_land", mobile))
 
-    cad_value = cad.get("appraised_value")
+    cad_value, _ = valuation(listing, cad)
     if cad_value in (None, 0):
         flags.append(flag("no_cad_value", MATERIAL,
-                          "the CAD record carries no appraised value, so bid-to-value "
-                          "cannot be computed"))
+                          "neither the CAD record nor the county list carries a value, so "
+                          "bid-to-value cannot be computed"))
     elif bid is not None:
         ratio = bid / cad_value
         cap = threshold(cfg, "MAX_BID_TO_VALUE")
@@ -611,6 +631,28 @@ def gate3_physical(listing: dict, cad: dict | None, checks: list[dict],
 # GATE 4 — economics
 # --------------------------------------------------------------------------
 
+def valuation(listing: dict, cad: dict | None) -> tuple[float | None, str]:
+    """What this property is worth, and where that number came from.
+
+    The appraisal districts are the good source and are also the flakiest part
+    of the pipeline — Tarrant rate-limited 365 straight lookups and Ellis reset
+    the connection — and without a value nothing can be priced or ranked at all.
+
+    But the county's own sale list often publishes the **adjudged value**: the
+    figure the court set in the tax suit, and the one §34.01(p) measures a
+    struck-off resale against. It is a real published number, not an estimate,
+    so it is a legitimate second source — and every output says which one was
+    used, because an adjudged value is a judgment-date figure and can be years
+    stale where a CAD roll is current.
+    """
+    if cad and cad.get("appraised_value"):
+        return float(cad["appraised_value"]), "cad"
+    adjudged = listing.get("adjudged_value")
+    if adjudged:
+        return float(adjudged), "adjudged"
+    return None, "none"
+
+
 def gate4_economics(listing: dict, cad: dict | None, cfg: dict,
                     terms: dict | None = None) -> dict | None:
     """Both outcomes priced, because both are acceptable.
@@ -633,7 +675,7 @@ def gate4_economics(listing: dict, cad: dict | None, cfg: dict,
     taxes reimbursed — while this takes it on the bid alone, as the spec does.
     """
     bid = listing.get("minimum_opening_bid")
-    cad_value = (cad or {}).get("appraised_value")
+    cad_value, value_source = valuation(listing, cad)
     if bid is None or not cad_value:
         return None
 
@@ -657,6 +699,7 @@ def gate4_economics(listing: dict, cad: dict | None, cfg: dict,
     econ = {
         "opening_bid": round(bid, 2),
         "cad_value": round(float(cad_value), 2),
+        "value_source": value_source,
         "bid_to_value": round(bid / cad_value, 4),
         "max_bid": round(cad_value * threshold(cfg, "MAX_BID_TO_VALUE"), 2),
         "quiet_title_budget": round(quiet_title, 2),
@@ -834,7 +877,7 @@ def statement_report(cfg: dict, county_names: Iterable[str], today: date) -> lis
 
 HEADERS = [
     "County", "Sale Date", "Sale Type", "Cause No", "Account No", "Address",
-    "Legal Description", "Property Type", "Opening Bid", "CAD Value", "Bid/Value",
+    "Legal Description", "Property Type", "Opening Bid", "Value", "Value Source", "Bid/Value",
     "Redemption Period", "Redemption Payout", "Recommended Max Bid", "Tier",
     "Flags", "Checks Run", "Checks Unavailable", "CAD Link", "County Listing Link",
     "Last Verified",
@@ -931,6 +974,8 @@ def _sheet_row(result: dict) -> list[Any]:
         listing.get("property_type") or cad.get("land_use_description") or "",
         _money(econ.get("opening_bid") if econ else listing.get("minimum_opening_bid")),
         _money(econ.get("cad_value") if econ else cad.get("appraised_value")),
+        {"cad": "CAD", "adjudged": "adjudged (court)", "none": ""}.get(
+            econ.get("value_source", ""), ""),
         f"{ratio:.2f}" if ratio is not None else "",
         result["redemption"]["label"],
         _money(econ.get("redemption_payout")),
@@ -1053,7 +1098,12 @@ def packet_markdown(result: dict, cfg: dict, statement: dict) -> str:
             "| Figure | Value |",
             "| --- | --- |",
             line("Opening bid", _money(econ["opening_bid"])),
-            line("CAD value", _money(econ["cad_value"])),
+            line("Value used", _money(econ["cad_value"])),
+            line("Value source", {"cad": "appraisal district roll",
+                                  "adjudged": "the county's **adjudged value** — the figure "
+                                              "the court set in the tax suit, which is a "
+                                              "judgment-date number and may be years stale"}
+                 .get(econ.get("value_source"), econ.get("value_source"))),
             line("Bid / value", f"{econ['bid_to_value']:.2f}"),
             line("Recommended max bid", _money(econ["max_bid"])),
             line("Quiet title budget", _money(econ["quiet_title_budget"])),
