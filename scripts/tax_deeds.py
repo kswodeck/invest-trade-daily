@@ -131,7 +131,7 @@ DEFAULT_THRESHOLDS: dict[str, Any] = {
     "MAX_ENRICHMENTS": 250,
     "TIER_A_MAX_MINOR_FLAGS": 1,
     "TIER_B_MAX_MINOR_FLAGS": 2,
-    "PACKET_TIERS": "A,B",
+    "PACKET_TIERS": "A,B,C",
 }
 
 BOOL_THRESHOLDS = {"REJECT_FLOOD_ZONE"}
@@ -1011,14 +1011,15 @@ RESULT_MARKS = {CLEAN: "clean", HIT: "**HIT**", UNAVAILABLE: "**unavailable — 
 
 
 def packet_tiers(cfg: dict) -> set[str]:
-    """Which tiers get a due-diligence packet. `A,B` per the spec.
+    """Which tiers get a due-diligence packet. All three by default.
 
-    A knob rather than a constant because of the Tier C consequence documented
-    above: while the clerk portals stay unscreenable, every property carries a
-    material flag and nothing is ever Tier A or B — so the default would write
-    no packets at all. Set `PACKET_TIERS=A,B,C` to get one for every candidate
-    and read the flag list, rather than lowering a severity to manufacture a
-    tier the evidence does not support.
+    The spec asked for A and B, and that default wrote no packets at all: while
+    the clerk portals disallow crawling, every property carries an unscreened
+    federal tax lien and PACE check, both material, so nothing reaches A or B.
+    A default that produces nothing is not a conservative default, it is a
+    broken one — and the honest way to work an unscreened shortlist is to read
+    the flag list on every candidate, not to lower a severity until a tier
+    appears. Narrow it back to `A,B` once a clerk source is configured.
     """
     raw = threshold(cfg, "PACKET_TIERS")
     return {part.strip().upper() for part in str(raw).split(",") if part.strip()}

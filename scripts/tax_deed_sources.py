@@ -1226,15 +1226,34 @@ def load_source(source: dict, cfg: dict) -> tuple[list[dict], dict]:
 
     # A county that moves its list usually keeps publishing it somewhere; try
     # every known location before calling the source broken.
-    attempts: list[str] = [u for u in [url, *(source.get("fallback_urls") or [])] if u]
+    #
+    # Markers and the county filter belong to a *URL*, not to a source, and
+    # conflating them cost Johnson County entirely: its fallback is the same
+    # nationwide feed that already works for three other counties, and it was
+    # rejected for not containing the word "constable" — a marker written for
+    # the county's own page. A bare string fallback therefore inherits no
+    # markers, and an object fallback carries its own.
+    attempts = [{"url": url, "required_markers": source.get("required_markers") or [],
+                 "county_filter": source.get("county_filter")}]
+    for entry in source.get("fallback_urls") or []:
+        if isinstance(entry, str):
+            attempts.append({"url": entry, "required_markers": [], "county_filter": None})
+        elif isinstance(entry, dict) and entry.get("url"):
+            attempts.append({"url": entry["url"],
+                             "required_markers": entry.get("required_markers") or [],
+                             "county_filter": entry.get("county_filter")})
+
     errors: list[str] = []
-    for candidate in attempts:
+    for attempt in [a for a in attempts if a["url"]]:
+        candidate = attempt["url"]
         try:
-            rows, diag = _read_source(candidate, source, fmt, column_map, cfg)
+            rows, diag = _read_source(candidate, source, fmt, column_map, cfg,
+                                      attempt["required_markers"])
         except SourceError as exc:
             errors.append(f"{candidate} — {exc.detail}")
             continue
         diag["source"] = candidate
+        diag["county_filter"] = attempt["county_filter"]
         if candidate != url:
             diag["via_fallback"] = candidate
         return rows, diag
@@ -1245,11 +1264,11 @@ def load_source(source: dict, cfg: dict) -> tuple[list[dict], dict]:
     raise StructureChanged(url, detail)
 
 
-def _read_source(url: str, source: dict, fmt: str, column_map: dict, cfg: dict
-                 ) -> tuple[list[dict], dict]:
+def _read_source(url: str, source: dict, fmt: str, column_map: dict, cfg: dict,
+                 required_markers: list | None = None) -> tuple[list[dict], dict]:
     text = fetch(url, cfg)
 
-    markers = [m.lower() for m in source.get("required_markers") or []]
+    markers = [m.lower() for m in (required_markers or [])]
     low = text.lower()
     absent = [m for m in markers if m not in low]
     if absent:
@@ -1361,7 +1380,12 @@ def county_listings(county: dict, cfg: dict, sale_date: str | None = None
             report.append(entry)
             continue
 
-        filter_name = None if diag.get("manual") else source.get("county_filter")
+        # Whichever URL answered decides the filter: the primary is this
+        # county's own page and needs none, while a nationwide aggregate needs
+        # one or it hands back the entire country.
+        filter_name = None if diag.get("manual") else (
+            diag.get("county_filter") if "county_filter" in diag
+            else source.get("county_filter"))
         parsed: list[dict] = []
         dropped_county = dropped_date = 0
         dates_seen: set[str] = set()
@@ -1618,6 +1642,23 @@ def _cad_record(cad_key: str, account: str, cfg: dict, *, use_cache: bool = True
 # Gate 2 checks
 # --------------------------------------------------------------------------
 
+def clerk_candidates(spec: dict, county: str) -> list[str]:
+    """Every official-records host configured for this county, in order.
+
+    A robots.txt disallow is that host's policy and it ends the matter there —
+    but it is *that host's* policy, not the county's. Counties commonly publish
+    the same official records index on more than one system, so a second host
+    that permits crawling is a different source rather than a way around the
+    first one's rules. Each candidate is robots-checked on its own.
+    """
+    configured = (spec.get("urls") or {}).get(county)
+    if configured is None:
+        configured = (spec.get("urls") or {}).get("_all")
+    if isinstance(configured, str):
+        configured = [configured]
+    return [u for u in (configured or []) if u]
+
+
 def clerk_check(name: str, spec: dict, listing: dict, cfg: dict) -> dict:
     """Search county clerk records for one lien class against the owner name.
 
@@ -1628,65 +1669,85 @@ def clerk_check(name: str, spec: dict, listing: dict, cfg: dict) -> dict:
     this starts returning real results instead.
     """
     county = listing.get("county", "")
-    base = (spec.get("urls") or {}).get(county) or (spec.get("urls") or {}).get("_all") or ""
+    candidates = clerk_candidates(spec, county)
     owner = listing.get("owner_name") or ""
     terms = spec.get("query_terms") or []
 
-    if not base:
+    if not candidates:
         return td.check_record(name, td.UNAVAILABLE, "not configured",
                                f"no clerk source configured for {county}")
     if not owner:
-        return td.check_record(name, td.UNAVAILABLE, base,
+        return td.check_record(name, td.UNAVAILABLE, candidates[0],
                                "the county list published no owner name to search against")
 
     query_url = spec.get("query_url")
     if not query_url:
-        return td.check_record(name, td.UNAVAILABLE, base, (
-            "county clerk records are not machine-readable here — the portal needs an "
-            "interactive session and publishes no keyless query endpoint. Search it by "
-            "hand for the owner name before bidding."))
+        return td.check_record(name, td.UNAVAILABLE, candidates[0], (
+            f"county clerk records are not machine-readable here — the portal needs an "
+            f"interactive session and publishes no keyless query endpoint. Configure "
+            f"`query_url` on this source when you find one; until then, search "
+            f"{candidates[0]} by hand for the owner name before bidding."))
 
-    url = (query_url.replace("{county}", urllib.parse.quote(county))
-                    .replace("{query}", urllib.parse.quote(owner)))
-    try:
-        text = fetch(url, cfg)
-    except SourceError as exc:
-        return td.check_record(name, td.UNAVAILABLE, url, exc.detail)
+    refusals: list[str] = []
+    for base in candidates:
+        url = (query_url.replace("{base}", base.rstrip("/"))
+                        .replace("{county}", urllib.parse.quote(county))
+                        .replace("{query}", urllib.parse.quote(owner)))
+        try:
+            text = fetch(url, cfg)
+        except RobotsDisallowed as exc:
+            # That host's rules, honoured, and the next candidate is a
+            # different host with its own.
+            refusals.append(f"{base}: {exc.detail}")
+            continue
+        except SourceError as exc:
+            refusals.append(f"{base}: {exc.detail}")
+            continue
 
-    low = text.lower()
-    hits = [term for term in terms if term.lower() in low]
-    if hits:
-        return td.check_record(name, td.HIT, url,
-                               f"{', '.join(hits)} against owner {owner!r}")
-    return td.check_record(name, td.CLEAN, url,
-                           f"no {name.replace('_', ' ')} instrument matched owner {owner!r} "
-                           f"in this index — an index search, not a title search")
+        low = text.lower()
+        hits = [term for term in terms if term.lower() in low]
+        if hits:
+            return td.check_record(name, td.HIT, url,
+                                   f"{', '.join(hits)} against owner {owner!r}")
+        return td.check_record(name, td.CLEAN, url,
+                               f"no {name.replace('_', ' ')} instrument matched owner "
+                               f"{owner!r} in this index — an index search, not a title "
+                               f"search")
+
+    return td.check_record(name, td.UNAVAILABLE, candidates[0],
+                           "no configured official-records host could be searched — "
+                           + "; ".join(refusals)[:300])
 
 
 def pace_check(spec: dict, listing: dict, cfg: dict) -> dict:
-    """Texas PACE Authority project registry. Super-priority, so a hit rejects."""
-    url = (spec.get("urls") or {}).get(listing.get("county")) or \
-          (spec.get("urls") or {}).get("_all") or ""
+    """Texas PACE project registries. Super-priority, so a hit rejects."""
+    candidates = clerk_candidates(spec, listing.get("county", ""))
     address = listing.get("address") or ""
-    if not url:
+    if not candidates:
         return td.check_record("pace_lien", td.UNAVAILABLE, "not configured",
                                "no PACE registry configured")
     if not address:
-        return td.check_record("pace_lien", td.UNAVAILABLE, url,
+        return td.check_record("pace_lien", td.UNAVAILABLE, candidates[0],
                                "no address on the listing to match against the registry")
-    try:
-        text = fetch(url, cfg)
-    except SourceError as exc:
-        return td.check_record("pace_lien", td.UNAVAILABLE, url, exc.detail)
 
     street = _norm(address).split()
     needle = " ".join(street[:3]) if len(street) >= 3 else _norm(address)
-    if needle and needle in _norm(text):
-        return td.check_record("pace_lien", td.HIT, url,
-                               f"address {address!r} appears in the PACE project registry")
-    return td.check_record("pace_lien", td.CLEAN, url, (
-        "not in the Texas PACE Authority published project registry — that registry only, "
-        "not a county clerk lien search"))
+    refusals: list[str] = []
+    for url in candidates:
+        try:
+            text = fetch(url, cfg)
+        except SourceError as exc:
+            refusals.append(f"{url}: {exc.detail}")
+            continue
+        if needle and needle in _norm(text):
+            return td.check_record("pace_lien", td.HIT, url,
+                                   f"address {address!r} appears in the PACE project registry")
+        return td.check_record("pace_lien", td.CLEAN, url, (
+            "not in the published Texas PACE project registry — that registry only, not a "
+            "county clerk lien search"))
+    return td.check_record("pace_lien", td.UNAVAILABLE, candidates[0],
+                           "no configured PACE registry could be read — "
+                           + "; ".join(refusals)[:300])
 
 
 def environmental_check(listing: dict, cad: dict | None, cfg: dict) -> dict:
