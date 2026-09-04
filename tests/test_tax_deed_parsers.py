@@ -1505,3 +1505,55 @@ class PacketsAreWrittenForEveryCandidateByDefault(unittest.TestCase):
     def test_the_default_covers_tier_c(self):
         self.assertEqual(td.packet_tiers(td.load_config()), {"A", "B", "C"})
 
+
+
+class VerifyExercisesTheSameAccessorTheChecksDo(unittest.TestCase):
+    """A config shape change that verify does not follow crashes the run.
+
+    `urls` became a list of hosts per county and `verify` still read it as a
+    single URL, so it handed a list to urlsplit and the whole screener died
+    before ingesting anything.
+    """
+
+    def setUp(self):
+        self.cfg = td.load_config()
+        self._fetch = tds.fetch
+        self.seen = []
+
+    def tearDown(self):
+        tds.fetch = self._fetch
+
+    def test_verify_survives_a_county_with_several_hosts(self):
+        def fake(url, cfg, **kw):
+            self.seen.append(url)
+            self.assertIsInstance(url, str, "verify passed a non-string to fetch")
+            return "<html>ok</html>"
+
+        tds.fetch = fake
+        rows = tds.verify(self.cfg)
+        lien = [r for r in rows if r["kind"].startswith("lien:")]
+        self.assertTrue(lien)
+        for row in lien:
+            self.assertIsInstance(row["url"], str)
+
+    def test_it_reports_how_many_hosts_answered(self):
+        def only_one(url, cfg, **kw):
+            if "publicsearch.us" in url:
+                raise tds.RobotsDisallowed(url, "robots.txt disallows this path")
+            return "<html>ok</html>"
+
+        tds.fetch = only_one
+        rows = tds.verify(self.cfg)
+        dallas = next(r for r in rows if r["id"] == "federal_tax_lien/Dallas")
+        self.assertTrue(dallas["ok"])
+        self.assertIn("host(s) reachable", dallas["detail"])
+        self.assertNotIn("publicsearch.us", dallas["url"])
+
+    def test_every_host_refusing_is_reported_as_a_failure(self):
+        tds.fetch = lambda url, cfg, **kw: (_ for _ in ()).throw(
+            tds.RobotsDisallowed(url, "robots.txt disallows this path"))
+        rows = tds.verify(self.cfg)
+        dallas = next(r for r in rows if r["id"] == "federal_tax_lien/Dallas")
+        self.assertFalse(dallas["ok"])
+        self.assertIn("robots.txt", dallas["detail"])
+

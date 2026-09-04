@@ -2017,26 +2017,40 @@ def verify(cfg: dict) -> list[dict]:
     for name, spec in (cfg.get("lien_sources") or {}).items():
         if not isinstance(spec, dict) or not spec.get("urls"):
             continue
-        for county_name, url in spec["urls"].items():
-            entry = {"kind": f"lien: {name}", "id": f"{name}/{county_name}", "url": url or ""}
-            if not url:
-                # A deliberate null: the URL that was here turned out not to
-                # exist. Reported as unconfigured rather than as a failure,
-                # because there is nothing broken to fix — something has to be
-                # found. The check itself already reports `unavailable`, which
-                # is a flag, so this cannot be mistaken for a clean screen.
+        # `clerk_candidates`, not the raw value: a county's entry is a *list* of
+        # official-records hosts, and reading it as a single URL handed a list
+        # straight to urlsplit. Verification has to exercise the same accessor
+        # the checks use, or it verifies a shape nothing else has.
+        for county_name in spec["urls"]:
+            candidates = clerk_candidates(spec, county_name)
+            entry = {"kind": f"lien: {name}", "id": f"{name}/{county_name}",
+                     "url": candidates[0] if candidates else ""}
+            if not candidates:
+                # Deliberately unconfigured: the URL that was here turned out
+                # not to exist. Reported as unconfigured rather than broken,
+                # because nothing is broken — something has to be found. The
+                # check already reports `unavailable`, which is a flag, so this
+                # cannot be mistaken for a clean screen.
                 entry.update(ok=True, detail=(
                     "no source configured — this check reports unavailable, which is a flag. "
-                    + str(spec.get("_ellis") or spec.get("_verified") or "")[:200]))
+                    + str(spec.get("_verified") or "")[:200]))
                 out.append(entry)
                 continue
-            try:
-                fetch(url, cfg)
-                entry.update(ok=True, detail="reachable" + (
-                    "" if spec.get("query_url") else
-                    " — but no query_url configured, so this check reports unavailable"))
-            except SourceError as exc:
-                entry.update(ok=False, detail=exc.detail)
+
+            reachable, refusals = [], []
+            for url in candidates:
+                try:
+                    fetch(url, cfg)
+                    reachable.append(url)
+                except SourceError as exc:
+                    refusals.append(f"{url}: {exc.detail[:90]}")
+            if reachable:
+                entry.update(ok=True, url=reachable[0], detail=(
+                    f"{len(reachable)} of {len(candidates)} host(s) reachable"
+                    + ("" if spec.get("query_url") else
+                       " — but no query_url configured, so this check reports unavailable")))
+            else:
+                entry.update(ok=False, detail="; ".join(refusals)[:300])
             out.append(entry)
 
     out.extend(_verify_enrichment(cfg))
