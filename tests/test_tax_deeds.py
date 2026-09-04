@@ -560,13 +560,17 @@ if __name__ == "__main__":
 class PacketTiers(unittest.TestCase):
     """Which candidates get a packet, and the escape hatch when none do."""
 
-    def test_the_default_is_the_spec_default(self):
-        self.assertEqual(td.packet_tiers(cfg()), {"A", "B"})
+    def test_the_default_covers_every_tier(self):
+        """A,B wrote nothing at all while the clerk portals stay unscreenable.
 
-    def test_it_can_be_widened_without_touching_a_severity(self):
+        A default that produces no output is not conservative, it is broken.
+        """
+        self.assertEqual(td.packet_tiers(cfg()), {"A", "B", "C"})
+
+    def test_it_can_be_narrowed_once_a_clerk_source_is_configured(self):
         config = cfg()
-        config["thresholds"]["PACKET_TIERS"] = "A,B,C"
-        self.assertEqual(td.packet_tiers(config), {"A", "B", "C"})
+        config["thresholds"]["PACKET_TIERS"] = "A,B"
+        self.assertEqual(td.packet_tiers(config), {"A", "B"})
 
     def test_the_environment_wins(self):
         import os

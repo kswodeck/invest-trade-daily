@@ -279,18 +279,27 @@ class PacketTierSwitch(unittest.TestCase):
                         sources=FixtureSources({"federal_tax_lien": td.UNAVAILABLE}))
         return out.getvalue()
 
-    def test_all_tier_c_writes_no_packets_and_says_why(self):
-        output = self._run()
+    def test_all_tier_c_still_gets_a_packet_each_by_default(self):
+        """The whole point of the default change: an unscreened shortlist is
+        worked by reading the flag list, and that needs the packet."""
+        self._run()
+        payload = json.loads(next((self.tmp / "data").glob("*.json")).read_text())
+        packets = list((self.tmp / "reports").rglob("*.md"))
+        self.assertTrue(packets)
+        self.assertEqual(len(packets), payload["totals"]["candidates"])
+
+    def test_narrowing_the_knob_to_a_and_b_writes_none_and_says_why(self):
+        import os
+        os.environ["PACKET_TIERS"] = "A,B"
+        try:
+            output = self._run()
+        finally:
+            del os.environ["PACKET_TIERS"]
         self.assertFalse(list((self.tmp / "reports").rglob("*.md")))
         self.assertIn("PACKET_TIERS=A,B,C", output)
 
-    def test_widening_the_knob_writes_one_per_candidate(self):
-        import os
-        os.environ["PACKET_TIERS"] = "A,B,C"
-        try:
-            self._run()
-        finally:
-            del os.environ["PACKET_TIERS"]
+    def test_every_packet_carries_the_flags_that_held_it_at_tier_c(self):
+        self._run()
         packets = list((self.tmp / "reports").rglob("*.md"))
         payload = json.loads(next((self.tmp / "data").glob("*.json")).read_text())
         self.assertTrue(packets)

@@ -257,6 +257,18 @@ layer by name so a re-indexed service self-heals. What is deliberately *not*
 worked around is robots.txt: the clerk portals disallow crawling, those checks
 stay unavailable, and `respect_robots_txt: false` is not a supported fix.
 
+Two blockers had feasible workarounds and one did not. Markers and the county
+filter belong to a URL, not to a source — conflating them cost Johnson every run,
+because its fallback is the aggregate that already works for three other
+counties and it was rejected for lacking the word "constable". A `fallback_urls`
+entry may be an object carrying its own `required_markers` and `county_filter`.
+And each lien source takes a list of official-records hosts per county, tried in
+order and robots-checked individually: a disallow is that host's policy and ends
+the matter there, but it is not the county's, and a county publishes the same
+index on more than one system. `PACKET_TIERS` defaults to `A,B,C` because `A,B`
+wrote no packets at all while every property carries an unscreened lien check —
+a default that produces nothing is broken, not conservative.
+
 Exit codes carry meaning: 0 clean, 1 published with a broken source, 2 every
 county list failed so nothing was screened and the Sheet was left alone,
 anything else a crash. 1 and 2 both write the snapshot and the step summary

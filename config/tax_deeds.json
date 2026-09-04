@@ -18,7 +18,7 @@
     "STATEMENT_WARN_DAYS": 30,
     "TIER_A_MAX_MINOR_FLAGS": 1,
     "TIER_B_MAX_MINOR_FLAGS": 2,
-    "PACKET_TIERS": "A,B",
+    "PACKET_TIERS": "A,B,C",
     "MAX_ENRICHMENTS": 250,
     "_MAX_ENRICHMENTS": "Per county, per run. Enrichment is three requests a property — CAD, geocode, flood — at one per second, so this is a wall-clock and a politeness budget both. Only listings that survive the cheap gates are enriched, cheapest bid first."
   },
@@ -132,9 +132,13 @@
           "_verified": "2026-09-03: HTTP 403 — the host refused a non-browser User-Agent. Not a format change. Confirm the real Dallas portal URL from the Dallas County Tax Office site, or use the manual CSV drop.",
           "fallback_urls": [
             "https://www.dallasact.com/act_webdev/dallas/index.jsp",
-            "https://www.dallascounty.org/departments/tax/tax-sales.php"
+            {
+              "url": "https://taxsales.lgbs.com/",
+              "required_markers": [],
+              "county_filter": "Dallas"
+            }
           ],
-          "_fallbacks": "Tried in order after the primary URL fails. Unverified alternates — strictly additive: if the primary works these are never fetched, and `verify` reports on any that get used."
+          "_fallbacks": "Object form: markers and the county filter belong to the URL. A bare string inherits neither, because applying this county's own page markers to a national aggregate is what excluded Johnson from every run."
         },
         {
           "id": "dallas_struck_off",
@@ -198,7 +202,11 @@
           },
           "_verified": "2026-09-03: taxsales.lgbs.com fetched 200 but contains no HTML table — it is a JavaScript app. Find the JSON endpoint the page calls and switch this source to \"format\": \"json\".",
           "fallback_urls": [
-            "https://www.dallascounty.org/departments/tax/tax-sales.php"
+            {
+              "url": "https://www.dallascounty.org/departments/tax/tax-sales.php",
+              "required_markers": [],
+              "county_filter": "Dallas"
+            }
           ],
           "_fallbacks": "Tried in order after the primary URL fails. Unverified alternates — strictly additive: if the primary works these are never fetched, and `verify` reports on any that get used."
         }
@@ -283,7 +291,11 @@
           },
           "_verified": "2026-09-03: same JavaScript app as dallas_struck_off — no HTML table to parse. Needs the JSON endpoint or a manual CSV.",
           "fallback_urls": [
-            "https://www.tarrantcountytx.gov/en/constables.html"
+            {
+              "url": "https://www.tarrantcountytx.gov/en/constables.html",
+              "required_markers": [],
+              "county_filter": null
+            }
           ],
           "_fallbacks": "Tried in order after the primary URL fails. Unverified alternates — strictly additive: if the primary works these are never fetched, and `verify` reports on any that get used."
         }
@@ -368,9 +380,13 @@
           "_verified": "2026-09-03: HTTP 403 — the host refused a non-browser User-Agent.",
           "fallback_urls": [
             "https://www.johnsoncountytx.org/departments/constables",
-            "https://taxsales.lgbs.com/"
+            {
+              "url": "https://taxsales.lgbs.com/",
+              "required_markers": [],
+              "county_filter": "Johnson"
+            }
           ],
-          "_fallbacks": "Tried in order after the primary URL fails. Unverified alternates — strictly additive: if the primary works these are never fetched, and `verify` reports on any that get used."
+          "_fallbacks": "Object form: markers and the county filter belong to the URL. A bare string inherits neither, because applying this county's own page markers to a national aggregate is what excluded Johnson from every run."
         }
       ]
     },
@@ -449,7 +465,11 @@
           },
           "_verified": "2026-09-03: same JavaScript app as dallas_struck_off.",
           "fallback_urls": [
-            "https://www.co.ellis.tx.us/166/Tax-Assessor-Collector"
+            {
+              "url": "https://www.co.ellis.tx.us/166/Tax-Assessor-Collector",
+              "required_markers": [],
+              "county_filter": null
+            }
           ],
           "_fallbacks": "Tried in order after the primary URL fails. Unverified alternates — strictly additive: if the primary works these are never fetched, and `verify` reports on any that get used."
         }
@@ -524,10 +544,24 @@
       "check": "federal_tax_lien",
       "on_hit": "reject",
       "urls": {
-        "Dallas": "https://dallas.tx.publicsearch.us/",
-        "Tarrant": "https://tarrant.tx.publicsearch.us/",
-        "Johnson": "https://johnson.tx.publicsearch.us/",
-        "Ellis": null
+        "Dallas": [
+          "https://dallas.tx.publicsearch.us/",
+          "https://www.dallascounty.org/departments/county-clerk/official-records.php",
+          "https://dallasclerk.tylerhost.net/"
+        ],
+        "Tarrant": [
+          "https://tarrant.tx.publicsearch.us/",
+          "https://www.tarrantcountytx.gov/en/county-clerk/deeds-and-records.html",
+          "https://countyclerkrecords.tarrantcountytx.gov/"
+        ],
+        "Johnson": [
+          "https://johnson.tx.publicsearch.us/",
+          "https://www.johnsoncountytx.org/departments/county-clerk"
+        ],
+        "Ellis": [
+          "https://www.co.ellis.tx.us/158/County-Clerk",
+          "https://ellis.tx.publicsearch.us/"
+        ]
       },
       "format": "clerk_search",
       "status": "unverified",
@@ -536,14 +570,19 @@
         "INTERNAL REVENUE",
         "UNITED STATES OF AMERICA"
       ],
-      "_ellis": "ellis.tx.publicsearch.us does not resolve — Ellis County is not on that platform. Find where the Ellis County Clerk publishes official public records and put it here; null reports 'not configured', which is honest, where a dead hostname reported a network error.",
-      "_verified": "2026-09-03: Dallas, Tarrant and Johnson resolve but their robots.txt disallows crawling, so these checks correctly report unavailable. Do not override respect_robots_txt to get around it."
+      "_verified": "2026-09-03: Dallas, Tarrant and Johnson resolve but their robots.txt disallows crawling, so these checks correctly report unavailable. Do not override respect_robots_txt to get around it.",
+      "_urls": "A list, tried in order, each robots-checked on its own. A disallow is that host's policy and ends the matter there — but it is that host's policy, not the county's, and a county commonly publishes the same official records index on more than one system. These are alternative sources, not a way around the first one's rules. None is verified; run `verify`.",
+      "_query_url": "Set this when you find a keyless query endpoint on any of the hosts above. {base} is the host that answered, {query} the owner name, {county} the county. Until it is set every check here reports unavailable, which is a material flag."
     },
     "pace_lien": {
       "check": "pace_lien",
       "on_hit": "reject",
       "urls": {
-        "_all": null
+        "_all": [
+          "https://www.texaspaceauthority.org/projects/",
+          "https://www.texaspaceauthority.org/",
+          "https://texaspace.org/"
+        ]
       },
       "format": "html_text",
       "status": "unverified",
@@ -553,10 +592,24 @@
       "check": "hoa_assessment",
       "on_hit": "flag",
       "urls": {
-        "Dallas": "https://dallas.tx.publicsearch.us/",
-        "Tarrant": "https://tarrant.tx.publicsearch.us/",
-        "Johnson": "https://johnson.tx.publicsearch.us/",
-        "Ellis": null
+        "Dallas": [
+          "https://dallas.tx.publicsearch.us/",
+          "https://www.dallascounty.org/departments/county-clerk/official-records.php",
+          "https://dallasclerk.tylerhost.net/"
+        ],
+        "Tarrant": [
+          "https://tarrant.tx.publicsearch.us/",
+          "https://www.tarrantcountytx.gov/en/county-clerk/deeds-and-records.html",
+          "https://countyclerkrecords.tarrantcountytx.gov/"
+        ],
+        "Johnson": [
+          "https://johnson.tx.publicsearch.us/",
+          "https://www.johnsoncountytx.org/departments/county-clerk"
+        ],
+        "Ellis": [
+          "https://www.co.ellis.tx.us/158/County-Clerk",
+          "https://ellis.tx.publicsearch.us/"
+        ]
       },
       "format": "clerk_search",
       "status": "unverified",
@@ -565,17 +618,32 @@
         "PROPERTY OWNERS ASSOCIATION",
         "ASSESSMENT LIEN"
       ],
-      "_ellis": "ellis.tx.publicsearch.us does not resolve — Ellis County is not on that platform. Find where the Ellis County Clerk publishes official public records and put it here; null reports 'not configured', which is honest, where a dead hostname reported a network error.",
-      "_verified": "2026-09-03: Dallas, Tarrant and Johnson resolve but their robots.txt disallows crawling, so these checks correctly report unavailable. Do not override respect_robots_txt to get around it."
+      "_verified": "2026-09-03: Dallas, Tarrant and Johnson resolve but their robots.txt disallows crawling, so these checks correctly report unavailable. Do not override respect_robots_txt to get around it.",
+      "_urls": "A list, tried in order, each robots-checked on its own. A disallow is that host's policy and ends the matter there — but it is that host's policy, not the county's, and a county commonly publishes the same official records index on more than one system. These are alternative sources, not a way around the first one's rules. None is verified; run `verify`.",
+      "_query_url": "Set this when you find a keyless query endpoint on any of the hosts above. {base} is the host that answered, {query} the owner name, {county} the county. Until it is set every check here reports unavailable, which is a material flag."
     },
     "municipal_lien": {
       "check": "municipal_lien",
       "on_hit": "flag",
       "urls": {
-        "Dallas": "https://dallas.tx.publicsearch.us/",
-        "Tarrant": "https://tarrant.tx.publicsearch.us/",
-        "Johnson": "https://johnson.tx.publicsearch.us/",
-        "Ellis": null
+        "Dallas": [
+          "https://dallas.tx.publicsearch.us/",
+          "https://www.dallascounty.org/departments/county-clerk/official-records.php",
+          "https://dallasclerk.tylerhost.net/"
+        ],
+        "Tarrant": [
+          "https://tarrant.tx.publicsearch.us/",
+          "https://www.tarrantcountytx.gov/en/county-clerk/deeds-and-records.html",
+          "https://countyclerkrecords.tarrantcountytx.gov/"
+        ],
+        "Johnson": [
+          "https://johnson.tx.publicsearch.us/",
+          "https://www.johnsoncountytx.org/departments/county-clerk"
+        ],
+        "Ellis": [
+          "https://www.co.ellis.tx.us/158/County-Clerk",
+          "https://ellis.tx.publicsearch.us/"
+        ]
       },
       "format": "clerk_search",
       "status": "unverified",
@@ -587,8 +655,9 @@
         "BOARD UP",
         "PARAMOUNT LIEN"
       ],
-      "_ellis": "ellis.tx.publicsearch.us does not resolve — Ellis County is not on that platform. Find where the Ellis County Clerk publishes official public records and put it here; null reports 'not configured', which is honest, where a dead hostname reported a network error.",
-      "_verified": "2026-09-03: Dallas, Tarrant and Johnson resolve but their robots.txt disallows crawling, so these checks correctly report unavailable. Do not override respect_robots_txt to get around it."
+      "_verified": "2026-09-03: Dallas, Tarrant and Johnson resolve but their robots.txt disallows crawling, so these checks correctly report unavailable. Do not override respect_robots_txt to get around it.",
+      "_urls": "A list, tried in order, each robots-checked on its own. A disallow is that host's policy and ends the matter there — but it is that host's policy, not the county's, and a county commonly publishes the same official records index on more than one system. These are alternative sources, not a way around the first one's rules. None is verified; run `verify`.",
+      "_query_url": "Set this when you find a keyless query endpoint on any of the hosts above. {base} is the host that answered, {query} the owner name, {county} the county. Until it is set every check here reports unavailable, which is a material flag."
     }
   },
   "flood": {

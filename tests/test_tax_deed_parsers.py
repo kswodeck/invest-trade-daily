@@ -434,6 +434,8 @@ class DeliberatelyUnconfiguredSources(unittest.TestCase):
 
     def setUp(self):
         self.cfg = td.load_config()
+        for name in ("federal_tax_lien", "hoa_assessment", "municipal_lien", "pace_lien"):
+            self.cfg["lien_sources"][name]["urls"] = {}
         self.listing = {"county": "Ellis", "owner_name": "BLUE, PAT",
                         "address": "604 W MARVIN AVE, WAXAHACHIE, TX 75165"}
 
@@ -1364,4 +1366,142 @@ class MapsThePlainValueFieldTheFeedActuallyPublishes(unittest.TestCase):
         result = td.screen(listing, None, [], self.cfg, _date(2026, 9, 4))
         self.assertEqual(result["economics"]["value_source"], "adjudged")
         self.assertAlmostEqual(result["economics"]["bid_to_value"], 7800 / 63000, places=4)
+
+
+
+class MarkersAndFiltersBelongToAUrlNotASource(unittest.TestCase):
+    """The bug that cost Johnson County every single run.
+
+    Its fallback is the same nationwide feed that already works for three other
+    counties, and it was rejected for not containing the word "constable" — a
+    marker written for the county's own page — then would have returned the
+    whole country for want of a filter.
+    """
+
+    def setUp(self):
+        self.cfg = td.load_config()
+        self.served = []
+        self._fetch = tds.fetch
+
+    def tearDown(self):
+        tds.fetch = self._fetch
+
+    def _source(self, **over):
+        base = {"id": "t", "sale_type": "auction", "format": "html_table",
+                "url": "https://county.example.invalid/constable-sale",
+                "required_markers": ["constable"],
+                "column_map": source_for("Tarrant")["column_map"]}
+        base.update(over)
+        return base
+
+    def test_a_string_fallback_inherits_no_markers(self):
+        html = fixture("dallas_realauction.html")   # contains no "constable"
+
+        def fake(url, cfg, **kw):
+            self.served.append(url)
+            if "county.example" in url:
+                raise tds.SourceError(url, "HTTP 403: the host refused this User-Agent")
+            return html
+
+        tds.fetch = fake
+        rows, diag = tds.load_source(
+            self._source(fallback_urls=["https://aggregate.example.invalid/"]), self.cfg)
+        self.assertEqual(len(rows), 5)
+        self.assertEqual(diag["via_fallback"], "https://aggregate.example.invalid/")
+
+    def test_an_object_fallback_carries_its_own_filter(self):
+        html = fixture("tarrant_lgbs.html")         # Tarrant, Dallas and Ellis rows
+
+        def fake(url, cfg, **kw):
+            if "county.example" in url:
+                raise tds.SourceError(url, "HTTP 403: the host refused this User-Agent")
+            return html
+
+        tds.fetch = fake
+        county = {"name": "Johnson", "cad": "JohnsonCAD", "sources": [self._source(
+            fallback_urls=[{"url": "https://aggregate.example.invalid/",
+                            "required_markers": [], "county_filter": "Ellis"}])]}
+        listings, report = tds.county_listings(county, self.cfg)
+        # The filter came from the URL that answered, not from the source.
+        self.assertEqual(len(listings), 1)
+        self.assertIn("WAXAHACHIE", listings[0]["address"])
+
+    def test_the_primary_url_still_gets_its_own_markers(self):
+        tds.fetch = lambda url, cfg, **kw: "<html>nothing here</html>"
+        with self.assertRaises(tds.StructureChanged) as caught:
+            tds.load_source(self._source(fallback_urls=[]), self.cfg)
+        self.assertIn("constable", caught.exception.detail)
+
+    def test_johnson_now_reaches_the_aggregate_that_works_for_everyone_else(self):
+        source = next(s for c in td.counties(self.cfg) if c["name"] == "Johnson"
+                      for s in c["sources"])
+        lgbs = [f for f in source["fallback_urls"] if isinstance(f, dict)]
+        self.assertTrue(lgbs, "Johnson needs an object fallback for the aggregate")
+        self.assertEqual(lgbs[0]["county_filter"], "Johnson")
+        self.assertEqual(lgbs[0]["required_markers"], [])
+
+
+class ClerkRecordsMayLiveOnMoreThanOneHost(unittest.TestCase):
+    """A robots disallow is that host's policy and ends the matter there.
+
+    It is not the county's policy, though, and counties publish the same
+    official records index on more than one system — so a second host is a
+    different source, not a way around the first one's rules.
+    """
+
+    def setUp(self):
+        self.cfg = td.load_config()
+        self.listing = {"county": "Dallas", "owner_name": "SMITH, JOHN",
+                        "address": "1417 S HARWOOD ST"}
+        self._fetch = tds.fetch
+
+    def tearDown(self):
+        tds.fetch = self._fetch
+
+    def test_every_county_has_more_than_one_candidate_host(self):
+        spec = self.cfg["lien_sources"]["federal_tax_lien"]
+        for county in ("Dallas", "Tarrant", "Johnson", "Ellis"):
+            with self.subTest(county=county):
+                self.assertGreaterEqual(len(tds.clerk_candidates(spec, county)), 2)
+
+    def test_a_disallowed_host_is_skipped_and_the_next_is_tried(self):
+        spec = dict(self.cfg["lien_sources"]["federal_tax_lien"],
+                    query_url="{base}/search?q={query}", query_terms=["FEDERAL TAX LIEN"])
+        seen = []
+
+        def fake(url, cfg, **kw):
+            seen.append(url)
+            if "publicsearch.us" in url:
+                raise tds.RobotsDisallowed(url, "robots.txt disallows this path")
+            return "<html>no results</html>"
+
+        tds.fetch = fake
+        check = tds.clerk_check("federal_tax_lien", spec, self.listing, self.cfg)
+        self.assertEqual(check["result"], tds.td.CLEAN)
+        self.assertNotIn("publicsearch.us", check["source"])
+        self.assertGreaterEqual(len(seen), 2)
+
+    def test_every_host_refusing_is_unavailable_and_never_clean(self):
+        spec = dict(self.cfg["lien_sources"]["federal_tax_lien"],
+                    query_url="{base}/search?q={query}")
+
+        def refuse(url, cfg, **kw):
+            raise tds.RobotsDisallowed(url, "robots.txt disallows this path")
+
+        tds.fetch = refuse
+        check = tds.clerk_check("federal_tax_lien", spec, self.listing, self.cfg)
+        self.assertEqual(check["result"], tds.td.UNAVAILABLE)
+        self.assertIn("robots.txt", check["detail"])
+
+    def test_without_a_query_url_it_is_still_unavailable(self):
+        check = tds.clerk_check("federal_tax_lien",
+                                self.cfg["lien_sources"]["federal_tax_lien"],
+                                self.listing, self.cfg)
+        self.assertEqual(check["result"], tds.td.UNAVAILABLE)
+        self.assertIn("query_url", check["detail"])
+
+
+class PacketsAreWrittenForEveryCandidateByDefault(unittest.TestCase):
+    def test_the_default_covers_tier_c(self):
+        self.assertEqual(td.packet_tiers(td.load_config()), {"A", "B", "C"})
 

@@ -65,7 +65,7 @@ widen a gate for one run without a commit.
 | `TIER_A_MAX_MINOR_FLAGS` | 1 | minor flags Tier A tolerates |
 | `TIER_B_MAX_MINOR_FLAGS` | 2 | more than this drops to Tier C |
 | `MAX_ENRICHMENTS` | 250 | CAD/geocode/flood lookups per county per run |
-| `PACKET_TIERS` | `A,B` | which tiers get a due-diligence packet |
+| `PACKET_TIERS` | `A,B,C` | which tiers get a due-diligence packet |
 
 ## §34.015 — fill this in
 
@@ -232,6 +232,23 @@ that plainly permit access. A connection reset is not a statement of policy; it
 is no signal at all. So a network-level failure is retried once and then treated
 as "no rules", with the reason recorded. An HTTP 5xx still refuses, because
 there the server is speaking and what it says is that it is broken.
+
+**A county page that refuses everything.** Markers and the county filter belong
+to a *URL*, not to a source, and conflating them cost Johnson County every run:
+its fallback is the same nationwide feed that already works for three other
+counties, and it was rejected for not containing the word "constable" — a marker
+written for the county's own page — then would have returned the whole country
+for want of a filter. A `fallback_urls` entry may now be an object carrying its
+own `required_markers` and `county_filter`; a bare string inherits neither.
+
+**A clerk portal that disallows crawling.** That is the host's policy and it
+ends the matter there — no retry, no alternate User-Agent, no exception. But it
+is *that host's* policy, not the county's, and a county commonly publishes the
+same official records index on more than one system. So each lien source takes a
+**list** of official-records hosts per county, tried in order, each robots-checked
+on its own. A disallowed host is skipped and the next is a different source
+rather than a way around the first one's rules. If every one refuses, the check
+is `unavailable` — which is a material flag, never a clean screen.
 
 What is **not** worked around, because it should not be: the four
 `publicsearch.us` clerk portals disallow crawling in robots.txt. Those checks
