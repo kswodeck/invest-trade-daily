@@ -572,9 +572,13 @@
       "V",
       "VE"
     ],
-    "_verified": "2026-09-03: layer 28 returned 404. `verify` now asks the MapServer for its layer list and prints the flood-looking candidates — run it and set the index it names.",
+    "_verified": "2026-09-04: the configured MapServer path 404s and the service root could not be listed either, so the layer autodetect had nothing to read. Fallback bases added.",
     "autodetect_layer": true,
-    "_autodetect": "The NFHL layer index is not stable across service revisions and 28 was wrong on the first live run. With this on, the screener asks the MapServer for its layer list and takes the flood-hazard-zone layer by name, so a re-indexed service self-heals."
+    "_autodetect": "The NFHL layer index is not stable across service revisions and 28 was wrong on the first live run. With this on, the screener asks the MapServer for its layer list and takes the flood-hazard-zone layer by name, so a re-indexed service self-heals.",
+    "url_fallbacks": [
+      "https://hazards.fema.gov/arcgis/rest/services/public/NFHL/MapServer/28/query",
+      "https://hazards.fema.gov/gis/nfhl/rest/services/public/NFHL/MapServer/query"
+    ]
   },
   "environmental": {
     "_": "TCEQ publishes datasets but no stable keyless per-parcel API; EPA Envirofacts is the reachable public one. Both are a proximity screen, not a Phase I.",
@@ -638,5 +642,9 @@
   "user_agent_fallbacks": [
     "Mozilla/5.0 (compatible; invest-trade-daily-taxdeeds/1.0; +mailto:{contact})"
   ],
-  "_user_agent": "Tried in order until one is not refused. robots.txt is a separate and absolute check, always evaluated against the first (our own) identity — a 403 on a UA string is a filter, not a policy. Every entry must name this project and carry a contact address; do not add one that impersonates a browser without identifying itself."
+  "_user_agent": "Tried in order until one is not refused. robots.txt is a separate and absolute check, always evaluated against the first (our own) identity — a 403 on a UA string is a filter, not a policy. Every entry must name this project and carry a contact address; do not add one that impersonates a browser without identifying itself.",
+  "host_interval_seconds": {
+    "_": "Seconds between requests for one host, over and above request_interval_seconds. Raised automatically on an HTTP 429 and kept for the rest of the run; pin a host here once you know it needs more room.",
+    "www.tad.org": 3.0
+  }
 }
