@@ -6,18 +6,21 @@
   "respect_robots_txt": true,
   "thresholds": {
     "MAX_OPENING_BID": 20000,
-    "MAX_BID_TO_VALUE": 0.6,
+    "MAX_BID_TO_VALUE": 0.75,
     "TIER_A_BID_TO_VALUE": 0.35,
     "QUIET_TITLE_BUDGET": 3500,
     "HOLDING_MONTHS": 7,
-    "REJECT_FLOOD_ZONE": true,
+    "REJECT_FLOOD_ZONE": false,
     "EFFECTIVE_TAX_RATE": 0.023,
     "MONTHLY_CARRY": 75,
     "POST_JUDGMENT_YEARS": 1.0,
     "TEARDOWN_IMPROVEMENT_VALUE": 5000,
     "STATEMENT_WARN_DAYS": 30,
+    "TIER_A_MAX_MINOR_FLAGS": 1,
     "TIER_B_MAX_MINOR_FLAGS": 2,
-    "PACKET_TIERS": "A,B"
+    "PACKET_TIERS": "A,B",
+    "MAX_ENRICHMENTS": 250,
+    "_MAX_ENRICHMENTS": "Per county, per run. Enrichment is three requests a property — CAD, geocode, flood — at one per second, so this is a wall-clock and a politeness budget both. Only listings that survive the cheap gates are enriched, cheapest bid first."
   },
   "bidder_statement": {
     "_": "Tex. Tax Code 34.015. The officer may not deliver a deed without an unexpired written statement from that county's assessor-collector. One per county; each county issues its own. Fill in `expires` from the statement you actually hold. Null means you do not hold one, which the report reports as a blocker.",
@@ -430,7 +433,8 @@
         "dcad",
         "account"
       ],
-      "_verified": "2026-09-03: reachable, markers present."
+      "_verified": "2026-09-03: matched 94 of 388 Dallas accounts and then stopped — almost certainly throttling under sustained requests. Enrichment is now limited to listings that survive the cheap gates (MAX_ENRICHMENTS), which cuts the volume by roughly two thirds.",
+      "_fallbacks": "Tried in order after account_url, against each plausible spelling of the account number."
     },
     "TAD": {
       "name": "Tarrant Appraisal District",
@@ -442,7 +446,12 @@
         "tarrant",
         "appraisal"
       ],
-      "_verified": "2026-09-03: reachable, markers present."
+      "_verified": "2026-09-03: reachable, but matched 0 of 363 Tarrant accounts — the account_url pattern is wrong. Fallback patterns added; `verify` and the run summary now name the reason each lookup failed.",
+      "account_url_fallbacks": [
+        "https://www.tad.org/property-detail/{account}",
+        "https://www.tad.org/property/?account={account}"
+      ],
+      "_fallbacks": "Tried in order after account_url, against each plausible spelling of the account number."
     },
     "JohnsonCAD": {
       "name": "Johnson County Appraisal District",
@@ -454,7 +463,8 @@
         "property",
         "search"
       ],
-      "_verified": "2026-09-03: reachable, markers present."
+      "_verified": "2026-09-03: reachable, markers present.",
+      "_fallbacks": "Tried in order after account_url, against each plausible spelling of the account number."
     },
     "EllisCAD": {
       "name": "Ellis Appraisal District",
@@ -466,7 +476,12 @@
         "property",
         "search"
       ],
-      "_verified": "2026-09-03: esearch.elliscad.com reset the connection on robots.txt, so nothing was fetched. May be transient; re-run verify."
+      "_verified": "2026-09-03: matched 0 of 7 Ellis accounts. Fallback patterns added; see the run summary for the reason.",
+      "account_url_fallbacks": [
+        "https://esearch.elliscad.com/Property/View/{account}?year=2026",
+        "https://esearch.elliscad.com/Search/Result?keywords={account}"
+      ],
+      "_fallbacks": "Tried in order after account_url, against each plausible spelling of the account number."
     }
   },
   "lien_sources": {

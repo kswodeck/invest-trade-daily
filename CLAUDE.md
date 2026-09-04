@@ -176,10 +176,18 @@ and "Checks Unavailable" are columns of their own.
 
 Four rules are load-bearing:
 
-- **Unavailable is never clean.** A lien check that could not run leaves a flag
-  behind, and a check that never ran at all is treated identically to one that
-  failed — the two are indistinguishable from the property's point of view.
-  `gate2_liens` reads the absence of a check as `unavailable`, not as a pass.
+- **Unavailable is never clean, and never a rejection either.** A check that
+  could not run leaves a flag behind, and a check that never ran at all is
+  treated identically to one that failed — the two are indistinguishable from
+  the property's point of view. But an unknown is not a finding, so it costs the
+  property its rank and never hides it. Gate 1 splits on exactly this: a
+  rejection is something that was *read* and disqualifies (bid over cap,
+  homestead, withdrawn, bid-to-value over cap); an unknown flags (no bid
+  published, no CAD match, no appraised value, an auction listing with no date).
+  The first live run is why — 718 of 758 listings were rejected for having no
+  sale date, and they were struck-off properties, which have no sale date
+  because there is no auction. Another 664 went for an unreachable appraisal
+  district. Between them they hid all 544 real candidates.
 - **So everything grading Tier C is the tool working.** Unscreened federal tax
   lien and PACE checks are *material* flags and material means Tier C. The clerk
   portals are session-gated and publish no keyless query endpoint, so until a

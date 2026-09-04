@@ -1393,8 +1393,43 @@ def _cache_path(cad_key: str, account: str) -> Path:
     return CACHE_DIR / "cad" / f"{cad_key}_{td.normalize_account(account) or 'unknown'}.json"
 
 
+# Why a CAD lookup failed, kept per district for the run report. A silent None
+# gave 664 identical `no_cad_match` rejections across two districts that turned
+# out to have entirely different problems — Dallas was being throttled after
+# ~94 requests, while Tarrant and Ellis matched nothing at all.
+cad_failures: dict[str, dict[str, int]] = {}
+
+
+def _note_cad_failure(cad_key: str, reason: str) -> None:
+    cad_failures.setdefault(cad_key, {})
+    cad_failures[cad_key][reason] = cad_failures[cad_key].get(reason, 0) + 1
+
+
+def account_variants(account: str) -> list[str]:
+    """The spellings a district might index this account under.
+
+    Sale lists and appraisal rolls disagree about punctuation and leading
+    zeros — `126-0002-0009` on a constable list is `12600020009` in the roll —
+    so try the obvious re-spellings before concluding there is no such parcel.
+    """
+    raw = str(account or "").strip()
+    if not raw:
+        return []
+    out = [raw]
+    for candidate in (td.normalize_account(raw), raw.replace("-", ""),
+                      raw.replace(" ", ""), raw.lstrip("0"),
+                      td.normalize_account(raw).lstrip("0")):
+        if candidate and candidate not in out:
+            out.append(candidate)
+    return out
+
+
 def cad_record(cad_key: str, account: str, cfg: dict, *, use_cache: bool = True) -> dict | None:
-    """The appraisal district record for one account, or None when unmatched."""
+    """The appraisal district record for one account, or None when unmatched.
+
+    Tries each configured URL pattern against each plausible spelling of the
+    account, stopping at the first page that yields an appraised value.
+    """
     district = (cfg.get("appraisal_districts") or {}).get(cad_key)
     if not district or not account:
         return None
@@ -1409,28 +1444,44 @@ def cad_record(cad_key: str, account: str, cfg: dict, *, use_cache: bool = True)
         except (json.JSONDecodeError, KeyError, ValueError):
             pass
 
-    url = district["account_url"].replace("{account}", urllib.parse.quote(str(account)))
-    try:
-        html = fetch(url, cfg)
-    except SourceError:
-        return None
-
+    patterns = [p for p in [district.get("account_url"),
+                            *(district.get("account_url_fallbacks") or [])] if p]
     markers = [m.lower() for m in district.get("required_markers") or []]
-    if markers and not any(m in html.lower() for m in markers):
-        raise StructureChanged(url, (
-            f"the {cad_key} account page no longer contains any of {markers!r}. "
-            f"Update `required_markers` / `account_url` for {cad_key}."))
+    variants = account_variants(account)
+    unreachable = False
 
-    record = parse_cad_record(html, district.get("field_map"))
-    if not record.get("appraised_value"):
-        return None  # a page that renders but carries no value is not a match
+    for pattern in patterns:
+        for variant in variants:
+            url = pattern.replace("{account}", urllib.parse.quote(str(variant)))
+            try:
+                html = fetch(url, cfg)
+            except SourceError as exc:
+                unreachable = True
+                _note_cad_failure(cad_key, exc.detail[:80])
+                continue
+            if markers and not any(m in html.lower() for m in markers):
+                _note_cad_failure(cad_key, f"page missing markers {markers!r}")
+                continue
+            record = parse_cad_record(html, district.get("field_map"))
+            if not record.get("appraised_value"):
+                # A page that renders but carries no value is a miss, not a
+                # match — usually "account not found" served as a 200.
+                _note_cad_failure(cad_key, "page rendered but carried no appraised value")
+                continue
 
-    record.update({"account": str(account), "account_key": td.normalize_account(account),
-                   "cad": cad_key, "cad_url": url, "source": district.get("name", cad_key),
-                   "fetched_at": td.now_iso()})
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(record, indent=2, ensure_ascii=False) + "\n")
-    return record
+            record.update({"account": str(account), "account_key": td.normalize_account(account),
+                           "cad": cad_key, "cad_url": url,
+                           "source": district.get("name", cad_key),
+                           "matched_as": variant, "fetched_at": td.now_iso()})
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(json.dumps(record, indent=2, ensure_ascii=False) + "\n")
+            return record
+
+        if unreachable:
+            # The district is refusing us, not missing this parcel. Trying more
+            # spellings is just more requests at a host already saying no.
+            break
+    return None
 
 
 # --------------------------------------------------------------------------

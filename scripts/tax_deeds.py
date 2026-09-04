@@ -118,16 +118,18 @@ CHECK_LABELS = {
 
 DEFAULT_THRESHOLDS: dict[str, Any] = {
     "MAX_OPENING_BID": 20000,
-    "MAX_BID_TO_VALUE": 0.60,
+    "MAX_BID_TO_VALUE": 0.75,
     "TIER_A_BID_TO_VALUE": 0.35,
     "QUIET_TITLE_BUDGET": 3500,
     "HOLDING_MONTHS": 7,
-    "REJECT_FLOOD_ZONE": True,
+    "REJECT_FLOOD_ZONE": False,
     "EFFECTIVE_TAX_RATE": 0.023,
     "MONTHLY_CARRY": 75,
     "POST_JUDGMENT_YEARS": 1.0,
     "TEARDOWN_IMPROVEMENT_VALUE": 5000,
     "STATEMENT_WARN_DAYS": 30,
+    "MAX_ENRICHMENTS": 250,
+    "TIER_A_MAX_MINOR_FLAGS": 1,
     "TIER_B_MAX_MINOR_FLAGS": 2,
     "PACKET_TIERS": "A,B",
 }
@@ -404,15 +406,29 @@ def redemption_terms(listing: dict, cad: dict | None) -> dict:
 # --------------------------------------------------------------------------
 
 def gate1_hard_disqualifiers(listing: dict, cad: dict | None, cfg: dict,
-                             today: date) -> list[dict]:
-    """Reject outright, with the reason recorded for the log."""
+                             today: date) -> tuple[list[dict], list[dict]]:
+    """Rejections and flags. The split is the whole point of this gate.
+
+    A rejection is a *determination*: something was read and it disqualifies the
+    property. Not being able to read something is not a determination, and the
+    first live run made the difference concrete — 718 of 758 listings were
+    rejected for having no sale date, and they are struck-off properties, which
+    by definition have no sale date because there is no auction. Another 664
+    went for having no CAD match, which is the appraisal district being
+    unreachable rather than anything about the property.
+
+    So: unknowns flag, findings reject.
+    """
     out: list[dict] = []
+    flags: list[dict] = []
     bid = listing.get("minimum_opening_bid")
     max_bid = threshold(cfg, "MAX_OPENING_BID")
+    struck_off = listing.get("sale_type") == "struck_off"
 
     if bid is None:
-        out.append(rejection(1, "no_opening_bid",
-                             "the county list published no minimum bid, so nothing can be priced"))
+        flags.append(flag("no_opening_bid", MATERIAL,
+                          "the county list published no minimum bid, so nothing can be "
+                          "priced — ask the tax office before bidding"))
     elif bid > max_bid:
         out.append(rejection(1, "opening_bid_over_cap",
                              f"opening bid ${bid:,.0f} is over the ${max_bid:,.0f} cap "
@@ -425,21 +441,25 @@ def gate1_hard_disqualifiers(listing: dict, cad: dict | None, cfg: dict,
                 out.append(rejection(1, "sale_date_passed",
                                      f"sale date {sale_date} is in the past"))
         except ValueError:
-            out.append(rejection(1, "unparseable_sale_date",
-                                 f"sale date {sale_date!r} could not be read"))
-    else:
-        out.append(rejection(1, "no_sale_date", "the county list published no sale date"))
+            flags.append(flag("unparseable_sale_date", MINOR,
+                              f"sale date {sale_date!r} could not be read"))
+    elif not struck_off:
+        # A struck-off property has no sale date because there is no sale — it
+        # is bought over the counter, which is the point of the category.
+        flags.append(flag("no_sale_date", MINOR,
+                          "the county list published no sale date for an auction listing; "
+                          "confirm the date with the county before you travel"))
 
     status = str(listing.get("status") or "").strip().lower()
     if status and re.search(r"withdraw|pulled|cancel|struck from|removed|paid|bankrupt", status):
         out.append(rejection(1, "withdrawn", f"county list status is {listing['status']!r}"))
 
     if not cad:
-        out.append(rejection(1, "no_cad_match",
-                             "no appraisal district record matched this account, so the "
-                             "property cannot be valued"))
-        # Everything below reads the CAD record. Stop rather than guess.
-        return out
+        flags.append(flag("no_cad_match", MATERIAL,
+                          "no appraisal district record matched this account, so the "
+                          "property cannot be valued and nothing below could be checked "
+                          "against it — value it by hand before bidding"))
+        return out, flags
 
     homestead = is_homestead(cad)
     if homestead:
@@ -465,9 +485,9 @@ def gate1_hard_disqualifiers(listing: dict, cad: dict | None, cfg: dict,
 
     cad_value = cad.get("appraised_value")
     if cad_value in (None, 0):
-        out.append(rejection(1, "no_cad_value",
-                             "the CAD record carries no appraised value, so bid-to-value "
-                             "cannot be computed"))
+        flags.append(flag("no_cad_value", MATERIAL,
+                          "the CAD record carries no appraised value, so bid-to-value "
+                          "cannot be computed"))
     elif bid is not None:
         ratio = bid / cad_value
         cap = threshold(cfg, "MAX_BID_TO_VALUE")
@@ -475,7 +495,7 @@ def gate1_hard_disqualifiers(listing: dict, cad: dict | None, cfg: dict,
             out.append(rejection(1, "bid_to_value_over_cap",
                                  f"bid-to-value {ratio:.2f} is over the {cap:.2f} cap "
                                  f"(MAX_BID_TO_VALUE)"))
-    return out
+    return out, flags
 
 
 # --------------------------------------------------------------------------
@@ -535,6 +555,10 @@ def gate3_physical(listing: dict, cad: dict | None, checks: list[dict],
     cad = cad or {}
 
     flood = find_check(checks, "flood_zone")
+    # A flood zone is priceable — insurance, elevation certificates, a lower
+    # bid — where a homestead's two-year redemption is not. So it flags rather
+    # than rejects by default; REJECT_FLOOD_ZONE turns it back into a reject
+    # for anyone who would never take one at any price.
     reject_flood = threshold(cfg, "REJECT_FLOOD_ZONE")
     if flood and flood.get("result") == HIT:
         zone = flood.get("detail") or "high-risk zone"
@@ -542,7 +566,9 @@ def gate3_physical(listing: dict, cad: dict | None, checks: list[dict],
             rejections.append(rejection(3, "flood_zone",
                                         f"FEMA {zone} (REJECT_FLOOD_ZONE is on)"))
         else:
-            flags.append(flag("flood_zone", MATERIAL, f"FEMA {zone}"))
+            flags.append(flag("flood_zone", MATERIAL,
+                              f"FEMA {zone} — price the flood insurance and the elevation "
+                              f"certificate into your maximum bid"))
     elif not flood or flood.get("result") == UNAVAILABLE:
         detail = (flood or {}).get("detail") or "source unavailable"
         flags.append(flag("flood_zone_unchecked", MINOR,
@@ -681,7 +707,11 @@ def gate5_tier(flags: list[dict], econ: dict | None, cad: dict | None,
         return "C"
     if minor > threshold(cfg, "TIER_B_MAX_MINOR_FLAGS"):
         return "C"
-    if not minor and ratio < threshold(cfg, "TIER_A_BID_TO_VALUE") and not is_homestead(cad):
+    # Tier A used to demand zero minor flags, which one unchecked flood zone —
+    # and those are routine — was enough to deny forever. A tier nothing can
+    # reach ranks nothing.
+    if (minor <= threshold(cfg, "TIER_A_MAX_MINOR_FLAGS")
+            and ratio < threshold(cfg, "TIER_A_BID_TO_VALUE") and not is_homestead(cad)):
         return "A"
     if ratio < threshold(cfg, "MAX_BID_TO_VALUE"):
         return "B"
@@ -698,9 +728,10 @@ def screen(listing: dict, cad: dict | None, checks: list[dict], cfg: dict,
     checks = list(checks or [])
     terms = redemption_terms(listing, cad)
 
-    rejections = gate1_hard_disqualifiers(listing, cad, cfg, today)
-    lien_rejections, flags = gate2_liens(checks, cfg)
+    rejections, flags = gate1_hard_disqualifiers(listing, cad, cfg, today)
+    lien_rejections, lien_flags = gate2_liens(checks, cfg)
     rejections += lien_rejections
+    flags += lien_flags
     physical_rejections, physical_flags = gate3_physical(listing, cad, checks, cfg)
     rejections += physical_rejections
     flags += physical_flags
