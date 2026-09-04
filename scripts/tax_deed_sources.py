@@ -73,6 +73,14 @@ class StructureChanged(SourceError):
 
 _session: Any = None
 _last_request: dict[str, float] = {}
+
+# Per-host interval, raised when a host says it is being asked too often. Tarrant
+# CAD answered 429 to 365 straight lookups at the global one-per-second: the
+# right response to "too fast" is to slow down for that host, not to keep the
+# same pace and record 365 identical failures.
+_host_interval: dict[str, float] = {}
+MAX_HOST_INTERVAL = 8.0
+RATE_LIMIT_RETRIES = 2
 _robots: dict[str, Any] = {}
 
 # Sentinel: robots.txt gave no answer at all, as distinct from answering
@@ -144,8 +152,10 @@ def session(cfg: dict):
 
 
 def _throttle(url: str, cfg: dict) -> None:
-    interval = float(cfg.get("request_interval_seconds") or 1.0)
     host = urllib.parse.urlsplit(url).netloc
+    base = float(cfg.get("request_interval_seconds") or 1.0)
+    configured = (cfg.get("host_interval_seconds") or {}).get(host)
+    interval = max(base, float(configured or 0), _host_interval.get(host, 0.0))
     elapsed = time.monotonic() - _last_request.get(host, 0.0)
     if elapsed < interval:
         time.sleep(interval - elapsed)
@@ -246,8 +256,13 @@ def fetch(url: str, cfg: dict, *, params: dict | None = None) -> str:
         raise RobotsDisallowed(url, why)
 
     agents = user_agents(cfg)
+    host = urllib.parse.urlsplit(url).netloc
     last: Exception | None = None
-    for index, agent in enumerate(agents):
+    backoffs = 0
+    index = -1
+    while True:
+        index = min(index + 1, len(agents) - 1)
+        agent = agents[index]
         _throttle(url, cfg)
         try:
             resp = session(cfg).get(url, params=params, timeout=TIMEOUT,
@@ -259,11 +274,25 @@ def fetch(url: str, cfg: dict, *, params: dict | None = None) -> str:
             break
         if resp.status_code in (401, 403) and index + 1 < len(agents):
             continue
+        if resp.status_code == 429:
+            # Back off for this host and try again rather than burning the rest
+            # of the run recording the same refusal once per property.
+            current = max(_host_interval.get(host, 0.0),
+                          float(cfg.get("request_interval_seconds") or 1.0))
+            _host_interval[host] = min(current * 2, MAX_HOST_INTERVAL)
+            if backoffs < RATE_LIMIT_RETRIES:
+                backoffs += 1
+                time.sleep(_host_interval[host])
+                continue
         if resp.status_code >= 400:
             detail = _explain_status(resp.status_code, url)
             if resp.status_code in (401, 403):
                 detail += (f" All {len(agents)} configured User-Agents were refused, so this "
                            f"is the host's filter and not a format change.")
+            if resp.status_code == 429:
+                detail += (f" Backed off to {_host_interval.get(host, 0):.0f}s for this host "
+                           f"and retried {backoffs} time(s); pin it with "
+                           f"`host_interval_seconds` in config/tax_deeds.json.")
             raise SourceError(url, detail)
         return resp.text
     raise last or SourceError(url, "no User-Agent was accepted")
@@ -1645,15 +1674,20 @@ def resolve_flood_url(spec: dict, cfg: dict) -> tuple[str, str]:
         return resolved, ("" if resolved == configured else
                           f"auto-resolved the NFHL layer to {resolved}")
 
-    root = re.sub(r"/\d+/query/?$", "", configured)
-    if root == configured:
-        _flood_layer_cache[configured] = configured
-        return configured, ""
-    try:
-        payload = fetch_json(root, cfg, params={"f": "json"})
-    except SourceError:
-        _flood_layer_cache[configured] = configured
-        return configured, ""
+    payload = None
+    for base in [configured, *(spec.get("url_fallbacks") or [])]:
+        root = re.sub(r"/\d+/query/?$", "", base)
+        if root == base:
+            continue
+        try:
+            payload = fetch_json(root, cfg, params={"f": "json"})
+        except SourceError:
+            continue
+        configured = base
+        break
+    if payload is None:
+        _flood_layer_cache[spec.get("url", "")] = spec.get("url", "")
+        return spec.get("url", ""), ""
 
     named = [(l.get("id"), str(l.get("name") or ""))
              for l in (payload.get("layers") or []) if l.get("id") is not None]

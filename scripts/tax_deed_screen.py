@@ -470,19 +470,6 @@ def main(argv: list[str] | None = None, sources: Any = None) -> int:
     else:
         print(f"\n{publish(values, spec)}")
 
-    try:
-        import tax_deed_sources as _sources
-        failures = _sources.cad_failures
-    except Exception:  # noqa: BLE001
-        failures = {}
-    if failures:
-        out += ["", "### Appraisal district lookups that failed", "",
-                "A property with no CAD record is flagged, not rejected — but it cannot be "
-                "valued, so it cannot rank. These are the reasons, per district.", ""]
-        for district, reasons in sorted(failures.items()):
-            top = sorted(reasons.items(), key=lambda kv: -kv[1])[:3]
-            out.append(f"- **{district}** — " + "; ".join(f"{r} ×{n}" for r, n in top))
-
     broken = [s for s in source_report if not s.get("ok")]
     if broken:
         print(f"\n{len(broken)} source(s) failed — see the URLs above.", file=sys.stderr)
@@ -491,4 +478,16 @@ def main(argv: list[str] | None = None, sources: Any = None) -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    # An uncaught exception exits 1, which is exactly the code that means "a
+    # source failed verification" — so a crash inside the screener read as a
+    # bad county URL, and a real UnboundLocalError shipped looking like one.
+    try:
+        raise SystemExit(main())
+    except SystemExit:
+        raise
+    except Exception:  # noqa: BLE001
+        import traceback
+        traceback.print_exc()
+        print("::error::tax_deed_screen.py crashed — this is a bug in the screener, "
+              "not a county source.", file=sys.stderr)
+        raise SystemExit(3)

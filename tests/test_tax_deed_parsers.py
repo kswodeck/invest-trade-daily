@@ -1184,3 +1184,75 @@ class AppraisalDistrictLookupsTryHarderAndSayWhy(unittest.TestCase):
             with self.subTest(district=key):
                 self.assertTrue(district.get("account_url"))
 
+
+
+class BacksOffWhenAHostSaysTooFast(unittest.TestCase):
+    """Tarrant CAD answered 429 to 365 straight lookups at one per second.
+
+    The right response to "too fast" is to slow down for that host, not to keep
+    the same pace and record 365 identical failures.
+    """
+
+    class Resp:
+        def __init__(self, code, text=""):
+            self.status_code, self.text = code, text
+
+    def setUp(self):
+        self.cfg = td.load_config()
+        self.cfg["contact_email"] = "someone@example.com"
+        self.cfg["request_interval_seconds"] = 0  # keep the test instant
+        tds._robots.clear()
+        tds._host_interval.clear()
+        self._session, self._sleep = tds.session, tds.time.sleep
+        tds.time.sleep = lambda *_: None
+        tds._robots["https://slow.example.invalid"] = tds.ALLOW_UNKNOWN
+
+    def tearDown(self):
+        tds.session, tds.time.sleep = self._session, self._sleep
+        tds._robots.clear()
+        tds._host_interval.clear()
+
+    def _serve(self, codes):
+        self.calls = []
+        queue = list(codes)
+
+        class FakeSession:
+            def get(inner, url, **kw):
+                self.calls.append(url)
+                return BacksOffWhenAHostSaysTooFast.Resp(
+                    queue.pop(0) if queue else 200, "ok")
+
+        tds.session = lambda cfg: FakeSession()
+
+    def test_a_429_is_retried_after_slowing_down(self):
+        self._serve([429, 200])
+        self.assertEqual(tds.fetch("https://slow.example.invalid/x", self.cfg), "ok")
+        self.assertEqual(len(self.calls), 2)
+        self.assertGreater(tds._host_interval["slow.example.invalid"], 0)
+
+    def test_the_slower_interval_persists_for_the_rest_of_the_run(self):
+        self._serve([429, 429, 200])
+        tds.fetch("https://slow.example.invalid/x", self.cfg)
+        first = tds._host_interval["slow.example.invalid"]
+        self.assertGreaterEqual(first, 2)
+
+    def test_it_gives_up_rather_than_retrying_forever(self):
+        self._serve([429] * 20)
+        with self.assertRaises(tds.SourceError) as caught:
+            tds.fetch("https://slow.example.invalid/x", self.cfg)
+        self.assertLessEqual(len(self.calls), tds.RATE_LIMIT_RETRIES + 2)
+        self.assertIn("host_interval_seconds", caught.exception.detail)
+
+    def test_the_backoff_is_bounded(self):
+        self.assertLessEqual(tds.MAX_HOST_INTERVAL, 8.0)
+
+    def test_a_host_can_be_pinned_slower_in_config(self):
+        self.assertIn("www.tad.org", td.load_config()["host_interval_seconds"])
+
+    def test_a_403_still_walks_the_user_agents_and_then_stops(self):
+        self._serve([403, 403])
+        with self.assertRaises(tds.SourceError) as caught:
+            tds.fetch("https://slow.example.invalid/x", self.cfg)
+        self.assertEqual(len(self.calls), len(tds.user_agents(self.cfg)))
+        self.assertIn("User-Agents were refused", caught.exception.detail)
+
