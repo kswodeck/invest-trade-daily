@@ -1321,3 +1321,47 @@ class GivesUpOnADistrictThatNeverAnswers(unittest.TestCase):
     def test_the_bound_is_small_enough_to_matter(self):
         self.assertLessEqual(tds.CAD_GIVE_UP_AFTER, 20)
 
+
+
+class MapsThePlainValueFieldTheFeedActuallyPublishes(unittest.TestCase):
+    """The unmapped-key diagnostic earned its place on its first live run.
+
+    The feed carries a field called exactly `value`, and every value pattern
+    required the word adjudged, appraised or assessed — so 363 listings went
+    unpriced next to a number the county had published for each of them.
+    """
+
+    def setUp(self):
+        self.cfg = td.load_config()
+        self.source = source_for("Tarrant")
+        # The real key list, from the live run's unmapped-fields report.
+        self.keys = ["cause_nbr", "account_nbr", "prop_address_one", "minimum_bid",
+                     "sale_date", "status", "county", "precinct", "value", "sale_nbr",
+                     "uid", "prop_city", "prop_zipcode", "google_view", "has_photo"]
+
+    def test_the_bare_value_field_is_mapped(self):
+        mapped = tds.infer_field_map(self.keys, self.source["column_map"])
+        self.assertEqual(mapped.get("adjudged_value"), "value")
+
+    def test_it_does_not_steal_the_minimum_bid(self):
+        mapped = tds.infer_field_map(self.keys, self.source["column_map"])
+        self.assertEqual(mapped.get("minimum_opening_bid"), "minimum_bid")
+
+    def test_a_more_specific_name_still_wins(self):
+        mapped = tds.infer_field_map(["adjudged_value", "value", "minimum_bid", "account_nbr"],
+                                     self.source["column_map"])
+        self.assertEqual(mapped.get("adjudged_value"), "adjudged_value")
+
+    def test_a_listing_carrying_it_is_priced_without_any_cad(self):
+        from datetime import date as _date
+        row = {"account_nbr": "02345678", "cause_nbr": "C-1", "minimum_bid": "$7,800.00",
+               "value": "$63,000.00", "sale_date": "2026-10-06", "status": "Active",
+               "county": "TARRANT COUNTY", "prop_address_one": "1109 E ANNIE ST"}
+        mapped = tds.infer_field_map(list(row), self.source["column_map"])
+        listing = tds.normalize_listing({f: row[k] for f, k in mapped.items()},
+                                        "Tarrant", self.source, self.cfg)
+        self.assertEqual(listing["adjudged_value"], 63000.0)
+        result = td.screen(listing, None, [], self.cfg, _date(2026, 9, 4))
+        self.assertEqual(result["economics"]["value_source"], "adjudged")
+        self.assertAlmostEqual(result["economics"]["bid_to_value"], 7800 / 63000, places=4)
+
