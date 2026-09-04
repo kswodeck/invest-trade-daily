@@ -678,6 +678,18 @@ def best_record_array(payloads: Iterable[Any], column_map: dict[str, list[str]]
                   "candidates": seen_paths[:5]}
 
 
+def _matches_county(rows: list[dict], source: dict) -> bool:
+    """Does this batch actually contain the county the source is scoped to?
+
+    No filter configured means any row is ours. An empty batch is not.
+    """
+    wanted = source.get("county_filter")
+    if not wanted:
+        return bool(rows)
+    needle = wanted.lower()
+    return any(needle in " ".join(str(v) for v in row.values()).lower() for row in rows)
+
+
 def discover_json_records(html: str, source: dict) -> tuple[list[dict], dict]:
     """Find the sale list inside the JSON a client-rendered page ships with."""
     rows, diag = best_record_array(embedded_json(html), source.get("column_map") or {})
@@ -1223,8 +1235,21 @@ def _read_source(url: str, source: dict, fmt: str, column_map: dict, cfg: dict
             # advice to go read dev tools, look for the data the page shipped
             # with itself — see discover_json_records.
             found, found_diag = discover_json_records(text, source)
-            if not found and source.get("probe_api", True):
-                found, found_diag = discover_api_records(text, source, cfg, url)
+            found_diag["route"] = "embedded" if found else None
+
+            # Rows are not the same thing as *our* rows. The embedded payload on
+            # this vendor's page is the first chunk of a nationwide feed, so
+            # discovery succeeded with 400 records and none of them were this
+            # county's — and because it succeeded, the API route never ran, and
+            # with it neither did the server-side narrowing that is the only way
+            # to reach the rest of the feed. So "found, but none ours" has to
+            # fall through exactly like "found nothing".
+            if source.get("probe_api", True) and not _matches_county(found, source):
+                api_rows, api_diag = discover_api_records(text, source, cfg, url)
+                if api_rows and (_matches_county(api_rows, source) or not found):
+                    api_diag["route"] = "api"
+                    found, found_diag = api_rows, api_diag
+
             if found:
                 found_diag["auto_discovered"] = True
                 return found, found_diag

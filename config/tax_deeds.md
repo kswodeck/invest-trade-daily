@@ -199,6 +199,13 @@ narrowing is only accepted when nearly every row that comes back is actually
 this county's. Pin it with `query_params` on the source once you see which key
 worked, and the probing is skipped.
 
+Discovery stops when it finds **this county's** rows, not merely when it finds
+rows. The vendor page embeds the first chunk of the nationwide feed, so embedded
+discovery used to succeed with 400 records — none of them ours — and by
+succeeding it skipped the API route, and with it the only path to the rest of
+the feed. "Found, but none ours" now falls through exactly like "found nothing",
+and the embedded rows are still kept if the API turns up nothing better.
+
 The value it queries with is learned, not guessed. The live feed turned out to
 be **nationwide** — Galveston, Maverick, and Philadelphia County among the first
 400 rows — and it stores names as `TARRANT COUNTY`, uppercase with a suffix. A

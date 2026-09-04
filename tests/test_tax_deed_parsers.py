@@ -1032,3 +1032,84 @@ class NationwideFeedIsNarrowedByTheLearnedValue(unittest.TestCase):
         self.assertIn("query_params", detail)
         self.assertIn("GALVESTON COUNTY", detail)
 
+
+
+class FoundRowsAreNotTheSameThingAsOurRows(unittest.TestCase):
+    """The bug that survived four rounds of fixes.
+
+    The vendor page embeds the first chunk of a *nationwide* feed. Embedded
+    discovery therefore succeeded with 400 records, none of them this county's —
+    and because it succeeded, the API route never ran, and with it neither did
+    the server-side narrowing that is the only way to reach the rest of the
+    feed. "Found, but none ours" has to fall through exactly like "found
+    nothing".
+    """
+
+    def _rec(self, i, county):
+        return {"cause_nbr": f"C{i}", "account_nbr": str(i), "prop_address_one": f"{i} MAIN",
+                "minimum_bid": "$7,800.00", "sale_date": "2026-10-06",
+                "status": "Active", "county": county}
+
+    def setUp(self):
+        self.cfg = td.load_config()
+        self.county = next(c for c in td.counties(self.cfg) if c["name"] == "Tarrant")
+        self.county["sources"][0] = dict(self.county["sources"][0], required_markers=[])
+        self.embedded = [self._rec(i, "GALVESTON COUNTY") for i in range(10)]
+        self.ours = [self._rec(100 + i, "TARRANT COUNTY") for i in range(3)]
+        self.served = []
+        self._fetch = tds.fetch
+        tds.fetch = self._fake
+
+    def tearDown(self):
+        tds.fetch = self._fetch
+
+    def _page(self):
+        return ('<html><body><div id=root></div>'
+                '<script id="__NEXT_DATA__" type="application/json">'
+                + json.dumps({"count": 9999, "next": None, "results": self.embedded})
+                + '</script><script>var A="/api/property_sales/";</script></body></html>')
+
+    def _fake(self, url, cfg, **kw):
+        self.served.append(url)
+        if "/api/property_sales/" in url:
+            if "county=TARRANT+COUNTY" in url or "county=TARRANT%20COUNTY" in url:
+                return json.dumps({"count": 3, "next": None, "results": self.ours})
+            return json.dumps({"count": 9999, "next": None, "results": self.embedded})
+        return self._page()
+
+    def test_embedded_rows_that_are_not_ours_do_not_end_the_search(self):
+        listings, _ = tds.county_listings(self.county, self.cfg, "2026-10-06")
+        self.assertEqual([l["account"] for l in listings], ["100", "101", "102"])
+
+    def test_the_api_route_runs_and_narrows(self):
+        tds.county_listings(self.county, self.cfg, "2026-10-06")
+        self.assertTrue([u for u in self.served if "county=TARRANT" in u.replace("%20", "+")])
+
+    def test_embedded_rows_that_are_ours_are_kept_without_touching_the_api(self):
+        self.embedded = self.ours
+        listings, _ = tds.county_listings(self.county, self.cfg, "2026-10-06")
+        self.assertEqual(len(listings), 3)
+        self.assertFalse([u for u in self.served if "/api/" in u],
+                         "no API probing when the page already gave us our rows")
+
+    def test_a_source_with_no_county_filter_keeps_whatever_it_finds(self):
+        source = dict(self.county["sources"][0])
+        source.pop("county_filter", None)
+        self.county["sources"][0] = source
+        listings, _ = tds.county_listings(self.county, self.cfg, "2026-10-06")
+        self.assertEqual(len(listings), 10)
+        self.assertFalse([u for u in self.served if "/api/" in u])
+
+    def test_the_embedded_rows_are_kept_when_the_api_finds_nothing_better(self):
+        """Falling through must not lose what discovery already had."""
+        self.ours = []
+        source = dict(self.county["sources"][0])
+        source.pop("county_filter", None)
+        self.county["sources"][0] = source
+        listings, _ = tds.county_listings(self.county, self.cfg, "2026-10-06")
+        self.assertEqual(len(listings), 10)
+
+    def test_matches_county_is_honest_about_an_empty_batch(self):
+        self.assertFalse(tds._matches_county([], {"county_filter": "Tarrant"}))
+        self.assertFalse(tds._matches_county([], {}))
+
