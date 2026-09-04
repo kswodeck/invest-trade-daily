@@ -52,17 +52,19 @@ widen a gate for one run without a commit.
 | Knob | Default | What it does |
 | --- | --- | --- |
 | `MAX_OPENING_BID` | 20000 | Gate 1 rejects a larger minimum bid |
-| `MAX_BID_TO_VALUE` | 0.60 | Gate 1 rejects above it; also the recommended max bid |
+| `MAX_BID_TO_VALUE` | 0.75 | Gate 1 rejects above it; also the recommended max bid |
 | `TIER_A_BID_TO_VALUE` | 0.35 | Tier A ceiling |
 | `QUIET_TITLE_BUDGET` | 3500 | in the ownership case only |
 | `HOLDING_MONTHS` | 7 | 180-day redemption plus a month |
-| `REJECT_FLOOD_ZONE` | true | false demotes a flood hit to a material flag |
+| `REJECT_FLOOD_ZONE` | false | a flood hit is a material flag; true makes it a reject |
 | `EFFECTIVE_TAX_RATE` | 0.023 | DFW ad valorem, for holding and post-judgment taxes |
 | `MONTHLY_CARRY` | 75 | insurance and utilities on a vacant parcel |
 | `POST_JUDGMENT_YEARS` | 1.0 | years of taxes assumed accrued since judgment |
 | `TEARDOWN_IMPROVEMENT_VALUE` | 5000 | below it, a parcel with a structure is flagged |
 | `STATEMENT_WARN_DAYS` | 30 | §34.015 expiry warning |
+| `TIER_A_MAX_MINOR_FLAGS` | 1 | minor flags Tier A tolerates |
 | `TIER_B_MAX_MINOR_FLAGS` | 2 | more than this drops to Tier C |
+| `MAX_ENRICHMENTS` | 250 | CAD/geocode/flood lookups per county per run |
 | `PACKET_TIERS` | `A,B` | which tiers get a due-diligence packet |
 
 ## §34.015 — fill this in
@@ -280,12 +282,31 @@ Non-negotiable, and enforced in code:
 
 ## The gates
 
-**Gate 1 — hard disqualifiers, rejected with the reason logged.** Opening bid
-over the cap; homestead or agricultural exemption on the CAD record; mineral-only
-interest; mobile home without the land; sale date passed or listing withdrawn; no
-CAD match; bid-to-value over the cap. The exemption classes go because §34.21(a)
-gives them a two-year redemption, and you cannot sell, re-tenant or remodel
-through it.
+**Gate 1 — findings reject, unknowns flag.** That split is the point of this
+gate, and the first live run is why: 718 of 758 listings were rejected for having
+no sale date, and they were *struck-off* properties, which have no sale date
+because there is no auction — that is the entire category. Another 664 went for
+having no CAD match, which is the appraisal district being unreachable rather
+than anything about the property. Between them they hid every real candidate.
+
+A **rejection** is a determination — something was read and it disqualifies:
+
+| Rejected | Why |
+| --- | --- |
+| opening bid over `MAX_OPENING_BID` | more capital than this is meant to deploy |
+| homestead or agricultural exemption | §34.21(a) gives it 2 years to redeem |
+| mineral-only interest | same 2-year period, and no surface to sell |
+| mobile home without the land | it is not real property |
+| sale date already passed | the sale happened |
+| status says withdrawn / cancelled / paid | it is off the sale |
+| bid-to-value over `MAX_BID_TO_VALUE` | the discount is not there |
+
+A **flag** is an unknown — nothing was determined, so nothing is disqualified:
+no opening bid published, no sale date on an *auction* listing, an unreadable
+sale date, no CAD match, a CAD record with no appraised value. Each costs the
+property its rank (they are material or minor flags, so it lands in Tier C) but
+none hides it. A struck-off listing with no sale date is not even flagged: that
+is normal for the category.
 
 **Gate 2 — liens.** A property passes only if every check returned clean, **or
 returned unavailable and left a flag behind.** Federal tax lien or PACE hit
@@ -293,9 +314,12 @@ rejects outright. HOA hits flag. A check that never ran is treated identically t
 one that failed, because the two are indistinguishable from the property's point
 of view.
 
-**Gate 3 — physical.** FEMA flood zone; road frontage; municipal minimum lot
-size; teardown-level improvement value. Occupancy is flagged unknown on every
-row and never inferred — see below.
+**Gate 3 — physical.** FEMA flood zone is a **material flag**, not a reject: a
+flood zone is priceable — insurance, an elevation certificate, a lower bid —
+where a homestead's two-year redemption is not. `REJECT_FLOOD_ZONE` turns it
+back into a reject for anyone who would never take one at any price. Road
+frontage, municipal minimum lot size and teardown-level improvement value flag.
+Occupancy is flagged unknown on every row and never inferred — see below.
 
 **Gate 4 — economics.** Both outcomes, because both are acceptable: redeemed
 pays 25% of the bid over ≤180 days; not redeemed leaves you the equity against
@@ -314,9 +338,27 @@ It is still conservative. §34.21(a) computes the 25% premium on the *aggregate
 total* — the bid plus the recording fee plus the taxes reimbursed — where this
 takes it on the bid alone, as the spec does.
 
-**Gate 5 — tiering.** A: no flags, bid-to-value < 0.35. B: no material flags, one
-or two minor, bid-to-value < 0.60. C: passes the hard gates but carries material
-flags — informational only.
+**Gate 5 — tiering.** A: no material flags, at most one minor, bid/value < 0.35.
+B: no material flags, up to two minor, bid/value < `MAX_BID_TO_VALUE`. C: any
+material flag, or more minor flags than B allows — informational only.
+
+Tier A used to demand *zero* minor flags, which one unchecked flood zone — and
+those are routine — was enough to deny forever. A tier nothing can reach ranks
+nothing.
+
+## Enrichment is rationed
+
+A CAD lookup, a geocode and a flood query is three requests per property at one
+per second, so 758 listings meant over half an hour of traffic — and Dallas CAD
+stopped answering after about 94 of them. Only listings that survive the cheap
+gates are enriched now, cheapest bid first, capped at `MAX_ENRICHMENTS` per
+county. A listing already rejected on its bid, its status or a passed sale date
+cannot be rescued by anything enrichment would find, so it earns no requests.
+
+When a lookup does fail, the run summary names the reason per district rather
+than emitting one undifferentiated `no_cad_match` — 664 of those turned out to
+be two unrelated problems, throttling in one county and a wrong URL pattern in
+two others.
 
 ## Two consequences worth knowing before you go debugging
 

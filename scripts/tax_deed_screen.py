@@ -102,21 +102,46 @@ def collect(cfg: dict, today: date, sale_date: str, only: list[str] | None = Non
             continue
         report.extend(source_report)
 
+        # Enrich only what could still be bought. Every listing used to get a
+        # CAD lookup plus a geocode plus a flood query — three requests each,
+        # at one per second — so 758 listings meant well over half an hour of
+        # traffic, and the appraisal district stopped answering after about 94
+        # of them. A listing already rejected on its bid, its status or a
+        # passed sale date cannot be rescued by anything enrichment would find.
+        cheap = [(l, td.gate1_hard_disqualifiers(l, None, cfg, today)[0]) for l in listings]
+        priced = [(l, r) for l, r in cheap if not r]
+        priced.sort(key=lambda pair: pair[0].get("minimum_opening_bid") or float("inf"))
+        budget = int(td.threshold(cfg, "MAX_ENRICHMENTS"))
+        enrich = {id(l) for l, _ in priced[:budget]}
+        skipped = max(0, len(priced) - budget)
+
         for listing in listings:
             cad = None
-            try:
-                cad = sources.cad_record(county.get("cad", ""), listing.get("account", ""), cfg)
-            except Exception as exc:  # noqa: BLE001
-                print(f"  CAD lookup failed for {listing.get('account')}: {exc}",
-                      file=sys.stderr)
-            try:
-                checks = sources.run_checks(listing, cad, cfg)
-            except Exception as exc:  # noqa: BLE001 - an exception is not a clean check
-                print(f"  checks failed for {listing.get('account')}: {exc}", file=sys.stderr)
-                checks = [td.check_record(name, td.UNAVAILABLE, "check raised",
-                                          f"{type(exc).__name__}: {exc}")
-                          for name in td.LIEN_CHECKS]
+            checks: list[dict] = []
+            if id(listing) in enrich:
+                try:
+                    cad = sources.cad_record(county.get("cad", ""),
+                                             listing.get("account", ""), cfg)
+                except Exception as exc:  # noqa: BLE001
+                    print(f"  CAD lookup failed for {listing.get('account')}: {exc}",
+                          file=sys.stderr)
+                try:
+                    checks = sources.run_checks(listing, cad, cfg)
+                except Exception as exc:  # noqa: BLE001 - an exception is not a clean check
+                    print(f"  checks failed for {listing.get('account')}: {exc}",
+                          file=sys.stderr)
+                    checks = [td.check_record(name, td.UNAVAILABLE, "check raised",
+                                              f"{type(exc).__name__}: {exc}")
+                              for name in td.LIEN_CHECKS]
             results.append(td.screen(listing, cad, checks, cfg, today))
+
+        if skipped:
+            print(f"  {county['name']}: enriched the {budget} cheapest of {len(priced)} "
+                  f"priceable listings; {skipped} were left unenriched (MAX_ENRICHMENTS)",
+                  file=sys.stderr)
+        for entry in source_report:
+            entry["enriched"] = min(len(priced), budget)
+            entry["not_enriched"] = skipped
 
     order = td.county_order(cfg)
     results.sort(key=lambda r: td.sort_key(r, order))
@@ -322,6 +347,19 @@ def summarize(cfg: dict, results: list[dict], statements: list[dict],
         out += [f"- `{code}` × {count}" for code, count in
                 sorted(reasons.items(), key=lambda kv: -kv[1])]
 
+    try:
+        import tax_deed_sources as _sources
+        failures = _sources.cad_failures
+    except Exception:  # noqa: BLE001
+        failures = {}
+    if failures:
+        out += ["", "### Appraisal district lookups that failed", "",
+                "A property with no CAD record is flagged, not rejected — but it cannot be "
+                "valued, so it cannot rank. These are the reasons, per district.", ""]
+        for district, reasons in sorted(failures.items()):
+            top = sorted(reasons.items(), key=lambda kv: -kv[1])[:3]
+            out.append(f"- **{district}** — " + "; ".join(f"{r} ×{n}" for r, n in top))
+
     broken = [s for s in source_report if not s.get("ok")]
     if broken:
         out += ["", "### Sources that failed", "",
@@ -431,6 +469,19 @@ def main(argv: list[str] | None = None, sources: Any = None) -> int:
         print("\nSheet not touched.")
     else:
         print(f"\n{publish(values, spec)}")
+
+    try:
+        import tax_deed_sources as _sources
+        failures = _sources.cad_failures
+    except Exception:  # noqa: BLE001
+        failures = {}
+    if failures:
+        out += ["", "### Appraisal district lookups that failed", "",
+                "A property with no CAD record is flagged, not rejected — but it cannot be "
+                "valued, so it cannot rank. These are the reasons, per district.", ""]
+        for district, reasons in sorted(failures.items()):
+            top = sorted(reasons.items(), key=lambda kv: -kv[1])[:3]
+            out.append(f"- **{district}** — " + "; ".join(f"{r} ×{n}" for r, n in top))
 
     broken = [s for s in source_report if not s.get("ok")]
     if broken:

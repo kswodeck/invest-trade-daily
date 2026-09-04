@@ -1113,3 +1113,74 @@ class FoundRowsAreNotTheSameThingAsOurRows(unittest.TestCase):
         self.assertFalse(tds._matches_county([], {"county_filter": "Tarrant"}))
         self.assertFalse(tds._matches_county([], {}))
 
+
+
+class AppraisalDistrictLookupsTryHarderAndSayWhy(unittest.TestCase):
+    """664 identical `no_cad_match` rejections hid two different problems.
+
+    Dallas matched 94 accounts and then stopped — throttling. Tarrant and Ellis
+    matched none at all — the URL pattern is wrong. One silent `None` for both.
+    """
+
+    def setUp(self):
+        self.cfg = td.load_config()
+        tds.cad_failures.clear()
+        self._fetch = tds.fetch
+        self.served = []
+
+    def tearDown(self):
+        tds.fetch = self._fetch
+        tds.cad_failures.clear()
+
+    def test_account_spellings_are_tried(self):
+        """A constable list writes 126-0002-0009; the roll writes 12600020009."""
+        self.assertIn("12600020009", tds.account_variants("126-0002-0009"))
+        self.assertIn("139750000000", tds.account_variants("00000139750000000"))
+
+    def test_a_second_url_pattern_is_tried_when_the_first_misses(self):
+        good = fixture("tad_account.html")
+
+        def fake(url, cfg, **kw):
+            self.served.append(url)
+            if "property-detail" in url:
+                return good
+            return "<html><body>Tarrant Appraisal District — account not found</body></html>"
+
+        tds.fetch = fake
+        record = tds.cad_record("TAD", "02345678", self.cfg, use_cache=False)
+        self.assertIsNotNone(record)
+        self.assertEqual(record["appraised_value"], 63000.0)
+        self.assertIn("property-detail", record["cad_url"])
+
+    def test_a_page_that_renders_but_carries_no_value_is_a_miss_not_a_match(self):
+        tds.fetch = lambda url, cfg, **kw: (
+            "<html><body>Tarrant Appraisal District</body></html>")
+        self.assertIsNone(tds.cad_record("TAD", "02345678", self.cfg, use_cache=False))
+        reasons = tds.cad_failures.get("TAD", {})
+        self.assertTrue(any("no appraised value" in r for r in reasons))
+
+    def test_a_refusing_district_is_not_hammered_with_more_spellings(self):
+        """Trying more account numbers at a host already saying no is just more
+        requests at a host already saying no."""
+        def refuse(url, cfg, **kw):
+            self.served.append(url)
+            raise tds.SourceError(url, "HTTP 403: the host refused this User-Agent")
+
+        tds.fetch = refuse
+        self.assertIsNone(tds.cad_record("DCAD", "00000139750000000", self.cfg,
+                                         use_cache=False))
+        self.assertLessEqual(len(self.served), len(tds.account_variants("00000139750000000")))
+
+    def test_the_reason_is_recorded_per_district(self):
+        tds.fetch = lambda url, cfg, **kw: (_ for _ in ()).throw(
+            tds.SourceError(url, "HTTP 429: rate limited"))
+        tds.cad_record("DCAD", "1", self.cfg, use_cache=False)
+        tds.cad_record("TAD", "2", self.cfg, use_cache=False)
+        self.assertIn("DCAD", tds.cad_failures)
+        self.assertIn("TAD", tds.cad_failures)
+
+    def test_every_district_has_a_fallback_pattern_configured(self):
+        for key, district in self.cfg["appraisal_districts"].items():
+            with self.subTest(district=key):
+                self.assertTrue(district.get("account_url"))
+

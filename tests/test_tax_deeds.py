@@ -124,10 +124,26 @@ class Gate1HardDisqualifiers(unittest.TestCase):
                            cad(appraised_value=19000.0), checks(), cfg(), TODAY)
         self.assertIn("bid_to_value_over_cap", codes(result["rejections"]))
 
-    def test_no_cad_match_rejects_because_it_cannot_be_valued(self):
+    def test_no_cad_match_flags_rather_than_hiding_the_property(self):
+        """An unreachable appraisal district says nothing about the property."""
         result = td.screen(listing(), None, checks(), cfg(), TODAY)
-        self.assertIn("no_cad_match", codes(result["rejections"]))
+        self.assertEqual(result["status"], "candidate")
+        self.assertIn("no_cad_match", codes(result["flags"]))
+        self.assertEqual(result["tier"], "C")
         self.assertIsNone(result["economics"])
+
+    def test_a_struck_off_listing_needs_no_sale_date(self):
+        """There is no auction, so there is no date. That is the category."""
+        result = td.screen(listing(sale_type="struck_off", sale_date=None), cad(),
+                           checks(), cfg(), TODAY)
+        self.assertEqual(result["status"], "candidate")
+        self.assertNotIn("no_sale_date", codes(result["flags"]))
+        self.assertEqual(result["tier"], "A")
+
+    def test_an_auction_listing_with_no_date_flags_but_survives(self):
+        result = td.screen(listing(sale_date=None), cad(), checks(), cfg(), TODAY)
+        self.assertEqual(result["status"], "candidate")
+        self.assertIn("no_sale_date", codes(result["flags"]))
 
     def test_a_passed_sale_date_rejects(self):
         result = td.screen(listing(sale_date="2026-08-04"), cad(), checks(), cfg(), TODAY)
@@ -138,9 +154,13 @@ class Gate1HardDisqualifiers(unittest.TestCase):
                            checks(), cfg(), TODAY)
         self.assertIn("withdrawn", codes(result["rejections"]))
 
-    def test_a_missing_opening_bid_is_not_a_free_property(self):
+    def test_a_missing_opening_bid_flags_rather_than_rejects(self):
+        """Not knowing the bid is not a finding about the property."""
         result = td.screen(listing(minimum_opening_bid=None), cad(), checks(), cfg(), TODAY)
-        self.assertIn("no_opening_bid", codes(result["rejections"]))
+        self.assertEqual(result["status"], "candidate")
+        self.assertIn("no_opening_bid", codes(result["flags"]))
+        self.assertEqual(result["tier"], "C")
+        self.assertIsNone(result["economics"])
 
 
 class Gate2LienScreening(unittest.TestCase):
@@ -198,23 +218,24 @@ class Gate2LienScreening(unittest.TestCase):
 
 
 class Gate3Physical(unittest.TestCase):
-    def test_a_high_risk_flood_zone_rejects_by_default(self):
-        result = td.screen(listing(), cad(), checks(flood_zone=td.HIT), cfg(), TODAY)
-        self.assertIn("flood_zone", codes(result["rejections"]))
-
-    def test_flood_becomes_a_material_flag_when_rejection_is_switched_off(self):
-        config = cfg()
-        config["thresholds"]["REJECT_FLOOD_ZONE"] = False
-        result = td.screen(listing(), cad(), checks(flood_zone=td.HIT), config, TODAY)
-        self.assertEqual(result["status"], "candidate")
-        self.assertEqual(result["tier"], "C")
-        self.assertIn("flood_zone", codes(result["flags"]))
-
-    def test_an_unchecked_flood_zone_is_a_flag_not_a_pass(self):
+    def test_an_unchecked_flood_zone_is_still_a_flag(self):
         result = td.screen(listing(), cad(), checks(flood_zone=td.UNAVAILABLE),
                            cfg(), TODAY)
         self.assertIn("flood_zone_unchecked", codes(result["flags"]))
-        self.assertNotEqual(result["tier"], "A")
+        self.assertEqual(result["minor_flags"], 1)
+
+    def test_a_flood_zone_hit_is_a_material_flag_not_a_rejection(self):
+        """It is priceable — insurance, a lower bid — where a homestead is not."""
+        result = td.screen(listing(), cad(), checks(flood_zone=td.HIT), cfg(), TODAY)
+        self.assertEqual(result["status"], "candidate")
+        self.assertIn("flood_zone", codes(result["flags"]))
+        self.assertEqual(result["tier"], "C")
+
+    def test_flood_can_still_be_made_a_rejection_by_config(self):
+        config = cfg()
+        config["thresholds"]["REJECT_FLOOD_ZONE"] = True
+        result = td.screen(listing(), cad(), checks(flood_zone=td.HIT), config, TODAY)
+        self.assertIn("flood_zone", codes(result["rejections"]))
 
     def test_zero_frontage_flags_as_possibly_landlocked(self):
         result = td.screen(listing(), cad(), checks(road_frontage=td.HIT), cfg(), TODAY)
@@ -224,7 +245,8 @@ class Gate3Physical(unittest.TestCase):
         result = td.screen(listing(), cad(improvement_value=2500.0), checks(),
                            cfg(), TODAY)
         self.assertIn("likely_teardown", codes(result["flags"]))
-        self.assertEqual(result["tier"], "B")
+        # One minor flag no longer costs Tier A — see TIER_A_MAX_MINOR_FLAGS.
+        self.assertEqual(result["tier"], "A")
 
     def test_occupancy_is_always_unknown_and_never_inferred(self):
         result = td.screen(listing(), cad(), checks(), cfg(), TODAY)
@@ -245,7 +267,9 @@ class Gate4Economics(unittest.TestCase):
 
     def test_bid_to_value_and_max_bid(self):
         self.assertAlmostEqual(self.econ["bid_to_value"], 8450 / 74300, places=4)
-        self.assertAlmostEqual(self.econ["max_bid"], 74300 * 0.60, places=2)
+        self.assertAlmostEqual(self.econ["max_bid"],
+                               74300 * td.threshold(cfg(), "MAX_BID_TO_VALUE"),
+                               places=2)
 
     def test_the_redemption_payout_is_the_bid_plus_the_statutory_25_percent(self):
         self.assertAlmostEqual(self.econ["redemption_payout"], 8450 * 1.25, places=2)
@@ -296,8 +320,16 @@ class Gate5Tiering(unittest.TestCase):
     def test_tier_a_needs_zero_flags_and_a_bid_under_35_percent(self):
         self.assertEqual(td.screen(listing(), cad(), checks(), cfg(), TODAY)["tier"], "A")
 
-    def test_a_cheap_listing_with_one_minor_flag_is_tier_b(self):
+    def test_a_cheap_listing_with_one_minor_flag_still_reaches_tier_a(self):
         result = td.screen(listing(), cad(), checks(hoa_assessment=td.HIT), cfg(), TODAY)
+        self.assertEqual(result["minor_flags"], 1)
+        self.assertEqual(result["tier"], "A")
+
+    def test_two_minor_flags_drop_a_cheap_listing_to_tier_b(self):
+        result = td.screen(listing(), cad(),
+                           checks(hoa_assessment=td.HIT, flood_zone=td.UNAVAILABLE),
+                           cfg(), TODAY)
+        self.assertEqual(result["minor_flags"], 2)
         self.assertEqual(result["tier"], "B")
 
     def test_a_bid_between_35_and_60_percent_is_tier_b_even_with_no_flags(self):
@@ -309,7 +341,7 @@ class Gate5Tiering(unittest.TestCase):
         result = td.screen(listing(), cad(), checks(municipal_lien=td.HIT), cfg(), TODAY)
         self.assertEqual(result["tier"], "C")
 
-    def test_three_minor_flags_drop_it_to_tier_c(self):
+    def test_more_than_two_minor_flags_drop_it_to_tier_c(self):
         result = td.screen(listing(improvement_value=2500.0), cad(improvement_value=2500.0),
                            checks(hoa_assessment=td.HIT, flood_zone=td.UNAVAILABLE),
                            cfg(), TODAY)
@@ -317,7 +349,10 @@ class Gate5Tiering(unittest.TestCase):
         self.assertEqual(result["tier"], "C")
 
     def test_rejected_listings_carry_no_tier(self):
-        self.assertIsNone(td.screen(listing(), None, checks(), cfg(), TODAY)["tier"])
+        rejected = td.screen(listing(), cad(exemptions=["Residence Homestead"]),
+                             checks(), cfg(), TODAY)
+        self.assertEqual(rejected["status"], "rejected")
+        self.assertIsNone(rejected["tier"])
 
 
 class WrittenStatement34015(unittest.TestCase):
@@ -390,7 +425,8 @@ class SheetOutput(unittest.TestCase):
     def test_rows_sort_by_tier_then_bid_to_value(self):
         rows = [self.values[row] for row, _ in self.spec["data_rows"]
                 if self.values[row][0] == "Tarrant"]
-        self.assertEqual([r[td.COL_TIER] for r in rows], ["A", "B"])
+        ratios = [float(r[td.HEADERS.index("Bid/Value")]) for r in rows]
+        self.assertEqual(ratios, sorted(ratios))
 
     def test_rejected_listings_never_reach_the_sheet(self):
         accounts = [self.values[row][4] for row, _ in self.spec["data_rows"]]

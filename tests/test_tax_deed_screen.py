@@ -157,13 +157,35 @@ class DryRun(unittest.TestCase):
             self.assertIn("- [ ] Title search ordered", text)
 
     def test_the_dallas_homestead_fixture_is_rejected_not_shortlisted(self):
-        """DCAD's fixture carries a Residence Homestead exemption."""
+        """DCAD's fixture carries a Residence Homestead exemption.
+
+        The cancelled row is rejected before enrichment ever runs — there is no
+        point paying three requests for a listing already off the sale — so it
+        is rejected on its status alone and never sees a CAD record.
+        """
         self.run_screen("--county", "Dallas")
         payload = json.loads(next((self.tmp / "data").glob("*.json")).read_text())
         self.assertTrue(payload["results"])
-        for result in payload["results"]:
-            self.assertEqual(result["status"], "rejected")
-            self.assertIn("homestead", {r["code"] for r in result["rejections"]})
+        self.assertEqual(payload["totals"]["candidates"], 0)
+        reasons = {r["listing"]["cause_number"]: {x["code"] for x in r["rejections"]}
+                   for r in payload["results"]}
+        self.assertTrue(all(reasons.values()), "every Dallas row must be rejected")
+        self.assertEqual(reasons["TX-19-02277"], {"withdrawn"})
+        self.assertTrue(any("homestead" in codes for codes in reasons.values()))
+
+    def test_a_listing_rejected_on_the_cheap_gates_is_never_enriched(self):
+        """Enrichment is three requests a property; a withdrawn one earns none."""
+        sources = FixtureSources()
+        looked_up = []
+        original = sources.cad_record
+        sources.cad_record = lambda key, acct, cfg: (looked_up.append(acct)
+                                                     or original(key, acct, cfg))
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out), contextlib.redirect_stderr(io.StringIO()):
+            screen.main(["--dry-run", "--no-verify", "--sale-date", SALE,
+                         "--county", "Dallas"], sources=sources)
+        self.assertNotIn("00000444444444000", looked_up,
+                         "the cancelled listing must not cost a CAD lookup")
 
     def test_a_federal_tax_lien_hit_empties_the_shortlist(self):
         _, output, _ = self.run_screen(check_results={"federal_tax_lien": td.HIT})
