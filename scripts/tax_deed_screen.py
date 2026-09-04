@@ -351,14 +351,18 @@ def summarize(cfg: dict, results: list[dict], statements: list[dict],
         import tax_deed_sources as _sources
         failures = _sources.cad_failures
     except Exception:  # noqa: BLE001
-        failures = {}
+        _sources, failures = None, {}
     if failures:
         out += ["", "### Appraisal district lookups that failed", "",
                 "A property with no CAD record is flagged, not rejected — but it cannot be "
                 "valued, so it cannot rank. These are the reasons, per district.", ""]
+        abandoned = getattr(_sources, "cad_abandoned", {}) if failures else {}
         for district, reasons in sorted(failures.items()):
             top = sorted(reasons.items(), key=lambda kv: -kv[1])[:3]
-            out.append(f"- **{district}** — " + "; ".join(f"{r} ×{n}" for r, n in top))
+            line = f"- **{district}** — " + "; ".join(f"{r} ×{n}" for r, n in top)
+            if district in abandoned:
+                line += f"\n  - **Stopped trying this district**: {abandoned[district]}"
+            out.append(line)
 
     broken = [s for s in source_report if not s.get("ok")]
     if broken:
