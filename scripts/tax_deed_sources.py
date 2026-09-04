@@ -704,6 +704,11 @@ def best_record_array(payloads: Iterable[Any], column_map: dict[str, list[str]]
             rows.append(row)
     return rows, {"mapped": sorted(field_map), "rows": len(rows),
                   "discovered_path": path, "discovered_field_map": field_map,
+                  # What the feed carries that nothing claimed. A value field
+                  # hiding here is worth more than any appraisal-district
+                  # lookup, and there was no way to see one before.
+                  "unmapped_keys": sorted(set(_flatten_keys(records[0]))
+                                          - set(field_map.values()))[:40],
                   "candidates": seen_paths[:5]}
 
 
@@ -1392,6 +1397,8 @@ def county_listings(county: dict, cfg: dict, sale_date: str | None = None
         # and it read exactly like a source that returned nothing at all.
         detail = (f"{diag.get('source')} · fetched {len(rows)}, kept {len(parsed)}"
                   f" · matched {diag.get('mapped')}")
+        if diag.get("unmapped_keys"):
+            detail += f" · unmapped fields available: {diag['unmapped_keys']}"
         if diag.get("pages", 1) > 1:
             detail += f" · {diag['pages']} page(s)"
         if dropped_county:
@@ -1453,6 +1460,44 @@ def account_variants(account: str) -> list[str]:
     return out
 
 
+# Guessing a detail-page URL is what failed for Tarrant and Ellis — 470 lookups
+# and not one match. Every district publishes a search box, though, so ask it
+# for the account and follow the result it gives back. Same shape as the county
+# narrowing: probe the parameter names and keep the one that actually answers.
+CAD_SEARCH_PARAMS = ("keywords", "q", "query", "searchText", "search", "account",
+                     "accountNumber", "term", "id")
+_DETAIL_HREF = re.compile(r"""href\s*=\s*["\']([^"\']+)["\']""", re.I)
+_DETAIL_PATH = re.compile(r"(propert|acctdetail|/detail|/view/|parcel)", re.I)
+_cad_search_param: dict[str, str] = {}
+
+
+def cad_search(cad_key: str, district: dict, account: str, cfg: dict) -> str | None:
+    """The district's own search, asked for this account. Returns a detail URL."""
+    search = district.get("search_url")
+    if not search:
+        return None
+    known = _cad_search_param.get(cad_key)
+    for param in ([known] if known else list(CAD_SEARCH_PARAMS)):
+        try:
+            html = fetch(search, cfg, params={param: account})
+        except SourceError:
+            continue
+        for href in _DETAIL_HREF.findall(html):
+            if not _DETAIL_PATH.search(href):
+                continue
+            absolute = urllib.parse.urljoin(search, href)
+            if urllib.parse.urlsplit(absolute).netloc != urllib.parse.urlsplit(search).netloc:
+                continue
+            # The result has to be about the account we asked for — a search
+            # page links its own navigation too.
+            tail = td.normalize_account(account)[-6:]
+            if tail and tail not in td.normalize_account(absolute):
+                continue
+            _cad_search_param[cad_key] = param
+            return absolute
+    return None
+
+
 def cad_record(cad_key: str, account: str, cfg: dict, *, use_cache: bool = True) -> dict | None:
     """The appraisal district record for one account, or None when unmatched.
 
@@ -1510,6 +1555,28 @@ def cad_record(cad_key: str, account: str, cfg: dict, *, use_cache: bool = True)
             # The district is refusing us, not missing this parcel. Trying more
             # spellings is just more requests at a host already saying no.
             break
+
+    if not unreachable and district.get("search_url"):
+        found = cad_search(cad_key, district, account, cfg)
+        if not found:
+            _note_cad_failure(cad_key, "the district's own search returned no detail link")
+            return None
+        try:
+            html = fetch(found, cfg)
+        except SourceError as exc:
+            _note_cad_failure(cad_key, f"search hit, detail fetch failed: {exc.detail[:50]}")
+            return None
+        record = parse_cad_record(html, district.get("field_map"))
+        if not record.get("appraised_value"):
+            _note_cad_failure(cad_key, "search found a detail page with no appraised value")
+            return None
+        record.update({"account": str(account), "account_key": td.normalize_account(account),
+                       "cad": cad_key, "cad_url": found,
+                       "source": district.get("name", cad_key),
+                       "matched_as": "search", "fetched_at": td.now_iso()})
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(record, indent=2, ensure_ascii=False) + "\n")
+        return record
     return None
 
 
