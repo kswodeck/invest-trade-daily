@@ -1256,3 +1256,68 @@ class BacksOffWhenAHostSaysTooFast(unittest.TestCase):
         self.assertEqual(len(self.calls), len(tds.user_agents(self.cfg)))
         self.assertIn("User-Agents were refused", caught.exception.detail)
 
+
+
+class GivesUpOnADistrictThatNeverAnswers(unittest.TestCase):
+    """Nine search probes per property against a district that cannot be
+    searched is nearly two hours for one county, against a 45-minute job."""
+
+    def setUp(self):
+        self.cfg = td.load_config()
+        tds.cad_failures.clear()
+        tds.cad_abandoned.clear()
+        tds._cad_misses.clear()
+        tds._cad_search_param.clear()
+        self._fetch = tds.fetch
+        self.calls = []
+
+    def tearDown(self):
+        tds.fetch = self._fetch
+        tds.cad_failures.clear()
+        tds.cad_abandoned.clear()
+        tds._cad_misses.clear()
+
+    def _always_fail(self, url, cfg, **kw):
+        self.calls.append(url)
+        raise tds.SourceError(url, "HTTP 404: this URL does not exist")
+
+    def test_it_stops_after_a_bounded_number_of_consecutive_misses(self):
+        tds.fetch = self._always_fail
+        for i in range(40):
+            tds.cad_record("TAD", f"{i:08d}", self.cfg, use_cache=False)
+        self.assertIn("TAD", tds.cad_abandoned)
+        self.assertLess(len(self.calls), 40, "it kept asking a district that never answers")
+
+    def test_giving_up_is_reported_with_the_reason(self):
+        tds.fetch = self._always_fail
+        for i in range(20):
+            tds.cad_record("TAD", f"{i:08d}", self.cfg, use_cache=False)
+        self.assertIn("gave up after", tds.cad_abandoned["TAD"])
+        self.assertIn("404", tds.cad_abandoned["TAD"])
+
+    def test_one_district_giving_up_does_not_stop_another(self):
+        tds.fetch = self._always_fail
+        for i in range(20):
+            tds.cad_record("TAD", f"{i:08d}", self.cfg, use_cache=False)
+        self.assertNotIn("DCAD", tds.cad_abandoned)
+        self.assertIsNone(tds.cad_record("DCAD", "1", self.cfg, use_cache=False))
+
+    def test_a_success_resets_the_counter(self):
+        good = fixture("tad_account.html")
+        state = {"n": 0}
+
+        def sometimes(url, cfg, **kw):
+            state["n"] += 1
+            if state["n"] % 3 == 0:
+                return good
+            raise tds.SourceError(url, "HTTP 404: this URL does not exist")
+
+        tds.fetch = sometimes
+        for i in range(30):
+            tds.cad_record("TAD", f"{i:08d}", self.cfg, use_cache=False)
+        self.assertNotIn("TAD", tds.cad_abandoned,
+                         "a district that answers sometimes must not be abandoned")
+
+    def test_the_bound_is_small_enough_to_matter(self):
+        self.assertLessEqual(tds.CAD_GIVE_UP_AFTER, 20)
+

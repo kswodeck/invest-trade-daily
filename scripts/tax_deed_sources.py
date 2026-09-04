@@ -1435,10 +1435,35 @@ def _cache_path(cad_key: str, account: str) -> Path:
 # ~94 requests, while Tarrant and Ellis matched nothing at all.
 cad_failures: dict[str, dict[str, int]] = {}
 
+# A district that has not answered once in this many consecutive tries is not
+# going to. Without this a district whose search cannot be probed costs up to
+# nine requests per property — 250 properties at Tarrant's pinned three seconds
+# is nearly two hours, and the job is capped at forty-five minutes. Give up on
+# the district, say so, and spend the remaining wall clock on the ones that work.
+CAD_GIVE_UP_AFTER = 12
+_cad_misses: dict[str, int] = {}
+cad_abandoned: dict[str, str] = {}
+
 
 def _note_cad_failure(cad_key: str, reason: str) -> None:
     cad_failures.setdefault(cad_key, {})
     cad_failures[cad_key][reason] = cad_failures[cad_key].get(reason, 0) + 1
+
+
+def _cad_gave_up(cad_key: str) -> bool:
+    return cad_key in cad_abandoned
+
+
+def _record_cad_outcome(cad_key: str, matched: bool) -> None:
+    if matched:
+        _cad_misses[cad_key] = 0
+        return
+    _cad_misses[cad_key] = _cad_misses.get(cad_key, 0) + 1
+    if _cad_misses[cad_key] >= CAD_GIVE_UP_AFTER and cad_key not in cad_abandoned:
+        top = sorted((cad_failures.get(cad_key) or {}).items(), key=lambda kv: -kv[1])[:2]
+        cad_abandoned[cad_key] = (
+            f"gave up after {CAD_GIVE_UP_AFTER} consecutive misses with no match — "
+            + "; ".join(f"{r} x{n}" for r, n in top))
 
 
 def account_variants(account: str) -> list[str]:
@@ -1502,10 +1527,19 @@ def cad_record(cad_key: str, account: str, cfg: dict, *, use_cache: bool = True)
     """The appraisal district record for one account, or None when unmatched.
 
     Tries each configured URL pattern against each plausible spelling of the
-    account, stopping at the first page that yields an appraised value.
+    account, then the district's own search, stopping at the first page that
+    yields an appraised value — and stops trying this district at all once it
+    has missed CAD_GIVE_UP_AFTER times in a row.
     """
+    record = _cad_record(cad_key, account, cfg, use_cache=use_cache)
+    if not (district_missing := not (cfg.get("appraisal_districts") or {}).get(cad_key)):
+        _record_cad_outcome(cad_key, record is not None)
+    return record
+
+
+def _cad_record(cad_key: str, account: str, cfg: dict, *, use_cache: bool = True) -> dict | None:
     district = (cfg.get("appraisal_districts") or {}).get(cad_key)
-    if not district or not account:
+    if not district or not account or _cad_gave_up(cad_key):
         return None
 
     path = _cache_path(cad_key, account)
