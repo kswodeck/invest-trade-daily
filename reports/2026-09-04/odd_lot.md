@@ -1,6 +1,6 @@
 # Odd-lot tender screener — 2026-09-04
 
-Run 2026-09-04 05:30 ET (premarket slot). 7 offers tracked, 0 clear every gate: 0 Tier A, 0 Tier B, 0 Tier C.
+Run 2026-09-04 09:45 ET (premarket slot). 7 offers tracked, 0 clear every gate: 0 Tier A, 0 Tier B, 0 Tier C.
 
 **No Tier A opportunities today.** That is the ordinary result — an odd-lot tender with a 3%+ spread and a clean condition set is rare, and the thresholds below are not moved to produce one.
 
