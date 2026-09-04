@@ -363,7 +363,14 @@ links on the district's own host that actually mention the account are followed.
 seconds, and holds it for the rest of the run. `host_interval_seconds` pins one
 ahead of time.
 
-**Fall back to the adjudged value.** The county's sale list often publishes it —
+**Fall back to the value the county itself published.** The first live run
+proved this the important one: the feed carries a field called exactly `value`,
+and every pattern required the word adjudged, appraised or assessed — so 363
+listings went unpriced next to a number the county had published for each of
+them. Discovery's unmapped-key report is what surfaced it, and a bare `value`
+pattern now catches it, ordered last so a specific name still wins.
+
+**What that number is, exactly, is the bidder's to confirm.** The county's sale list often publishes it —
 the figure the court set in the tax suit, and the one §34.01(p) measures a
 struck-off resale against. It is a real published number rather than an
 estimate, so it is a legitimate second source. Every output names which was

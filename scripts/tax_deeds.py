@@ -462,9 +462,10 @@ def gate1_hard_disqualifiers(listing: dict, cad: dict | None, cfg: dict,
             # the exemption checks below never ran at all.
             flags.append(flag("no_cad_match", MATERIAL,
                               f"no appraisal district record matched this account. Priced on "
-                              f"the county's adjudged value of ${value:,.0f} instead, which "
-                              f"is a judgment-date figure and may be years stale — and the "
-                              f"homestead, agricultural and mineral checks never ran"))
+                              f"the ${value:,.0f} value published on the county sale list "
+                              f"instead — usually the adjudged value from the tax suit, so "
+                              f"confirm its basis and its age. The homestead, agricultural "
+                              f"and mineral checks all read the CAD record and none ran."))
         else:
             flags.append(flag("no_cad_match", MATERIAL,
                               "no appraisal district record matched this account, so the "
@@ -974,7 +975,7 @@ def _sheet_row(result: dict) -> list[Any]:
         listing.get("property_type") or cad.get("land_use_description") or "",
         _money(econ.get("opening_bid") if econ else listing.get("minimum_opening_bid")),
         _money(econ.get("cad_value") if econ else cad.get("appraised_value")),
-        {"cad": "CAD", "adjudged": "adjudged (court)", "none": ""}.get(
+        {"cad": "CAD roll", "adjudged": "county list", "none": ""}.get(
             econ.get("value_source", ""), ""),
         f"{ratio:.2f}" if ratio is not None else "",
         result["redemption"]["label"],
@@ -1100,9 +1101,10 @@ def packet_markdown(result: dict, cfg: dict, statement: dict) -> str:
             line("Opening bid", _money(econ["opening_bid"])),
             line("Value used", _money(econ["cad_value"])),
             line("Value source", {"cad": "appraisal district roll",
-                                  "adjudged": "the county's **adjudged value** — the figure "
-                                              "the court set in the tax suit, which is a "
-                                              "judgment-date number and may be years stale"}
+                                  "adjudged": "the **value published on the county sale "
+                                              "list** — usually the adjudged value the court "
+                                              "set in the tax suit. Confirm what basis it "
+                                              "uses and how old it is before you rely on it"}
                  .get(econ.get("value_source"), econ.get("value_source"))),
             line("Bid / value", f"{econ['bid_to_value']:.2f}"),
             line("Recommended max bid", _money(econ["max_bid"])),

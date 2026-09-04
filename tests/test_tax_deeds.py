@@ -144,8 +144,11 @@ class Gate1HardDisqualifiers(unittest.TestCase):
         self.assertEqual(result["economics"]["value_source"], "adjudged")
         self.assertAlmostEqual(result["economics"]["bid_to_value"], 8450 / 74300, places=4)
         detail = next(f["detail"] for f in result["flags"] if f["code"] == "no_cad_match")
-        self.assertIn("adjudged value", detail)
-        self.assertIn("may be years stale", detail)
+        # Honest about provenance: the county published it; what basis it used
+        # is the bidder's to confirm.
+        self.assertIn("published on the county sale list", detail)
+        self.assertIn("confirm its basis and its age", detail)
+        self.assertIn("none ran", detail)
 
     def test_the_cad_is_preferred_over_the_adjudged_value_when_both_exist(self):
         result = td.screen(listing(adjudged_value=999999.0), cad(), checks(), cfg(), TODAY)
