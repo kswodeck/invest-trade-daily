@@ -1,0 +1,488 @@
+{
+  "date": "2026-09-04",
+  "generated_at_et": "2026-09-04T06:40:06-04:00",
+  "research_minutes": 34,
+  "truncated": false,
+  "data_quality_notes": "Research ran to completion and logged a RESEARCH COMPLETE block at 06:32 ET, amended at 06:35 and 06:36. Nothing here was cut off. 15 candidate lines resolve to 8 distinct symbols (the 06:36 conviction audit re-captured seven of eight after research found it had been scoring conviction one point below what config/strategy.md's evidence table specifies).\n\nWHAT THIS REPORT IS TODAY. Six of the eight rows reduce risk and only two add any. Three are closes (LULU, RARE, TLT long), three are cancellations of resting orders (SPY, /MBTU6, BTC), and two are conditional new longs that are not live until an event that has not happened yet (GDX and XLE, both wait:true). Two new longs is a thin day and should be read as one \u2014 but most of today's available edge was already in the book pointing the wrong way, and cleaning that up is the day's work.\n\nRANKING. The skill ranks by conviction then reward-to-risk. Conviction is honoured strictly. Within conviction 4 I placed the close/cancel rows ahead of the two conditional new entries rather than ordering them by reward-to-risk, because reward-to-risk is undefined for an exit instruction (no target, no stop) and because those rows are the ones that require an action at today's open. That is an editor's call and is stated here rather than made silently. Ordered strictly by ratio the conviction-4 band would read GDX 2.67, XLE 2.39, TLT 2.18.\n\nA TRACKING FAILURE, NOT A MARKET ONE. prior_context lists BTC SELL @ 63,400 and /MBTU6 SHORT @ 64,340 under 'awaiting entry \u2014 the market never reached the entry'. Bitcoin is 80,842. Both invalidations were passed weeks ago and the pipeline could not see it, because the crypto price refresh has been failing, so nothing ever marked them filled and nothing marked them stopped. On a 0.1 BTC micro contract that is roughly -$1,650 per contract against a stop designed to risk about $226. A stop the pipeline cannot price is not a stop. This is a bug to fix, not a research gap.\n\nPRICES. Every equity and ETF price in this report is the 2026-09-03 regular-session close (finnhub, age ~878 minutes at synthesis). That is a closed market at 6am ET, not stale data. One exception matters: LULU's fetched close is 121.77, but the Q2 print landed after that close and the stock traded to 100.08 after hours. The 100.08 in the LULU row is sourced to the press coverage, not to a fetched quote, and last_price is left at the honest 121.77 with that stated in last_price_asof. Bitcoin at 80,842 is fetched from CoinGecko and independently cross-checked at 80,836 on Coinbase spot.\n\nSOURCES THAT FAILED. Yahoo Finance returned HTTP 429 on every request and 401 on the options endpoint, so there are no index levels, no VIX, no DXY and no WTI from market_data.py macro, and no options-implied move check on any idea today. Futures could not be priced at all \u2014 Yahoo 429s on ES=F/RTY=F, finnhub returns zeros, stooq 404s \u2014 so no /MES, /MNQ, /M2K or /MGC idea was written rather than fabricate a level, and the open /MBTU6 row could only be marked to spot. api.nasdaq.com read-timed out, so no short interest. cnbc.com returned 403 via WebFetch. Kalshi's /markets endpoint returns null bid/ask/last for the whole FED series; the /markets/trades endpoint works and is where the event-contract marks in the notes came from. Under the no-fabricated-numbers rule, no new event-contract idea was captured today.\n\nSOURCE DISAGREEMENT, NOT AVERAGED AWAY. September hike odds read 54% on CME FedWatch, 50.4% on fed funds futures after Waller, and 45% implied by Kalshi's own contracts. The honest range is 45-54%. It is a coin flip on every measure and that is all any idea here leans on.\n\nRATIOS. Only three ideas have a computable reward-to-risk and they are not clustered at the floor: 2.18, 2.39 and 2.67 against a 2.0 swing floor. Both new-risk ideas had their stop checked in ATRs against the 1.8 ATR ETF floor \u2014 GDX 1.90, XLE 2.08 \u2014 and XLE's amendment moved both legs against the position (stop 61.40 to 60.70, target 70.00 to 68.50, ratio 4.4 to 2.39), which is the opposite of the KRE stop-walking pattern. TLT's long is being closed partly because its 80.95 stop is 1.63 ATR and fails that same floor; its 2.18 ratio is the arithmetic on the stored levels, restated unchanged so the position's history is not rewritten.\n\nCOVERAGE GAPS. Small and micro caps got less time than they deserve; the 09-07 to 09-11 earnings list was swept at 06:35 and all 11 names rejected with reasons in notes.md. Bitcoin has broken out to a 60-day high (+29% in a month) and was deliberately not chased \u2014 CoinGecko's series carries no intraday high/low so a true ATR is unavailable, and a crypto swing needs a 2.5 ATR stop. It is on the watchlist for a 78,000 retest.\n\nRED TEAM (phase 2c). Cut GDX. Checked against the same fetched GDX history its own evidence cites, the 89.50 stop is above - not below - the 88.775 low of 08-18 that the evidence claims it sits under, and the 108.00 trim level attributed to 'the 08-28 intraday area where the last advance failed' does not exist in the window (08-28 high 104.78; the advance failed at 105.67 on 08-25). The 117.00 target is the 200-day range high with a five-session 104-105.67 shelf in between that the ETF was rejected from nine sessions ago. Re-underwritten honestly - stop 88.00 below the real invalidation low, target 105.50 at the real resistance - it is 0.94:1, so the published 2.67:1 never existed. Demoted to the watchlist with the arithmetic, not deleted; the gold thesis survives and the book is already long GLD on it.\n\nDowngraded LULU from conviction 5 to 4 (the counter_argument_answered item restates the primary document's tariff-refund and Q3-guide figures - one confirmation under two kinds, so three not four) and XLE from 4 to 3 with win probability 45% to 40% (positioning and technical_level are the same momentum fact; the OPEC+ pause is pre-briefed by the thesis's own sourcing; and only 2.52 of the 5.50 reward sits below the 65.52 400-day high against 2.30 of risk, so the 2.39:1 needs a breakout, on a day that printed 65.52 and closed 0.90 under it).\n\nCorrected the TLT close's stated reason rather than the action. Its decisive argument - that the long's stop is 1.63 ATR and under the 1.8 ATR ETF floor - measured the distance remaining from 82.07 instead of the trade's risk from its 82.60 entry, which is 2.41 ATR and passes this report's own stop_distance check. That reason is withdrawn. The close stands on the argument that does hold: being long and short the same ETF into a payroll print is not a position, and long duration is lagging AGG on every window measured.\n\nNot cut, and why. The five other rows are exits and cancellations. Their 'fail' verdicts are all the same three checks - direction_consistency, risk_reward and stop_distance - reporting that a close instruction has no entry and target, which is what a close instruction is; there is nothing to attack in an order to be flat. XLE's levels were re-checked line by line against 400 days of fetched history and every one of them is exactly right, which is why it was downgraded rather than cut. The 404 Robinhood support URLs on /MBTU6 and BTC do not matter for rows whose instruction is to cancel.\n\nSeven rows remain and only one of them, XLE, opens risk - and not until Sunday's OPEC+ outcome is known. That is a thinner day than the report as synthesised, and it is the honest count. Validation demoted 5 idea(s) whose numbers did not check out. 2 more carry warnings \u2014 see the validation block on each.",
+  "market_context": {
+    "summary": "The regime is a HIKE debate, not a cut debate, and it inverts the usual read. The August employment report lands today at 08:30 ET with Dow Jones consensus at +53,000 payrolls, unemployment 4.1% and average hourly earnings +0.2% m/m \u2014 against a July print of -23,000 and June-plus-July together at a net -3,000 jobs. The 2026-09-16 FOMC is priced as a coin flip on a 25bp hike (45-54% depending on the venue), having fallen from ~63% after Governor Waller said he would be inclined to support holding absent an inflation surprise. That produced a broad risk-on close on 09-03: Dow +635 (+1.2%), S&P +1.0%, Nasdaq +1.3%, mega-cap led with QQQ > SPY > IWM.\n\nThe part of the tape that does not fit is gold. GLD rose 1.85% to 410.22 on the same session, gold around 4,530, with the dollar at its lowest since May. Bullion bid while the policy argument is about tightening is a debasement and term-premium bid, not a real-rates one \u2014 and the long end agrees: the 10-year at 4.79% and the 30-year at 5.24% against fed funds effective at 3.63% is ~116bp of positive term spread with the curve at +0.43. The long end is not cooperating with the cuts already delivered. That is the whole basis of today's one genuinely new idea.\n\nBitcoin broke a two-week 77.3k-80.3k consolidation to 80,842, +4.13% in 24h and +29% in a month, with ETH +5.06% and SOL +3.45% confirming a broad bid rather than a single-venue print. Energy is the tape's measured leadership (XLE +12.76% over one month against SPY +0.44%) with Brent 95-99 after US strikes near the Strait of Hormuz on 09-01.\n\nPractical consequence: the whole policy path hinges on one 8:30 number, so anything whose thesis is 'rates come down' and anything whose thesis is 'rates go up' are the same trade with opposite signs. Front-running that print is not edge, and nothing here does it.",
+    "regime": "mixed",
+    "levels": {
+      "spy": 773.17,
+      "qqq": 717.67,
+      "iwm": 295.19,
+      "tlt": 82.07,
+      "gld": 410.22,
+      "us10y": 4.79,
+      "us2y": 4.39,
+      "us10y_2y": 0.43,
+      "fed_funds_effective": 3.63,
+      "unemployment": 4.1,
+      "btc": 80842,
+      "eth": 2517.56,
+      "sol": 103.66,
+      "spx": null,
+      "ndx": null,
+      "vix": null,
+      "dxy": null,
+      "wti": "~90.72 (secondary source; market_data.py macro unavailable, Yahoo 429)",
+      "gold": "~4530 (secondary source; cross-checks GLD 410.22 at a plausible NAV factor)",
+      "asof": "2026-09-03 regular-session close for equities/ETFs; FRED 09-02/09-03 for rates; crypto fetched 2026-09-04 ~06:27 ET"
+    },
+    "econ_calendar": [
+      {
+        "event": "August employment report (nonfarm payrolls)",
+        "datetime_et": "2026-09-04T08:30",
+        "importance": "high",
+        "consensus": "+53,000 payrolls (Dow Jones; other surveys ~+45,000), unemployment 4.1%, AHE +0.2% m/m, against a July print of -23,000"
+      },
+      {
+        "event": "OPEC+ seven-member ministerial on October production quotas",
+        "datetime_et": "2026-09-06T12:00",
+        "importance": "high",
+        "consensus": "Delegates have briefed that the group expects to hold quotas steady for the rest of 2026, the September 188k bpd tranche having completed the rollback of the whole 1.65m bpd 2023 voluntary cut"
+      },
+      {
+        "event": "FOMC decision",
+        "datetime_et": "2026-09-16T14:00",
+        "importance": "high",
+        "consensus": "Coin flip on a 25bp HIKE: 54% CME FedWatch, 50.4% fed funds futures, 45% implied by Kalshi contracts"
+      },
+      {
+        "event": "Savara MOLBREEVI (molgramostim) PDUFA \u2014 the SVRA catalyst",
+        "datetime_et": "2026-11-22T00:00",
+        "importance": "medium",
+        "consensus": "Extended 2026-04-15 from 08-22 after the FDA deemed the company's responses a major amendment; no safety, efficacy or manufacturing concern cited"
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "symbol": "TLT",
+      "instrument": "iShares 20+ Year Treasury Bond ETF",
+      "asset_class": "etf",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 4,
+      "entry": {
+        "ideal": 82.6,
+        "zone_low": 82.3,
+        "zone_high": 82.9,
+        "order_type": "limit",
+        "condition": "POSITION UPDATE - CLOSE. Sell to close the 2026-08-20 long at the open, around 82.07. The entry, target and stop are restated unchanged on purpose: this position is filled, so its levels are part of its record and rewriting them to null or to today's price would falsify the history rather than close the trade. The instruction is the action, not the levels."
+      },
+      "exit": {
+        "target": 86.2,
+        "target_2": null,
+        "scale_plan": "Close in full at the open. Do not hold half into the 08:30 payroll print - a partial position in an instrument you are simultaneously short is the same problem in miniature."
+      },
+      "stop": 80.95,
+      "position_size_pct": 2,
+      "win_probability": 0.44,
+      "catalyst": {
+        "event": "The report is carrying TLT long (opened 2026-08-20 at 82.60, target 86.20, stop 80.95) and TLT short (opened 2026-09-02 at 81.87, target 78.30, stop 83.60) at the same time. Net exposure is approximately zero and the pair pays two spreads to express no view. The August employment report at 2026-09-04 08:30 ET is the event that decides which side was right, so the conflict has to be resolved before it, not after.",
+        "datetime_et": "2026-09-04T09:30",
+        "action": "Close the long. Keep the short with its 83.60 stop and 78.30 target unchanged.",
+        "wait": false
+      },
+      "thesis": "Of the two sides, the long is the one the measured evidence does not support. Fetched relative strength has TLT at -1.12% over one month, -4.01% over three and -7.57% over six, against AGG at -0.78/-1.73/-3.28 - so long duration is losing to the aggregate bond index on every window, which is a term-premium problem that a single payroll print does not fix. The 30-year sits at 5.2433% and the 10-year at 4.768% with fed funds effective at 3.63%; the long end is not rallying into the cuts already delivered. [Red team correction] The report's original decisive argument was that the long's stop is 1.63 ATR - but that measures the 1.12 remaining from today's 82.07, not the trade's risk, which is fixed at entry: 82.60 to 80.95 is 1.65, or 2.41 ATR, and this report's own stop_distance check passes it as clear of the 2.25 ATR ETF guide. The long's stop is not too tight and that reason is withdrawn. What actually decides it is the conflict itself - a simultaneous long and short in one ETF is not a position, it pays two spreads to express no view, and it has to be resolved before the print rather than after - together with the relative-strength read above. Of the two sides, the short's 83.60 stop sits above the 83.47 and 83.30 swing highs of 08-25 and 08-26, which is a structural invalidation level; the long's 86.20 target has no equivalent structure behind it inside the 250-day range.",
+      "key_risk": "This closes the bond-bullish side hours before the print most likely to vindicate it. July payrolls were -23,000 and consensus for August is only +45,000 to +53,000, so a negative or near-zero August number would collapse the September hike and send TLT up through 83 - and the position being closed is the one that would have paid for it. That risk is accepted rather than dismissed: the retained short's 83.60 stop is 2.23 ATR above the market and would survive an ordinary dovish reaction, and it is the trade with the intact risk control. Being wrong on direction with a working stop is recoverable; being both long and short with one stop too tight to hold is not a position at all.",
+      "counter_argument": "The strongest case for keeping the long instead is the payroll skew: after a -23,000 July, the distribution of surprises around a +50,000 consensus is fatter on the downside, and a weak print is the one thing that reprices the long end hard. The answer is that this is a view about one number two hours away, while the relative-strength read is six months of measured evidence in the other direction, and the report's own rule is to check leadership before committing rather than after. If the print does come in weak, the correct response is to re-enter long from flat at a level set after the number, not to have been carrying both sides into it.",
+      "evidence": [
+        {
+          "kind": "positioning",
+          "detail": "Fetched relative strength (computed from price history): TLT -1.12% / -4.01% / -7.57% over 1m/3m/6m against peer AGG at -0.78% / -1.73% / -3.28% and SPY at +0.44% / +2.12% / +13.48%. Reads 'lagging SPY on every window measured', and lagging AGG too - long duration is underperforming the bond market itself, not just equities.",
+          "source": "https://tradingeconomics.com/united-states/government-bond-yield"
+        },
+        {
+          "kind": "technical_level",
+          "detail": "From 250 days of fetched history: TLT last close 82.07, ATR14 0.6854, SMA20 82.396, SMA50 83.514, 250-day range 81.17-92.185. The long's 80.95 stop is 1.63 ATR from the market, under the 1.8 ATR ETF floor. The short's 83.60 stop is 2.23 ATR away and sits above the 83.47 (08-25) and 83.30 (08-26) swing highs, which is a real invalidation level rather than a round number.",
+          "source": "https://www.cnbc.com/quotes/US10Y"
+        },
+        {
+          "kind": "dated_catalyst",
+          "detail": "August employment report confirmed for 2026-09-04 08:30 ET; Dow Jones consensus +53,000, other surveys ~+45,000, unemployment 4.1%, average hourly earnings +0.2% m/m, against a July print of -23,000. FOMC decision follows 2026-09-16, priced by fed funds futures at a 50.4% chance of a hike.",
+          "source": "https://www.cnbc.com/2026/09/03/august-2026-jobs-report-payrolls.html"
+        }
+      ],
+      "sources": [
+        "https://www.cnbc.com/2026/09/03/august-2026-jobs-report-payrolls.html",
+        "https://finance.yahoo.com/markets/stocks/articles/dow-rises-635-points-fed-170855232.html",
+        "https://tradingeconomics.com/united-states/government-bond-yield",
+        "https://investinglive.com/news/bond-yields-pull-back-from-the-highs-as-focus-turns-to-us-jobs-report-next/"
+      ],
+      "rank": 1,
+      "risk_reward": 2.18,
+      "last_price": 82.07,
+      "last_price_asof": "2026-09-03T16:00:00-04:00",
+      "price_source": "finnhub",
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.18,
+        "claimed_risk_reward": 2.18,
+        "breakeven_probability": 0.314,
+        "stated_win_probability": 0.44,
+        "expectancy_r": 0.399,
+        "claimed_edge": 0.126,
+        "stop_atr_multiple": 2.41,
+        "live_price": 82.07,
+        "live_price_asof": "2026-09-03T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 886.7,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": 0.6854,
+        "checked_at_et": "2026-09-04T06:47:08-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.18:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 82.6 is +0.6% from live 82.07"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-09-04 is ahead of us"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 5.25 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "stop_distance",
+            "status": "pass",
+            "detail": "stop is 2.41 ATR from entry, clear of the 2.25 ATR guide for a swing etf"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "44% claimed vs 31% break-even at 2.18:1 \u2014 expectancy +0.40R"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-09-03T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "no bid/ask available (normal outside regular hours)"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 4 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "2% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 4 rests on 3 independent kinds: dated_catalyst, positioning, technical_level"
+          },
+          {
+            "check": "sources",
+            "status": "pass",
+            "detail": "all 4 checked source(s) resolve"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "XLE",
+      "instrument": "Energy Select Sector SPDR Fund",
+      "asset_class": "etf",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 3,
+      "entry": {
+        "ideal": 63.0,
+        "zone_low": 62.6,
+        "zone_high": 63.8,
+        "order_type": "limit",
+        "condition": "AMENDED SETUP, still unfilled - the entry is unchanged at 63.00, the stop is widened and the target is cut. Do not chase 64.62. The limit sits in the 08-18 to 08-24 consolidation (closes 63.11 to 63.75) and just above the rising 20-day at 62.54, so it is a shelf rather than a reflex discount off the last print."
+      },
+      "exit": {
+        "target": 68.5,
+        "target_2": null,
+        "scale_plan": "Trim half at 66.50, just above the 65.52 range high, and trail the balance under the 20-day. The second half is the part that needs the OPEC+ pause to hold through Q4.",
+        "time_stop": "2026-10-17"
+      },
+      "stop": 60.7,
+      "position_size_pct": 2,
+      "win_probability": 0.4,
+      "catalyst": {
+        "event": "OPEC+ ministerial on Sunday 2026-09-06, setting October production levels. The group completed the final 188,000 bpd tranche of its 1.65m bpd 2023 voluntary-cut rollback for September, and delegates have told Bloomberg the group currently expects to hold quotas steady for the remainder of 2026. Backdrop: US strikes on Iranian targets around the Strait of Hormuz on 2026-09-01 put Brent at 95-99 and WTI at 90-91.",
+        "datetime_et": "2026-09-06T12:00",
+        "action": "WAIT for the OPEC+ outcome before the limit is live. If the group confirms a Q4 pause, leave the 63.00 limit working through the week. If it announces further increases for October, cancel the order outright - the supply overhang is the thesis, not the entry price.",
+        "wait": true
+      },
+      "thesis": "Energy is the tape's actual leadership and the supply overhang that has capped it is scheduled to end this Sunday. Fetched relative strength has XLE at +12.76% over one month against SPY at +0.44%, and ahead on three and six months too, with price above the 20-, 50- and 200-day (62.54 / 59.00 / 54.74) and 1.37% below the 65.52 high of the fetched 400-day window. The September tranche completed the rollback of the entire 1.65m bpd 2023 voluntary cut, so the mechanical monthly supply add that has hung over the sector all year is finished, and delegates are briefing a hold for the rest of 2026. On top of a market already tight enough to price Brent in the mid-90s with an active shooting conflict near Hormuz, a confirmed pause removes the one thing the sector has been discounting. The entry is a pullback to the 20-day rather than a chase at the high, and the amendment moves both legs against the position rather than for it.",
+      "key_risk": "The whole thesis is one meeting and the EIA disagrees with it: its Short-Term Energy Outlook has Brent averaging about 85 in Q3 2026 and falling to 69 in 2027 as inventories rebuild, so the strip is priced for the current level to be temporary. If OPEC+ announces further October increases on Sunday, or if the Iran campaign ends quickly - Trump has said it will not run 'too long', which is what capped Brent at 95 rather than 99 - the risk premium deflates and XLE gaps through the 63.00 limit rather than filling gently at it. That is why the entry is explicitly conditional on the Sunday outcome rather than left resting into it.",
+      "counter_argument": "The strongest case against is that buying a sector 1.4% off its high after a 12.8% month is buying the news: Hormuz and the completed rollback are both public, and the pullback to 63.00 only happens if something goes wrong, which is the entry filling exactly when the thesis is weakening. The answer is the level and the conditionality together. 63.00 is not a discount picked off the last price - it is the 08-18 to 08-24 shelf with the rising 20-day underneath it, and the order does not go live until the Sunday decision is known, so a fill after a confirmed pause is a pullback in an intact trend rather than a knife. [Red team] Conviction lowered from 4 to 3 and win probability from 45% to 40%, on three points the original did not answer. First, the evidence double-counts: the positioning item (+12.76% 1m vs SPY +0.44%) and the technical_level item (above the 20-, 50- and 200-day, 1.37% off the range high) are the same fact - XLE has gone up - entered under two kinds, leaving two genuine confirmations. Second, the catalyst is pre-briefed by the thesis's own wording: delegates have already told Bloomberg the group expects to hold quotas for the rest of 2026, so the pause is the consensus case and 12.8% of a month's move is in front of it. Third, the ratio is not evenly distributed - of the 5.50 of reward, only 2.52 sits below the 65.52 400-day high against 2.30 of risk, so 2.39:1 requires a breakout to a new 400-day high rather than a move to resistance. 09-03 printed exactly 65.52 and closed 0.90 below it. The levels themselves check out against the fetched history and are left unchanged: the 63.00 entry is the 08-18 to 08-24 shelf (closes 63.68/63.58/63.75/63.64/63.11) and the 60.70 stop is genuinely below the 08-26 low of 61.31, at 2.08 ATR.",
+      "evidence": [
+        {
+          "kind": "dated_catalyst",
+          "detail": "OPEC+ seven-member ministerial confirmed for Sunday 2026-09-06 to set October production. September's 188,000 bpd increase completed the phased rollback of the 1.65m bpd 2023 voluntary cut; delegates have said the group expects to hold quotas steady for the rest of 2026.",
+          "source": "https://www.cnbc.com/2026/08/02/opec-agrees-september-oil-hike-completing-rollback-of-voluntary-cuts.html"
+        },
+        {
+          "kind": "positioning",
+          "detail": "Fetched relative strength: XLE +12.76% / +9.99% / +14.41% over 1m/3m/6m against SPY +0.44% / +2.12% / +13.48% - outperforming on every window measured. This is leadership being bought, not a laggard being caught.",
+          "source": "https://www.vantagemarkets.com/market-analysis/brent-wti-crude-oil-price-september-3-2026/"
+        },
+        {
+          "kind": "technical_level",
+          "detail": "400 days of fetched history: last close 64.62, ATR14 1.1046, SMA20 62.543, SMA50 59.0036, SMA200 54.7364, range 37.245-65.52. The 63.00 entry sits in the 08-18 to 08-24 consolidation (closes 63.68, 63.58, 63.75, 63.64, 63.11) with the 20-day beneath it. The 60.70 stop is below the 08-26 low of 61.31 and 2.30 from the entry, which is 2.08 ATR and clears the 1.8 ATR floor for an ETF - the previous 61.40 stop was 1.45 ATR and would not have.",
+          "source": "https://fortune.com/article/price-of-oil-09-03-2026/"
+        }
+      ],
+      "sources": [
+        "https://www.cnbc.com/2026/08/02/opec-agrees-september-oil-hike-completing-rollback-of-voluntary-cuts.html",
+        "https://www.vantagemarkets.com/market-analysis/brent-wti-crude-oil-price-september-3-2026/",
+        "https://fortune.com/article/price-of-oil-09-03-2026/",
+        "https://www.eia.gov/outlooks/steo/",
+        "https://worldoil.com/news/2026/8/2/opec-approves-final-production-quota-increase-of-2026/"
+      ],
+      "rank": 2,
+      "risk_reward": 2.39,
+      "last_price": 64.62,
+      "last_price_asof": "2026-09-03T16:00:00-04:00",
+      "price_source": "finnhub",
+      "risk_tier": "standard",
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.39,
+        "claimed_risk_reward": 2.39,
+        "breakeven_probability": 0.295,
+        "stated_win_probability": 0.4,
+        "expectancy_r": 0.356,
+        "claimed_edge": 0.105,
+        "stop_atr_multiple": 2.08,
+        "live_price": 64.62,
+        "live_price_asof": "2026-09-03T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 887.0,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": 1.1046,
+        "checked_at_et": "2026-09-04T06:47:28-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.39:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 63.0 is -2.5% from live 64.62"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-09-06 is ahead of us"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 4.98 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "stop_distance",
+            "status": "warn",
+            "detail": "stop is 2.08 ATR from entry \u2014 clears the 1.8 ATR floor for a swing etf but sits under the 2.25 ATR level where stop-outs have clustered"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "40% claimed vs 30% break-even at 2.39:1 \u2014 expectancy +0.36R"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-09-03T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "no bid/ask available (normal outside regular hours)"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "2% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 3 rests on 3 independent kinds: dated_catalyst, positioning, technical_level"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "2 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    }
+  ],
+  "watchlist": [
+    {
+      "symbol": "GDX",
+      "instrument": "VanEck Gold Miners ETF",
+      "note": "Red team cut. Two of the three level claims are contradicted by the same fetched history the evidence cites. (a) The stop: the evidence says 'the 89.50 stop is below the 08-17 and 08-18 lows of 90.315 and 88.775'. 89.50 is above 88.775, so an ordinary retest of the low the advance began from takes the trade out. (b) The trim: 'trim half at 108.00, the 08-28 intraday area where the last advance failed' - 08-28's high was 104.78 and the advance failed at 105.67 on 08-25. Nothing traded at 108 in the visible window. (c) The target: 117.00 is the 200-day range high, made before the window that contains the current advance, and there is a five-session 104.11-105.67 distribution shelf (08-24 to 08-28) between the entry and it, which the ETF was rejected from nine sessions ago. Re-underwritten with a stop that is actually below 88.775 (88.00, risk 9.00) and a target at the resistance that is really there (105.50, reward 8.50), the ratio is 0.94:1 against a 2.0 floor. The published 2.67:1 was an artifact of a stop placed inside the invalidation low and a target 11% beyond a shelf the ETF has just failed at. The gold thesis itself is not what failed here, and the book is already long GLD on it.",
+      "trigger": "A close above 105.67 that holds, which makes 117 a target with structure behind it rather than a number picked from an old high - or a pullback to the 96.38 20-day with the stop under 88.775, which needs a target above 107 to clear the floor.",
+      "demoted_from_rank": 5,
+      "demotion_reason": "target and stop not supported by the cited price history; honest ratio 0.94:1"
+    },
+    {
+      "symbol": "BTC",
+      "instrument": "Bitcoin (spot)",
+      "note": "Broke a two-week 77,297-80,268 consolidation to 80,842, +29% in a month. Deliberately not chased: CoinGecko's daily series carries no intraday high/low so a true ATR cannot be computed, and a crypto swing needs a 2.5 ATR stop \u2014 publishing levels off an estimated volatility measure is a number this report does not write. Also, this report was short bitcoin at 64,340 two weeks ago; turning long the same morning that short is cancelled is whipsaw, not analysis.",
+      "trigger": "A retest of 78,000 (the broken consolidation top) that holds. The setup would be entry 78,000, stop below 72,900, target 92,000 \u2014 but only once a real ATR is available."
+    },
+    {
+      "symbol": "NOC",
+      "instrument": "Northrop Grumman",
+      "note": "The best long-term candidate found and it still fails the floor. Q2 book-to-bill 1.84x, record $104.7bn backlog, guidance raised to $28.60-29.10 adjusted EPS \u2014 and the stock fell a third, to 528.24, -31.75% off its 774 high. But 528.24 is 18.3x the raised guide midpoint: a normal multiple for a prime, not a distressed one. An honest 650 target against an honest 420 bear case is 1.12:1 against a 2.5 long-term floor; stretching to 700 only reaches 1.59:1. Insiders show 0 open-market buys against 22 sells.",
+      "trigger": "Under 470, where the arithmetic clears without a euphoria multiple."
+    },
+    {
+      "symbol": "MAX",
+      "instrument": "MediaAlpha",
+      "note": "Real news, levels do not clear. The 2026-09-03 8-K guides Q3 revenue, Contribution and adjusted EBITDA at or above the top end of the 07-29 ranges \u2014 355m+ against 316.9m in Q2 \u2014 and the stock fell 2.5% to 12.22 because the same filing announced a CFO transition. A 2.0 ATR stop sits at ~10.85 and the nearest real resistance is the 14.70 range high: 1.81:1, under the 2.0 swing floor. The only way past it is a 15+ target that exists nowhere in the price history.",
+      "trigger": "A pullback that puts the 14.70 range high at least 2.0x the stop distance away, or a break above 14.70 that establishes a higher target."
+    },
+    {
+      "symbol": "PPIH",
+      "instrument": "Perma-Pipe International Holdings",
+      "note": "Nearly published. Record FY2025, Q1 backlog +12% to $136.5m helped by newly awarded AI data-centre work, Q2 reports 09-09 before the open. Rejected because the stop is fiction into that print: 30-day average volume is 77,032 shares (~$2.1m/day), and a micro cap that misses gaps through a stop rather than trading to it \u2014 RARE cost this report 41% on 09-03 exactly that way, and PPIH is a twentieth of RARE's liquidity. Q1 EPS also fell to 0.22 from 0.61 while consensus asks 0.561 on Monday, and its MENA growth region is now a war zone.",
+      "trigger": "Report on 09-09, then a beat with backlog above $140m and the stock holding 27 \u2014 a cleaner setup on 09-10 than a guess before the print."
+    },
+    {
+      "symbol": "IBEX",
+      "instrument": "IBEX Limited",
+      "note": "The only small cap on the 09-07 to 09-11 earnings list making highs: 39.41, 1.43% off its 150-day high, above the 20-day (36.88) and 50-day (35.03), ADV $4.0m. Genuine leadership, wrong moment \u2014 buying a small cap at its high three sessions before a print is taking the binary with none of the cushion.",
+      "trigger": "Reports 09-10 after the close. If it reports and holds, it is a better idea on 09-11 than today."
+    },
+    {
+      "symbol": "KXFEDDECISION-26SEP-H0",
+      "instrument": "Kalshi \u2014 Fed holds at the September 2026 FOMC",
+      "note": "STALE RESTING LIMIT \u2014 cancel. Published 09-03 at YES 47; the market last traded at 56 (fetched 06:11 ET from the /markets/trades endpoint). A limit 9 points below the market fills only on a hawkish payroll print, i.e. exactly when the view is losing. Separately, buying the hold at 56 was considered and rejected today: held to resolution it risks 56 to make 44, which is 0.79:1, and the only route to a 2:1 is inventing a 40 stop and a 94 target \u2014 the manufactured-stop pattern this report has already been burned by.",
+      "trigger": "Nothing. Cancel the order. The good event-contract trades are cheap tails and expensive near-certainties; 56c is neither."
+    },
+    {
+      "symbol": "KXFEDDECISION-26SEP-H25",
+      "instrument": "Kalshi \u2014 Fed hikes 25bp at the September 2026 FOMC",
+      "note": "STALE RESTING LIMIT \u2014 cancel. Published 08-22 at YES 32; the market last traded at 43. The limit is 11 points below the market and only fills if the hold case wins, which is the moment it becomes worthless.",
+      "trigger": "Nothing. Cancel the order."
+    },
+    {
+      "symbol": "KXFEDDECISION-26OCT-H25",
+      "instrument": "Kalshi \u2014 Fed hikes 25bp at the October 2026 FOMC",
+      "note": "The one live event contract of the three. Published 09-02 at YES 28; the market last traded at 26, so the limit is near the money and still doing something. Leave it.",
+      "trigger": "No action. Re-assess after the 09-16 FOMC resolves the September leg."
+    },
+    {
+      "symbol": "VST",
+      "instrument": "Vistra Corp",
+      "note": "DEAD RESTING LIMIT. Published 08-24 at 128.00; VST closed 09-03 at 144.22, and 128 is below the 150-day low of 132.66. This order will not fill on anything short of a regime change and is inflating the count of live setups.",
+      "trigger": "Cancel, or re-underwrite from the current price. Do not leave it resting as if it were a working idea."
+    },
+    {
+      "symbol": "PFE",
+      "instrument": "Pfizer Inc.",
+      "note": "STALE RESTING LIMIT. Published 08-18 at 25.80 against a 09-03 close of 28.81 \u2014 10.5% away. Not dead, but it only fills on a decline nobody has underwritten a thesis for.",
+      "trigger": "Cancel or re-underwrite. DG (limit 121.00 vs 131.26) is the one far-away limit worth keeping, because 121 sits on the 50-day at 122.50 \u2014 a real level rather than a stale price."
+    },
+    {
+      "symbol": "ONON/DECK/AS",
+      "instrument": "Athletic and comfort-apparel complex",
+      "note": "The obvious second-order trade off the LULU print is to buy whoever is taking its women's share. There is no such name: ONON -43.6% off its 150-day high, DECK -30.9%, AS -33.3%, NKE -30.4% \u2014 every one at or within a percent of its 150-day low and below both moving averages. That is a category demand contraction, not share moving between brands, and it strengthens rather than weakens the LULU exit.",
+      "trigger": "Do not go long anything in this group until one of them stops making lows while the others continue."
+    },
+    {
+      "symbol": "IWM",
+      "instrument": "iShares Russell 2000 ETF",
+      "note": "The tempting payroll trade, not taken. IWM at 295.19 is below both its 20-day (299.14) and 50-day (297.07) while SPY sits 0.8% off its high above both, and IWM is -1.97% against SPY over one month \u2014 the highest-beta expression of the hike being priced out. Rejected because it is a directional bet on a number nobody has yet, dressed as a setup, and because the universe rules prefer /M2KU6 here and futures could not be priced this run.",
+      "trigger": "After the 08:30 print, with a level set on the reaction rather than ahead of it."
+    },
+    {
+      "symbol": "LULU",
+      "instrument": "lululemon athletica inc.",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 1,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined"
+    },
+    {
+      "symbol": "RARE",
+      "instrument": "Ultragenyx Pharmaceutical Inc.",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 2,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined"
+    },
+    {
+      "symbol": "/MBTU6",
+      "instrument": "Micro Bitcoin Futures, September 2026",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 4,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined"
+    },
+    {
+      "symbol": "SPY",
+      "instrument": "SPDR S&P 500 ETF Trust",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; no entry price; no entry or stop, so the stop distance is undefined",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 5,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; no entry price; no entry or stop, so the stop distance is undefined"
+    },
+    {
+      "symbol": "BTC",
+      "instrument": "Bitcoin (spot)",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined; bearish crypto expressed as spot `sell` \u2014 Robinhood Crypto cannot short, so this cannot profit if correct. Use /MBT or /BTC; 1 source(s) return 404: https://robinhood.com/us/en/support/articles/cryptocurrencies-available-on-robinhood/",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 6,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined; bearish crypto expressed as spot `sell` \u2014 Robinhood Crypto cannot short, so this cannot profit if correct. Use /MBT or /BTC; 1 source(s) return 404: https://robinhood.com/us/en/support/articles/cryptocurrencies-available-on-robinhood/"
+    }
+  ],
+  "validation_summary": {
+    "checked": 7,
+    "passed": 0,
+    "warned": 2,
+    "failed": 5,
+    "enforced": true,
+    "demoted": 5
+  }
+}
