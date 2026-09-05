@@ -445,7 +445,7 @@ class SheetOutput(unittest.TestCase):
 
     def test_the_header_lands_on_the_frozen_row(self):
         self.assertEqual(self.values[td.HEADER_ROW - 1], td.HEADERS)
-        self.assertEqual(len(td.HEADERS), 22)
+        self.assertEqual(len(td.HEADERS), 23)
         self.assertEqual(td.HEADERS[td.COL_TIER], "Tier")
         self.assertIn("Value Source", td.HEADERS)
 
@@ -456,7 +456,8 @@ class SheetOutput(unittest.TestCase):
 
     def test_a_county_with_nothing_says_so_rather_than_being_omitted(self):
         text = "\n".join(str(row[0]) for row in self.values if row)
-        self.assertIn("ELLIS COUNTY — 0 candidate(s)", text)
+        self.assertIn("ELLIS COUNTY — 0 on the 2026-10-06 docket · 0 candidate(s)",
+                      text)
         self.assertIn("no listing survived the gates", text)
 
     def test_rows_sort_by_tier_then_bid_to_value(self):
@@ -819,3 +820,139 @@ class RepeatOfferings(unittest.TestCase):
         td.annotate_history(result, td.offer_history(date(2026, 9, 1), self.tmp), cfg())
         self.assertIsNone(result["tier"])
 
+
+
+class TheDocketAxis(unittest.TestCase):
+    """Which sale a row belongs to is not a measure of the property.
+
+    The first live run published 328 candidates under a "sale 2026-10-06"
+    banner. 18 of them were on that docket. The other 310 carried the feed's
+    own `Available for Future Sale`, which is not a defect, not an unknown, and
+    not a reason to rank them lower — only a reason not to let them look like
+    tomorrow's shortlist.
+    """
+
+    def result(self, sale_date=None, status="Active", screening_for=SALE, **extra):
+        return td.screen(listing(sale_date=sale_date, status=status, **extra),
+                         cad(), checks(), cfg(), TODAY, screening_for)
+
+    def test_a_listing_set_for_this_sale_is_on_the_docket(self):
+        docket = self.result(sale_date=SALE, status="Scheduled for Auction")["docket"]
+        self.assertEqual(docket["state"], td.ON_DOCKET)
+        self.assertTrue(docket["on_docket"])
+        self.assertEqual(docket["label"], "yes")
+
+    def test_the_feeds_own_words_are_read_not_treated_as_silence(self):
+        for phrasing in ("Available for Future Sale", "Not Yet Scheduled",
+                         "PENDING", "To Be Rescheduled"):
+            with self.subTest(phrasing):
+                docket = self.result(status=phrasing)["docket"]
+                self.assertEqual(docket["state"], td.NOT_SCHEDULED)
+                self.assertFalse(docket["on_docket"])
+
+    def test_a_listing_for_a_different_sale_says_which(self):
+        docket = self.result(sale_date="2026-11-03")["docket"]
+        self.assertEqual(docket["state"], td.OTHER_SALE)
+        self.assertEqual(docket["label"], "sale 2026-11-03")
+        self.assertIn("2026-11-03", docket["detail"])
+
+    def test_a_struck_off_listing_has_no_docket_to_be_on(self):
+        docket = self.result(sale_type="struck_off")["docket"]
+        self.assertEqual(docket["state"], td.OVER_THE_COUNTER)
+        self.assertIn("any time", docket["detail"])
+
+    def test_silence_with_no_explanation_stays_an_unknown(self):
+        result = self.result(status="Active")
+        self.assertEqual(result["docket"]["state"], td.DATE_UNKNOWN)
+        self.assertIn("no_sale_date", codes(result["flags"]))
+
+    def test_but_a_status_that_explains_the_silence_is_not_an_unknown(self):
+        """`Available for Future Sale` answers the question the flag asks."""
+        result = self.result(status="Available for Future Sale")
+        self.assertNotIn("no_sale_date", codes(result["flags"]))
+
+    def test_being_off_the_docket_is_never_a_flag(self):
+        """It would rank rows, and it says nothing about the property.
+
+        It would also drive 94% of a run into Tier C, which is the mistake
+        `occupancy_unknown` carries severity `universal` to avoid.
+        """
+        off = self.result(status="Available for Future Sale")
+        on = self.result(sale_date=SALE, status="Scheduled for Auction")
+        self.assertEqual(codes(off["flags"]), codes(on["flags"]))
+        self.assertEqual(off["tier"], on["tier"])
+
+    def test_nor_a_rejection(self):
+        self.assertEqual(self.result(status="Available for Future Sale")["status"],
+                         "candidate")
+
+    def test_screening_without_a_sale_date_does_not_invent_one(self):
+        """Any published date is 'the' date when nothing was asked for."""
+        docket = td.screen(listing(sale_date="2026-11-03"), cad(), checks(),
+                           cfg(), TODAY)["docket"]
+        self.assertEqual(docket["state"], td.ON_DOCKET)
+
+
+class DocketOrdering(unittest.TestCase):
+    def rows(self, *specs):
+        out = []
+        for sale_date, status in specs:
+            out.append(td.screen(listing(sale_date=sale_date, status=status),
+                                 cad(), checks(), cfg(), TODAY, SALE))
+        return out
+
+    def test_what_you_can_bid_on_sorts_first(self):
+        rows = self.rows((None, "Available for Future Sale"),
+                         ("2026-11-03", "Active"),
+                         (SALE, "Scheduled for Auction"))
+        rows.sort(key=lambda r: td.sort_key(r, td.county_order(cfg())))
+        self.assertEqual([r["docket"]["state"] for r in rows],
+                         [td.ON_DOCKET, td.NOT_SCHEDULED, td.OTHER_SALE])
+
+    def test_the_docket_outranks_the_tier(self):
+        """A Tier A property six weeks out is not tomorrow morning's problem."""
+        later = td.screen(listing(sale_date="2026-11-03", minimum_opening_bid=1000.0),
+                          cad(), checks(), cfg(), TODAY, SALE)
+        now = td.screen(listing(sale_date=SALE, minimum_opening_bid=19000.0),
+                        cad(), checks(), cfg(), TODAY, SALE)
+        order = td.county_order(cfg())
+        self.assertLess(td.sort_key(now, order), td.sort_key(later, order))
+
+
+class DocketInTheOutputs(unittest.TestCase):
+    def setUp(self):
+        self.statements = td.statement_report(cfg(), ["Dallas"], TODAY, SALE)
+        self.on = td.screen(listing(sale_date=SALE, status="Scheduled for Auction"),
+                            cad(), checks(), cfg(), TODAY, SALE)
+        self.off = td.screen(
+            listing(sale_date=None, status="Available for Future Sale", account="99"),
+            cad(), checks(), cfg(), TODAY, SALE)
+
+    def test_the_sheet_has_a_column_for_it(self):
+        self.assertIn("On This Docket", td.HEADERS)
+        row = td._sheet_row(self.on)
+        self.assertEqual(row[td.HEADERS.index("On This Docket")], "yes")
+        self.assertEqual(td._sheet_row(self.off)[td.HEADERS.index("On This Docket")],
+                         "not scheduled")
+
+    def test_the_banner_gives_both_numbers(self):
+        values, _ = td.sheet_rows([self.on, self.off], cfg(), TODAY, SALE, self.statements)
+        self.assertIn("1 on this docket of 2 candidates", values[1][0])
+
+    def test_a_packet_for_an_unscheduled_property_does_not_say_sale_none(self):
+        text = td.packet_markdown(self.off, cfg(), self.statements[0])
+        self.assertNotIn("Sale None", text)
+        self.assertIn("Not scheduled for any sale yet", text)
+
+    def test_and_carries_no_deadline_table_it_cannot_honour(self):
+        text = td.packet_markdown(self.off, cfg(), self.statements[0])
+        self.assertNotIn("Deadlines before this sale", text)
+
+    def test_while_a_docketed_one_does(self):
+        text = td.packet_markdown(self.on, cfg(), self.statements[0])
+        self.assertIn(f"**Sale {SALE}**", text)
+        self.assertIn("Deadlines before this sale", text)
+
+    def test_an_unscheduled_packet_is_filed_away_from_the_sale(self):
+        self.assertEqual(td.packet_path(self.off).parent.name, "undated")
+        self.assertEqual(td.packet_path(self.on).parent.name, SALE)

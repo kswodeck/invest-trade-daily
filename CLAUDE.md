@@ -233,6 +233,25 @@ Four rules are load-bearing:
   backwards in *working* days by `deadlines()`, because that is how the counties
   count and a weekend quietly eats two days of a five-day window.
 
+- **Which sale a row is for is an axis, not a flag.** The report is headed with
+  one sale date and its rows are not all on it: the first live run published 328
+  candidates under "sale 2026-10-06", 18 of which were on that docket. The rest
+  carried the feed's own `Available for Future Sale` — real inventory with no
+  auction assigned, nothing wrong with them, answering a different question than
+  the header asked. `docket_status` gives five states and the sheet a column,
+  because a flag would rank rows against each other and being off the docket
+  says nothing about whether a property is a good buy — it would also put 94% of
+  a run in Tier C and make the tiers meaningless, the trap `occupancy_unknown`
+  is `universal` to avoid. On-docket rows sort *above* the tier: a Tier A
+  property six weeks out is not a better use of tomorrow morning than a Tier B
+  one on tomorrow's docket. Banner and summary give both counts, and the
+  deadline table only covers counties with something on this docket — telling
+  someone to stage a deposit for a sale they have no property in is the
+  conflation the column exists to end. `no_sale_date` narrowed to match: a
+  status that *explains* the silence is a determination, so the flag is now only
+  for no date and no reason given, which removed 336 false unknowns from that
+  run.
+
 - **Repeat offerings come from the snapshots, not the network.** A property
   matched across `data/tax_deeds/<date>.json` by account, else cause number, else
   county and address, and offered at two or more prior sales, is flagged

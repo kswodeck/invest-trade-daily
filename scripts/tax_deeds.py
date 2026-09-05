@@ -406,6 +406,80 @@ def redemption_terms(listing: dict, cad: dict | None) -> dict:
 # GATE 1 — hard disqualifiers
 # --------------------------------------------------------------------------
 
+# A listing being on the sale the report is headed with is its own question,
+# and not one the gates answer. The first live run made that plain: 310 of 328
+# candidates went out under a "sale 2026-10-06" banner carrying the LGBS feed's
+# own `Available for Future Sale` — properties in the pipeline with no docket at
+# all. Nothing was wrong with them and nothing was wrong with the screening;
+# they simply did not answer the question the header asked, and a reader on
+# 2026-10-05 would have thought all 328 were biddable in the morning.
+#
+# So this is an axis beside the tier, not a flag. A flag would rank rows against
+# each other, and "not on this docket" says nothing about whether a property is
+# a good buy — only about which sale it belongs to. Flagging it would also drive
+# 94% of a run into Tier C and make the tiers meaningless, which is the mistake
+# `occupancy_unknown` is documented to avoid.
+
+ON_DOCKET = "on_docket"
+NOT_SCHEDULED = "not_scheduled"
+OTHER_SALE = "other_sale"
+DATE_UNKNOWN = "date_unknown"
+OVER_THE_COUNTER = "over_the_counter"
+
+# The feeds say this in their own words when a property is real inventory that
+# has not reached a docket. Read it — it is a determination, not a silence.
+_FUTURE_STATUS = re.compile(
+    r"future sale|available for future|not (yet )?scheduled|pending|unscheduled|"
+    r"awaiting|to be (re)?scheduled|struck.?off", re.I)
+
+
+def docket_status(listing: dict, sale_date: str | None) -> dict:
+    """Which sale this listing belongs to, relative to the one being screened.
+
+    Five answers, and only the first is biddable on the day the report is for:
+
+    - `on_docket` — set for this sale
+    - `over_the_counter` — struck off; there is no auction, which is the point
+      of the category, so it is always available and never "late"
+    - `not_scheduled` — the county says so itself. Real inventory worth
+      researching now, biddable at some later sale
+    - `other_sale` — set for a different date
+    - `date_unknown` — the list published nothing and said nothing. The only
+      one of the five that is an unknown, and it keeps its flag
+    """
+    listed = listing.get("sale_date")
+    status = str(listing.get("status") or "").strip()
+
+    if listing.get("sale_type") == "struck_off":
+        return {"state": OVER_THE_COUNTER, "sale_date": None, "on_docket": False,
+                "label": "over the counter",
+                "detail": "struck off to the taxing units — bought from the county "
+                          "at any time, not at an auction"}
+    if listed:
+        try:
+            parsed = date.fromisoformat(str(listed))
+        except ValueError:
+            return {"state": DATE_UNKNOWN, "sale_date": None, "on_docket": False,
+                    "label": "date unreadable",
+                    "detail": f"the list published {listed!r}, which is not a date"}
+        if sale_date and str(listed) != str(sale_date):
+            return {"state": OTHER_SALE, "sale_date": parsed.isoformat(), "on_docket": False,
+                    "label": f"sale {parsed.isoformat()}",
+                    "detail": f"set for the {parsed.isoformat()} sale, not {sale_date}"}
+        return {"state": ON_DOCKET, "sale_date": parsed.isoformat(), "on_docket": True,
+                "label": "yes", "detail": f"set for the {parsed.isoformat()} sale"}
+
+    if _FUTURE_STATUS.search(status):
+        return {"state": NOT_SCHEDULED, "sale_date": None, "on_docket": False,
+                "label": "not scheduled",
+                "detail": f"the county lists it as {status!r} with no sale date — real "
+                          f"inventory for a later sale, so there is nothing to register "
+                          f"for or drive to yet"}
+    return {"state": DATE_UNKNOWN, "sale_date": None, "on_docket": False,
+            "label": "unknown",
+            "detail": "the list published no sale date and no status that explains why"}
+
+
 def gate1_hard_disqualifiers(listing: dict, cad: dict | None, cfg: dict,
                              today: date) -> tuple[list[dict], list[dict]]:
     """Rejections and flags. The split is the whole point of this gate.
@@ -444,12 +518,16 @@ def gate1_hard_disqualifiers(listing: dict, cad: dict | None, cfg: dict,
         except ValueError:
             flags.append(flag("unparseable_sale_date", MINOR,
                               f"sale date {sale_date!r} could not be read"))
-    elif not struck_off:
+    elif not struck_off and not _FUTURE_STATUS.search(str(listing.get("status") or "")):
         # A struck-off property has no sale date because there is no sale — it
-        # is bought over the counter, which is the point of the category.
+        # is bought over the counter, which is the point of the category. And a
+        # listing whose status *says* it is not yet scheduled is not missing a
+        # date either: that is a determination, carried on the docket axis. What
+        # is left here is the genuine silence — no date, and no reason given.
         flags.append(flag("no_sale_date", MINOR,
-                          "the county list published no sale date for an auction listing; "
-                          "confirm the date with the county before you travel"))
+                          "the county list published no sale date for an auction listing, "
+                          "and no status explaining why; confirm the date with the county "
+                          "before you travel"))
 
     status = str(listing.get("status") or "").strip().lower()
     if status and re.search(r"withdraw|pulled|cancel|struck from|removed|paid|bankrupt", status):
@@ -877,8 +955,13 @@ def gate5_tier(flags: list[dict], econ: dict | None, cad: dict | None,
 # --------------------------------------------------------------------------
 
 def screen(listing: dict, cad: dict | None, checks: list[dict], cfg: dict,
-           today: date) -> dict:
-    """Run every gate over one listing and return the full, auditable result."""
+           today: date, sale_date: str | None = None) -> dict:
+    """Run every gate over one listing and return the full, auditable result.
+
+    `sale_date` is the sale the run is *for*. It does not gate anything — a
+    property not on that docket is not a worse property — but it decides which
+    question the row answers, which is the `docket` block.
+    """
     checks = list(checks or [])
     terms = redemption_terms(listing, cad)
 
@@ -892,6 +975,7 @@ def screen(listing: dict, cad: dict | None, checks: list[dict], cfg: dict,
 
     econ = gate4_economics(listing, cad, cfg, terms)
     flags += gate4_flags(econ)
+    docket = docket_status(listing, sale_date)
     tier = None if rejections else gate5_tier(flags, econ, cad, cfg)
     material, minor = count_flags(flags)
 
@@ -907,6 +991,7 @@ def screen(listing: dict, cad: dict | None, checks: list[dict], cfg: dict,
         "rejections": rejections,
         "economics": econ,
         "redemption": terms,
+        "docket": docket,
         "tier": tier,
         "status": "rejected" if rejections else "candidate",
         "material_flags": material,
@@ -917,12 +1002,23 @@ def screen(listing: dict, cad: dict | None, checks: list[dict], cfg: dict,
     }
 
 
+DOCKET_ORDER = {ON_DOCKET: 0, OVER_THE_COUNTER: 1, NOT_SCHEDULED: 2,
+                OTHER_SALE: 3, DATE_UNKNOWN: 4}
+
+
 def sort_key(result: dict, order: dict[str, int]) -> tuple:
-    """County block order, then tier, then bid-to-value ascending."""
+    """County block, then what you can act on today, then tier, then bid/value.
+
+    The docket sorts above the tier deliberately. A Tier A property at a sale
+    six weeks out is not a better use of tomorrow morning than a Tier B one on
+    tomorrow's docket, and the reader looking at the top of a county block is
+    almost always asking what to do about *this* sale.
+    """
     listing = result["listing"]
     ratio = (result.get("economics") or {}).get("bid_to_value")
     return (
         order.get(listing.get("county"), 99),
+        DOCKET_ORDER.get((result.get("docket") or {}).get("state"), 9),
         {"A": 0, "B": 1, "C": 2}.get(result.get("tier"), 3),
         ratio if ratio is not None else 9.99,
         listing.get("account") or "",
@@ -1169,7 +1265,7 @@ def annotate_history(result: dict, history: dict[str, dict], cfg: dict) -> None:
 # --------------------------------------------------------------------------
 
 HEADERS = [
-    "County", "Sale Date", "Sale Type", "Cause No", "Account No", "Address",
+    "County", "Sale Date", "On This Docket", "Sale Type", "Cause No", "Account No", "Address",
     "Legal Description", "Property Type", "Opening Bid", "Value", "Value Source", "Bid/Value",
     "Redemption Period", "Redemption Payout", "Walk-Away Bid", "Tier",
     "Flags", "Checks Run", "Checks Unavailable", "CAD Link", "County Listing Link",
@@ -1214,9 +1310,15 @@ def sheet_rows(results: list[dict], cfg: dict, today: date,
     tier_counts = {t: sum(1 for r in candidates if r["tier"] == t) for t in ("A", "B", "C")}
     blockers = [s for s in statements if s["state"] in ("missing", "expired", "expiring")]
 
+    # Candidates and candidates-you-can-bid-on-that-day are different numbers,
+    # and a banner that gives only the first invites the reader to assume they
+    # are the same one. In the first live run they were 328 and 18.
+    on_docket = sum(1 for r in candidates if r["docket"]["on_docket"])
     banner = (f"TEXAS TAX DEED CANDIDATES · sale {sale_date} · screened {today.isoformat()} · "
-              f"{len(candidates)} candidates from {len(results)} listings "
-              f"(A {tier_counts['A']} / B {tier_counts['B']} / C {tier_counts['C']})")
+              f"{on_docket} on this docket of {len(candidates)} candidates "
+              f"from {len(results)} listings "
+              f"(A {tier_counts['A']} / B {tier_counts['B']} / C {tier_counts['C']}) · "
+              f"'On This Docket' says which rows are biddable at this sale")
     statement_line = (
         "§34.015 BIDDER STATEMENT: " +
         (" | ".join(f"{s['county']}: {s['state'].upper()}" for s in statements) or "none configured") +
@@ -1231,7 +1333,9 @@ def sheet_rows(results: list[dict], cfg: dict, today: date,
         block = [r for r in candidates if r["listing"].get("county") == name]
         listed = sum(1 for r in results if r["listing"].get("county") == name)
         statement = next((s for s in statements if s["county"] == name), None)
-        header = (f"{name.upper()} COUNTY — {len(block)} candidate(s) of {listed} listed"
+        here = sum(1 for r in block if r["docket"]["on_docket"])
+        header = (f"{name.upper()} COUNTY — {here} on the {sale_date} docket · "
+                  f"{len(block)} candidate(s) of {listed} listed"
                   + (f" · §34.015 {statement['state'].upper()}" if statement else ""))
         spec["county_rows"].append(len(rows))
         rows.append([header])
@@ -1259,6 +1363,7 @@ def _sheet_row(result: dict) -> list[Any]:
     return [
         listing.get("county", ""),
         listing.get("sale_date", ""),
+        (result.get("docket") or {}).get("label", ""),
         listing.get("sale_type", ""),
         listing.get("cause_number", ""),
         listing.get("account", ""),
@@ -1324,12 +1429,36 @@ def packet_path(result: dict) -> Path:
     return PACKET_DIR / (listing.get("sale_date") or "undated") / f"{county}_{account}.md"
 
 
+def _docket_sentence(result: dict) -> str:
+    """One sentence on which sale this packet is for, before anything else.
+
+    A packet written for a run headed "sale 2026-10-06" used to open "Sale
+    None" for the 94% of listings that had no docket. The reader deserves the
+    difference between "be there on the 6th" and "there is nowhere to be yet".
+    """
+    docket = result.get("docket") or {}
+    listing = result.get("listing") or {}
+    kind = listing.get("sale_type") or "auction"
+    if docket.get("state") == ON_DOCKET:
+        return f"**Sale {docket['sale_date']}** ({kind})."
+    if docket.get("state") == OVER_THE_COUNTER:
+        return "**No auction** — struck off, so it is bought from the county at any time."
+    if docket.get("state") == OTHER_SALE:
+        return (f"**Not this sale** — it is set for {docket['sale_date']}. "
+                f"Research it now, bid on it then.")
+    if docket.get("state") == NOT_SCHEDULED:
+        return ("**Not scheduled for any sale yet** — the county lists it as future "
+                "inventory. Nothing to register for or drive to until it is docketed.")
+    return "**No sale date published**, and no status explaining why — ask the county."
+
+
 def packet_markdown(result: dict, cfg: dict, statement: dict) -> str:
     listing, cad = result["listing"], result.get("cad") or {}
     econ = result.get("economics") or {}
     terms = result["redemption"]
     county = listing.get("county", "")
     county_cfg = next((c for c in cfg.get("counties", []) if c["name"] == county), {})
+    docket = result.get("docket") or docket_status(listing, None)
 
     def line(label: str, value: Any) -> str:
         return f"| {label} | {value if value not in (None, '') else '—'} |"
@@ -1339,15 +1468,16 @@ def packet_markdown(result: dict, cfg: dict, statement: dict) -> str:
         "",
         f"> **{DISCLAIMER}**",
         "",
-        f"Screened {result.get('screened_at')}. Sale {listing.get('sale_date')} "
-        f"({listing.get('sale_type')}). Rewritten each run — check the timestamp before acting.",
+        f"Screened {result.get('screened_at')}. {_docket_sentence(result)} "
+        f"Rewritten each run — check the timestamp before acting.",
         "",
         "## Property",
         "",
         "| Field | Value |",
         "| --- | --- |",
         line("County", county),
-        line("Sale date", listing.get("sale_date")),
+        line("Sale date", listing.get("sale_date") or docket["detail"]),
+        line("On this docket", docket["label"]),
         line("Sale type", listing.get("sale_type")),
         line("Sale venue", county_cfg.get("sale_location")),
         line("Cause number", listing.get("cause_number")),

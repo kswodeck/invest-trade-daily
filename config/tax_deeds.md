@@ -97,6 +97,50 @@ is checked against the *sale date* rather than against today:
   was never going to catch, because 30 days out from expiry is not 30 days out
   from the sale.
 
+## Which sale a row is for
+
+The report is headed with one sale date; its rows are not all on it. The first
+live run published **328 candidates under a "sale 2026-10-06" banner, of which
+18 were on that docket** — the other 310 carried the feed's own `Available for
+Future Sale`, real inventory with no auction assigned. Nothing was wrong with
+them and nothing was wrong with the screening. They simply did not answer the
+question the header asked, and a reader on 2026-10-05 would have thought all
+328 were biddable in the morning.
+
+So it is an **axis beside the tier, never a flag**. A flag ranks rows against
+each other, and "not on this docket" says nothing about whether a property is a
+good buy — only about which sale it belongs to. Flagging it would also drive 94%
+of a run into Tier C and make the tiers meaningless, the same trap
+`occupancy_unknown` carries severity `universal` to avoid.
+
+| State | Column reads | Meaning |
+| --- | --- | --- |
+| `on_docket` | `yes` | set for this sale — the only rows biddable that day |
+| `over_the_counter` | `over the counter` | struck off, so there is no auction and it is never late |
+| `not_scheduled` | `not scheduled` | the county says so itself; research now, bid later |
+| `other_sale` | `sale <date>` | set for a different date |
+| `date_unknown` | `unknown` | nothing published and nothing said — the only unknown of the five |
+
+It changes four things:
+
+- **A column**, "On This Docket", beside the sale date.
+- **The sort.** On-docket rows come first, *above* the tier: a Tier A property
+  six weeks out is not a better use of tomorrow morning than a Tier B one on
+  tomorrow's docket.
+- **Both counts** in the banner and the summary — candidates, and candidates you
+  can bid on that morning.
+- **The deadlines**, which now appear only for counties with something on this
+  docket. Telling someone to stage a deposit five days before a sale they have
+  no property in is the same conflation the column exists to end. Packets follow
+  the listing's own date, so an unscheduled one is filed under `undated/` and
+  says "nothing to register for or drive to until it is docketed" rather than
+  "Sale None".
+
+**`no_sale_date` narrowed with it.** A status that explains the silence is a
+determination, not an unknown, so the flag is now only for the genuine case —
+no date published and no reason given. That removed 336 false unknowns from
+that one run.
+
 ## Deadlines before the sale
 
 Everything with a lead time is counted backwards from the sale date in **working
@@ -111,7 +155,8 @@ days of a five-day window. Each county configures its own leads:
 
 The summary prints them as a table with a **MISSED** marker, so a deadline that
 has already gone reads as gone rather than as a date in a list. These are
-latest-possible dates, not comfortable ones.
+latest-possible dates, not comfortable ones. Only counties with a candidate on
+this docket get a row — see above.
 
 ## Repeat offerings
 

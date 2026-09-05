@@ -133,7 +133,7 @@ def collect(cfg: dict, today: date, sale_date: str, only: list[str] | None = Non
                     checks = [td.check_record(name, td.UNAVAILABLE, "check raised",
                                               f"{type(exc).__name__}: {exc}")
                               for name in td.LIEN_CHECKS]
-            results.append(td.screen(listing, cad, checks, cfg, today))
+            results.append(td.screen(listing, cad, checks, cfg, today, sale_date))
 
         if skipped:
             print(f"  {county['name']}: enriched the {budget} cheapest of {len(priced)} "
@@ -326,12 +326,18 @@ def summarize(cfg: dict, results: list[dict], statements: list[dict],
               today: date | None = None) -> list[str]:
     candidates = [r for r in results if r["status"] == "candidate"]
     tiers = {t: sum(1 for r in candidates if r["tier"] == t) for t in ("A", "B", "C")}
+    on_docket = sum(1 for r in candidates if r["docket"]["on_docket"])
     out = [
         f"## Texas Tax Deeds — sale {sale_date}", "",
         f"> {td.DISCLAIMER}", "",
-        f"{len(results)} listing(s) ingested · {len(candidates)} candidate(s) · "
+        f"{len(results)} listing(s) ingested · {len(candidates)} candidate(s), "
+        f"{on_docket} of them on the {sale_date} docket · "
         f"Tier A {tiers['A']} / B {tiers['B']} / C {tiers['C']}", "",
-        "| County | Listed | Candidates | A | B | C |", "| --- | --- | --- | --- | --- | --- |",
+        # Candidates and rows-you-can-bid-on-that-morning are different numbers.
+        # The first live run published 328 of the first and 18 of the second
+        # under one "sale 2026-10-06" heading.
+        "| County | Listed | Candidates | On docket | Not scheduled | A | B | C |",
+        "| --- | --- | --- | --- | --- | --- | --- | --- |",
     ]
     # Every configured county, in report order, whether or not it produced
     # anything. A county missing from this table reads as "nothing for sale",
@@ -340,6 +346,8 @@ def summarize(cfg: dict, results: list[dict], statements: list[dict],
         block = [r for r in candidates if r["listing"]["county"] == name]
         out.append(f"| {name} | {sum(1 for r in results if r['listing']['county'] == name)} "
                    f"| {len(block)} "
+                   f"| {sum(1 for r in block if r['docket']['on_docket'])} "
+                   f"| {sum(1 for r in block if r['docket']['state'] == td.NOT_SCHEDULED)} "
                    f"| {sum(1 for r in block if r['tier'] == 'A')} "
                    f"| {sum(1 for r in block if r['tier'] == 'B')} "
                    f"| {sum(1 for r in block if r['tier'] == 'C')} |")
@@ -351,11 +359,16 @@ def summarize(cfg: dict, results: list[dict], statements: list[dict],
     # The run's own date, not the wall clock — a --today run must not read
     # half its dates from one calendar and half from another.
     asof = today or date.today()
-    upcoming = [d for county in {s["county"] for s in statements}
+    # Only for counties with something actually on this docket. Telling someone
+    # to stage a deposit five days before a sale they have no property in is
+    # the same conflation the "On This Docket" column exists to end.
+    live = {r["listing"]["county"] for r in candidates if r["docket"]["on_docket"]}
+    upcoming = [d for county in sorted(live)
                 for d in td.deadlines(cfg, county, sale_date, asof)]
     if upcoming:
         out += ["", "### Deadlines before this sale", "",
-                "Weekdays only, so each is the latest date that could possibly work.", "",
+                "Counties with a candidate on this docket. Weekdays only, so each is the "
+                "latest date that could possibly work.", "",
                 "| Due | County | What | Status |", "| --- | --- | --- | --- |"]
         for item in sorted(upcoming, key=lambda d: d["due"]):
             out.append(f"| {item['due']} | {item['county']} | {item['what']} "
@@ -464,8 +477,11 @@ def main(argv: list[str] | None = None, sources: Any = None) -> int:
         print(f"Snapshot -> {rel(path)}")
         packets = write_packets(results, cfg, statements)
         tiers = "/".join(sorted(td.packet_tiers(cfg)))
-        print(f"Packets  -> {len(packets)} Tier {tiers} due-diligence file(s) under "
-              f"{rel(td.PACKET_DIR / sale_date)}/")
+        # `packet_path` files by the listing's own sale date, so a run for one
+        # sale writes into several directories. Naming only the run's sale date
+        # sent the reader to a folder holding a fraction of the packets.
+        where = ", ".join(sorted({rel(path.parent) + "/" for path in packets})) or "—"
+        print(f"Packets  -> {len(packets)} Tier {tiers} due-diligence file(s) under {where}")
         if not packets and any(r["status"] == "candidate" for r in results):
             print(f"  note: every candidate fell outside Tier {tiers}. While the county "
                   f"clerk adapters report unavailable, an unscreened federal tax lien is a "
