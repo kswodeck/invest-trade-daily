@@ -144,6 +144,11 @@ def collect(cfg: dict, today: date, sale_date: str, only: list[str] | None = Non
             entry["not_enriched"] = skipped
 
     order = td.county_order(cfg)
+    # Prior offerings, from the snapshots already on disk. Nothing is fetched.
+    history = td.offer_history(today)
+    for result in results:
+        td.annotate_history(result, history, cfg)
+
     results.sort(key=lambda r: td.sort_key(r, order))
     return results, report
 
@@ -310,8 +315,15 @@ def publish(values: list[list[Any]], spec: dict) -> str:
 # reporting
 # --------------------------------------------------------------------------
 
+STATEMENT_MARKS = {
+    "current": "✅", "expiring": "⚠️", "expired": "🔴", "missing": "🔴",
+    "unreadable": "🔴", "expires_before_sale": "🔴", "too_late": "⛔",
+}
+
+
 def summarize(cfg: dict, results: list[dict], statements: list[dict],
-              source_report: list[dict], sale_date: str) -> list[str]:
+              source_report: list[dict], sale_date: str,
+              today: date | None = None) -> list[str]:
     candidates = [r for r in results if r["status"] == "candidate"]
     tiers = {t: sum(1 for r in candidates if r["tier"] == t) for t in ("A", "B", "C")}
     out = [
@@ -334,9 +346,20 @@ def summarize(cfg: dict, results: list[dict], statements: list[dict],
 
     out += ["", "### §34.015 written statement", ""]
     for status in statements:
-        mark = {"current": "✅", "expiring": "⚠️", "expired": "🔴",
-                "missing": "🔴", "unreadable": "🔴"}[status["state"]]
-        out.append(f"- {mark} {status['message']}")
+        out.append(f"- {STATEMENT_MARKS.get(status['state'], '🔴')} {status['message']}")
+
+    # The run's own date, not the wall clock — a --today run must not read
+    # half its dates from one calendar and half from another.
+    asof = today or date.today()
+    upcoming = [d for county in {s["county"] for s in statements}
+                for d in td.deadlines(cfg, county, sale_date, asof)]
+    if upcoming:
+        out += ["", "### Deadlines before this sale", "",
+                "Weekdays only, so each is the latest date that could possibly work.", "",
+                "| Due | County | What | Status |", "| --- | --- | --- | --- |"]
+        for item in sorted(upcoming, key=lambda d: d["due"]):
+            out.append(f"| {item['due']} | {item['county']} | {item['what']} "
+                       f"| {'**MISSED**' if item['missed'] else 'ahead'} |")
 
     reasons: dict[str, int] = {}
     for result in results:
@@ -396,7 +419,7 @@ def main(argv: list[str] | None = None, sources: Any = None) -> int:
     sale_date = args.sale_date or td.next_sale_date(today).isoformat()
     names = [c["name"] for c in td.counties(cfg)
              if not args.county or c["name"].lower() in {o.lower() for o in args.county}]
-    statements = td.statement_report(cfg, names, today)
+    statements = td.statement_report(cfg, names, today, sale_date)
 
     print(td.DISCLAIMER)
     print(f"\nScreening {', '.join(names)} for the {sale_date} sale (today {today}).\n")
@@ -428,8 +451,11 @@ def main(argv: list[str] | None = None, sources: Any = None) -> int:
     source_report = verification + source_report
 
     for status in statements:
+        # Same marks as the summary. A `too_late` county is not a warning that
+        # ranks with an expiring statement — its whole sale is off the table.
         if status["state"] != "current":
-            print(f"⚠️  {status['message']}", file=sys.stderr)
+            mark = STATEMENT_MARKS.get(status["state"], "🔴")
+            print(f"{mark}  {status['message']}", file=sys.stderr)
 
     values, spec = td.sheet_rows(results, cfg, today, sale_date, statements)
 
@@ -446,7 +472,7 @@ def main(argv: list[str] | None = None, sources: Any = None) -> int:
                   f"material flag and nothing reaches Tier A or B. Set PACKET_TIERS=A,B,C "
                   f"to write a packet per candidate and read the flags yourself.")
 
-    summary = summarize(cfg, results, statements, source_report, sale_date)
+    summary = summarize(cfg, results, statements, source_report, sale_date, today)
     print("\n".join(summary))
     step_summary = os.environ.get("GITHUB_STEP_SUMMARY")
     if step_summary:

@@ -52,7 +52,7 @@ widen a gate for one run without a commit.
 | Knob | Default | What it does |
 | --- | --- | --- |
 | `MAX_OPENING_BID` | 20000 | Gate 1 rejects a larger minimum bid |
-| `MAX_BID_TO_VALUE` | 0.75 | Gate 1 rejects above it; also the recommended max bid |
+| `MAX_BID_TO_VALUE` | 0.75 | Gate 1 rejects above it; also the policy-cap walk-away |
 | `TIER_A_BID_TO_VALUE` | 0.35 | Tier A ceiling |
 | `QUIET_TITLE_BUDGET` | 3500 | in the ownership case only |
 | `HOLDING_MONTHS` | 7 | 180-day redemption plus a month |
@@ -62,6 +62,7 @@ widen a gate for one run without a commit.
 | `POST_JUDGMENT_YEARS` | 1.0 | years of taxes assumed accrued since judgment |
 | `TEARDOWN_IMPROVEMENT_VALUE` | 5000 | below it, a parcel with a structure is flagged |
 | `STATEMENT_WARN_DAYS` | 30 | §34.015 expiry warning |
+| `STATEMENT_LEAD_WORKING_DAYS` | 21 | working days a §34.015 statement takes to issue |
 | `TIER_A_MAX_MINOR_FLAGS` | 1 | minor flags Tier A tolerates |
 | `TIER_B_MAX_MINOR_FLAGS` | 2 | more than this drops to Tier C |
 | `MAX_ENRICHMENTS` | 250 | CAD/geocode/flood lookups per county per run |
@@ -81,6 +82,48 @@ working days in some counties, which is why the warning fires at 30 days.
 
 An individual may not bid or purchase in the name of another individual
 (§34.011). Knowing violation is a Class B misdemeanor.
+
+**Expiry alone misses the two ways this catches people out**, so the statement
+is checked against the *sale date* rather than against today:
+
+- **`too_late`** — you hold none and the sale is nearer than
+  `STATEMENT_LEAD_WORKING_DAYS` (21 working days, per
+  `bidder_statement.counties.<County>.statement_lead_business_days` where a
+  county is slower). Applying today will not produce a statement in time. The
+  honest report is "you cannot bid at this sale", not "renew soon".
+- **`expires_before_sale`** — you hold one, it is unexpired *today*, and it
+  lapses before the sale. A statement current on the morning you read the report
+  and worthless on the morning you bid is the failure mode the 30-day warning
+  was never going to catch, because 30 days out from expiry is not 30 days out
+  from the sale.
+
+## Deadlines before the sale
+
+Everything with a lead time is counted backwards from the sale date in **working
+days**, because that is how the counties count and a weekend silently eats two
+days of a five-day window. Each county configures its own leads:
+
+| Key | Default | What |
+| --- | --- | --- |
+| `statement_lead_business_days` | 21 | §34.015 written statement |
+| `registration_lead_business_days` | 5 | bidder registration |
+| `deposit_lead_business_days` | 5 | deposit / funds on file |
+
+The summary prints them as a table with a **MISSED** marker, so a deadline that
+has already gone reads as gone rather than as a date in a list. These are
+latest-possible dates, not comfortable ones.
+
+## Repeat offerings
+
+`data/tax_deeds/<date>.json` snapshots are already on disk, so a property is
+matched across them — by account, else cause number, else county and address —
+and one offered at two or more prior sales is flagged `offered_repeatedly`
+(minor).
+
+Nothing is fetched to do this. A property nobody bid on twice is not
+disqualified — plenty go unsold because nobody was in the room — but it is the
+cheapest available signal that the room saw something, and it belongs on the
+row rather than in the reader's memory.
 
 ## Sources
 
@@ -354,6 +397,32 @@ over `HOLDING_MONTHS`.
 It is still conservative. §34.21(a) computes the 25% premium on the *aggregate
 total* — the bid plus the recording fee plus the taxes reimbursed — where this
 takes it on the bid alone, as the spec does.
+
+**The published bid is the opening bid, and an auction goes up from there**, so
+Gate 4 also prices the two ceilings the bidding has to stay under. Both are
+column "Walk-Away Bid" on the sheet, whichever binds first:
+
+- **Equity break-even** — the bid at which the ownership case nets zero. Above
+  it you paid more than the property is worth once costs are in.
+- **Policy cap** — `MAX_BID_TO_VALUE` × value, the same ratio Gate 1 rejects on.
+
+The first one is not the second one in disguise, and that is the whole reason it
+exists. `QUIET_TITLE_BUDGET` is a fixed $3,500 whether the property is worth
+$6,000 or $60,000, so on cheap parcels it eats the spread while the *ratio* still
+looks fine: $4,000 on a $6,000 house is 0.67 bid-to-value — comfortably inside
+the 0.75 cap — against a $1,757 break-even. `opening_bid_past_walk_away` is a
+**material** flag for exactly that case: a listing that cannot be bought at a
+profit even at its own opening bid.
+
+**And a redemption on a cheap enough property loses money.** The 25% premium is
+a percentage of the bid; the carry it has to cover is a fixed monthly cost, so
+below `min_profitable_bid` (= unreimbursed carry ÷ premium) the percentage
+cannot reach it. At the default carry that floor is about $2,100, and 5 of one
+live run's 157 priced listings sat under it — which the bid-to-value ranking
+puts at the *top* of the sheet. `redemption_loses_at_this_bid` is a minor flag,
+minor because it is only half a verdict: fine if you keep the property, a loss
+if it redeems. It is flagged rather than left for the reader to derive, because
+this is the one case where the tool's own ordering points at its worst outcome.
 
 **Gate 5 — tiering.** A: no material flags, at most one minor, bid/value < 0.35.
 B: no material flags, up to two minor, bid/value < `MAX_BID_TO_VALUE`. C: any
