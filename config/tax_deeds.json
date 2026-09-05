@@ -16,6 +16,8 @@
     "POST_JUDGMENT_YEARS": 1.0,
     "TEARDOWN_IMPROVEMENT_VALUE": 5000,
     "STATEMENT_WARN_DAYS": 30,
+    "STATEMENT_LEAD_WORKING_DAYS": 21,
+    "_STATEMENT_LEAD_WORKING_DAYS": "Working days a county takes to issue a §34.015 written statement. Checked against the sale date, not against today: if you hold none and the sale is nearer than this, you cannot bid at that sale and the report says so rather than telling you to apply. A county with its own figure overrides it with `statement_lead_business_days`.",
     "TIER_A_MAX_MINOR_FLAGS": 1,
     "TIER_B_MAX_MINOR_FLAGS": 2,
     "PACKET_TIERS": "A,B,C",
@@ -210,7 +212,11 @@
           ],
           "_fallbacks": "Tried in order after the primary URL fails. Unverified alternates — strictly additive: if the primary works these are never fetched, and `verify` reports on any that get used."
         }
-      ]
+      ],
+      "registration_lead_business_days": 5,
+      "deposit_lead_business_days": 5,
+      "statement_lead_business_days": 21,
+      "_leads": "Business days before the sale. Weekday counting only — no county holiday calendar — so a computed date is the latest that could possibly work and the real cutoff can only be earlier. Confirm with the county."
     },
     {
       "name": "Tarrant",
@@ -299,7 +305,11 @@
           ],
           "_fallbacks": "Tried in order after the primary URL fails. Unverified alternates — strictly additive: if the primary works these are never fetched, and `verify` reports on any that get used."
         }
-      ]
+      ],
+      "registration_lead_business_days": 5,
+      "deposit_lead_business_days": 5,
+      "statement_lead_business_days": 21,
+      "_leads": "Business days before the sale. Weekday counting only — no county holiday calendar — so a computed date is the latest that could possibly work and the real cutoff can only be earlier. Confirm with the county."
     },
     {
       "name": "Johnson",
@@ -388,7 +398,11 @@
           ],
           "_fallbacks": "Object form: markers and the county filter belong to the URL. A bare string inherits neither, because applying this county's own page markers to a national aggregate is what excluded Johnson from every run."
         }
-      ]
+      ],
+      "registration_lead_business_days": 3,
+      "deposit_lead_business_days": 3,
+      "statement_lead_business_days": 21,
+      "_leads": "Business days before the sale. Weekday counting only — no county holiday calendar — so a computed date is the latest that could possibly work and the real cutoff can only be earlier. Confirm with the county."
     },
     {
       "name": "Ellis",
@@ -473,7 +487,11 @@
           ],
           "_fallbacks": "Tried in order after the primary URL fails. Unverified alternates — strictly additive: if the primary works these are never fetched, and `verify` reports on any that get used."
         }
-      ]
+      ],
+      "registration_lead_business_days": 3,
+      "deposit_lead_business_days": 3,
+      "statement_lead_business_days": 21,
+      "_leads": "Business days before the sale. Weekday counting only — no county holiday calendar — so a computed date is the latest that could possibly work and the real cutoff can only be earlier. Confirm with the county."
     }
   ],
   "appraisal_districts": {

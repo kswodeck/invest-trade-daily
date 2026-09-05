@@ -9,6 +9,7 @@ both exit routes.
 
 from __future__ import annotations
 
+import json
 import sys
 import unittest
 from datetime import date
@@ -444,7 +445,7 @@ class SheetOutput(unittest.TestCase):
 
     def test_the_header_lands_on_the_frozen_row(self):
         self.assertEqual(self.values[td.HEADER_ROW - 1], td.HEADERS)
-        self.assertEqual(len(td.HEADERS), 22)
+        self.assertEqual(len(td.HEADERS), 23)
         self.assertEqual(td.HEADERS[td.COL_TIER], "Tier")
         self.assertIn("Value Source", td.HEADERS)
 
@@ -455,7 +456,8 @@ class SheetOutput(unittest.TestCase):
 
     def test_a_county_with_nothing_says_so_rather_than_being_omitted(self):
         text = "\n".join(str(row[0]) for row in self.values if row)
-        self.assertIn("ELLIS COUNTY — 0 candidate(s)", text)
+        self.assertIn("ELLIS COUNTY — 0 on the 2026-10-06 docket · 0 candidate(s)",
+                      text)
         self.assertIn("no listing survived the gates", text)
 
     def test_rows_sort_by_tier_then_bid_to_value(self):
@@ -580,3 +582,377 @@ class PacketTiers(unittest.TestCase):
         finally:
             del os.environ["PACKET_TIERS"]
 
+
+
+class WalkAwayBid(unittest.TestCase):
+    """Every other figure prices the auction *floor*, which nobody pays.
+
+    The number a bidder actually needs is where to stop, and the checklist has
+    asked for it since the first commit while nothing computed it.
+    """
+
+    def setUp(self):
+        self.econ = td.gate4_economics(listing(), cad(), cfg())
+
+    def test_the_walk_away_is_the_lower_of_the_two_ceilings(self):
+        self.assertEqual(self.econ["walk_away_bid"],
+                         min(self.econ["policy_cap_bid"],
+                             self.econ["equity_breakeven_bid"]))
+
+    def test_it_says_which_ceiling_is_binding(self):
+        self.assertIn(self.econ["walk_away_basis"], (
+            "policy cap (MAX_BID_TO_VALUE)",
+            "equity break-even — above this you paid more than the property is worth"))
+
+    def test_equity_is_zero_at_the_equity_break_even(self):
+        at = td.gate4_economics(
+            listing(minimum_opening_bid=self.econ["equity_breakeven_bid"]), cad(), cfg())
+        self.assertAlmostEqual(at["ownership_equity"], 0.0, places=2)
+
+    def test_headroom_is_how_far_the_bidding_can_run(self):
+        self.assertAlmostEqual(self.econ["bid_headroom"],
+                               self.econ["walk_away_bid"] - self.econ["opening_bid"], places=2)
+
+    def test_a_cheap_property_redeems_at_a_loss(self):
+        """The premium is a percentage; the carry it must cover is not.
+
+        Five of one live run's 157 priced listings sat under this floor, and the
+        bid-to-value ranking puts exactly those at the top.
+        """
+        econ = td.gate4_economics(listing(minimum_opening_bid=726.0), cad(), cfg())
+        self.assertLess(econ["redemption_net_profit"], 0)
+        self.assertGreater(econ["min_profitable_bid"], 726.0)
+
+    def test_the_floor_is_where_the_premium_exactly_covers_the_carry(self):
+        floor = self.econ["min_profitable_bid"]
+        at = td.gate4_economics(listing(minimum_opening_bid=floor), cad(), cfg())
+        self.assertAlmostEqual(at["redemption_net_profit"], 0.0, places=2)
+
+    def test_a_bid_below_the_floor_is_flagged_not_silently_ranked_best(self):
+        result = td.screen(listing(minimum_opening_bid=726.0), cad(), checks(), cfg(), TODAY)
+        self.assertIn("redemption_loses_at_this_bid", codes(result["flags"]))
+        detail = next(f["detail"] for f in result["flags"]
+                      if f["code"] == "redemption_loses_at_this_bid")
+        self.assertIn("Fine if you keep it", detail)
+
+    def test_an_opening_bid_past_the_walk_away_is_a_material_flag(self):
+        """A cheap property passes the ratio cap and still has no room in it.
+
+        $4,000 on a $6,000 house is 0.67 bid-to-value, well inside the 0.75
+        cap Gate 1 enforces — but the quiet title budget alone is $3,500, so
+        the equity break-even sits at $1,757 and the ratio never sees it.
+        """
+        result = td.screen(listing(minimum_opening_bid=4000.0),
+                           cad(appraised_value=6000.0), checks(), cfg(), TODAY)
+        self.assertNotIn("bid_to_value_over_cap", codes(result["rejections"]))
+        self.assertIn("opening_bid_past_walk_away", codes(result["flags"]))
+        self.assertEqual(result["tier"], "C")
+
+    def test_the_ratio_cap_alone_would_have_passed_that_bid(self):
+        econ = td.gate4_economics(
+            listing(minimum_opening_bid=4000.0), cad(appraised_value=6000.0), cfg())
+        self.assertLess(econ["bid_to_value"],
+                        td.threshold(cfg(), "MAX_BID_TO_VALUE"))
+        self.assertLess(econ["walk_away_bid"], econ["opening_bid"])
+        self.assertEqual(econ["walk_away_basis"],
+                         "equity break-even — above this you paid more than "
+                         "the property is worth")
+
+
+class BusinessDays(unittest.TestCase):
+    def test_weekends_do_not_count(self):
+        # Fri 2026-09-04 -> Mon 2026-09-07 is one working day.
+        self.assertEqual(td.business_days_between(date(2026, 9, 4), date(2026, 9, 7)), 1)
+
+    def test_counting_backwards_skips_weekends_too(self):
+        self.assertEqual(td.subtract_business_days(date(2026, 9, 7), 1), date(2026, 9, 4))
+
+    def test_a_past_date_is_zero_not_negative(self):
+        self.assertEqual(td.business_days_between(date(2026, 9, 7), date(2026, 9, 4)), 0)
+
+
+class StatementAgainstTheSaleDate(unittest.TestCase):
+    """Expiry alone misses the two ways this actually catches people out."""
+
+    def config_with(self, expires):
+        config = cfg()
+        config["bidder_statement"]["counties"]["Dallas"] = {"expires": expires}
+        return config
+
+    def test_no_statement_and_too_little_time_means_you_cannot_bid(self):
+        status = td.statement_status(self.config_with(None), "Dallas",
+                                     date(2026, 9, 5), "2026-09-15")
+        self.assertEqual(status["state"], "too_late")
+        self.assertIn("cannot bid at this sale", status["message"])
+        self.assertIn("next first Tuesday", status["message"])
+
+    def test_no_statement_but_time_enough_says_apply_today(self):
+        status = td.statement_status(self.config_with(None), "Dallas",
+                                     date(2026, 9, 5), "2026-12-01")
+        self.assertEqual(status["state"], "missing")
+        self.assertIn("apply today", status["message"])
+
+    def test_a_statement_expiring_before_sale_day_is_worthless(self):
+        """Current today, useless on the day it is needed."""
+        status = td.statement_status(self.config_with("2026-09-20"), "Dallas",
+                                     date(2026, 9, 5), "2026-10-06")
+        self.assertEqual(status["state"], "expires_before_sale")
+        self.assertIn("worthless on sale day", status["message"])
+
+    def test_a_statement_good_past_sale_day_is_current(self):
+        status = td.statement_status(self.config_with("2027-01-01"), "Dallas",
+                                     date(2026, 9, 5), "2026-10-06")
+        self.assertEqual(status["state"], "current")
+
+    def test_without_a_sale_date_nothing_changes(self):
+        status = td.statement_status(self.config_with(None), "Dallas", date(2026, 9, 5))
+        self.assertEqual(status["state"], "missing")
+        self.assertNotIn("sale_date", status)
+
+
+class DeadlineCalendar(unittest.TestCase):
+    def test_the_prose_becomes_dates(self):
+        due = td.deadlines(cfg(), "Dallas", "2026-10-06", date(2026, 9, 5))
+        self.assertTrue(due)
+        for item in due:
+            self.assertRegex(item["due"], r"^\d{4}-\d{2}-\d{2}$")
+            self.assertLess(item["due"], "2026-10-06")
+
+    def test_they_are_ordered_earliest_first(self):
+        due = td.deadlines(cfg(), "Dallas", "2026-10-06", date(2026, 9, 5))
+        self.assertEqual([d["due"] for d in due], sorted(d["due"] for d in due))
+
+    def test_a_passed_deadline_is_marked_missed(self):
+        due = td.deadlines(cfg(), "Dallas", "2026-10-06", date(2026, 10, 1))
+        self.assertTrue(any(d["missed"] for d in due))
+
+    def test_no_sale_date_means_no_deadlines(self):
+        self.assertEqual(td.deadlines(cfg(), "Dallas", None, date(2026, 9, 5)), [])
+
+
+class RepeatOfferings(unittest.TestCase):
+    """A property on the list three months running did not sell three times."""
+
+    def setUp(self):
+        import tempfile, shutil
+        self.tmp = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, self.tmp, True)
+
+    def _snapshot(self, day, bid):
+        (self.tmp / f"{day}.json").write_text(json.dumps({"results": [
+            {"listing": {"county": "Dallas", "account": "00000123456789000",
+                         "minimum_opening_bid": bid}}]}))
+
+    def test_it_counts_prior_offerings(self):
+        for day, bid in (("2026-07-07", 12000), ("2026-08-04", 10000)):
+            self._snapshot(day, bid)
+        history = td.offer_history(date(2026, 9, 1), self.tmp)
+        entry = history["dallas|acct|00000123456789000"]
+        self.assertEqual(entry["times_offered"], 2)
+        self.assertEqual(entry["first_seen"], "2026-07-07")
+
+    def test_todays_own_snapshot_is_not_prior_history(self):
+        self._snapshot("2026-09-01", 12000)
+        self.assertEqual(td.offer_history(date(2026, 9, 1), self.tmp), {})
+
+    def test_two_or_more_prior_offerings_flag(self):
+        for day, bid in (("2026-07-07", 12000), ("2026-08-04", 10000)):
+            self._snapshot(day, bid)
+        result = td.screen(listing(), cad(), checks(), cfg(), TODAY)
+        td.annotate_history(result, td.offer_history(date(2026, 9, 1), self.tmp), cfg())
+        self.assertIn("offered_repeatedly", codes(result["flags"]))
+        detail = next(f["detail"] for f in result["flags"] if f["code"] == "offered_repeatedly")
+        self.assertIn("did not sell", detail)
+        self.assertIn("$12,000", detail)
+
+    def test_a_single_prior_offering_is_context_not_a_flag(self):
+        self._snapshot("2026-08-04", 10000)
+        result = td.screen(listing(), cad(), checks(), cfg(), TODAY)
+        td.annotate_history(result, td.offer_history(date(2026, 9, 1), self.tmp), cfg())
+        self.assertNotIn("offered_repeatedly", codes(result["flags"]))
+        self.assertEqual(result["history"]["times_offered"], 1)
+
+    def test_a_property_never_seen_before_gets_no_history(self):
+        result = td.screen(listing(), cad(), checks(), cfg(), TODAY)
+        td.annotate_history(result, {}, cfg())
+        self.assertNotIn("history", result)
+
+    def test_a_corrupt_snapshot_does_not_take_the_run_down(self):
+        (self.tmp / "2026-07-07.json").write_text("{ not json")
+        self.assertEqual(td.offer_history(date(2026, 9, 1), self.tmp), {})
+
+    def test_a_listing_with_no_account_falls_back_to_the_cause_number(self):
+        """The unmatched listings are exactly the ones that lack an account."""
+        key = td.offer_key({"county": "Dallas", "cause_number": "TX-22-01188"})
+        self.assertEqual(key, "dallas|cause|TX2201188")
+
+    def test_and_to_the_address_when_there_is_no_cause_number_either(self):
+        key = td.offer_key({"county": "Dallas", "address": "1417 S Harwood St"})
+        self.assertEqual(key, "dallas|addr|1417sharwoodst")
+
+    def test_the_same_address_in_two_counties_is_two_properties(self):
+        self.assertNotEqual(td.offer_key({"county": "Dallas", "address": "1 Main"}),
+                            td.offer_key({"county": "Ellis", "address": "1 Main"}))
+
+    def test_a_listing_with_nothing_to_match_on_is_not_matched(self):
+        self.assertEqual(td.offer_key({"county": "Dallas"}), "")
+
+    def test_the_added_flag_re_tiers_the_row(self):
+        """The flag arrives after screening, so the tier has to be recomputed.
+
+        Otherwise the row reads Tier A beside the flags that disqualify it.
+        """
+        for day in ("2026-07-07", "2026-08-04"):
+            self._snapshot(day, 10000)
+        result = td.screen(listing(), cad(), checks(), cfg(), TODAY)
+        before = result["tier"]
+        td.annotate_history(result, td.offer_history(date(2026, 9, 1), self.tmp), cfg())
+        self.assertEqual(result["minor_flags"], td.count_flags(result["flags"])[1])
+        self.assertEqual(result["tier"],
+                         td.gate5_tier(result["flags"], result["economics"],
+                                       result["cad"], cfg()))
+        self.assertIn(before, ("A", "B", "C"))
+
+    def test_a_rejected_row_keeps_its_null_tier(self):
+        for day in ("2026-07-07", "2026-08-04"):
+            self._snapshot(day, 10000)
+        result = td.screen(listing(status="Withdrawn"), cad(), checks(), cfg(), TODAY)
+        td.annotate_history(result, td.offer_history(date(2026, 9, 1), self.tmp), cfg())
+        self.assertIsNone(result["tier"])
+
+
+
+class TheDocketAxis(unittest.TestCase):
+    """Which sale a row belongs to is not a measure of the property.
+
+    The first live run published 328 candidates under a "sale 2026-10-06"
+    banner. 18 of them were on that docket. The other 310 carried the feed's
+    own `Available for Future Sale`, which is not a defect, not an unknown, and
+    not a reason to rank them lower — only a reason not to let them look like
+    tomorrow's shortlist.
+    """
+
+    def result(self, sale_date=None, status="Active", screening_for=SALE, **extra):
+        return td.screen(listing(sale_date=sale_date, status=status, **extra),
+                         cad(), checks(), cfg(), TODAY, screening_for)
+
+    def test_a_listing_set_for_this_sale_is_on_the_docket(self):
+        docket = self.result(sale_date=SALE, status="Scheduled for Auction")["docket"]
+        self.assertEqual(docket["state"], td.ON_DOCKET)
+        self.assertTrue(docket["on_docket"])
+        self.assertEqual(docket["label"], "yes")
+
+    def test_the_feeds_own_words_are_read_not_treated_as_silence(self):
+        for phrasing in ("Available for Future Sale", "Not Yet Scheduled",
+                         "PENDING", "To Be Rescheduled"):
+            with self.subTest(phrasing):
+                docket = self.result(status=phrasing)["docket"]
+                self.assertEqual(docket["state"], td.NOT_SCHEDULED)
+                self.assertFalse(docket["on_docket"])
+
+    def test_a_listing_for_a_different_sale_says_which(self):
+        docket = self.result(sale_date="2026-11-03")["docket"]
+        self.assertEqual(docket["state"], td.OTHER_SALE)
+        self.assertEqual(docket["label"], "sale 2026-11-03")
+        self.assertIn("2026-11-03", docket["detail"])
+
+    def test_a_struck_off_listing_has_no_docket_to_be_on(self):
+        docket = self.result(sale_type="struck_off")["docket"]
+        self.assertEqual(docket["state"], td.OVER_THE_COUNTER)
+        self.assertIn("any time", docket["detail"])
+
+    def test_silence_with_no_explanation_stays_an_unknown(self):
+        result = self.result(status="Active")
+        self.assertEqual(result["docket"]["state"], td.DATE_UNKNOWN)
+        self.assertIn("no_sale_date", codes(result["flags"]))
+
+    def test_but_a_status_that_explains_the_silence_is_not_an_unknown(self):
+        """`Available for Future Sale` answers the question the flag asks."""
+        result = self.result(status="Available for Future Sale")
+        self.assertNotIn("no_sale_date", codes(result["flags"]))
+
+    def test_being_off_the_docket_is_never_a_flag(self):
+        """It would rank rows, and it says nothing about the property.
+
+        It would also drive 94% of a run into Tier C, which is the mistake
+        `occupancy_unknown` carries severity `universal` to avoid.
+        """
+        off = self.result(status="Available for Future Sale")
+        on = self.result(sale_date=SALE, status="Scheduled for Auction")
+        self.assertEqual(codes(off["flags"]), codes(on["flags"]))
+        self.assertEqual(off["tier"], on["tier"])
+
+    def test_nor_a_rejection(self):
+        self.assertEqual(self.result(status="Available for Future Sale")["status"],
+                         "candidate")
+
+    def test_screening_without_a_sale_date_does_not_invent_one(self):
+        """Any published date is 'the' date when nothing was asked for."""
+        docket = td.screen(listing(sale_date="2026-11-03"), cad(), checks(),
+                           cfg(), TODAY)["docket"]
+        self.assertEqual(docket["state"], td.ON_DOCKET)
+
+
+class DocketOrdering(unittest.TestCase):
+    def rows(self, *specs):
+        out = []
+        for sale_date, status in specs:
+            out.append(td.screen(listing(sale_date=sale_date, status=status),
+                                 cad(), checks(), cfg(), TODAY, SALE))
+        return out
+
+    def test_what_you_can_bid_on_sorts_first(self):
+        rows = self.rows((None, "Available for Future Sale"),
+                         ("2026-11-03", "Active"),
+                         (SALE, "Scheduled for Auction"))
+        rows.sort(key=lambda r: td.sort_key(r, td.county_order(cfg())))
+        self.assertEqual([r["docket"]["state"] for r in rows],
+                         [td.ON_DOCKET, td.NOT_SCHEDULED, td.OTHER_SALE])
+
+    def test_the_docket_outranks_the_tier(self):
+        """A Tier A property six weeks out is not tomorrow morning's problem."""
+        later = td.screen(listing(sale_date="2026-11-03", minimum_opening_bid=1000.0),
+                          cad(), checks(), cfg(), TODAY, SALE)
+        now = td.screen(listing(sale_date=SALE, minimum_opening_bid=19000.0),
+                        cad(), checks(), cfg(), TODAY, SALE)
+        order = td.county_order(cfg())
+        self.assertLess(td.sort_key(now, order), td.sort_key(later, order))
+
+
+class DocketInTheOutputs(unittest.TestCase):
+    def setUp(self):
+        self.statements = td.statement_report(cfg(), ["Dallas"], TODAY, SALE)
+        self.on = td.screen(listing(sale_date=SALE, status="Scheduled for Auction"),
+                            cad(), checks(), cfg(), TODAY, SALE)
+        self.off = td.screen(
+            listing(sale_date=None, status="Available for Future Sale", account="99"),
+            cad(), checks(), cfg(), TODAY, SALE)
+
+    def test_the_sheet_has_a_column_for_it(self):
+        self.assertIn("On This Docket", td.HEADERS)
+        row = td._sheet_row(self.on)
+        self.assertEqual(row[td.HEADERS.index("On This Docket")], "yes")
+        self.assertEqual(td._sheet_row(self.off)[td.HEADERS.index("On This Docket")],
+                         "not scheduled")
+
+    def test_the_banner_gives_both_numbers(self):
+        values, _ = td.sheet_rows([self.on, self.off], cfg(), TODAY, SALE, self.statements)
+        self.assertIn("1 on this docket of 2 candidates", values[1][0])
+
+    def test_a_packet_for_an_unscheduled_property_does_not_say_sale_none(self):
+        text = td.packet_markdown(self.off, cfg(), self.statements[0])
+        self.assertNotIn("Sale None", text)
+        self.assertIn("Not scheduled for any sale yet", text)
+
+    def test_and_carries_no_deadline_table_it_cannot_honour(self):
+        text = td.packet_markdown(self.off, cfg(), self.statements[0])
+        self.assertNotIn("Deadlines before this sale", text)
+
+    def test_while_a_docketed_one_does(self):
+        text = td.packet_markdown(self.on, cfg(), self.statements[0])
+        self.assertIn(f"**Sale {SALE}**", text)
+        self.assertIn("Deadlines before this sale", text)
+
+    def test_an_unscheduled_packet_is_filed_away_from_the_sale(self):
+        self.assertEqual(td.packet_path(self.off).parent.name, "undated")
+        self.assertEqual(td.packet_path(self.on).parent.name, SALE)

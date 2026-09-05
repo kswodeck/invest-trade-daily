@@ -210,6 +210,55 @@ Four rules are load-bearing:
   It is still conservative: §34.21(a) takes the 25% premium on the aggregate
   total, where `gate4_economics` takes it on the bid alone.
 
+- **A ratio is not a ceiling, and the bid published is only the opening one.**
+  `bid_ceilings` prices where the bidding has to stop: the equity break-even and
+  the `MAX_BID_TO_VALUE` policy cap, whichever binds first. They are not the same
+  number, which is why both exist — `QUIET_TITLE_BUDGET` is fixed at $3,500
+  regardless of value, so on a cheap parcel it eats the whole spread while the
+  ratio still reads fine. $4,000 on a $6,000 house is 0.67 bid-to-value, inside
+  the 0.75 cap, against a $1,757 break-even; `opening_bid_past_walk_away` is
+  material for exactly that. And below `min_profitable_bid` — unreimbursed carry
+  divided by the premium, about $2,100 — a *redemption* loses money, because the
+  premium is a percentage and the carry it must cover is not. Five of one live
+  run's 157 priced listings sat under that floor, and the bid-to-value sort puts
+  precisely those on top: the one case where the tool's own ranking points at its
+  worst outcome, so it is flagged rather than derived.
+
+- **§34.015 is checked against the sale date, not against today.** Two states the
+  expiry alone cannot see: `too_late` (you hold no statement and the sale is
+  nearer than the 21 working days one takes to issue — you cannot bid at this
+  sale, and "renew soon" would be the wrong sentence), and `expires_before_sale`
+  (current the morning you read the report, worthless the morning you bid).
+  Everything with a lead time — statement, registration, deposit — is counted
+  backwards in *working* days by `deadlines()`, because that is how the counties
+  count and a weekend quietly eats two days of a five-day window.
+
+- **Which sale a row is for is an axis, not a flag.** The report is headed with
+  one sale date and its rows are not all on it: the first live run published 328
+  candidates under "sale 2026-10-06", 18 of which were on that docket. The rest
+  carried the feed's own `Available for Future Sale` — real inventory with no
+  auction assigned, nothing wrong with them, answering a different question than
+  the header asked. `docket_status` gives five states and the sheet a column,
+  because a flag would rank rows against each other and being off the docket
+  says nothing about whether a property is a good buy — it would also put 94% of
+  a run in Tier C and make the tiers meaningless, the trap `occupancy_unknown`
+  is `universal` to avoid. On-docket rows sort *above* the tier: a Tier A
+  property six weeks out is not a better use of tomorrow morning than a Tier B
+  one on tomorrow's docket. Banner and summary give both counts, and the
+  deadline table only covers counties with something on this docket — telling
+  someone to stage a deposit for a sale they have no property in is the
+  conflation the column exists to end. `no_sale_date` narrowed to match: a
+  status that *explains* the silence is a determination, so the flag is now only
+  for no date and no reason given, which removed 336 false unknowns from that
+  run.
+
+- **Repeat offerings come from the snapshots, not the network.** A property
+  matched across `data/tax_deeds/<date>.json` by account, else cause number, else
+  county and address, and offered at two or more prior sales, is flagged
+  `offered_repeatedly` (minor). It does not disqualify — plenty go unsold because
+  nobody was in the room — but it is the cheapest signal available that the room
+  saw something, and it belongs on the row rather than in the reader's memory.
+
 Statute the gates encode, in one place: homestead, agricultural and mineral
 property redeem for two years (25% year one, 50% year two) and are rejected at
 Gate 1 for exactly that reason; everything else is 180 days at 25%. Redemption
