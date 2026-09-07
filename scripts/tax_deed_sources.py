@@ -85,6 +85,16 @@ RATE_LIMIT_RETRIES = 2
 # unknown, and bounded because a host that is genuinely down should be reported
 # as down inside the run's time budget rather than retried into the timeout.
 NETWORK_RETRIES = 2
+
+# Retrying is for blips, and after this many consecutive transport failures a
+# host is not blipping. Without this the retry is a wall-clock hazard rather
+# than a fix: enrichment calls a CAD once per property, so a district that is
+# simply down would cost three attempts and two backoffs *per property* — on a
+# 250-property budget that is the difference between noticing in a minute and
+# running into the job's 45-minute timeout. The first few failures still get
+# the full retry, so a genuine blip is never mistaken for an outage.
+HOST_DOWN_AFTER = 3
+_host_failures: dict[str, int] = {}
 _robots: dict[str, Any] = {}
 
 # Sentinel: robots.txt gave no answer at all, as distinct from answering
@@ -285,13 +295,20 @@ def fetch(url: str, cfg: dict, *, params: dict | None = None) -> str:
             # which is the server actually telling us something — already got
             # two retries, so the unknown was the one case given none.
             last = SourceError(url, f"{type(exc).__name__}: {exc}")
-            if attempts < NETWORK_RETRIES:
+            # Counted per *call*, not per attempt — incremented once below, when
+            # this call gives up. Counting attempts would trip the breaker
+            # inside the very first fetch and there would be no retry at all.
+            if attempts < NETWORK_RETRIES and _host_failures.get(host, 0) < HOST_DOWN_AFTER:
                 attempts += 1
                 time.sleep(min(2 ** attempts, MAX_HOST_INTERVAL))
                 index -= 1          # same UA: this was not a refusal
                 continue
+            _host_failures[host] = _host_failures.get(host, 0) + 1
+            note = ("" if _host_failures[host] <= HOST_DOWN_AFTER else
+                    f" — {host} has failed {_host_failures[host]} calls in a row this run, "
+                    f"so it is treated as down and no longer retried")
             last = SourceError(url, (
-                f"{type(exc).__name__} after {attempts + 1} attempt(s): {exc}"))
+                f"{type(exc).__name__} after {attempts + 1} attempt(s): {exc}{note}"))
             break
         if resp.status_code in (401, 403) and index + 1 < len(agents):
             continue
@@ -305,6 +322,7 @@ def fetch(url: str, cfg: dict, *, params: dict | None = None) -> str:
                 backoffs += 1
                 time.sleep(_host_interval[host])
                 continue
+        _host_failures.pop(host, None)
         if resp.status_code >= 400:
             detail = _explain_status(resp.status_code, url)
             if resp.status_code in (401, 403):

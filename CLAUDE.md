@@ -332,7 +332,11 @@ row. Separately, `fetch` broke out on the first transport error, so one blip
 failed a source for the whole run — `taxsales.lgbs.com` served Tarrant's 363 rows
 and was called broken for three other sources in that same run. A 429 already got
 two retries; the timeout, which is the actual unknown, got none. `NETWORK_RETRIES`
-fixes that, on the same UA, and the detail says how many attempts it took.
+fixes that, on the same UA, and the detail says how many attempts it took —
+bounded by `HOST_DOWN_AFTER`, because retrying is for blips and enrichment calls
+a CAD once per property: three attempts each against a down district on a
+250-property budget is how a fix becomes a 45-minute timeout. Counted per call,
+not per attempt, and cleared by any success.
 
 Exit codes carry meaning: 0 clean, 1 published with a broken source, 2 every
 county list failed so nothing was screened and the Sheet was left alone,

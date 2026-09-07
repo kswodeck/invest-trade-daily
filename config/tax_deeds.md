@@ -380,6 +380,16 @@ gives transport errors two more attempts with backoff, on the *same* User-Agent
 needs. The failure detail says how many attempts were made, so a genuine outage
 does not read like a blip.
 
+`HOST_DOWN_AFTER` is what keeps that from becoming a wall-clock hazard of its
+own. Enrichment calls an appraisal district once per property against a
+250-property budget, so a district that is simply *down* would cost three
+attempts and two backoffs each — the difference between noticing in a minute and
+running into the job's 45-minute timeout. After three consecutive failed calls a
+host is not blipping, and it stops being retried; the count is per call rather
+than per attempt (counting attempts would trip it inside the first fetch and
+there would be no retry at all), any success clears it, and it is per host, so
+one dead district does not stop the next from getting its retries.
+
 ### Exit codes
 
 | Code | Meaning |

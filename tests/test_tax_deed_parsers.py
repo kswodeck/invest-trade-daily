@@ -1667,6 +1667,7 @@ class ATransportFailureIsRetriedBeforeItIsBelieved(unittest.TestCase):
         tds._throttle = lambda url, cfg: None
         tds.time.sleep = lambda s: None
         self.cfg = {"contact_email": "screener@example.org"}
+        tds._host_failures.clear()   # per-run state, not per-process
         self.calls = []
 
     def tearDown(self):
@@ -1729,3 +1730,95 @@ class ATransportFailureIsRetriedBeforeItIsBelieved(unittest.TestCase):
         with self.assertRaises(tds.RobotsDisallowed):
             tds.fetch("https://nope.gov/x", self.cfg)
         self.assertEqual(self.calls, [])
+
+
+class RetryingIsForBlipsNotForOutages(unittest.TestCase):
+    """The retry is a wall-clock hazard without a stop.
+
+    Enrichment calls a CAD once per property against a 250-property budget. A
+    district that is simply down would otherwise cost three attempts and two
+    backoffs *each*, which is the difference between noticing in a minute and
+    running into the job's 45-minute timeout.
+    """
+
+    def setUp(self):
+        self.real = (tds._session, tds.robots_allows, tds._throttle, tds.time.sleep)
+        tds.robots_allows = lambda url, cfg: (True, "ok")
+        tds._throttle = lambda url, cfg: None
+        self.slept = []
+        tds.time.sleep = self.slept.append
+        tds._host_failures.clear()
+        self.cfg = {"contact_email": "screener@example.org"}
+        self.calls = []
+
+    def tearDown(self):
+        tds._session, tds.robots_allows, tds._throttle, tds.time.sleep = self.real
+        tds._host_failures.clear()
+
+    def down(self):
+        outer = self
+
+        class Down:
+            def get(self, url, **kw):
+                outer.calls.append(url)
+                raise ConnectionResetError(104, "reset by peer")
+
+        tds._session = Down()
+
+    def hammer(self, n, host="https://dead.gov/x"):
+        for _ in range(n):
+            with self.assertRaises(tds.SourceError):
+                tds.fetch(host, self.cfg)
+
+    def test_the_first_calls_still_get_their_retries(self):
+        """A blip must not be mistaken for an outage on the first sight of it."""
+        self.down()
+        self.hammer(1)
+        self.assertEqual(len(self.calls), tds.NETWORK_RETRIES + 1)
+
+    def test_a_host_that_keeps_failing_stops_being_retried(self):
+        self.down()
+        self.hammer(tds.HOST_DOWN_AFTER + 2)
+        full = (tds.HOST_DOWN_AFTER) * (tds.NETWORK_RETRIES + 1)
+        self.assertLess(len(self.calls), full + 2 * (tds.NETWORK_RETRIES + 1))
+
+    def test_which_is_what_keeps_a_dead_host_inside_the_time_budget(self):
+        self.down()
+        self.hammer(20)
+        unbounded = 20 * (tds.NETWORK_RETRIES + 1)
+        self.assertLess(len(self.calls), unbounded / 2)
+        self.assertLess(sum(self.slept), 30)
+
+    def test_and_the_error_says_the_host_is_being_treated_as_down(self):
+        self.down()
+        self.hammer(tds.HOST_DOWN_AFTER)
+        with self.assertRaises(tds.SourceError) as caught:
+            tds.fetch("https://dead.gov/x", self.cfg)
+        self.assertIn("treated as down", caught.exception.detail)
+
+    def test_one_host_being_down_does_not_stop_retrying_another(self):
+        self.down()
+        self.hammer(tds.HOST_DOWN_AFTER + 1)
+        self.calls.clear()
+        self.hammer(1, host="https://other.gov/x")
+        self.assertEqual(len(self.calls), tds.NETWORK_RETRIES + 1)
+
+    def test_a_success_forgives_the_host(self):
+        """Whatever it was, it is answering now — the next blip gets its retry."""
+        outer = self
+        state = {"fail": True}
+
+        class Flaky:
+            def get(self, url, **kw):
+                outer.calls.append(url)
+                if state["fail"]:
+                    raise ConnectionResetError(104, "reset by peer")
+                class R:
+                    status_code, text = 200, "<html>fine</html>"
+                return R()
+
+        tds._session = Flaky()
+        self.hammer(tds.HOST_DOWN_AFTER + 1)
+        state["fail"] = False
+        tds.fetch("https://dead.gov/x", self.cfg)
+        self.assertEqual(tds._host_failures.get("dead.gov", 0), 0)
