@@ -209,13 +209,27 @@ def write_snapshot(results: list[dict], cfg: dict, today: date, sale_date: str,
     return path
 
 
-def write_packets(results: list[dict], cfg: dict, statements: list[dict]) -> list[Path]:
-    """One packet per candidate in PACKET_TIERS — Tier A and B by default."""
+def write_packets(results: list[dict], cfg: dict,
+                  statements: list[dict]) -> tuple[list[Path], dict[str, int]]:
+    """A packet per candidate in PACKET_TIERS *and* PACKET_DOCKETS.
+
+    Returns the paths written and a count of what was withheld, by docket state,
+    because a packet that is not written has to be accounted for out loud. It is
+    a file this run did not need, never a judgement about the property: those
+    rows are screened, tiered, ranked, published to the sheet and recorded in
+    the snapshot exactly like every other candidate.
+    """
     written: list[Path] = []
+    withheld: dict[str, int] = {}
     tiers = td.packet_tiers(cfg)
+    dockets = td.packet_dockets(cfg)
     by_county = {s["county"]: s for s in statements}
     for result in results:
         if result.get("tier") not in tiers:
+            continue
+        state = (result.get("docket") or {}).get("state", "")
+        if state and state not in dockets:
+            withheld[state] = withheld.get(state, 0) + 1
             continue
         county = result["listing"].get("county", "")
         statement = by_county.get(county) or {"message": "no §34.015 status computed"}
@@ -223,7 +237,7 @@ def write_packets(results: list[dict], cfg: dict, statements: list[dict]) -> lis
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(td.packet_markdown(result, cfg, statement))
         written.append(path)
-    return written
+    return written, withheld
 
 
 # --------------------------------------------------------------------------
@@ -546,13 +560,22 @@ def main(argv: list[str] | None = None, sources: Any = None) -> int:
     if not args.no_files:
         path = write_snapshot(results, cfg, today, sale_date, statements, source_report)
         print(f"Snapshot -> {rel(path)}")
-        packets = write_packets(results, cfg, statements)
+        packets, withheld = write_packets(results, cfg, statements)
         tiers = "/".join(sorted(td.packet_tiers(cfg)))
         # `packet_path` files by the listing's own sale date, so a run for one
         # sale writes into several directories. Naming only the run's sale date
         # sent the reader to a folder holding a fraction of the packets.
         where = ", ".join(sorted({rel(path.parent) + "/" for path in packets})) or "—"
         print(f"Packets  -> {len(packets)} Tier {tiers} due-diligence file(s) under {where}")
+        if withheld:
+            # Said out loud, every run. A packet this run did not write must
+            # never be mistaken for a property this run turned down.
+            detail = ", ".join(f"{n} {state.replace('_', ' ')}"
+                               for state, n in sorted(withheld.items()))
+            print(f"  no packet for {sum(withheld.values())} candidate(s) not on a "
+                  f"docket this run covers ({detail}). They are still screened, still "
+                  f"ranked and still on the sheet — this withholds a file, not a "
+                  f"property. PACKET_DOCKETS controls it.")
         if not packets and any(r["status"] == "candidate" for r in results):
             print(f"  note: every candidate fell outside Tier {tiers}. While the county "
                   f"clerk adapters report unavailable, an unscreened federal tax lien is a "

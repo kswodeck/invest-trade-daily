@@ -252,6 +252,21 @@ Four rules are load-bearing:
   for no date and no reason given, which removed 336 false unknowns from that
   run.
 
+- **A packet is a file, not a verdict.** One run wrote 572 of them, 541 for
+  properties with no auction assigned. `PACKET_DOCKETS` gates which docket states
+  get a packet written, and gates *only* that — a row outside it is still
+  screened, tiered, ranked, published to the sheet and in the snapshot, and the
+  gate adds no flag of its own. Having no sale date is never a reason to reject
+  or rank down, and the default proves it rather than excepting it:
+  `over_the_counter` has no sale date and is **kept**, because struck-off
+  property is buyable from the county today and is the most actionable category
+  there is. Gating on "has a date" would have cut exactly the rows a buyer can
+  act on soonest, which is why this reads the docket state. Left out are
+  `not_scheduled` and `date_unknown`; the run prints how many it withheld and
+  says they are still screened, because a packet not written must never read as
+  a property turned down. On the 2026-09-07 run: 265 packets instead of 806, all
+  806 rows still published, none rejected.
+
 - **Repeat offerings come from the snapshots, not the network.** A property
   matched across `data/tax_deeds/<date>.json` by account, else cause number, else
   county and address, and offered at two or more prior sales, is flagged

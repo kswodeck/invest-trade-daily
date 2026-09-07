@@ -21,6 +21,8 @@
     "TIER_A_MAX_MINOR_FLAGS": 1,
     "TIER_B_MAX_MINOR_FLAGS": 2,
     "PACKET_TIERS": "A,B,C",
+    "PACKET_DOCKETS": "on_docket,over_the_counter,other_sale",
+    "_PACKET_DOCKETS": "Which docket states get a due-diligence packet written to disk. Gates the FILE only — a row outside this set is still screened, tiered, ranked, published to the sheet and recorded in the snapshot, and no flag is added for it. Having no sale date is never a reason to reject or rank down a property, and the default proves it: over_the_counter has no sale date and is kept, because struck-off property is buyable from the county today and is the most actionable category there is. Left out are not_scheduled and date_unknown, which was 541 of one run's 572 packets. Add them back with on_docket,over_the_counter,other_sale,not_scheduled,date_unknown.",
     "MAX_ENRICHMENTS": 250,
     "_MAX_ENRICHMENTS": "Per county, per run. Enrichment is three requests a property — CAD, geocode, flood — at one per second, so this is a wall-clock and a politeness budget both. Only listings that survive the cheap gates are enriched, cheapest bid first."
   },
