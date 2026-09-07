@@ -1879,3 +1879,54 @@ class ANulledSourceIsNotABrokenOne(unittest.TestCase):
             for county, urls in spec["urls"].items():
                 for url in (urls if isinstance(urls, list) else [urls]):
                     self.assertNotIn(url, dead, f"{name}/{county} still lists a proven 404")
+
+
+class TheDiagnosisHasToSurviveTheTruncation(unittest.TestCase):
+    """Two runs reported a host unreachable without saying whether it exists.
+
+    A `requests` transport failure spends about 120 characters on
+    `HTTPSConnectionPool(host=..., port=443): Max retries exceeded with url: /`
+    before the one clause that says why. Any sensible cap keeps the boilerplate
+    and discards the diagnosis — and `NameResolutionError` (delete the URL) and
+    `ConnectionRefused` (keep it, retry later) call for opposite fixes.
+    """
+
+    def chained(self, inner):
+        try:
+            try:
+                raise inner
+            except type(inner):
+                raise RuntimeError(
+                    "HTTPSConnectionPool(host='clerk.example.gov', port=443): "
+                    "Max retries exceeded with url: / (Caused by ...)") from inner
+        except RuntimeError as outer:
+            return outer
+
+    def test_a_host_that_does_not_resolve_says_so(self):
+        exc = self.chained(OSError("[Errno -2] Name or service not known"))
+        self.assertIn("Name or service not known", tds._root_cause(exc))
+
+    def test_a_host_that_refuses_says_that_instead(self):
+        exc = self.chained(ConnectionRefusedError(111, "Connection refused"))
+        self.assertIn("Connection refused", tds._root_cause(exc))
+
+    def test_the_two_are_distinguishable(self):
+        """Which is the whole point — they call for opposite fixes."""
+        a = tds._root_cause(self.chained(OSError("[Errno -2] Name or service not known")))
+        b = tds._root_cause(self.chained(ConnectionRefusedError(111, "Connection refused")))
+        self.assertNotEqual(a, b)
+
+    def test_an_unchained_exception_is_reported_plainly(self):
+        self.assertEqual(tds._root_cause(TimeoutError("timed out")),
+                         "TimeoutError: timed out")
+
+    def test_a_self_referential_chain_does_not_loop_forever(self):
+        a = ValueError("a")
+        b = ValueError("b")
+        a.__cause__, b.__cause__ = b, a
+        self.assertIsInstance(tds._root_cause(a), str)
+
+    def test_the_cause_survives_a_realistic_length_cap(self):
+        """The reason the head-truncation lost it in the first place."""
+        exc = self.chained(OSError("[Errno -2] Name or service not known"))
+        self.assertIn("Name or service not known", tds._root_cause(exc)[:140])

@@ -51,6 +51,34 @@ CAD_CACHE_DAYS = 30
 TIMEOUT = 30
 
 
+def _root_cause(exc: BaseException) -> str:
+    """The innermost exception, which is the only part that diagnoses anything.
+
+    A `requests` transport failure reads
+    `HTTPSConnectionPool(host='x', port=443): Max retries exceeded with url: /
+    (Caused by NameResolutionError(...))` — about 120 characters of boilerplate
+    before the one clause that says *why*. Truncating that to a sensible length
+    keeps the boilerplate and throws away the diagnosis, which is how two runs
+    reported a host as unreachable without ever saying whether the host exists.
+
+    `NameResolutionError` means it does not; `ConnectionRefused` or a timeout
+    means it does and is not answering. Those call for opposite fixes — delete
+    the URL, or keep it and retry later — so the difference has to survive.
+    """
+    seen, cause = set(), exc
+    while True:
+        nxt = cause.__cause__ or cause.__context__
+        if nxt is None or id(nxt) in seen:
+            break
+        seen.add(id(nxt))
+        cause = nxt
+    name = type(cause).__name__
+    text = str(cause).strip()
+    if cause is exc:
+        return f"{name}: {text}"
+    return f"{type(exc).__name__} <- {name}: {text}"
+
+
 class SourceError(Exception):
     """A source could not be used. Always carries the URL that failed."""
 
@@ -294,7 +322,7 @@ def fetch(url: str, cfg: dict, *, params: dict | None = None) -> str:
             # sources in the same run, each on one ConnectTimeout. A 429 —
             # which is the server actually telling us something — already got
             # two retries, so the unknown was the one case given none.
-            last = SourceError(url, f"{type(exc).__name__}: {exc}")
+            last = SourceError(url, _root_cause(exc))
             # Counted per *call*, not per attempt — incremented once below, when
             # this call gives up. Counting attempts would trip the breaker
             # inside the very first fetch and there would be no retry at all.
@@ -308,7 +336,7 @@ def fetch(url: str, cfg: dict, *, params: dict | None = None) -> str:
                     f" — {host} has failed {_host_failures[host]} calls in a row this run, "
                     f"so it is treated as down and no longer retried")
             last = SourceError(url, (
-                f"{type(exc).__name__} after {attempts + 1} attempt(s): {exc}{note}"))
+                f"after {attempts + 1} attempt(s): {_root_cause(exc)}{note}"))
             break
         if resp.status_code in (401, 403) and index + 1 < len(agents):
             continue

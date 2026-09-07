@@ -385,6 +385,16 @@ about a hundred characters each, which truncated every error mid-sentence — in
 module whose entire failure contract is "fails *with the URL*". Each host now
 gets its own line and its own budget.
 
+That was necessary and not sufficient. A `requests` transport failure reads
+`HTTPSConnectionPool(host=..., port=443): Max retries exceeded with url: /
+(Caused by NameResolutionError(...))` — roughly 120 characters of boilerplate
+before the one clause that says *why* — so **any** head-truncation keeps the
+noise and discards the finding. Two runs in a row reported these hosts
+unreachable without ever saying whether they exist. `_root_cause` now reports
+the innermost exception, because `Name or service not known` (delete the URL)
+and `Connection refused` (keep it, the host is real and not answering today)
+call for opposite fixes and the difference has to survive.
+
 ### Not permitted is not broken
 
 The four `publicsearch.us` clerk portals disallow crawling in robots.txt. That
