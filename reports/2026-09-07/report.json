@@ -1,0 +1,444 @@
+{
+  "date": "2026-09-07",
+  "generated_at_et": "2026-09-07T06:40:00-04:00",
+  "truncated": false,
+  "data_quality_notes": "Research ran to completion and logged a RESEARCH COMPLETE block at 06:34 ET; nothing was cut off. Seven candidate lines resolve to four distinct symbols (XLE and FRO were each re-captured after refinement, TLT after a conviction correction; the last entry per symbol is used). All four are published.\n\nTODAY IS LABOR DAY. US cash equities and most futures are closed. Every equity price in this report is the Friday 2026-09-04 close, fetched from finnhub at 06:39 ET with a session flag of 'pre' and an age of ~62 hours. That is the freshest honest price available, not stale data. There is no US session to trade today, so there are no intraday ideas and every equity instruction is written for the Tuesday 2026-09-08 open.\n\nTHIS REPORT IS CONCENTRATED, and the research phase said so first rather than hiding it. XLE long and FRO long both pay on the same headline: a continuing Iran escalation and a constrained Strait of Hormuz. Both die on a ceasefire. The open (and deliberately un-republished) SPY short pays on the same headline, and the TLT short is only partly independent of it. config/strategy.md caps one driver at three ideas; research captured two new lines on that driver and stopped, rejecting four further tanker longs (DHT, INSW, TNK, TRMD), an airlines short and a third oil-levered long for exactly that reason, and did not re-emit SPY even though today's news supports it. CEG is the only genuinely independent driver in the report. Size accordingly: these are not four bets.\n\nRATIO CLUSTERING, disclosed because it is the signature the process is meant to catch. All four recomputed reward-to-risk ratios land between 2.06 and 2.21 against a 2.0 swing floor, which is the pattern of targets fitted to clear a bar. The mitigating evidence, checked rather than asserted: every stop is 2.38-2.79 ATR from its entry against floors of 1.8 (ETF) and 2.0 (stock), so none of these ratios was manufactured by walking the stop in, and each stop sits at a named level - below the SMA20 and below a prior low or support shelf - rather than at a distance chosen to make the arithmetic work. Read the tight clustering as a reason to check the targets, not the stops.\n\nSOURCE FAILURES this run:\n1. Yahoo chart API returned HTTP 429 on every index symbol, and finnhub refuses index quotes ('subscription required for CFD indices'). So there is NO VIX level, no index level, no futures quote and no DXY anywhere in this report. ETF proxies (SPY, QQQ, IWM, TLT, GLD, USO) are used instead. No VIX number is stated because none was fetched.\n2. Yahoo options returned HTTP 401 on every name tried. No implied-move check was possible on any idea. This is why the entire scheduled-earnings lane is absent - see below.\n3. api.nasdaq.com timed out on short interest, four attempts across LULU, FRO and XLE, the same host that failed for three names on 2026-09-06. No short-interest or days-to-cover figure appears in any idea, so every equity idea is one positioning input short.\n4. market_data.py history CTRA returned not-ok; the rest of the natural-gas complex fetched fine.\n5. REPO BUG, inherited and now two days old: scripts/market_data.py events() reads Kalshi's retired field names, so every event contract reads null through the CLI. All event work was done against api.elections.kalshi.com/trade-api/v2/markets directly, where the live fields are yes_bid_dollars / yes_ask_dollars / last_price_dollars / open_interest_fp / volume_fp. This is a one-line-per-field fix.\nWhat worked: finnhub for individual equities and ETFs, nasdaq for history/ATR/SMA, FRED for rates, CoinGecko for crypto, Kalshi direct, and web fetch for news and live crude.\n\nWHAT THIS REPORT DOES NOT CONTAIN, and why:\n- No earnings plays, despite the densest catalyst week in a month (ORCL and ADBE both Thu 09-10 after the close, plus CHWY/KR/ASO/SIG/AEO/AVAV/COO/RH on Wed 09-09). With Yahoo options returning 401 on every name, no implied-move check is possible, and research would not publish a directional bet into a binary print without one. ORCL was rejected on that basis and consistency required the same bar everywhere. This is a source failure, not a view on those setups.\n- No event contracts, for the third consecutive run, each rejection with arithmetic in notes.md: the WTI settlement ladder is correctly priced against a live $91.51 spot, the September FOMC market is a deeply liquid 50/50 with no edge available, the August CPI ladder is priced to its own nowcast and too wide to cross, and the one genuine monotonicity violation found (September CPI YoY, 224 contracts of open interest) is a two-leg spread the report schema cannot express.\n- No crypto. BTC at 79,302 sits below yesterday's still-pending 82,400 stop-limit trigger and nothing about that idea changed.\n- No small caps. A real gap against the mandate. The research budget went into the macro dislocation and into falsifying three sector theses (defense, natural gas, the power complex) rather than being filled with something unresearched.\n- No long-term ideas; all four are swing. The long-term lane got its time - it is where the defense and natural-gas work went - and both failed on evidence. ITA/LMT failed the 2.5 long-term floor at 1.30:1 and the only way to reach 2.5 was a bear case that could not be defended. CCJ and GLD remain the book's long-term positions, both held unchanged.\n\nBOOK ITEMS THE SCHEMA CANNOT CARRY, recorded here because they are decisions:\n- LULU (buy 115.00, last 100.61) and NKE (buy 40.75, last 38.40) both carry a standing FULL CLOSE instruction, already issued on 09-05 and 09-06. They are not re-emitted because positions_from_report() keys on (symbol, direction), so a 'sell' row would open a phantom short rather than close the long. CLOSE BOTH BY HAND. LULU fell 17.4% on Friday on 7.8x average volume against a 12.5% EPS BEAT - the damage was guidance, and the sell-side is 5.0% bullish and deteriorating.\n- HOLD unchanged, nothing emitted: SPY short (773.00, stop 783.50, target 750 - held out deliberately on the correlation cap), CCJ (the 09-06 bear case at 80.00 stands), BCC, SVRA, GLD (the 09-06 amendment stands: target cut 520 to 448, bear case 368, hold what is filled and do not add - GLD is 20.2% off its high and BELOW its SMA200 even with a shooting war on, so a war-driven gold long is not supported by this chart).\n- PENDING LINES TO CANCEL rather than re-pitch: VST BUY @ 128.00 (16.6% through the market), BTC SELL @ 63,400 and /MBTU6 SHORT @ 64,340 (both ~20% below a spot of 79,302 and stale bearish leftovers), KXFEDDECISION-26SEP-H25 YES @ 32 and KXFEDDECISION-26SEP-H0 YES @ 47 (YES on both hike and hold, and H25 now trades 50/51 so the 32 limit is 18c through the market). CEG @ 272.00 is REPLACED by the line below, not cancelled and not added to.\n- UNRECONCILED TRACKER DISCREPANCY, flagged for a second day: BCC at 79.21 against a 76.50 entry is +3.5%, but prior_context reports -2.2%. Research could not reconcile it and did not trade on it.\n- The book holds a TLT long (82.60, opened 08-20) and a TLT short (81.87, opened 09-02) simultaneously - a netting artifact the 09-06 run flagged. It is not a new idea and is noted so it is not re-pitched as one.\n\nTRACK RECORD CONTEXT: the book is 0 for 5 on closed trades, averaging -4.3%. That sample is well under the ~15 needed to mean anything and should not be over-fitted, but it is why every win_probability here claims only a 7.4 to 10.4 point edge over the driftless baseline rather than a large one.\n\nRED TEAM (phase 2c), 2026-09-07. Four ideas in, two out.\nCUT XLE (was rank 1): the correlation cap, plus a level record that reads as a chase - eleventh publication since 08-15, entry walked from 60.80 to 65.60 and target from 67.00 to 71.80, never filled in 24 days, and every one of the eleven versions cleared the 2.0 floor. FRO is the better leg of the same trade.\nCUT CEG (was rank 3): the 277.00 stop sits ABOVE the 268.00-274.06 support shelf the idea itself names (re-fetched: 08-31 low 274.06, 09-01 low 268.00). Moving the stop below that shelf takes the ratio to 1.49:1, under the floor. The 2.11:1 was an artifact of a stop placed inside the structure.\nKEPT FRO at conviction 4 - three genuinely distinct fetched confirmations and the only correctly placed stop in the report - with the 6.03 ATR blue-sky target now disclosed in key_risk.\nKEPT TLT but DOWNGRADED 4 -> 3: identical levels and evidence to the 09-02 and 09-06 publications that carried 3, and its own evidence concedes no catalyst inside the 10-02 horizon can confirm it. The simultaneous open TLT long is now named in key_risk.\nVALIDATION CORRECTION, verified rather than taken on either side's word: TLT's 'fail' verdict came from check_sources reporting a 404 on the Kalshi endpoint. That is a checker bug, not a bad source. The URL answers HEAD with 404 and GET with 200, and check_sources probes with HEAD only. Fetched by GET, every figure the idea quotes matches to the digit: H25 yes 0.50/0.51 on 3,820,128 open interest, H0 0.48/0.49 on 10,072,162. Left unfixed, --enforce would have demoted a live filled position over a source that is real, so check_sources now retries a HEAD 404 with GET before calling a URL dead (tests/test_validate_report.py covers it). No source was removed or reordered to get past the check.\nNOT CUT and worth saying so: FRO's thesis is falsifiable and dated, its central number is a printed fixture rather than a forecast, and the weekend escalation genuinely has not traded in US equities. Two ideas on one remaining driver plus an open SPY short is a small book, and that is the honest shape of this morning.",
+  "market_context": {
+    "summary": "US cash equities closed Friday 2026-09-04 at 16:00 ET and do not reopen until Tuesday 2026-09-08 (Labor Day). Two things happened in the gap that US stocks have not traded: the US struck three Iranian oil tankers in retaliation for ballistic missile attacks on Navy warships, and Tehran responded by attacking tankers and announcing a 'restricted' maritime zone beyond the Strait of Hormuz; then on Sunday 2026-09-06 OPEC+ held production quotas unchanged for the remainder of 2026, adding no incremental barrels into a widening disruption. Brent sits near $96.62 and WTI near $91.51. Read the tape carefully rather than the narrative, though: crude is NOT spiking today (+0.36% and +0.04%), so the large oil move happened over the preceding weeks and a big Tuesday gap should not be assumed. The regime read off fetched Friday closes is higher-nominal-growth rather than fear: equities are at highs (SPY -1.2% off its 250-day high, XLF -0.8%), oil has already ripped (USO 141.96 against a 107.49 SMA200, ~32% above it), long bonds are AT their 250-day low and beneath all three moving averages with the 10Y at 4.77% against effective fed funds of 3.63%, and precious metals are in drawdown (GLD -20.2% and below its SMA200, SLV -45.5%). That combination is internally fragile, because an oil shock is precisely the input that lifts inflation without lifting growth. The week is dense: PPI Thursday, August CPI Friday against a +3.38% YoY headline nowcast, and the FOMC on 09-16 into which Kalshi prices a 25bp HIKE at 50-51c versus a hold at 48-49c. Note the timing trap - August CPI was collected before the weekend, so Friday's print cannot contain the oil shock; that is an October and November problem the market must price before the data confirms it. No VIX or index level is quoted anywhere in this report because none could be fetched.",
+    "regime": "mixed",
+    "levels": {
+      "spy": 770.19,
+      "qqq": 718.96,
+      "iwm": 296.01,
+      "tlt": 82.21,
+      "gld": 406.77,
+      "uso": 141.96,
+      "us10y": 4.77,
+      "us2y": 4.34,
+      "10s2s": 0.41,
+      "fed_funds_effective": 3.63,
+      "unemployment": 4.1,
+      "brent": 96.62,
+      "wti": 91.51,
+      "btc": 79302,
+      "eth": 2484.82,
+      "vix": null,
+      "spx": null,
+      "ndx": null,
+      "dxy": null,
+      "note": "Equity/ETF levels are Friday 2026-09-04 closes (Labor Day, US markets shut). Crude and crypto are live 2026-09-07. VIX, index and DXY levels are null because Yahoo returned HTTP 429 and finnhub refuses index quotes."
+    },
+    "econ_calendar": [
+      {
+        "event": "PPI (BLS)",
+        "datetime_et": "2026-09-10T08:30",
+        "importance": "medium",
+        "consensus": null
+      },
+      {
+        "event": "August CPI",
+        "datetime_et": "2026-09-11T08:30",
+        "importance": "high",
+        "consensus": "nowcast as of 09-04: headline +3.38% YoY / +0.36% MoM, core +2.38% YoY / +0.20% MoM. Measures August, so it does NOT contain the weekend oil move."
+      },
+      {
+        "event": "FOMC decision (blackout 09-05 to 09-17, so no Fed speak this week)",
+        "datetime_et": "2026-09-16T14:00",
+        "importance": "high",
+        "consensus": "Kalshi KXFEDDECISION-26SEP: 25bp hike 0.50/0.51, hold 0.48/0.49"
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "rank": 1,
+      "symbol": "FRO",
+      "instrument": "Frontline plc",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 4,
+      "risk_tier": "standard",
+      "last_price": 46.12,
+      "last_price_asof": "2026-09-04T16:00:00-04:00",
+      "price_source": "finnhub (Friday close; US markets shut for Labor Day)",
+      "market_cap_usd": 10270000000,
+      "avg_dollar_volume": 101300000,
+      "entry": {
+        "ideal": 47.15,
+        "zone_low": 47.05,
+        "zone_high": 48.5,
+        "order_type": "stop_limit",
+        "condition": "Enter only on Tue 2026-09-08 on a trade THROUGH 47.05 - Friday's intraday high and the 250-day high is 47.04 - via a stop-limit triggered at 47.15 with a 48.50 limit. If FRO gaps above 48.50 do NOT chase; wait for a pullback into 47.05-48.50 that holds, and if it never comes there is no trade. No trade either if it opens below 47.05 and never trades through. This is a continuation entry above a one-year high and is deliberately structured so the position cannot exist without tape confirmation."
+      },
+      "exit": {
+        "target": 57.0,
+        "target_2": 64.0,
+        "scale_plan": "trim half at 57.00, trail the rest under the prior week low",
+        "time_stop": "2026-10-30"
+      },
+      "stop": 42.6,
+      "risk_reward": 2.16,
+      "win_probability": 0.42,
+      "position_size_pct": 2.5,
+      "requires_margin": false,
+      "catalyst": {
+        "event": "Tehran attacking tankers and preparing a restricted maritime zone beyond the Strait of Hormuz after the US struck three Iranian tankers over the 2026-09-05/07 weekend - shipowners refusing transits shrinks effective VLCC supply, which is what sets the rate",
+        "datetime_et": "2026-09-08T09:30",
+        "action": "US equities have not traded the weekend escalation; wait for the Tuesday open and enter only on confirmation through the 250-day high, never on the gap itself",
+        "wait": true
+      },
+      "thesis": "A tanker owner is short vessel supply and long voyage distance, and both moved hard the same way: VLCC Middle East-to-China day rates are near $498,000 against roughly $200,000 before the war and $20,000-60,000 in a normal market, while war-risk premiums have gone from 0.25% of hull value to 3-10%, so the owners still willing to transit Hormuz are paid extraordinary economics for the ones who will not. Frontline closed Friday at 46.12 after printing a 250-day high of 47.04 on 3.09M shares, above its 20-, 50- and 200-day averages (42.85 / 39.83 / 33.60), and it did that BEFORE the weekend strikes US equities have not yet traded. Verified tradeable on Robinhood: $10.27B market cap, NYSE-listed ordinary shares.",
+      "key_risk": "This is a war-premium trade at a one-year high after a 130% twelve-month run, and the exit is a headline, not a level: a ceasefire, a reopened strait or a de-risking of transits collapses spot VLCC rates far faster than they rose, and tanker equities de-rate on the rate print rather than on reported earnings. The 42.60 stop is 9.6% away and a genuine de-escalation gap can clear it overnight without ever filling near it. Short interest could not be fetched (api.nasdaq.com timed out twice), so one positioning input is missing. RED TEAM ADDITION: the 57.00 target is 6.03 ATR away, past the 6.0 ATR swing guide validation flagged, and at 21% above a 250-day high of 47.04 it sits in blue sky with no fetched resistance behind it - it is a measured-move extension of a trend, not a level. Pulling it to anything defensible below the high breaks the 2.16:1 ratio (55.00 gives 1.73:1), so read the ratio as resting on that extension. It is left standing rather than trimmed because the stop is the one thing in this report placed correctly - 42.60 is genuinely BELOW the 43.42-43.89 shelf, 2.79 ATR out - so the ratio was not manufactured from the risk side. Also unmentioned in the original: with XLE cut, this is now the report's only expression of the Iran/Hormuz driver, and the book still carries an open SPY short and a TLT short that lean on the same headline. A ceasefire hits all three at once. Size this as the whole oil bet, not as one of several.",
+      "counter_argument": "The whole move is already in the price - FRO is up 130% from a 250-day low of 20.47, sits 2% under its high, carries 71.4% bullish sell-side with zero sell ratings, and is being bought precisely because the news is loud. That is the textbook profile of a late cyclical chase, and spot tanker rates are the most mean-reverting series in shipping: $498,000 a day is not a level anyone underwrites as durable. Read the 6.91 trailing P/E as a warning rather than as support - a shipping company is cheapest on trailing earnings exactly at the peak of a rate cycle, and the 6.79% yield is largely variable dividends paid out of those peak earnings, so both numbers fall with the rate rather than cushioning it.",
+      "evidence": [
+        {
+          "kind": "positioning",
+          "detail": "Fetched relative strength: FRO +16.58% 1m, +31.13% 3m, +33.45% 6m against SPY +0.21% / +4.43% / +14.55% and XLE +10.14% / +11.08% / +13.24% - outperforming SPY on every window measured, and beating XLE too, so this is not just the oil trade in another wrapper. Sell-side is 3 strong buy, 2 buy, 2 hold, zero sell (71.4% bullish) and unchanged across four monthly periods, i.e. no deterioration to fade. Insider data: 0 open-market buys and 0 sells over six months - clean, unlike DHT (4 sells, $8.6M) and INSW (18 sells, $39.6M), which is why the trade is expressed in FRO.",
+          "source": "https://www.nasdaq.com/market-activity/stocks/fro"
+        },
+        {
+          "kind": "technical_level",
+          "detail": "Fetched bars: 250-day high 47.04 printed Friday 2026-09-04 on 3,088,344 shares against a rising base - SMA20 42.85, SMA50 39.83, SMA200 33.60, ATR14 1.6322. There is a real support shelf at 43.42-43.89 from the 08-28, 08-31 and 09-01 lows; the 42.60 stop sits below that shelf and below the SMA20, 2.79 ATR from entry, clearing the 2.0 ATR stock swing floor without being tightened to flatter the ratio.",
+          "source": "https://www.nasdaq.com/market-activity/stocks/fro/historical"
+        },
+        {
+          "kind": "counter_argument_answered",
+          "detail": "The bear case is that this is a chase of a mean-reverting spot rate. The answer is that the rate move is measured rather than forecast - $498,000/day on the Gulf-to-Asia VLCC route is a printed fixture, not an estimate - and the mechanism driving it is a supply withdrawal that is getting worse, not better: owners are declining Hormuz transits and Iran has resumed attacking tankers, including two UAE supertankers. Mean reversion requires the transits to resume, which is precisely what Tehran's announced restricted maritime zone is designed to prevent. The trade is nonetheless sized at 2.5% and only exists above the high, because the counter-argument is strong enough that it should not be answered with size.",
+          "source": "https://www.aljazeera.com/economy/2026/7/23/how-shipping-insurance-rates-are-rising-as-hormuz-bab-al-mandeb-shut-down"
+        }
+      ],
+      "sources": [
+        "https://www.briefs.co/news/supertanker-charter-rates-for-gulf-to-asia-crude-hauls-near/",
+        "https://www.aljazeera.com/economy/2026/7/23/how-shipping-insurance-rates-are-rising-as-hormuz-bab-al-mandeb-shut-down",
+        "https://www.thenationalnews.com/business/2026/07/17/war-risk-shipping-premium-surges-again-as-tensions-escalate-at-strait-of-hormuz/",
+        "https://www.lloydslist.com/LL1156586/Gulf-war-risk-premiums-topping-double-digit-millions-of-dollars-per-trip",
+        "https://tradingeconomics.com/commodity/crude-oil",
+        "https://robinhood.com/stocks/FRO/",
+        "https://www.nasdaq.com/market-activity/stocks/fro/historical"
+      ],
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.16,
+        "claimed_risk_reward": 2.16,
+        "breakeven_probability": 0.316,
+        "stated_win_probability": 0.42,
+        "expectancy_r": 0.327,
+        "claimed_edge": 0.104,
+        "stop_atr_multiple": 2.79,
+        "live_price": 46.12,
+        "live_price_asof": "2026-09-04T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 3764.6,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": 1.6322,
+        "checked_at_et": "2026-09-07T06:44:47-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.16:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 47.15 is +2.2% from live 46.12"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-09-08 is ahead of us"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "warn",
+            "detail": "target is 6.03 ATR away, 15 session(s) to get there \u2014 beyond the 6.0 ATR guide for swing, likely optimistic"
+          },
+          {
+            "check": "stop_distance",
+            "status": "pass",
+            "detail": "stop is 2.79 ATR from entry, clear of the 2.5 ATR guide for a swing stock"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "42% claimed vs 32% break-even at 2.16:1 \u2014 expectancy +0.33R"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-09-04T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "no bid/ask available (normal outside regular hours)"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 4 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "2.5% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 4 rests on 3 independent kinds: counter_argument_answered, positioning, technical_level"
+          },
+          {
+            "check": "sources",
+            "status": "pass",
+            "detail": "all 4 checked source(s) resolve"
+          }
+        ]
+      }
+    },
+    {
+      "rank": 2,
+      "symbol": "TLT",
+      "instrument": "iShares 20+ Year Treasury Bond ETF",
+      "asset_class": "etf",
+      "venue": "Robinhood Stocks",
+      "direction": "sell",
+      "horizon": "swing",
+      "conviction": 3,
+      "risk_tier": "standard",
+      "last_price": 82.21,
+      "last_price_asof": "2026-09-04T16:00:00-04:00",
+      "price_source": "finnhub (Friday close; US markets shut for Labor Day)",
+      "entry": {
+        "ideal": 81.87,
+        "zone_low": 81.6,
+        "zone_high": 82.6,
+        "order_type": "limit",
+        "condition": "UPDATE TO AN OPEN POSITION - ALREADY FILLED at 81.87 on 2026-09-02. This amends the existing short and does NOT open a second one. Levels are unchanged; what changed is the driver. DO NOT ADD HERE."
+      },
+      "exit": {
+        "target": 78.3,
+        "target_2": 76.5,
+        "scale_plan": "cover half at 78.30, trail the rest above the prior day high",
+        "time_stop": "2026-10-02"
+      },
+      "stop": 83.6,
+      "risk_reward": 2.06,
+      "win_probability": 0.4,
+      "position_size_pct": 2.0,
+      "requires_margin": false,
+      "catalyst": {
+        "event": "August CPI Fri 2026-09-11 08:30 ET (nowcast +3.38% YoY headline), PPI Thu 2026-09-10, then the FOMC decision Wed 2026-09-16 14:00 ET - into which Kalshi prices a 25bp hike at 50-51c against a hold at 48-49c",
+        "datetime_et": "2026-09-11T08:30",
+        "action": "hold through the CPI print; do not add before it, and cover half into 78.30 if the 81.17 250-day low breaks",
+        "wait": false
+      },
+      "thesis": "Update to the 2026-09-02 short at 81.87: thesis intact and strengthened by the weekend, levels unchanged at target 78.30 and stop 83.60, no addition. A long-duration Treasury is the worst thing to own into an energy supply shock, and one arrived while the bond market was already broken: TLT closed at 82.21 against a 250-day low of 81.17, beneath its 20-, 50- and 200-day averages (82.37 / 83.41 / 86.25), with the 10Y at 4.77% against effective fed funds of 3.63%. Kalshi's September FOMC market, on 10.1M contracts of open interest, prices a 25bp hike at 0.50/0.51 versus a hold at 0.48/0.49, so the deepest rates market available thinks the next move is as likely up as nowhere.",
+      "key_risk": "The growth channel, which is the honest counterweight: an oil supply shock lowers real growth as well as raising prices, and if the market decides the Iran escalation is a demand shock rather than an inflation shock, long bonds rally hard and this short is on the wrong side of a flight to quality. The stop at 83.60 is 2.61 ATR away but a genuine risk-off gap does not respect it. RED TEAM ADDITIONS. (1) NO CATALYST INSIDE THE HORIZON CAN CONFIRM THE THESIS. This idea's own dated_catalyst evidence concedes that August CPI was collected before the weekend oil move, so neither Thursday's PPI nor Friday's CPI can contain the shock, and it puts the inflation impulse in the October and November prints - which land after the 2026-10-02 time stop. The FOMC on 09-16 is inside the horizon but is a 50/50 the report itself calls 'no edge available'. The trade therefore holds through two prints that can hurt it and none that can pay it, which is why conviction is cut to 3. (2) The book holds a TLT LONG (82.60, opened 08-20, target 86.20, stop 80.95) and this TLT SHORT simultaneously. The two have opposing targets and stops that bracket the current 82.21, so whichever side moves, one of them stops out. That netting artifact has now been flagged for three runs and is not addressed by this line - resolve it by hand before adding any risk here.",
+      "counter_argument": "TLT is already at a 250-day low with the whole rates complex positioned for higher-for-longer, which means this is a crowded short being pressed at the worst possible entry point in the range. Everything the thesis relies on - 3.4% CPI, a 4.77% 10Y, a coin-flip hike - is public and in the price; a merely in-line CPI on Friday and a hold on 09-16 would be enough to squeeze it, and shorts covering from a 250-day low is how bond bear markets end. Red team: nothing new was fetched to pay for today's 3 -> 4 conviction upgrade. The levels, the Kalshi quotes and all three evidence items are unchanged from the 09-02 and 09-06 publications, which both carried conviction 3; what changed is the weekend oil headline, and that is already being paid for once in the FRO line. Restored to 3.",
+      "evidence": [
+        {
+          "kind": "positioning",
+          "detail": "Kalshi KXFEDDECISION-26SEP fetched directly from the exchange API: H25 (25bp hike) 0.50/0.51 on 3,820,095 contracts of open interest, H0 (hold) 0.48/0.49 on 10,072,125, H26 0.01/0.02, C25 0.00/0.01. Asks sum to 1.04 and bids to 0.99, so the complex is tightly arbitraged and the 50/50 hike-or-hold read is real rather than a stale quote. A market pricing a coin flip on a HIKE is not a market that supports 20-year duration.",
+          "source": "https://api.elections.kalshi.com/trade-api/v2/markets?event_ticker=KXFEDDECISION-26SEP"
+        },
+        {
+          "kind": "technical_level",
+          "detail": "Fetched 250 bars: last 82.21, ATR14 0.664, SMA20 82.37, SMA50 83.41, SMA200 86.25, 250-day high 92.185, 250-day low 81.17. Price is below all three averages with the averages themselves stacked bearishly, and sits 1.3% above the one-year low. The 83.60 stop is above the SMA20 and 2.61 ATR from the 81.87 entry, clearing the 1.8 ATR ETF swing floor.",
+          "source": "https://www.nasdaq.com/market-activity/etf/tlt/historical"
+        },
+        {
+          "kind": "dated_catalyst",
+          "detail": "Three dated events verified against fetched calendars inside the position's horizon: PPI Thu 2026-09-10 before the open, August CPI Fri 2026-09-11 08:30 ET with a 09-04 nowcast of +3.38% YoY headline and +0.36% MoM, and the FOMC decision Wed 2026-09-16 14:00 ET with the blackout running 09-05 to 09-17. Note honestly that August CPI was collected BEFORE the weekend oil move, so Friday's print cannot contain the shock - the inflation impulse this trade is short shows up in the October and November prints.",
+          "source": "https://www.kiplinger.com/investing/economy/this-weeks-economic-calendar"
+        }
+      ],
+      "sources": [
+        "https://api.elections.kalshi.com/trade-api/v2/markets?event_ticker=KXFEDDECISION-26SEP",
+        "https://tradingeconomics.com/commodity/crude-oil",
+        "https://www.kiplinger.com/investing/economy/this-weeks-economic-calendar",
+        "https://fred.stlouisfed.org/series/DGS10"
+      ],
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.06,
+        "claimed_risk_reward": 2.06,
+        "breakeven_probability": 0.327,
+        "stated_win_probability": 0.4,
+        "expectancy_r": 0.224,
+        "claimed_edge": 0.073,
+        "stop_atr_multiple": 2.61,
+        "live_price": 82.21,
+        "live_price_asof": "2026-09-04T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 3764.7,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": 0.664,
+        "checked_at_et": "2026-09-07T06:44:58-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.06:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 81.87 is -0.4% from live 82.21"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-09-11 is ahead of us"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 5.38 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "stop_distance",
+            "status": "pass",
+            "detail": "stop is 2.61 ATR from entry, clear of the 2.25 ATR guide for a swing etf"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "40% claimed vs 33% break-even at 2.06:1 \u2014 expectancy +0.22R"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-09-04T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "no bid/ask available (normal outside regular hours)"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "2.0% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 3 rests on 3 independent kinds: dated_catalyst, positioning, technical_level"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "1 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    }
+  ],
+  "watchlist": [
+    {
+      "symbol": "ITA",
+      "instrument": "iShares U.S. Aerospace & Defense ETF",
+      "note": "A real dislocation - defense sold off 5-8% below its 20-day INTO an escalating shooting war while the index sits 1.2% off a high - but with no confirmation. Rejected on four fetched checks: ITA is ~48% commercial aerospace (GE Aerospace 21.5%, RTX 17.2%, Boeing 8.9%), which an oil shock hurts; twenty sessions of lower highs with no volume flush; lagging SPY on every window (-9.96% 1m, -21.40% 6m); and no insider buying at LMT (0 buys, 11 sells).",
+      "trigger": "A capitulation bar or a first higher low, ideally in a pure-play defense name rather than ITA."
+    },
+    {
+      "symbol": "LMT",
+      "instrument": "Lockheed Martin",
+      "note": "The pure-play version of the defense dislocation and genuinely cheap - 16.89x NTM earnings, record $230B backlog (+$64B YoY), FY guidance raised to $79.75-81.75B. It fails the arithmetic, not the story: a 19x re-rating target near $640 against a defensible 14x bear near $437 (the 250-day low is 437.25) is 1.30:1 from 525.28, well under the 2.5 long-term floor. The only way to reach 2.5 was a bear case that could not be defended.",
+      "trigger": "A price low enough to make the ratio work honestly, or a defensible upward revision to the bear case - not a narrowed one."
+    },
+    {
+      "symbol": "ORCL",
+      "instrument": "Oracle",
+      "note": "The biggest catalyst of the week (earnings Thu 2026-09-10 AMC, est EPS 1.78 on $19.53B) and deliberately not traded. RPO of $638B (+363% YoY) against FY26 free cash flow of -$23.7B, $100B+ long-term debt (+24%), a credit downgrade and $45-50B more issuance planned makes it interesting both ways. Rejected because Yahoo options returns HTTP 401 so no implied move could be measured; 0 insider buys against 12 sells totalling $66.3M; sell-side still 79.6% bullish after a 60% fall; and a +13.2% three-day bounce leaves the entry mid-range with no level to lean on.",
+      "trigger": "A working implied-move source, or a post-print level - a washout or a breakout rather than the middle of the range."
+    },
+    {
+      "symbol": "ADBE",
+      "instrument": "Adobe",
+      "note": "Broke 285.75 to 266.51 (-6.7%) on Friday and closed just under its 267.93 SMA200, which is a real level, into its own Thu 2026-09-10 AMC print (est EPS 6.20 / $6.82B). Not published for one reason only: no implied-move check is possible this run, and no directional bet into a binary print is published without one.",
+      "trigger": "A working options source before the print, or a defined post-print level."
+    },
+    {
+      "symbol": "DHT",
+      "instrument": "DHT Holdings",
+      "note": "Same VLCC rate mechanism as the FRO recommendation and it would qualify on its own merits, but publishing it would be a third and fourth line on one driver, which is exactly the failure the correlation cap exists to prevent. Insider data also cuts against it: 4 sells totalling $8.6M over six months, where FRO is clean. INSW (18 sells, $39.6M), TNK and TRMD were rejected identically.",
+      "trigger": "Only if the FRO position closes and the Hormuz mechanism is still intact - not alongside it."
+    },
+    {
+      "symbol": "VST",
+      "instrument": "Vistra Corp",
+      "note": "CANCEL the pending VST BUY @ 128.00 - it is 16.6% through the market, the worst miss in the book. Same power-complex thesis as the CEG recommendation but worse evidence: insiders net -$6,585,127 (1 buy against 8 sells), still below both its SMA50 (149.64) and SMA200 (157.76), and it beats SPY on the 1m window only. CEG is the better-evidenced expression and two names on one thesis is not published.",
+      "trigger": "Nothing at present. Cancel the line rather than re-pitch it."
+    },
+    {
+      "symbol": "JETS",
+      "instrument": "U.S. Global Jets ETF",
+      "note": "The textbook trade on a fuel shock is short airlines, but JETS 28.80, DAL -16.2%, UAL -19.7%, AAL -30.1% and LUV -28.1% have ALREADY fallen 15-30% while USO ran to 141.96. Shorting after the move is how a right thesis loses money, and config/universe.md requires margin for sell_short.",
+      "trigger": "Evidence the fuel shock is not yet in the price - a failed bounce into the 20-day, or a leg higher in crude with airlines flat."
+    },
+    {
+      "symbol": "EQT",
+      "instrument": "EQT Corporation",
+      "note": "Recorded as a killed hypothesis rather than a waiting trade, because the reasoning is settled. The idea was that all of Qatar's LNG transits Hormuz (~19-20% of global LNG), so a restricted strait lifts US gas producers. 2026 already ran that experiment: during the Feb-May Hormuz closure European gas rose 44% and Asian gas 66% while US Henry Hub FELL 6%, because US liquefaction capacity is fixed in the short run and a global shock widens an arbitrage American producers physically cannot serve. The correct sign of a Hormuz shock on Henry Hub is negative. AR, RRC and UNG were rejected identically.",
+      "trigger": "None on this thesis. EQT is cheap for reasons unrelated to this war."
+    },
+    {
+      "symbol": "BTC",
+      "instrument": "Bitcoin",
+      "note": "CANCEL the stale pending BTC SELL @ 63,400 and /MBTU6 SHORT @ 64,340 - both sit ~20% below a spot of 79,302, were never reached, and are bearish leftovers standing against a subsequent long. Yesterday's 82,400 stop-limit breakout trigger is unchanged and unfilled at a spot of 79,302, so there is nothing new to say about it.",
+      "trigger": "A trade through 82,400 as already specified on 2026-09-06."
+    },
+    {
+      "symbol": "KXFEDDECISION-26SEP",
+      "instrument": "Kalshi September FOMC decision",
+      "note": "CANCEL both pending legs - KXFEDDECISION-26SEP-H25 YES @ 32 and -26SEP-H0 YES @ 47 are YES on both a hike and a hold, and H25 now trades 50/51 so the 32 limit is 18c through the market. No new event contract is published for the third consecutive run: this market is a deeply liquid 50/50 with no edge, the WTI settlement ladder is correctly priced against a live $91.51 spot, the August CPI ladder is priced to its own nowcast and too wide to cross, and the one genuine monotonicity violation found in the September CPI ladder is a two-leg spread on 224 contracts of open interest that the report schema cannot express.",
+      "trigger": "A mispricing large enough to cross the spread, expressible as a single leg."
+    },
+    {
+      "symbol": "XLE",
+      "instrument": "Energy Select Sector SPDR Fund",
+      "note": "Red team cut on two grounds. FIRST, the correlation cap: XLE long and FRO long pay on the same headline and die on the same ceasefire, and FRO is the better-evidenced expression of it - FRO beats XLE on all three relative-strength windows fetched (1m +16.58 vs +10.14, 3m +31.13 vs +11.08, 6m +33.45 vs -1.31), has a clean six-month insider record, and rests on a printed $498,000/day VLCC fixture rather than on second-hand crude beta. With an open SPY short and a TLT short both partly on the same driver, this was the leg to drop. SECOND, the level record: this is the ELEVENTH XLE publication since 2026-08-15, the entry has been walked up 60.80 -> 60.50 -> 58.20 -> 60.80 -> 61.50 -> 60.70 -> 63.00 -> 63.00 -> 63.90 -> 64.06 -> 65.60 (+7.9%) and the target up 67.00 -> 71.80 alongside it, tracking price each time, and it has never filled in 24 days. The 2026-08-30 XLE line printed 29:1 on a 0.20-wide stop and is the cautionary tale in this repo's own notes. A ratio that clears 2.0 on every one of eleven re-cut versions of the same idea is measuring the cutting, not the edge. Conviction was also raised 3 -> 4 today with no new confirmation fetched: OPEC+ holding quotas removes a risk the prior line was waiting on, which is not the same as adding evidence.",
+      "trigger": "A clean fill on a stated level that is not re-cut the next morning, or a reason to own energy beta that is independent of the Hormuz headline FRO already expresses.",
+      "demoted_from_rank": 1,
+      "demotion_reason": "correlation cap (same driver as FRO, weaker leg); entry walked up 7.9% across eleven publications without filling"
+    },
+    {
+      "symbol": "CEG",
+      "instrument": "Constellation Energy Corporation",
+      "note": "Red team cut on stop placement, which is the one thing the ratio cannot survive. The idea names its own support shelf at 268.00-274.06 (the 08-31 and 09-01 lows, both re-fetched and confirmed) and then puts the stop at 277.00, ABOVE that shelf - so an ordinary retest of the base this four-session bounce launched from ends the trade. 09-01 alone traded 268.00-284.25, a 16.25-point range, so 22.85 points of risk is inside a single day's noise for this name. Place the stop where the evidence says it belongs, below 268.00, and the arithmetic collapses: risk 32.35 against reward 48.15 is 1.49:1, well under the 2.0 swing floor. At 273.90, just under the shelf, it is still only 1.86:1. The 2.11:1 that got this published exists only because the stop sits inside the structure. Validation already warned the stop was 2.38 ATR, under the 2.5 level where this book's stop-outs cluster. Conviction 4 was unpaid besides: CEG was 3, 3 and 2 on its three prior publications, the idea's own key_risk calls the positioning leg 'genuinely thin' (one insider buyer, sell-side 82.1% bullish and DETERIORATING at -3.1), and its own counter_argument declines to defend the valuation through a drawdown. The pending CEG BUY @ 272.00 from 2026-08-21 should still be CANCELLED - this cut does not revive it.",
+      "trigger": "A pullback that holds the 268.00-274.06 shelf and a target still 2:1 away from a stop placed BELOW it - roughly, an entry near 280 with the stop at 267 needs a target near 306. Or a second and third insider buyer, or realised PJM power prices printing nearer plan than NRG's $33.",
+      "demoted_from_rank": 3,
+      "demotion_reason": "stop at 277.00 sits above the idea's own 268.00-274.06 support shelf; placed below it the ratio falls to 1.49:1, under the 2.0 floor"
+    }
+  ],
+  "validation_summary": {
+    "checked": 2,
+    "passed": 0,
+    "warned": 2,
+    "failed": 0,
+    "enforced": true
+  }
+}
