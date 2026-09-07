@@ -603,7 +603,14 @@ class FloodLayerSelfHeals(unittest.TestCase):
     """A wrong layer index is not something an operator can guess."""
 
     def setUp(self):
+        # A fixture URL, deliberately not the live one. The self-heal logic has
+        # to stay tested whether or not a working NFHL endpoint is configured
+        # today — the live `flood.url` was nulled on 2026-09-07 after it and
+        # both its fallbacks 404'd, and that must not delete this coverage.
         self.cfg = td.load_config()
+        self.cfg["flood"] = dict(self.cfg["flood"],
+                                 url="https://example.invalid/NFHL/MapServer/28/query",
+                                 url_fallbacks=[], autodetect_layer=True)
         tds._flood_layer_cache.clear()
         self._fetch_json = tds.fetch_json
 
@@ -1822,3 +1829,53 @@ class RetryingIsForBlipsNotForOutages(unittest.TestCase):
         state["fail"] = False
         tds.fetch("https://dead.gov/x", self.cfg)
         self.assertEqual(tds._host_failures.get("dead.gov", 0), 0)
+
+
+class ANulledSourceIsNotABrokenOne(unittest.TestCase):
+    """A dead URL is worse than a null — the module's own rule, applied.
+
+    The 2026-09-07 live run proved the FEMA NFHL endpoint and both its
+    fallbacks 404, and that the layer autodetect could not list the service to
+    follow one by name. Left pointing at it, the run reports a network error
+    forever, which reads as transient and is not. Nulled, it reports "not
+    configured" and the check stays `unavailable` — a material flag on every
+    row, never a clean screen.
+    """
+
+    def test_the_check_reports_unavailable_rather_than_erroring(self):
+        cfg = td.load_config()
+        cfg["flood"] = dict(cfg["flood"], url=None, url_fallbacks=[])
+        record = tds.flood_check({"address": "1 Main St"}, None, cfg)
+        self.assertEqual(record["result"], td.UNAVAILABLE)
+        self.assertIn("not configured", record["source"] + record["detail"])
+
+    def test_and_an_unavailable_check_is_still_a_flag(self):
+        """The point of nulling is to stop lying, not to stop reporting."""
+        cfg = td.load_config()
+        cfg["flood"] = dict(cfg["flood"], url=None, url_fallbacks=[])
+        record = tds.flood_check({"address": "1 Main St"}, None, cfg)
+        self.assertNotEqual(record["result"], td.CLEAN)
+
+    def test_the_verifier_does_not_probe_a_null_and_crash(self):
+        """A verifier whose own probe is wrong is worse than none at all."""
+        cfg = td.load_config()
+        spec = dict(cfg["flood"], url=None, url_fallbacks=[])
+        entry = tds._verify_flood(spec, cfg)
+        self.assertTrue(entry["ok"])
+        self.assertIn("no NFHL endpoint configured", entry["detail"])
+        self.assertIn("unavailable", entry["detail"])
+        self.assertEqual(entry["url"], "")
+
+    def test_the_live_config_has_no_url_proven_dead(self):
+        """Removed on evidence, not on a guess. Re-adding needs a live check."""
+        cfg = td.load_config()
+        dead = {
+            "https://www.dallascounty.org/departments/county-clerk/official-records.php",
+            "https://www.tarrantcountytx.gov/en/county-clerk/deeds-and-records.html",
+        }
+        for name, spec in (cfg.get("lien_sources") or {}).items():
+            if not isinstance(spec, dict) or not spec.get("urls"):
+                continue
+            for county, urls in spec["urls"].items():
+                for url in (urls if isinstance(urls, list) else [urls]):
+                    self.assertNotIn(url, dead, f"{name}/{county} still lists a proven 404")

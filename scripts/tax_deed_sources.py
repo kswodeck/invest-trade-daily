@@ -2089,9 +2089,9 @@ def verify(cfg: dict) -> list[dict]:
                     fetch(url, cfg)
                     reachable.append(url)
                 except RobotsDisallowed as exc:
-                    disallowed.append(f"{url}: {exc.detail[:90]}")
+                    disallowed.append(f"{url}: {exc.detail[:140]}")
                 except SourceError as exc:
-                    refusals.append(f"{url}: {exc.detail[:90]}")
+                    refusals.append(f"{url}: {exc.detail[:140]}")
             if reachable:
                 entry.update(ok=True, url=reachable[0], detail=(
                     f"{len(reachable)} of {len(candidates)} host(s) reachable"
@@ -2115,8 +2115,13 @@ def verify(cfg: dict) -> list[dict]:
                     f"this check reports unavailable, which is a flag, on every row. "
                     f"Permanent and not a config error. " + "; ".join(disallowed)[:200]))
             else:
+                # One line per host, and no shared character budget. A joined
+                # string capped at 300 gave a three-host county about a hundred
+                # characters each, which truncated every error mid-sentence and
+                # made the run's own diagnosis unreadable — the whole point of
+                # naming the URL that failed.
                 entry.update(ok=False,
-                             detail="; ".join(refusals + disallowed)[:300])
+                             detail="\n    ".join(refusals + disallowed))
             out.append(entry)
 
     out.extend(_verify_enrichment(cfg))
@@ -2181,7 +2186,18 @@ def _verify_flood(spec: dict, cfg: dict) -> dict:
     MapServer for its own layer list and print the candidates.
     """
     url, layer_note = resolve_flood_url(spec, cfg)
-    entry = {"kind": "flood", "id": "flood", "url": url}
+    entry = {"kind": "flood", "id": "flood", "url": url or ""}
+    if not url:
+        # Deliberately unconfigured, exactly like a nulled lien source: nothing
+        # is broken, something has to be found. Reported ok because the run is
+        # not failing — `flood_check` already returns `unavailable`, which is a
+        # flag on every row, so this can never be mistaken for a clean screen.
+        # Probing a null would also have crashed the verifier, which is worse
+        # than not verifying: it would report a configuration choice as a bug.
+        entry.update(ok=True, detail=(
+            "no NFHL endpoint configured — this check reports unavailable, which is a flag. "
+            + str(spec.get("_verified") or "")[:240]))
+        return entry
     lon, lat = PROBE_POINT
     try:
         payload = fetch_json(url, cfg, params={

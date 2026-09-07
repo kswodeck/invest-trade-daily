@@ -564,12 +564,10 @@
       "urls": {
         "Dallas": [
           "https://dallas.tx.publicsearch.us/",
-          "https://www.dallascounty.org/departments/county-clerk/official-records.php",
           "https://dallasclerk.tylerhost.net/"
         ],
         "Tarrant": [
           "https://tarrant.tx.publicsearch.us/",
-          "https://www.tarrantcountytx.gov/en/county-clerk/deeds-and-records.html",
           "https://countyclerkrecords.tarrantcountytx.gov/"
         ],
         "Johnson": [
@@ -612,12 +610,10 @@
       "urls": {
         "Dallas": [
           "https://dallas.tx.publicsearch.us/",
-          "https://www.dallascounty.org/departments/county-clerk/official-records.php",
           "https://dallasclerk.tylerhost.net/"
         ],
         "Tarrant": [
           "https://tarrant.tx.publicsearch.us/",
-          "https://www.tarrantcountytx.gov/en/county-clerk/deeds-and-records.html",
           "https://countyclerkrecords.tarrantcountytx.gov/"
         ],
         "Johnson": [
@@ -646,12 +642,10 @@
       "urls": {
         "Dallas": [
           "https://dallas.tx.publicsearch.us/",
-          "https://www.dallascounty.org/departments/county-clerk/official-records.php",
           "https://dallasclerk.tylerhost.net/"
         ],
         "Tarrant": [
           "https://tarrant.tx.publicsearch.us/",
-          "https://www.tarrantcountytx.gov/en/county-clerk/deeds-and-records.html",
           "https://countyclerkrecords.tarrantcountytx.gov/"
         ],
         "Johnson": [
@@ -680,9 +674,9 @@
   },
   "flood": {
     "_": "FEMA National Flood Hazard Layer, public ArcGIS REST. Layer 28 is the flood hazard zone polygons.",
-    "url": "https://hazards.fema.gov/gis/nfhl/rest/services/public/NFHL/MapServer/28/query",
+    "url": null,
     "format": "arcgis",
-    "status": "unverified",
+    "status": "not_configured",
     "high_risk_zones": [
       "A",
       "AE",
@@ -693,13 +687,10 @@
       "V",
       "VE"
     ],
-    "_verified": "2026-09-04: the configured MapServer path 404s and the service root could not be listed either, so the layer autodetect had nothing to read. Fallback bases added.",
+    "_verified": "2026-09-07 live run: the configured MapServer 404s, both url_fallbacks 404, and the layer autodetect could not list the service either — so there is nothing to follow by name. Nulled rather than left pointing at a dead URL: a URL that does not resolve reports a network error every single run, which reads as transient and is not. Nulled, the check reports 'not configured' and stays `unavailable`, which is a material flag on every row — never a clean screen. To restore it, find the current public NFHL MapServer (start at https://hazards.fema.gov/femaportal/wps/portal/NFHLWMS or the FEMA GeoPlatform), confirm it answers with ?f=json in a browser, and put the layer's /query URL back in `url`. Do not guess one.",
     "autodetect_layer": true,
     "_autodetect": "The NFHL layer index is not stable across service revisions and 28 was wrong on the first live run. With this on, the screener asks the MapServer for its layer list and takes the flood-hazard-zone layer by name, so a re-indexed service self-heals.",
-    "url_fallbacks": [
-      "https://hazards.fema.gov/arcgis/rest/services/public/NFHL/MapServer/28/query",
-      "https://hazards.fema.gov/gis/nfhl/rest/services/public/NFHL/MapServer/query"
-    ]
+    "url_fallbacks": []
   },
   "environmental": {
     "_": "TCEQ publishes datasets but no stable keyless per-parcel API; EPA Envirofacts is the reachable public one. Both are a proximity screen, not a Phase I.",

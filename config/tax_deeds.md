@@ -343,6 +343,48 @@ What is **not** worked around, because it should not be: the four
 stay `unavailable`, which is a material flag, which means Tier C. Setting
 `respect_robots_txt: false` to get around that is not a supported fix.
 
+### What the 2026-09-07 live run established
+
+The first run in four days, and the first with the auto-discovery work actually
+executing. Coverage went from 370 listings to **1,185**, candidates from 328 to
+**806**, and 598 of them now carry a value from the feed's own `value` field
+where the previous run had none at all. Dallas produced 796 listings having
+produced zero.
+
+What it proved dead, and what was therefore removed rather than guessed at:
+
+| Source | Evidence | Action |
+| --- | --- | --- |
+| `dallascounty.org/.../official-records.php` | HTTP 404 | removed |
+| `tarrantcountytx.gov/en/county-clerk/deeds-and-records.html` | HTTP 404 | removed |
+| FEMA NFHL `url` + both `url_fallbacks` | HTTP 404, and the layer autodetect could not list the service either | nulled |
+
+Nulling the flood source is the rule above applied, not a shrug: it now reports
+"not configured" and the check stays `unavailable` — a material flag on every
+row — instead of reporting a network error every run that reads as transient and
+is not. To restore it, find the current public NFHL MapServer, confirm it
+answers `?f=json` **in a browser**, and put the layer's `/query` URL back. Do not
+guess one; that is what put a dead URL there.
+
+Still failing, and legitimately so — do not paper over these:
+
+- **Ellis CAD** — connection reset, three attempts.
+- **Dallas / Tarrant clerk alternates** — `dallasclerk.tylerhost.net` and
+  `countyclerkrecords.tarrantcountytx.gov`, connection errors. Whether those
+  hosts exist at all is *unknown*, and an unknown is not a determination, so
+  they are neither trusted nor deleted. The next run says which, because the
+  diagnosis is no longer truncated (below).
+- **Johnson county clerk** — HTTP 403 to every declared User-Agent. Left as a
+  failure rather than reclassified as policy: robots.txt is an explicit,
+  machine-readable statement and a 403 is not, so it could be a WAF rule,
+  geoblocking, or something an operator can actually resolve. Silencing it would
+  hide a real regression.
+
+**A joined 300-character detail is not a diagnosis.** A three-host county got
+about a hundred characters each, which truncated every error mid-sentence — in a
+module whose entire failure contract is "fails *with the URL*". Each host now
+gets its own line and its own budget.
+
 ### Not permitted is not broken
 
 The four `publicsearch.us` clerk portals disallow crawling in robots.txt. That
