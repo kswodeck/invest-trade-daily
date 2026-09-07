@@ -563,20 +563,17 @@
       "on_hit": "reject",
       "urls": {
         "Dallas": [
-          "https://dallas.tx.publicsearch.us/",
-          "https://dallasclerk.tylerhost.net/"
+          "https://dallas.tx.publicsearch.us/"
         ],
         "Tarrant": [
-          "https://tarrant.tx.publicsearch.us/",
-          "https://countyclerkrecords.tarrantcountytx.gov/"
+          "https://tarrant.tx.publicsearch.us/"
         ],
         "Johnson": [
           "https://johnson.tx.publicsearch.us/",
           "https://www.johnsoncountytx.org/departments/county-clerk"
         ],
         "Ellis": [
-          "https://www.co.ellis.tx.us/158/County-Clerk",
-          "https://ellis.tx.publicsearch.us/"
+          "https://www.co.ellis.tx.us/158/County-Clerk"
         ]
       },
       "format": "clerk_search",
@@ -586,7 +583,7 @@
         "INTERNAL REVENUE",
         "UNITED STATES OF AMERICA"
       ],
-      "_verified": "2026-09-03: Dallas, Tarrant and Johnson resolve but their robots.txt disallows crawling, so these checks correctly report unavailable. Do not override respect_robots_txt to get around it.",
+      "_verified": "2026-09-07: dallasclerk.tylerhost.net, countyclerkrecords.tarrantcountytx.gov and ellis.tx.publicsearch.us do not resolve in DNS (Name or service not known) and were removed — a dead URL is worse than a null. The Ellis one had never been reported as a failure because its county's first host answers, so a reachable host was masking a hostname that does not exist. Add a host only after confirming it resolves.",
       "_urls": "A list, tried in order, each robots-checked on its own. A disallow is that host's policy and ends the matter there — but it is that host's policy, not the county's, and a county commonly publishes the same official records index on more than one system. These are alternative sources, not a way around the first one's rules. None is verified; run `verify`.",
       "_query_url": "Set this when you find a keyless query endpoint on any of the hosts above. {base} is the host that answered, {query} the owner name, {county} the county. Until it is set every check here reports unavailable, which is a material flag."
     },
@@ -602,27 +599,24 @@
       },
       "format": "html_text",
       "status": "unverified",
-      "_verified": "2026-09-03: https://www.texaspaceauthority.org/completed-projects/ returned 404. Find the current project registry URL and put it here. Until then this check reports unavailable, which is a material flag — see config/tax_deeds.md."
+      "_verified": "2026-09-07: dallasclerk.tylerhost.net, countyclerkrecords.tarrantcountytx.gov and ellis.tx.publicsearch.us do not resolve in DNS (Name or service not known) and were removed — a dead URL is worse than a null. The Ellis one had never been reported as a failure because its county's first host answers, so a reachable host was masking a hostname that does not exist. Add a host only after confirming it resolves."
     },
     "hoa_assessment": {
       "check": "hoa_assessment",
       "on_hit": "flag",
       "urls": {
         "Dallas": [
-          "https://dallas.tx.publicsearch.us/",
-          "https://dallasclerk.tylerhost.net/"
+          "https://dallas.tx.publicsearch.us/"
         ],
         "Tarrant": [
-          "https://tarrant.tx.publicsearch.us/",
-          "https://countyclerkrecords.tarrantcountytx.gov/"
+          "https://tarrant.tx.publicsearch.us/"
         ],
         "Johnson": [
           "https://johnson.tx.publicsearch.us/",
           "https://www.johnsoncountytx.org/departments/county-clerk"
         ],
         "Ellis": [
-          "https://www.co.ellis.tx.us/158/County-Clerk",
-          "https://ellis.tx.publicsearch.us/"
+          "https://www.co.ellis.tx.us/158/County-Clerk"
         ]
       },
       "format": "clerk_search",
@@ -632,7 +626,7 @@
         "PROPERTY OWNERS ASSOCIATION",
         "ASSESSMENT LIEN"
       ],
-      "_verified": "2026-09-03: Dallas, Tarrant and Johnson resolve but their robots.txt disallows crawling, so these checks correctly report unavailable. Do not override respect_robots_txt to get around it.",
+      "_verified": "2026-09-07: dallasclerk.tylerhost.net, countyclerkrecords.tarrantcountytx.gov and ellis.tx.publicsearch.us do not resolve in DNS (Name or service not known) and were removed — a dead URL is worse than a null. The Ellis one had never been reported as a failure because its county's first host answers, so a reachable host was masking a hostname that does not exist. Add a host only after confirming it resolves.",
       "_urls": "A list, tried in order, each robots-checked on its own. A disallow is that host's policy and ends the matter there — but it is that host's policy, not the county's, and a county commonly publishes the same official records index on more than one system. These are alternative sources, not a way around the first one's rules. None is verified; run `verify`.",
       "_query_url": "Set this when you find a keyless query endpoint on any of the hosts above. {base} is the host that answered, {query} the owner name, {county} the county. Until it is set every check here reports unavailable, which is a material flag."
     },
@@ -641,20 +635,17 @@
       "on_hit": "flag",
       "urls": {
         "Dallas": [
-          "https://dallas.tx.publicsearch.us/",
-          "https://dallasclerk.tylerhost.net/"
+          "https://dallas.tx.publicsearch.us/"
         ],
         "Tarrant": [
-          "https://tarrant.tx.publicsearch.us/",
-          "https://countyclerkrecords.tarrantcountytx.gov/"
+          "https://tarrant.tx.publicsearch.us/"
         ],
         "Johnson": [
           "https://johnson.tx.publicsearch.us/",
           "https://www.johnsoncountytx.org/departments/county-clerk"
         ],
         "Ellis": [
-          "https://www.co.ellis.tx.us/158/County-Clerk",
-          "https://ellis.tx.publicsearch.us/"
+          "https://www.co.ellis.tx.us/158/County-Clerk"
         ]
       },
       "format": "clerk_search",
@@ -667,7 +658,7 @@
         "BOARD UP",
         "PARAMOUNT LIEN"
       ],
-      "_verified": "2026-09-03: Dallas, Tarrant and Johnson resolve but their robots.txt disallows crawling, so these checks correctly report unavailable. Do not override respect_robots_txt to get around it.",
+      "_verified": "2026-09-07: dallasclerk.tylerhost.net, countyclerkrecords.tarrantcountytx.gov and ellis.tx.publicsearch.us do not resolve in DNS (Name or service not known) and were removed — a dead URL is worse than a null. The Ellis one had never been reported as a failure because its county's first host answers, so a reachable host was masking a hostname that does not exist. Add a host only after confirming it resolves.",
       "_urls": "A list, tried in order, each robots-checked on its own. A disallow is that host's policy and ends the matter there — but it is that host's policy, not the county's, and a county commonly publishes the same official records index on more than one system. These are alternative sources, not a way around the first one's rules. None is verified; run `verify`.",
       "_query_url": "Set this when you find a keyless query endpoint on any of the hosts above. {base} is the host that answered, {query} the owner name, {county} the county. Until it is set every check here reports unavailable, which is a material flag."
     }

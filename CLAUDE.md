@@ -349,6 +349,17 @@ and the summary says the run was cut short, because a row past the cutoff carrie
 `no_cad_match` for having never been looked up rather than for the district
 saying nothing, and those are not the same fact.
 
+**Resolve a host before you configure it.** Three hostnames in
+`config/tax_deeds.json` did not exist — `dallasclerk.tylerhost.net`,
+`countyclerkrecords.tarrantcountytx.gov`, `ellis.tx.publicsearch.us`, all
+answering `Name or service not known` — and removing them turned six reported
+failures into `policy`, because Dallas and Tarrant were then left with only their
+robots-disallowed portal. That was always the true state; two phantom hosts had
+been hiding it. Ellis is the one to remember: it had **never been reported as a
+failure**, because verification said "1 of 2 host(s) reachable" and a working
+first host masked a hostname that pointed nowhere. Verification now names the
+hosts that did not answer even when another did.
+
 Exit codes carry meaning: 0 clean, 1 published with a broken source, 2 every
 county list failed so nothing was screened and the Sheet was left alone,
 anything else a crash. 1 and 2 both write the snapshot and the step summary

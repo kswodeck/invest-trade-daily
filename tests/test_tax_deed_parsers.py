@@ -1465,14 +1465,36 @@ class ClerkRecordsMayLiveOnMoreThanOneHost(unittest.TestCase):
     def tearDown(self):
         tds.fetch = self._fetch
 
-    def test_every_county_has_more_than_one_candidate_host(self):
+    def test_every_county_has_at_least_one_candidate_host(self):
+        """A county with no host at all cannot even report unavailable honestly.
+
+        This used to demand *two*, which the config satisfied only because
+        three of the hostnames did not exist. Resolving every configured host
+        by hand on 2026-09-07 found dallasclerk.tylerhost.net,
+        countyclerkrecords.tarrantcountytx.gov and ellis.tx.publicsearch.us all
+        answering `Name or service not known`. A test that a wish is true is
+        not a test; the mechanism for several hosts is exercised below with a
+        fixture instead, where it belongs.
+        """
         spec = self.cfg["lien_sources"]["federal_tax_lien"]
         for county in ("Dallas", "Tarrant", "Johnson", "Ellis"):
             with self.subTest(county=county):
-                self.assertGreaterEqual(len(tds.clerk_candidates(spec, county)), 2)
+                self.assertGreaterEqual(len(tds.clerk_candidates(spec, county)), 1)
+
+    def test_no_configured_clerk_host_is_a_hostname_that_never_resolved(self):
+        spec = self.cfg["lien_sources"]["federal_tax_lien"]
+        phantom = {"dallasclerk.tylerhost.net",
+                   "countyclerkrecords.tarrantcountytx.gov",
+                   "ellis.tx.publicsearch.us"}
+        for county in ("Dallas", "Tarrant", "Johnson", "Ellis"):
+            for url in tds.clerk_candidates(spec, county):
+                self.assertFalse(any(host in url for host in phantom),
+                                 f"{county} still lists a hostname that does not resolve: {url}")
 
     def test_a_disallowed_host_is_skipped_and_the_next_is_tried(self):
         spec = dict(self.cfg["lien_sources"]["federal_tax_lien"],
+                    urls={"Dallas": ["https://dallas.tx.publicsearch.us/",
+                                     "https://records.example.gov/"]},
                     query_url="{base}/search?q={query}", query_terms=["FEDERAL TAX LIEN"])
         seen = []
 
@@ -1550,11 +1572,41 @@ class VerifyExercisesTheSameAccessorTheChecksDo(unittest.TestCase):
             return "<html>ok</html>"
 
         tds.fetch = only_one
-        rows = tds.verify(self.cfg)
+        cfg = dict(self.cfg)
+        cfg["lien_sources"] = dict(cfg["lien_sources"])
+        cfg["lien_sources"]["federal_tax_lien"] = dict(
+            cfg["lien_sources"]["federal_tax_lien"],
+            urls={"Dallas": ["https://dallas.tx.publicsearch.us/",
+                             "https://records.example.gov/"]})
+        rows = tds.verify(cfg)
         dallas = next(r for r in rows if r["id"] == "federal_tax_lien/Dallas")
         self.assertTrue(dallas["ok"])
         self.assertIn("host(s) reachable", dallas["detail"])
         self.assertNotIn("publicsearch.us", dallas["url"])
+
+    def test_a_reachable_host_does_not_hide_an_unreachable_sibling(self):
+        """Reporting only "1 of 2 reachable" is how a phantom host survives.
+
+        Ellis never appeared in any failure list because its first host
+        answers, so `ellis.tx.publicsearch.us` — which does not resolve — sat
+        in config unnoticed until every host was checked by hand.
+        """
+        def only_one(url, cfg, **kw):
+            if "publicsearch.us" in url:
+                raise tds.RobotsDisallowed(url, "robots.txt disallows this path")
+            return "<html>ok</html>"
+
+        tds.fetch = only_one
+        cfg = dict(self.cfg)
+        cfg["lien_sources"] = dict(cfg["lien_sources"])
+        cfg["lien_sources"]["federal_tax_lien"] = dict(
+            cfg["lien_sources"]["federal_tax_lien"],
+            urls={"Dallas": ["https://records.example.gov/",
+                             "https://dallas.tx.publicsearch.us/"]})
+        dallas = next(r for r in tds.verify(cfg) if r["id"] == "federal_tax_lien/Dallas")
+        self.assertTrue(dallas["ok"])
+        self.assertIn("unused", dallas["detail"])
+        self.assertIn("publicsearch.us", dallas["detail"])
 
     def test_every_host_disallowing_is_policy_not_failure(self):
         """A robots.txt disallow is a determination, and a permanent one.

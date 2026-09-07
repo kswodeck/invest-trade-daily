@@ -366,14 +366,29 @@ is not. To restore it, find the current public NFHL MapServer, confirm it
 answers `?f=json` **in a browser**, and put the layer's `/query` URL back. Do not
 guess one; that is what put a dead URL there.
 
+**Three configured hostnames did not exist.** Resolving every host in this file
+by hand — DNS only, no fetching — found `dallasclerk.tylerhost.net`,
+`countyclerkrecords.tarrantcountytx.gov` and `ellis.tx.publicsearch.us` all
+answering `Name or service not known`, against controls that resolved fine. They
+were plausible guesses that never pointed anywhere. Removed.
+
+The Ellis one is the instructive case: **it had never been reported as a failure
+at all**, because its county's first host answers, and verification said only
+"1 of 2 host(s) reachable". A working host was masking a hostname that does not
+exist. Verification now names the ones that did not answer as `(unused)` lines
+even when another did, so the next phantom is visible the first time it is seen
+rather than on the day someone resolves every host by hand.
+
+Removing them settles six of the ten remaining lien failures: Dallas and Tarrant
+are left with only their `publicsearch.us` portal, so every candidate is a robots
+disallow, so they classify as **policy** rather than failure — which is what they
+always were, obscured by two hostnames that were never reachable in the first
+place. `resolve every configured host before adding it` is now the rule, and a
+test asserts none of these three comes back.
+
 Still failing, and legitimately so — do not paper over these:
 
 - **Ellis CAD** — connection reset, three attempts.
-- **Dallas / Tarrant clerk alternates** — `dallasclerk.tylerhost.net` and
-  `countyclerkrecords.tarrantcountytx.gov`, connection errors. Whether those
-  hosts exist at all is *unknown*, and an unknown is not a determination, so
-  they are neither trusted nor deleted. The next run says which, because the
-  diagnosis is no longer truncated (below).
 - **Johnson county clerk** — HTTP 403 to every declared User-Agent. Left as a
   failure rather than reclassified as policy: robots.txt is an explicit,
   machine-readable statement and a 403 is not, so it could be a WAF rule,

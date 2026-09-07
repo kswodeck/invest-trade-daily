@@ -2121,10 +2121,17 @@ def verify(cfg: dict) -> list[dict]:
                 except SourceError as exc:
                     refusals.append(f"{url}: {exc.detail[:140]}")
             if reachable:
+                # Name the ones that did not answer, too. Reporting only
+                # "1 of 2 reachable" let a hostname that does not exist sit in
+                # config indefinitely: Ellis never appeared in a failure list
+                # because its first host answers, so the phantom behind it was
+                # invisible until every host was resolved by hand.
+                missed = "".join(f"\n    (unused) {m}" for m in refusals + disallowed)
                 entry.update(ok=True, url=reachable[0], detail=(
                     f"{len(reachable)} of {len(candidates)} host(s) reachable"
                     + ("" if spec.get("query_url") else
-                       " — but no query_url configured, so this check reports unavailable")))
+                       " — but no query_url configured, so this check reports unavailable")
+                    + missed))
             elif disallowed and not refusals:
                 # Every host told us not to crawl. That is a *determination*,
                 # not a breakage: it is permanent, it is already handled, and
