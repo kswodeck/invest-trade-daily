@@ -51,6 +51,34 @@ CAD_CACHE_DAYS = 30
 TIMEOUT = 30
 
 
+def _root_cause(exc: BaseException) -> str:
+    """The innermost exception, which is the only part that diagnoses anything.
+
+    A `requests` transport failure reads
+    `HTTPSConnectionPool(host='x', port=443): Max retries exceeded with url: /
+    (Caused by NameResolutionError(...))` — about 120 characters of boilerplate
+    before the one clause that says *why*. Truncating that to a sensible length
+    keeps the boilerplate and throws away the diagnosis, which is how two runs
+    reported a host as unreachable without ever saying whether the host exists.
+
+    `NameResolutionError` means it does not; `ConnectionRefused` or a timeout
+    means it does and is not answering. Those call for opposite fixes — delete
+    the URL, or keep it and retry later — so the difference has to survive.
+    """
+    seen, cause = set(), exc
+    while True:
+        nxt = cause.__cause__ or cause.__context__
+        if nxt is None or id(nxt) in seen:
+            break
+        seen.add(id(nxt))
+        cause = nxt
+    name = type(cause).__name__
+    text = str(cause).strip()
+    if cause is exc:
+        return f"{name}: {text}"
+    return f"{type(exc).__name__} <- {name}: {text}"
+
+
 class SourceError(Exception):
     """A source could not be used. Always carries the URL that failed."""
 
@@ -81,6 +109,20 @@ _last_request: dict[str, float] = {}
 _host_interval: dict[str, float] = {}
 MAX_HOST_INTERVAL = 8.0
 RATE_LIMIT_RETRIES = 2
+# Transport failures — no HTTP answer at all. Retried because a blip is an
+# unknown, and bounded because a host that is genuinely down should be reported
+# as down inside the run's time budget rather than retried into the timeout.
+NETWORK_RETRIES = 2
+
+# Retrying is for blips, and after this many consecutive transport failures a
+# host is not blipping. Without this the retry is a wall-clock hazard rather
+# than a fix: enrichment calls a CAD once per property, so a district that is
+# simply down would cost three attempts and two backoffs *per property* — on a
+# 250-property budget that is the difference between noticing in a minute and
+# running into the job's 45-minute timeout. The first few failures still get
+# the full retry, so a genuine blip is never mistaken for an outage.
+HOST_DOWN_AFTER = 3
+_host_failures: dict[str, int] = {}
 _robots: dict[str, Any] = {}
 
 # Sentinel: robots.txt gave no answer at all, as distinct from answering
@@ -259,6 +301,7 @@ def fetch(url: str, cfg: dict, *, params: dict | None = None) -> str:
     host = urllib.parse.urlsplit(url).netloc
     last: Exception | None = None
     backoffs = 0
+    attempts = 0
     index = -1
     while True:
         index = min(index + 1, len(agents) - 1)
@@ -270,7 +313,30 @@ def fetch(url: str, cfg: dict, *, params: dict | None = None) -> str:
         except SourceError:
             raise
         except Exception as exc:  # noqa: BLE001
-            last = SourceError(url, f"{type(exc).__name__}: {exc}")
+            # No answer at all — a timeout, a reset, a DNS blip. That is an
+            # unknown, not a determination, and this module's whole rule is
+            # that you do not conclude anything from an unknown you have not
+            # retried. It used to `break` on the first one, so a single blip
+            # failed a source for the entire run: on 2026-09-03 taxsales.lgbs
+            # served Tarrant's 363 rows and was reported broken for three other
+            # sources in the same run, each on one ConnectTimeout. A 429 —
+            # which is the server actually telling us something — already got
+            # two retries, so the unknown was the one case given none.
+            last = SourceError(url, _root_cause(exc))
+            # Counted per *call*, not per attempt — incremented once below, when
+            # this call gives up. Counting attempts would trip the breaker
+            # inside the very first fetch and there would be no retry at all.
+            if attempts < NETWORK_RETRIES and _host_failures.get(host, 0) < HOST_DOWN_AFTER:
+                attempts += 1
+                time.sleep(min(2 ** attempts, MAX_HOST_INTERVAL))
+                index -= 1          # same UA: this was not a refusal
+                continue
+            _host_failures[host] = _host_failures.get(host, 0) + 1
+            note = ("" if _host_failures[host] <= HOST_DOWN_AFTER else
+                    f" — {host} has failed {_host_failures[host]} calls in a row this run, "
+                    f"so it is treated as down and no longer retried")
+            last = SourceError(url, (
+                f"after {attempts + 1} attempt(s): {_root_cause(exc)}{note}"))
             break
         if resp.status_code in (401, 403) and index + 1 < len(agents):
             continue
@@ -284,6 +350,7 @@ def fetch(url: str, cfg: dict, *, params: dict | None = None) -> str:
                 backoffs += 1
                 time.sleep(_host_interval[host])
                 continue
+        _host_failures.pop(host, None)
         if resp.status_code >= 400:
             detail = _explain_status(resp.status_code, url)
             if resp.status_code in (401, 403):
@@ -2044,20 +2111,52 @@ def verify(cfg: dict) -> list[dict]:
                 out.append(entry)
                 continue
 
-            reachable, refusals = [], []
+            reachable, refusals, disallowed = [], [], []
             for url in candidates:
                 try:
                     fetch(url, cfg)
                     reachable.append(url)
+                except RobotsDisallowed as exc:
+                    disallowed.append(f"{url}: {exc.detail[:140]}")
                 except SourceError as exc:
-                    refusals.append(f"{url}: {exc.detail[:90]}")
+                    refusals.append(f"{url}: {exc.detail[:140]}")
             if reachable:
+                # Name the ones that did not answer, too. Reporting only
+                # "1 of 2 reachable" let a hostname that does not exist sit in
+                # config indefinitely: Ellis never appeared in a failure list
+                # because its first host answers, so the phantom behind it was
+                # invisible until every host was resolved by hand.
+                missed = "".join(f"\n    (unused) {m}" for m in refusals + disallowed)
                 entry.update(ok=True, url=reachable[0], detail=(
                     f"{len(reachable)} of {len(candidates)} host(s) reachable"
                     + ("" if spec.get("query_url") else
-                       " — but no query_url configured, so this check reports unavailable")))
+                       " — but no query_url configured, so this check reports unavailable")
+                    + missed))
+            elif disallowed and not refusals:
+                # Every host told us not to crawl. That is a *determination*,
+                # not a breakage: it is permanent, it is already handled, and
+                # there is no config change that fixes it — `respect_robots_txt:
+                # false` is not a supported answer. The check still reports
+                # `unavailable`, which is a material flag that puts the property
+                # in Tier C, so nothing is hidden and nothing reads as clean.
+                #
+                # Reported ok for the same reason a deliberately unconfigured
+                # source is: the run is not failing. Counting it as a failure
+                # made the workflow red on every run forever, including runs
+                # that screened and published perfectly — and an alarm that
+                # cannot ever be cleared is an alarm that stops being read.
+                entry.update(ok=True, policy=True, detail=(
+                    f"not permitted by robots.txt on all {len(candidates)} host(s) — "
+                    f"this check reports unavailable, which is a flag, on every row. "
+                    f"Permanent and not a config error. " + "; ".join(disallowed)[:200]))
             else:
-                entry.update(ok=False, detail="; ".join(refusals)[:300])
+                # One line per host, and no shared character budget. A joined
+                # string capped at 300 gave a three-host county about a hundred
+                # characters each, which truncated every error mid-sentence and
+                # made the run's own diagnosis unreadable — the whole point of
+                # naming the URL that failed.
+                entry.update(ok=False,
+                             detail="\n    ".join(refusals + disallowed))
             out.append(entry)
 
     out.extend(_verify_enrichment(cfg))
@@ -2122,7 +2221,18 @@ def _verify_flood(spec: dict, cfg: dict) -> dict:
     MapServer for its own layer list and print the candidates.
     """
     url, layer_note = resolve_flood_url(spec, cfg)
-    entry = {"kind": "flood", "id": "flood", "url": url}
+    entry = {"kind": "flood", "id": "flood", "url": url or ""}
+    if not url:
+        # Deliberately unconfigured, exactly like a nulled lien source: nothing
+        # is broken, something has to be found. Reported ok because the run is
+        # not failing — `flood_check` already returns `unavailable`, which is a
+        # flag on every row, so this can never be mistaken for a clean screen.
+        # Probing a null would also have crashed the verifier, which is worse
+        # than not verifying: it would report a configuration choice as a bug.
+        entry.update(ok=True, detail=(
+            "no NFHL endpoint configured — this check reports unavailable, which is a flag. "
+            + str(spec.get("_verified") or "")[:240]))
+        return entry
     lon, lat = PROBE_POINT
     try:
         payload = fetch_json(url, cfg, params={

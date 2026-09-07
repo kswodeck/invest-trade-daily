@@ -318,6 +318,48 @@ index on more than one system. `PACKET_TIERS` defaults to `A,B,C` because `A,B`
 wrote no packets at all while every property carries an unscreened lien check —
 a default that produces nothing is broken, not conservative.
 
+**Not permitted is not broken, and no answer is not an answer.** Two ways the
+verifier called things failures that were not, both of which made a working run
+red. The clerk portals disallow crawling by policy — permanently, with no config
+that fixes it — so `verify` reports them `policy` rather than failed and the
+summary lists them under "Checks not permitted"; they still report `unavailable`
+on every row, which is the material flag keeping everything at Tier C, so nothing
+reads as clean. Nine of the 2026-09-03 run's sixteen "failures" were exactly this,
+on a run that screened 370 listings and published 328 candidates. A *mixed*
+refusal still fails, and a disallowed county *list* still fails loudly, because
+missing a county's inventory is invisible where a missing lien check is on the
+row. Separately, `fetch` broke out on the first transport error, so one blip
+failed a source for the whole run — `taxsales.lgbs.com` served Tarrant's 363 rows
+and was called broken for three other sources in that same run. A 429 already got
+two retries; the timeout, which is the actual unknown, got none. `NETWORK_RETRIES`
+fixes that, on the same UA, and the detail says how many attempts it took —
+bounded by `HOST_DOWN_AFTER`, because retrying is for blips and enrichment calls
+a CAD once per property: three attempts each against a down district on a
+250-property budget is how a fix becomes a 45-minute timeout. Counted per call,
+not per attempt, and cleared by any success.
+
+**A job killed by the workflow's 45-minute cap runs no further steps**, so it
+commits no snapshot and writes no summary — the exact failure the exit codes
+below exist to prevent. That happened on 2026-09-07: cancelled at 45m21s, and
+nothing at all left behind. The screener now keeps its own clock inside the
+job's (`--deadline-minutes`, default 32) and, when it runs out, stops *enriching*
+rather than stopping — enrichment being the only unbounded part, at three
+requests per property. Everything already fetched is still screened and written,
+and the summary says the run was cut short, because a row past the cutoff carries
+`no_cad_match` for having never been looked up rather than for the district
+saying nothing, and those are not the same fact.
+
+**Resolve a host before you configure it.** Three hostnames in
+`config/tax_deeds.json` did not exist — `dallasclerk.tylerhost.net`,
+`countyclerkrecords.tarrantcountytx.gov`, `ellis.tx.publicsearch.us`, all
+answering `Name or service not known` — and removing them turned six reported
+failures into `policy`, because Dallas and Tarrant were then left with only their
+robots-disallowed portal. That was always the true state; two phantom hosts had
+been hiding it. Ellis is the one to remember: it had **never been reported as a
+failure**, because verification said "1 of 2 host(s) reachable" and a working
+first host masked a hostname that pointed nowhere. Verification now names the
+hosts that did not answer even when another did.
+
 Exit codes carry meaning: 0 clean, 1 published with a broken source, 2 every
 county list failed so nothing was screened and the Sheet was left alone,
 anything else a crash. 1 and 2 both write the snapshot and the step summary

@@ -603,7 +603,14 @@ class FloodLayerSelfHeals(unittest.TestCase):
     """A wrong layer index is not something an operator can guess."""
 
     def setUp(self):
+        # A fixture URL, deliberately not the live one. The self-heal logic has
+        # to stay tested whether or not a working NFHL endpoint is configured
+        # today — the live `flood.url` was nulled on 2026-09-07 after it and
+        # both its fallbacks 404'd, and that must not delete this coverage.
         self.cfg = td.load_config()
+        self.cfg["flood"] = dict(self.cfg["flood"],
+                                 url="https://example.invalid/NFHL/MapServer/28/query",
+                                 url_fallbacks=[], autodetect_layer=True)
         tds._flood_layer_cache.clear()
         self._fetch_json = tds.fetch_json
 
@@ -1458,14 +1465,36 @@ class ClerkRecordsMayLiveOnMoreThanOneHost(unittest.TestCase):
     def tearDown(self):
         tds.fetch = self._fetch
 
-    def test_every_county_has_more_than_one_candidate_host(self):
+    def test_every_county_has_at_least_one_candidate_host(self):
+        """A county with no host at all cannot even report unavailable honestly.
+
+        This used to demand *two*, which the config satisfied only because
+        three of the hostnames did not exist. Resolving every configured host
+        by hand on 2026-09-07 found dallasclerk.tylerhost.net,
+        countyclerkrecords.tarrantcountytx.gov and ellis.tx.publicsearch.us all
+        answering `Name or service not known`. A test that a wish is true is
+        not a test; the mechanism for several hosts is exercised below with a
+        fixture instead, where it belongs.
+        """
         spec = self.cfg["lien_sources"]["federal_tax_lien"]
         for county in ("Dallas", "Tarrant", "Johnson", "Ellis"):
             with self.subTest(county=county):
-                self.assertGreaterEqual(len(tds.clerk_candidates(spec, county)), 2)
+                self.assertGreaterEqual(len(tds.clerk_candidates(spec, county)), 1)
+
+    def test_no_configured_clerk_host_is_a_hostname_that_never_resolved(self):
+        spec = self.cfg["lien_sources"]["federal_tax_lien"]
+        phantom = {"dallasclerk.tylerhost.net",
+                   "countyclerkrecords.tarrantcountytx.gov",
+                   "ellis.tx.publicsearch.us"}
+        for county in ("Dallas", "Tarrant", "Johnson", "Ellis"):
+            for url in tds.clerk_candidates(spec, county):
+                self.assertFalse(any(host in url for host in phantom),
+                                 f"{county} still lists a hostname that does not resolve: {url}")
 
     def test_a_disallowed_host_is_skipped_and_the_next_is_tried(self):
         spec = dict(self.cfg["lien_sources"]["federal_tax_lien"],
+                    urls={"Dallas": ["https://dallas.tx.publicsearch.us/",
+                                     "https://records.example.gov/"]},
                     query_url="{base}/search?q={query}", query_terms=["FEDERAL TAX LIEN"])
         seen = []
 
@@ -1543,19 +1572,88 @@ class VerifyExercisesTheSameAccessorTheChecksDo(unittest.TestCase):
             return "<html>ok</html>"
 
         tds.fetch = only_one
-        rows = tds.verify(self.cfg)
+        cfg = dict(self.cfg)
+        cfg["lien_sources"] = dict(cfg["lien_sources"])
+        cfg["lien_sources"]["federal_tax_lien"] = dict(
+            cfg["lien_sources"]["federal_tax_lien"],
+            urls={"Dallas": ["https://dallas.tx.publicsearch.us/",
+                             "https://records.example.gov/"]})
+        rows = tds.verify(cfg)
         dallas = next(r for r in rows if r["id"] == "federal_tax_lien/Dallas")
         self.assertTrue(dallas["ok"])
         self.assertIn("host(s) reachable", dallas["detail"])
         self.assertNotIn("publicsearch.us", dallas["url"])
 
-    def test_every_host_refusing_is_reported_as_a_failure(self):
+    def test_a_reachable_host_does_not_hide_an_unreachable_sibling(self):
+        """Reporting only "1 of 2 reachable" is how a phantom host survives.
+
+        Ellis never appeared in any failure list because its first host
+        answers, so `ellis.tx.publicsearch.us` — which does not resolve — sat
+        in config unnoticed until every host was checked by hand.
+        """
+        def only_one(url, cfg, **kw):
+            if "publicsearch.us" in url:
+                raise tds.RobotsDisallowed(url, "robots.txt disallows this path")
+            return "<html>ok</html>"
+
+        tds.fetch = only_one
+        cfg = dict(self.cfg)
+        cfg["lien_sources"] = dict(cfg["lien_sources"])
+        cfg["lien_sources"]["federal_tax_lien"] = dict(
+            cfg["lien_sources"]["federal_tax_lien"],
+            urls={"Dallas": ["https://records.example.gov/",
+                             "https://dallas.tx.publicsearch.us/"]})
+        dallas = next(r for r in tds.verify(cfg) if r["id"] == "federal_tax_lien/Dallas")
+        self.assertTrue(dallas["ok"])
+        self.assertIn("unused", dallas["detail"])
+        self.assertIn("publicsearch.us", dallas["detail"])
+
+    def test_every_host_disallowing_is_policy_not_failure(self):
+        """A robots.txt disallow is a determination, and a permanent one.
+
+        Counting it as a failure turned the workflow red on every run forever
+        — including runs that screened and published perfectly — because the
+        four clerk portals disallow crawling by policy and always will. An
+        alarm that can never be cleared stops being read.
+        """
         tds.fetch = lambda url, cfg, **kw: (_ for _ in ()).throw(
             tds.RobotsDisallowed(url, "robots.txt disallows this path"))
         rows = tds.verify(self.cfg)
         dallas = next(r for r in rows if r["id"] == "federal_tax_lien/Dallas")
-        self.assertFalse(dallas["ok"])
-        self.assertIn("robots.txt", dallas["detail"])
+        self.assertTrue(dallas["ok"])
+        self.assertTrue(dallas["policy"])
+
+    def test_but_it_is_never_reported_as_a_working_check(self):
+        """Not a failure is not the same as fine. It must still say so."""
+        tds.fetch = lambda url, cfg, **kw: (_ for _ in ()).throw(
+            tds.RobotsDisallowed(url, "robots.txt disallows this path"))
+        rows = tds.verify(self.cfg)
+        dallas = next(r for r in rows if r["id"] == "federal_tax_lien/Dallas")
+        self.assertIn("not permitted", dallas["detail"])
+        self.assertIn("unavailable", dallas["detail"])
+        self.assertNotIn("reachable", dallas["detail"])
+
+    def test_a_host_that_is_merely_broken_still_fails(self):
+        """Only *policy* is exempt. A 404 among the refusals is a real break."""
+        def broken(url, cfg, **kw):
+            if "publicsearch.us" in url:
+                raise tds.RobotsDisallowed(url, "robots.txt disallows this path")
+            raise tds.SourceError(url, "HTTP 404: this URL does not exist")
+
+        tds.fetch = broken
+        rows = tds.verify(self.cfg)
+        for row in rows:
+            if row["kind"].startswith("lien:") and not row["ok"]:
+                self.assertIn("404", row["detail"])
+                break
+        else:
+            self.fail("a genuinely broken host was not reported as a failure")
+
+    def test_policy_refusals_do_not_make_the_run_fail(self):
+        """The exit code is what the workflow reads, so assert on it."""
+        entries = [{"id": "a", "ok": True, "policy": True},
+                   {"id": "b", "ok": True}]
+        self.assertEqual([e for e in entries if not e.get("ok")], [])
 
 
 
@@ -1608,3 +1706,279 @@ class ThePerUrlFilterReachesTheServerSideNarrowing(unittest.TestCase):
         _, report = tds.county_listings(county, self.cfg, "2026-10-06")
         self.assertIn("fetched 4, kept 4", report[0]["detail"])
 
+
+
+class ATransportFailureIsRetriedBeforeItIsBelieved(unittest.TestCase):
+    """No answer is an unknown, and unknowns get retried before they count.
+
+    `fetch` used to break out of its loop on the first transport exception, so
+    one blip failed a source for the whole run. On 2026-09-03 taxsales.lgbs.com
+    served Tarrant's 363 rows and was simultaneously reported broken for three
+    other sources, each on a single ConnectTimeout. Meanwhile a 429 — the
+    server actually telling us something — already got two retries. The unknown
+    was the one case given none.
+    """
+
+    def setUp(self):
+        self.real_session, self.real_robots = tds._session, tds.robots_allows
+        self.real_throttle, self.real_sleep = tds._throttle, tds.time.sleep
+        tds.robots_allows = lambda url, cfg: (True, "ok")
+        tds._throttle = lambda url, cfg: None
+        tds.time.sleep = lambda s: None
+        self.cfg = {"contact_email": "screener@example.org"}
+        tds._host_failures.clear()   # per-run state, not per-process
+        self.calls = []
+
+    def tearDown(self):
+        tds._session, tds.robots_allows = self.real_session, self.real_robots
+        tds._throttle, tds.time.sleep = self.real_throttle, self.real_sleep
+
+    def install(self, fail_times, exc=None):
+        outer = self
+
+        class Resp:
+            status_code = 200
+            text = "<html>recovered</html>"
+
+        class Fake:
+            def get(self, url, **kw):
+                outer.calls.append(kw.get("headers", {}).get("User-Agent"))
+                if len(outer.calls) <= fail_times:
+                    raise (exc or ConnectionResetError(104, "reset by peer"))
+                return Resp()
+
+        tds._session = Fake()
+
+    def test_a_single_blip_no_longer_fails_the_source(self):
+        self.install(fail_times=1)
+        self.assertIn("recovered", tds.fetch("https://a.gov/x", self.cfg))
+
+    def test_it_keeps_trying_up_to_the_bound(self):
+        self.install(fail_times=tds.NETWORK_RETRIES)
+        self.assertIn("recovered", tds.fetch("https://a.gov/x", self.cfg))
+        self.assertEqual(len(self.calls), tds.NETWORK_RETRIES + 1)
+
+    def test_but_a_host_that_is_really_down_is_still_reported_down(self):
+        self.install(fail_times=99)
+        with self.assertRaises(tds.SourceError) as caught:
+            tds.fetch("https://down.gov/x", self.cfg)
+        self.assertIn("attempt(s)", caught.exception.detail)
+        self.assertEqual(len(self.calls), tds.NETWORK_RETRIES + 1)
+
+    def test_the_detail_says_how_many_attempts_it_took(self):
+        """An outage reported as one failed request reads like a blip."""
+        self.install(fail_times=99)
+        with self.assertRaises(tds.SourceError) as caught:
+            tds.fetch("https://down.gov/x", self.cfg)
+        self.assertIn(f"{tds.NETWORK_RETRIES + 1} attempt(s)", caught.exception.detail)
+
+    def test_a_retry_does_not_burn_a_user_agent(self):
+        """A timeout is not a refusal, so it must not walk the UA list.
+
+        Walking it would spend the fallback agents on a network blip and leave
+        none for the 403 they exist for.
+        """
+        self.install(fail_times=2)
+        tds.fetch("https://a.gov/x", self.cfg)
+        self.assertEqual(len(set(self.calls)), 1, f"UA changed across retries: {self.calls}")
+
+    def test_a_robots_disallow_is_never_retried(self):
+        """It is a determination. Retrying it would be asking again after no."""
+        tds.robots_allows = lambda url, cfg: (False, "robots.txt disallows this path")
+        self.install(fail_times=0)
+        with self.assertRaises(tds.RobotsDisallowed):
+            tds.fetch("https://nope.gov/x", self.cfg)
+        self.assertEqual(self.calls, [])
+
+
+class RetryingIsForBlipsNotForOutages(unittest.TestCase):
+    """The retry is a wall-clock hazard without a stop.
+
+    Enrichment calls a CAD once per property against a 250-property budget. A
+    district that is simply down would otherwise cost three attempts and two
+    backoffs *each*, which is the difference between noticing in a minute and
+    running into the job's 45-minute timeout.
+    """
+
+    def setUp(self):
+        self.real = (tds._session, tds.robots_allows, tds._throttle, tds.time.sleep)
+        tds.robots_allows = lambda url, cfg: (True, "ok")
+        tds._throttle = lambda url, cfg: None
+        self.slept = []
+        tds.time.sleep = self.slept.append
+        tds._host_failures.clear()
+        self.cfg = {"contact_email": "screener@example.org"}
+        self.calls = []
+
+    def tearDown(self):
+        tds._session, tds.robots_allows, tds._throttle, tds.time.sleep = self.real
+        tds._host_failures.clear()
+
+    def down(self):
+        outer = self
+
+        class Down:
+            def get(self, url, **kw):
+                outer.calls.append(url)
+                raise ConnectionResetError(104, "reset by peer")
+
+        tds._session = Down()
+
+    def hammer(self, n, host="https://dead.gov/x"):
+        for _ in range(n):
+            with self.assertRaises(tds.SourceError):
+                tds.fetch(host, self.cfg)
+
+    def test_the_first_calls_still_get_their_retries(self):
+        """A blip must not be mistaken for an outage on the first sight of it."""
+        self.down()
+        self.hammer(1)
+        self.assertEqual(len(self.calls), tds.NETWORK_RETRIES + 1)
+
+    def test_a_host_that_keeps_failing_stops_being_retried(self):
+        self.down()
+        self.hammer(tds.HOST_DOWN_AFTER + 2)
+        full = (tds.HOST_DOWN_AFTER) * (tds.NETWORK_RETRIES + 1)
+        self.assertLess(len(self.calls), full + 2 * (tds.NETWORK_RETRIES + 1))
+
+    def test_which_is_what_keeps_a_dead_host_inside_the_time_budget(self):
+        self.down()
+        self.hammer(20)
+        unbounded = 20 * (tds.NETWORK_RETRIES + 1)
+        self.assertLess(len(self.calls), unbounded / 2)
+        self.assertLess(sum(self.slept), 30)
+
+    def test_and_the_error_says_the_host_is_being_treated_as_down(self):
+        self.down()
+        self.hammer(tds.HOST_DOWN_AFTER)
+        with self.assertRaises(tds.SourceError) as caught:
+            tds.fetch("https://dead.gov/x", self.cfg)
+        self.assertIn("treated as down", caught.exception.detail)
+
+    def test_one_host_being_down_does_not_stop_retrying_another(self):
+        self.down()
+        self.hammer(tds.HOST_DOWN_AFTER + 1)
+        self.calls.clear()
+        self.hammer(1, host="https://other.gov/x")
+        self.assertEqual(len(self.calls), tds.NETWORK_RETRIES + 1)
+
+    def test_a_success_forgives_the_host(self):
+        """Whatever it was, it is answering now — the next blip gets its retry."""
+        outer = self
+        state = {"fail": True}
+
+        class Flaky:
+            def get(self, url, **kw):
+                outer.calls.append(url)
+                if state["fail"]:
+                    raise ConnectionResetError(104, "reset by peer")
+                class R:
+                    status_code, text = 200, "<html>fine</html>"
+                return R()
+
+        tds._session = Flaky()
+        self.hammer(tds.HOST_DOWN_AFTER + 1)
+        state["fail"] = False
+        tds.fetch("https://dead.gov/x", self.cfg)
+        self.assertEqual(tds._host_failures.get("dead.gov", 0), 0)
+
+
+class ANulledSourceIsNotABrokenOne(unittest.TestCase):
+    """A dead URL is worse than a null — the module's own rule, applied.
+
+    The 2026-09-07 live run proved the FEMA NFHL endpoint and both its
+    fallbacks 404, and that the layer autodetect could not list the service to
+    follow one by name. Left pointing at it, the run reports a network error
+    forever, which reads as transient and is not. Nulled, it reports "not
+    configured" and the check stays `unavailable` — a material flag on every
+    row, never a clean screen.
+    """
+
+    def test_the_check_reports_unavailable_rather_than_erroring(self):
+        cfg = td.load_config()
+        cfg["flood"] = dict(cfg["flood"], url=None, url_fallbacks=[])
+        record = tds.flood_check({"address": "1 Main St"}, None, cfg)
+        self.assertEqual(record["result"], td.UNAVAILABLE)
+        self.assertIn("not configured", record["source"] + record["detail"])
+
+    def test_and_an_unavailable_check_is_still_a_flag(self):
+        """The point of nulling is to stop lying, not to stop reporting."""
+        cfg = td.load_config()
+        cfg["flood"] = dict(cfg["flood"], url=None, url_fallbacks=[])
+        record = tds.flood_check({"address": "1 Main St"}, None, cfg)
+        self.assertNotEqual(record["result"], td.CLEAN)
+
+    def test_the_verifier_does_not_probe_a_null_and_crash(self):
+        """A verifier whose own probe is wrong is worse than none at all."""
+        cfg = td.load_config()
+        spec = dict(cfg["flood"], url=None, url_fallbacks=[])
+        entry = tds._verify_flood(spec, cfg)
+        self.assertTrue(entry["ok"])
+        self.assertIn("no NFHL endpoint configured", entry["detail"])
+        self.assertIn("unavailable", entry["detail"])
+        self.assertEqual(entry["url"], "")
+
+    def test_the_live_config_has_no_url_proven_dead(self):
+        """Removed on evidence, not on a guess. Re-adding needs a live check."""
+        cfg = td.load_config()
+        dead = {
+            "https://www.dallascounty.org/departments/county-clerk/official-records.php",
+            "https://www.tarrantcountytx.gov/en/county-clerk/deeds-and-records.html",
+        }
+        for name, spec in (cfg.get("lien_sources") or {}).items():
+            if not isinstance(spec, dict) or not spec.get("urls"):
+                continue
+            for county, urls in spec["urls"].items():
+                for url in (urls if isinstance(urls, list) else [urls]):
+                    self.assertNotIn(url, dead, f"{name}/{county} still lists a proven 404")
+
+
+class TheDiagnosisHasToSurviveTheTruncation(unittest.TestCase):
+    """Two runs reported a host unreachable without saying whether it exists.
+
+    A `requests` transport failure spends about 120 characters on
+    `HTTPSConnectionPool(host=..., port=443): Max retries exceeded with url: /`
+    before the one clause that says why. Any sensible cap keeps the boilerplate
+    and discards the diagnosis — and `NameResolutionError` (delete the URL) and
+    `ConnectionRefused` (keep it, retry later) call for opposite fixes.
+    """
+
+    def chained(self, inner):
+        try:
+            try:
+                raise inner
+            except type(inner):
+                raise RuntimeError(
+                    "HTTPSConnectionPool(host='clerk.example.gov', port=443): "
+                    "Max retries exceeded with url: / (Caused by ...)") from inner
+        except RuntimeError as outer:
+            return outer
+
+    def test_a_host_that_does_not_resolve_says_so(self):
+        exc = self.chained(OSError("[Errno -2] Name or service not known"))
+        self.assertIn("Name or service not known", tds._root_cause(exc))
+
+    def test_a_host_that_refuses_says_that_instead(self):
+        exc = self.chained(ConnectionRefusedError(111, "Connection refused"))
+        self.assertIn("Connection refused", tds._root_cause(exc))
+
+    def test_the_two_are_distinguishable(self):
+        """Which is the whole point — they call for opposite fixes."""
+        a = tds._root_cause(self.chained(OSError("[Errno -2] Name or service not known")))
+        b = tds._root_cause(self.chained(ConnectionRefusedError(111, "Connection refused")))
+        self.assertNotEqual(a, b)
+
+    def test_an_unchained_exception_is_reported_plainly(self):
+        self.assertEqual(tds._root_cause(TimeoutError("timed out")),
+                         "TimeoutError: timed out")
+
+    def test_a_self_referential_chain_does_not_loop_forever(self):
+        a = ValueError("a")
+        b = ValueError("b")
+        a.__cause__, b.__cause__ = b, a
+        self.assertIsInstance(tds._root_cause(a), str)
+
+    def test_the_cause_survives_a_realistic_length_cap(self):
+        """The reason the head-truncation lost it in the first place."""
+        exc = self.chained(OSError("[Errno -2] Name or service not known"))
+        self.assertIn("Name or service not known", tds._root_cause(exc)[:140])

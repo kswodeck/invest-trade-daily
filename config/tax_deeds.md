@@ -343,6 +343,144 @@ What is **not** worked around, because it should not be: the four
 stay `unavailable`, which is a material flag, which means Tier C. Setting
 `respect_robots_txt: false` to get around that is not a supported fix.
 
+### What the 2026-09-07 live run established
+
+The first run in four days, and the first with the auto-discovery work actually
+executing. Coverage went from 370 listings to **1,185**, candidates from 328 to
+**806**, and 598 of them now carry a value from the feed's own `value` field
+where the previous run had none at all. Dallas produced 796 listings having
+produced zero.
+
+What it proved dead, and what was therefore removed rather than guessed at:
+
+| Source | Evidence | Action |
+| --- | --- | --- |
+| `dallascounty.org/.../official-records.php` | HTTP 404 | removed |
+| `tarrantcountytx.gov/en/county-clerk/deeds-and-records.html` | HTTP 404 | removed |
+| FEMA NFHL `url` + both `url_fallbacks` | HTTP 404, and the layer autodetect could not list the service either | nulled |
+
+Nulling the flood source is the rule above applied, not a shrug: it now reports
+"not configured" and the check stays `unavailable` — a material flag on every
+row — instead of reporting a network error every run that reads as transient and
+is not. To restore it, find the current public NFHL MapServer, confirm it
+answers `?f=json` **in a browser**, and put the layer's `/query` URL back. Do not
+guess one; that is what put a dead URL there.
+
+**Three configured hostnames did not exist.** Resolving every host in this file
+by hand — DNS only, no fetching — found `dallasclerk.tylerhost.net`,
+`countyclerkrecords.tarrantcountytx.gov` and `ellis.tx.publicsearch.us` all
+answering `Name or service not known`, against controls that resolved fine. They
+were plausible guesses that never pointed anywhere. Removed.
+
+The Ellis one is the instructive case: **it had never been reported as a failure
+at all**, because its county's first host answers, and verification said only
+"1 of 2 host(s) reachable". A working host was masking a hostname that does not
+exist. Verification now names the ones that did not answer as `(unused)` lines
+even when another did, so the next phantom is visible the first time it is seen
+rather than on the day someone resolves every host by hand.
+
+Removing them settles six of the ten remaining lien failures: Dallas and Tarrant
+are left with only their `publicsearch.us` portal, so every candidate is a robots
+disallow, so they classify as **policy** rather than failure — which is what they
+always were, obscured by two hostnames that were never reachable in the first
+place. `resolve every configured host before adding it` is now the rule, and a
+test asserts none of these three comes back.
+
+Still failing, and legitimately so — do not paper over these:
+
+- **Ellis CAD** — connection reset, three attempts.
+- **Johnson county clerk** — HTTP 403 to every declared User-Agent. Left as a
+  failure rather than reclassified as policy: robots.txt is an explicit,
+  machine-readable statement and a 403 is not, so it could be a WAF rule,
+  geoblocking, or something an operator can actually resolve. Silencing it would
+  hide a real regression.
+
+**A joined 300-character detail is not a diagnosis.** A three-host county got
+about a hundred characters each, which truncated every error mid-sentence — in a
+module whose entire failure contract is "fails *with the URL*". Each host now
+gets its own line and its own budget.
+
+That was necessary and not sufficient. A `requests` transport failure reads
+`HTTPSConnectionPool(host=..., port=443): Max retries exceeded with url: /
+(Caused by NameResolutionError(...))` — roughly 120 characters of boilerplate
+before the one clause that says *why* — so **any** head-truncation keeps the
+noise and discards the finding. Two runs in a row reported these hosts
+unreachable without ever saying whether they exist. `_root_cause` now reports
+the innermost exception, because `Name or service not known` (delete the URL)
+and `Connection refused` (keep it, the host is real and not answering today)
+call for opposite fixes and the difference has to survive.
+
+### Not permitted is not broken
+
+The four `publicsearch.us` clerk portals disallow crawling in robots.txt. That
+is honoured, permanently, and `respect_robots_txt: false` is not a supported
+fix — so those checks report `unavailable` on every row, forever, which is a
+material flag and the reason nothing reaches Tier A.
+
+**Verification therefore does not count them as failures.** It used to, and the
+result was exit code 1 on every single run: the 2026-09-03 run screened 370
+listings and published 328 candidates, and still went red, because 9 of its 16
+"failed sources" were the clerk portals declining to be crawled. An alarm that
+can never be cleared is an alarm nobody reads, which costs you the one that
+matters.
+
+They appear under **Checks not permitted** in the summary instead — listed, never
+silent, and never as a working check. A refusal that is *mixed* with a real
+error (a 404 on one host, a disallow on another) is still a failure: something
+that should work does not. And a **county list** that is disallowed still fails
+loudly, because missing a whole county's inventory is invisible in the output —
+an empty tab reads exactly like "no sales this month", the failure this module
+exists to avoid. A lien check that could not run is on the row that names it.
+
+### A transport failure is retried before it is believed
+
+`fetch` used to give up on the first timeout or connection reset. So one blip
+failed a source for a whole run — on 2026-09-03 `taxsales.lgbs.com` served
+Tarrant's 363 rows and was reported broken for three *other* sources in the same
+run, each on a single `ConnectTimeout`.
+
+Meanwhile a 429 already got two retries. That is backwards: a 429 is the server
+telling you something, a timeout is no answer at all, and this module's whole
+rule is that you do not conclude anything from an unknown. `NETWORK_RETRIES`
+gives transport errors two more attempts with backoff, on the *same* User-Agent
+— a blip is not a refusal and must not spend the fallback agents the 403 path
+needs. The failure detail says how many attempts were made, so a genuine outage
+does not read like a blip.
+
+`HOST_DOWN_AFTER` is what keeps that from becoming a wall-clock hazard of its
+own. Enrichment calls an appraisal district once per property against a
+250-property budget, so a district that is simply *down* would cost three
+attempts and two backoffs each — the difference between noticing in a minute and
+running into the job's 45-minute timeout. After three consecutive failed calls a
+host is not blipping, and it stops being retried; the count is per call rather
+than per attempt (counting attempts would trip it inside the first fetch and
+there would be no retry at all), any success clears it, and it is per host, so
+one dead district does not stop the next from getting its retries.
+
+### A run that runs out of time still leaves a record
+
+The workflow caps the job at 45 minutes, and **a job killed by that cap runs no
+further steps** — so the snapshot is never committed and the step summary is
+never written. That is exactly the failure the exit codes below are designed to
+prevent: the record of what broke has to survive the failure, or the only trace
+is raw CI log.
+
+It happened on 2026-09-07. A run was cancelled at 45m21s and left nothing behind
+at all — no snapshot, no summary, no list of which source failed.
+
+So the screener keeps its own clock (`--deadline-minutes`, default 32) safely
+inside the job's. When it runs out it stops *enriching* rather than stopping:
+everything already fetched is still screened, ranked and written. A report that
+says "I ran out of time partway through Tarrant" is worth having; a job that
+vanishes at minute 45 is not.
+
+Enrichment is the right thing to cut because it is the only unbounded part —
+three requests per property at one per second. The summary says so under **This
+run ran out of time**, and it has to: rows past the cutoff carry `no_cad_match`
+because they were never looked up, *not* because the district said nothing, and
+those two must never be conflated. `0` disables the clock; keep any value well
+inside the workflow's `timeout-minutes`.
+
 ### Exit codes
 
 | Code | Meaning |

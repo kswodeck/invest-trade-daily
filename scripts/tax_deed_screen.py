@@ -25,6 +25,7 @@ import argparse
 import json
 import os
 import sys
+import time
 from datetime import date, datetime
 from pathlib import Path
 from typing import Any
@@ -78,18 +79,49 @@ def col_letter(index: int) -> str:
 # collection
 # --------------------------------------------------------------------------
 
+DEFAULT_DEADLINE_MINUTES = 32
+
+
+def enrichment_deadline(minutes: float | None) -> float | None:
+    """When to stop enriching, as a monotonic stamp.
+
+    The workflow caps the job at 45 minutes, and a job killed by that cap runs
+    *no further steps* — so the snapshot never gets committed and the step
+    summary is never written. That is precisely the failure this module already
+    went out of its way to prevent for exit codes 1 and 2: the record of what
+    broke has to survive the failure, or the only trace is raw CI log.
+
+    It happened on 2026-09-07. The run was cancelled at 45m21s and left nothing
+    behind at all — no snapshot, no summary, no list of which source failed.
+
+    So the screener keeps its own clock, comfortably inside the job's, and when
+    it runs out it stops enriching rather than stopping. Enrichment is the only
+    unbounded part: everything already fetched is still screened, still ranked
+    and still written. A report that says "I ran out of time after 180 of 370"
+    is worth having; a job that vanishes at minute 45 is not.
+    """
+    if minutes is None or minutes <= 0:
+        return None
+    return time.monotonic() + minutes * 60
+
+
 def collect(cfg: dict, today: date, sale_date: str, only: list[str] | None = None,
-            sources: Any = None) -> tuple[list[dict], list[dict]]:
+            sources: Any = None, deadline: float | None = None) -> tuple[list[dict], list[dict]]:
     """Fetch, enrich, check and screen every listing. Returns (results, sources).
 
     `sources` is injected so the pipeline can be exercised end to end without a
     network — which is how the dry-run test runs.
+
+    `deadline` is a `time.monotonic()` stamp after which enrichment stops. The
+    run then screens everything it has and writes its snapshot as normal. See
+    `enrichment_deadline` for why that is not optional.
     """
     if sources is None:
         import tax_deed_sources as sources  # lazy: needs requests
 
     results: list[dict] = []
     report: list[dict] = []
+    out_of_time = False
 
     for county in td.counties(cfg):
         if only and county["name"].lower() not in {o.lower() for o in only}:
@@ -118,7 +150,12 @@ def collect(cfg: dict, today: date, sale_date: str, only: list[str] | None = Non
         for listing in listings:
             cad = None
             checks: list[dict] = []
-            if id(listing) in enrich:
+            if deadline is not None and not out_of_time and time.monotonic() > deadline:
+                out_of_time = True
+                print(f"  ⏱ out of time — enriching no further. Everything already "
+                      f"fetched is still screened, and the snapshot is still written.",
+                      file=sys.stderr)
+            if id(listing) in enrich and not out_of_time:
                 try:
                     cad = sources.cad_record(county.get("cad", ""),
                                              listing.get("account", ""), cfg)
@@ -142,6 +179,12 @@ def collect(cfg: dict, today: date, sale_date: str, only: list[str] | None = Non
         for entry in source_report:
             entry["enriched"] = min(len(priced), budget)
             entry["not_enriched"] = skipped
+            if out_of_time:
+                # A partly-enriched county must never look like a fully screened
+                # one. Unenriched rows carry `no_cad_match`, which is a flag, so
+                # they are already ranked down — but the reader has to be told
+                # the run was cut short rather than the district being silent.
+                entry["deadline_reached"] = True
 
     order = td.county_order(cfg)
     # Prior offerings, from the snapshots already on disk. Nothing is fetched.
@@ -405,6 +448,29 @@ def summarize(cfg: dict, results: list[dict], statements: list[dict],
         out += ["", "### Sources that failed", "",
                 "County sites change format without notice. Each line names the URL to fix.", ""]
         out += [f"- 🔴 `{s['id']}` — {s.get('url')}\n  {s.get('detail')}" for s in broken]
+
+    # Listed separately and never as a failure. These are permanent, they are
+    # already reflected on every row as an unavailable check, and there is
+    # nothing to fix — so they belong in the record, not in the alarm.
+    truncated = [s for s in source_report if s.get("deadline_reached")]
+    if truncated:
+        counties = sorted({s.get("county") or s.get("id", "") for s in truncated})
+        out += ["", "### This run ran out of time", "",
+                f"Enrichment stopped early in: {', '.join(counties)}. Everything already "
+                "fetched was still screened and this snapshot is complete for what it "
+                "covers — but rows past that point carry `no_cad_match` because they were "
+                "never looked up, **not** because the appraisal district said nothing. "
+                "Re-run, or raise `--deadline-minutes` if the job timeout allows it."]
+
+    refused = [s for s in source_report if s.get("policy")]
+    if refused:
+        out += ["", "### Checks not permitted", "",
+                "These hosts disallow crawling in robots.txt. That is their policy and it is "
+                "honoured: the checks report **unavailable**, which is a material flag on "
+                "every row, which is why nothing here reaches Tier A. It is permanent, it is "
+                "not a config error, and `respect_robots_txt: false` is not a supported fix. "
+                "An unavailable check is never a clean one.", ""]
+        out += [f"- ⛔ `{s['id']}` — {s.get('detail')}" for s in refused]
     return out
 
 
@@ -425,6 +491,10 @@ def main(argv: list[str] | None = None, sources: Any = None) -> int:
     ap.add_argument("--no-verify", action="store_true",
                     help="skip the source structure check before ingesting")
     ap.add_argument("--config", type=Path, help="alternate config/tax_deeds.json")
+    ap.add_argument("--deadline-minutes", type=float, default=DEFAULT_DEADLINE_MINUTES,
+                    help=("stop enriching after this long and write the snapshot anyway; "
+                          "0 disables. Must stay inside the workflow's job timeout — a "
+                          "job killed by that cap writes nothing at all."))
     args = ap.parse_args(argv)
 
     cfg = td.load_config(args.config)
@@ -460,7 +530,8 @@ def main(argv: list[str] | None = None, sources: Any = None) -> int:
     results: list[dict] = []
     source_report: list[dict] = []
     if not every_list_failed:
-        results, source_report = collect(cfg, today, sale_date, args.county, sources)
+        results, source_report = collect(cfg, today, sale_date, args.county, sources,
+                                         enrichment_deadline(args.deadline_minutes))
     source_report = verification + source_report
 
     for status in statements:
