@@ -67,6 +67,7 @@ widen a gate for one run without a commit.
 | `TIER_B_MAX_MINOR_FLAGS` | 2 | more than this drops to Tier C |
 | `MAX_ENRICHMENTS` | 250 | CAD/geocode/flood lookups per county per run |
 | `PACKET_TIERS` | `A,B,C` | which tiers get a due-diligence packet |
+| `PACKET_DOCKETS` | `on_docket,over_the_counter,other_sale` | which docket states get one |
 
 ## §34.015 — fill this in
 
@@ -96,6 +97,33 @@ is checked against the *sale date* rather than against today:
   and worthless on the morning you bid is the failure mode the 30-day warning
   was never going to catch, because 30 days out from expiry is not 30 days out
   from the sale.
+
+## A packet is a file, not a verdict
+
+One live run wrote 572 packets — **541 of them for properties with no auction
+assigned**. Several hundred files a run, twice a week, for rows that are not on
+the sale being screened. `PACKET_DOCKETS` decides which docket states get one,
+and it is bounded to exactly that: whether a markdown checklist is written.
+
+**Having no sale date is never a reason to reject, rank down, or drop a row.** A
+row outside the set is screened, tiered, ranked, published to the sheet and
+recorded in the snapshot exactly as before, and the gate adds no flag of its
+own. The run prints what it withheld and says so in those words, because a
+packet that was not written must never be mistaken for a property that was
+turned down.
+
+The default is proof of the rule rather than an exception to it:
+`over_the_counter` **has no sale date and is kept**, because struck-off property
+is buyable from the county today — the most actionable category there is.
+Gating on "does it have a date" would have cut precisely the rows a buyer can
+act on soonest, which is why the gate reads the docket state instead.
+`other_sale` is kept for the same reason: a real, dated sale, just not this one.
+
+What it leaves out is `not_scheduled` — real inventory the county has not
+docketed — and `date_unknown`. Set
+`PACKET_DOCKETS=on_docket,over_the_counter,other_sale,not_scheduled,date_unknown`
+to put the whole pipeline back on disk. Against the 2026-09-07 run that is 265
+packets instead of 806, with all 806 rows still on the sheet and none rejected.
 
 ## Which sale a row is for
 

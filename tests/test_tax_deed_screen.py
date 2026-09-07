@@ -487,3 +487,155 @@ class ARunThatRunsOutOfTimeStillLeavesARecord(unittest.TestCase):
         self.assertIsNone(screen.enrichment_deadline(0))
         self.assertIsNone(screen.enrichment_deadline(None))
         self.assertIsNotNone(screen.enrichment_deadline(5))
+
+
+class APacketGateWithholdsAFileNotAProperty(unittest.TestCase):
+    """One run wrote 572 packets, 541 for properties with no auction assigned.
+
+    That is several hundred files a run, twice a week, for rows that are not on
+    the sale being screened. The gate is `PACKET_DOCKETS`, and it is bounded to
+    exactly one thing: whether a markdown checklist is written to disk.
+
+    Having no sale date is never a reason to reject, rank down, or drop a row —
+    and the default proves it, because `over_the_counter` has no sale date and
+    is *kept*: struck-off property is buyable from the county today, which makes
+    it the most actionable category there is. Keying this on "has a date" would
+    have cut precisely the rows a buyer can act on soonest.
+    """
+
+    def setUp(self):
+        # The listing/cad/checks fixtures live with the gate tests they were
+        # written for; reusing them keeps one definition of "a normal listing".
+        from test_tax_deeds import TODAY, cad, checks, codes, listing
+        self.fixtures = (TODAY, listing, cad, checks, codes)
+        self.tmp = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, self.tmp, True)
+        self._dir = td.PACKET_DIR
+        td.PACKET_DIR = self.tmp
+        self.addCleanup(lambda: setattr(td, "PACKET_DIR", self._dir))
+        self.cfg = td.load_config()
+        self.statements = td.statement_report(self.cfg, ["Dallas"], TODAY, SALE)
+
+    def screened(self, **listing_over):
+        today, listing, cad, checks, _ = self.fixtures
+        return td.screen(listing(**listing_over), cad(), checks(), self.cfg, today, SALE)
+
+    def flag_codes(self, result):
+        return self.fixtures[4](result["flags"])
+
+    def write(self, results, dockets=None):
+        cfg = self.cfg
+        if dockets is not None:
+            cfg = dict(cfg, thresholds=dict(cfg.get("thresholds") or {},
+                                            PACKET_DOCKETS=dockets))
+        return screen.write_packets(results, cfg, self.statements)
+
+    def test_an_on_docket_property_gets_a_packet(self):
+        written, _ = self.write([self.screened(sale_date=SALE)])
+        self.assertEqual(len(written), 1)
+
+    def test_a_struck_off_property_gets_one_too_despite_having_no_sale_date(self):
+        """The case that makes 'no date' the wrong thing to gate on."""
+        result = self.screened(sale_date=None, sale_type="struck_off")
+        self.assertEqual(result["docket"]["state"], td.OVER_THE_COUNTER)
+        written, withheld = self.write([result])
+        self.assertEqual(len(written), 1)
+        self.assertEqual(withheld, {})
+
+    def test_an_unscheduled_property_gets_no_file(self):
+        written, withheld = self.write(
+            [self.screened(sale_date=None, status="Available for Future Sale")])
+        self.assertEqual(written, [])
+        self.assertEqual(withheld, {td.NOT_SCHEDULED: 1})
+
+    def test_but_it_is_still_a_candidate(self):
+        """The whole point. Withholding a file is not a verdict."""
+        result = self.screened(sale_date=None, status="Available for Future Sale")
+        self.write([result])
+        self.assertEqual(result["status"], "candidate")
+        self.assertEqual(result["rejections"], [])
+        self.assertIsNotNone(result["tier"])
+
+    def test_and_still_appears_on_the_sheet(self):
+        off = self.screened(sale_date=None, status="Available for Future Sale")
+        on = self.screened(sale_date=SALE, account="22")
+        self.write([off, on])
+        values, spec = td.sheet_rows([off, on], self.cfg, self.fixtures[0], SALE,
+                                     self.statements)
+        self.assertEqual(len(spec["data_rows"]), 2)
+
+    def test_and_the_gate_adds_no_flag_of_its_own(self):
+        before = self.screened(sale_date=None, status="Available for Future Sale")
+        codes_before = self.flag_codes(before)
+        self.write([before])
+        self.assertEqual(self.flag_codes(before), codes_before)
+
+    def test_the_withheld_count_is_reported_rather_than_silent(self):
+        _, withheld = self.write(
+            [self.screened(sale_date=None, status="Available for Future Sale"),
+             self.screened(sale_date=None, status="Pending", account="23")])
+        self.assertEqual(sum(withheld.values()), 2)
+
+    def test_it_is_configurable_back_to_everything(self):
+        result = self.screened(sale_date=None, status="Available for Future Sale")
+        written, withheld = self.write(
+            [result], dockets="on_docket,over_the_counter,other_sale,"
+                              "not_scheduled,date_unknown")
+        self.assertEqual(len(written), 1)
+        self.assertEqual(withheld, {})
+
+    def test_the_tier_gate_still_applies_independently(self):
+        # The fixture screens to Tier A, so exclude A to make the tier miss.
+        cfg = dict(self.cfg, thresholds=dict(self.cfg.get("thresholds") or {},
+                                             PACKET_TIERS="B,C"))
+        result = self.screened(sale_date=SALE)
+        self.assertEqual(result["tier"], "A")
+        written, withheld = screen.write_packets([result], cfg, self.statements)
+        self.assertEqual(written, [])
+        self.assertEqual(withheld, {}, "a tier miss is not a docket withholding")
+
+    def test_a_whole_run_says_out_loud_what_it_withheld(self):
+        """Unit counts are not enough — the operator reads the console."""
+        class Unscheduled(FixtureSources):
+            def county_listings(self, county, cfg, sale_date):
+                rows, report = super().county_listings(county, cfg, sale_date)
+                for row in rows:
+                    row["sale_date"] = None
+                    row["status"] = "Available for Future Sale"
+                return rows, report
+
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out), contextlib.redirect_stderr(io.StringIO()):
+            screen.main(["--dry-run", "--no-verify", "--sale-date", SALE],
+                        sources=Unscheduled(None, None))
+        text = out.getvalue()
+        self.assertIn("no packet for", text)
+        self.assertIn("still screened", text)
+        self.assertIn("withholds a file, not a property", text)
+        self.assertIn("PACKET_DOCKETS", text)
+
+    def test_and_those_rows_are_still_published(self):
+        """The sentence above has to be true, not just printed."""
+        class Unscheduled(FixtureSources):
+            def county_listings(self, county, cfg, sale_date):
+                rows, report = super().county_listings(county, cfg, sale_date)
+                for row in rows:
+                    row["sale_date"] = None
+                    row["status"] = "Available for Future Sale"
+                return rows, report
+
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out), contextlib.redirect_stderr(io.StringIO()):
+            code = screen.main(["--dry-run", "--no-verify", "--sale-date", SALE],
+                               sources=Unscheduled(None, None))
+        self.assertEqual(code, 0)
+        self.assertIn("DRY RUN", out.getvalue())
+        self.assertNotIn("no listing survived the gates for this county",
+                         out.getvalue().split("DALLAS COUNTY")[-1][:200])
+
+    def test_the_default_keeps_every_state_that_has_somewhere_to_be(self):
+        keep = td.packet_dockets(self.cfg)
+        self.assertIn(td.ON_DOCKET, keep)
+        self.assertIn(td.OVER_THE_COUNTER, keep)
+        self.assertIn(td.OTHER_SALE, keep)
+        self.assertNotIn(td.NOT_SCHEDULED, keep)

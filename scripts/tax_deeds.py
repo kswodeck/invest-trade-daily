@@ -133,10 +133,11 @@ DEFAULT_THRESHOLDS: dict[str, Any] = {
     "TIER_A_MAX_MINOR_FLAGS": 1,
     "TIER_B_MAX_MINOR_FLAGS": 2,
     "PACKET_TIERS": "A,B,C",
+    "PACKET_DOCKETS": "on_docket,over_the_counter,other_sale",
 }
 
 BOOL_THRESHOLDS = {"REJECT_FLOOD_ZONE"}
-STRING_THRESHOLDS = {"PACKET_TIERS"}
+STRING_THRESHOLDS = {"PACKET_TIERS", "PACKET_DOCKETS"}
 
 
 # --------------------------------------------------------------------------
@@ -1420,6 +1421,35 @@ def packet_tiers(cfg: dict) -> set[str]:
     """
     raw = threshold(cfg, "PACKET_TIERS")
     return {part.strip().upper() for part in str(raw).split(",") if part.strip()}
+
+
+def packet_dockets(cfg: dict) -> set[str]:
+    """Which docket states get a packet written to disk.
+
+    A run writes a packet per candidate, and one live run wrote 572 of them —
+    541 for properties with no auction assigned. That is several hundred files
+    a run, twice a week, for properties that are not on the sale being screened.
+
+    **This withholds a file. It does not withhold a property.** A row outside
+    this set is screened, tiered, ranked, published to the sheet and recorded in
+    the snapshot exactly as before; the only thing it does not get is a markdown
+    checklist for a sale it has no date at. Nothing here rejects anything, and
+    nothing here may ever be read as a finding about a property.
+
+    Note what the default keeps. `over_the_counter` has no sale date either and
+    is the *most* actionable category there is — struck-off property is buyable
+    from the county today, not at an auction. So the gate is the docket state
+    and never "does it have a date", which would have cut precisely the rows a
+    buyer can act on soonest. `other_sale` is kept for the same reason: it is a
+    real, dated sale, just not this one.
+
+    What it leaves out is `not_scheduled` — real inventory the county has not
+    docketed — and `date_unknown`. Add them back with
+    `PACKET_DOCKETS=on_docket,over_the_counter,other_sale,not_scheduled,date_unknown`
+    when you want the whole pipeline on disk.
+    """
+    raw = threshold(cfg, "PACKET_DOCKETS")
+    return {part.strip().lower() for part in str(raw).split(",") if part.strip()}
 
 
 def packet_path(result: dict) -> Path:
