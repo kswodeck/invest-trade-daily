@@ -318,6 +318,22 @@ index on more than one system. `PACKET_TIERS` defaults to `A,B,C` because `A,B`
 wrote no packets at all while every property carries an unscreened lien check —
 a default that produces nothing is broken, not conservative.
 
+**Not permitted is not broken, and no answer is not an answer.** Two ways the
+verifier called things failures that were not, both of which made a working run
+red. The clerk portals disallow crawling by policy — permanently, with no config
+that fixes it — so `verify` reports them `policy` rather than failed and the
+summary lists them under "Checks not permitted"; they still report `unavailable`
+on every row, which is the material flag keeping everything at Tier C, so nothing
+reads as clean. Nine of the 2026-09-03 run's sixteen "failures" were exactly this,
+on a run that screened 370 listings and published 328 candidates. A *mixed*
+refusal still fails, and a disallowed county *list* still fails loudly, because
+missing a county's inventory is invisible where a missing lien check is on the
+row. Separately, `fetch` broke out on the first transport error, so one blip
+failed a source for the whole run — `taxsales.lgbs.com` served Tarrant's 363 rows
+and was called broken for three other sources in that same run. A 429 already got
+two retries; the timeout, which is the actual unknown, got none. `NETWORK_RETRIES`
+fixes that, on the same UA, and the detail says how many attempts it took.
+
 Exit codes carry meaning: 0 clean, 1 published with a broken source, 2 every
 county list failed so nothing was screened and the Sheet was left alone,
 anything else a crash. 1 and 2 both write the snapshot and the step summary

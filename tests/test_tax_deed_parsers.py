@@ -1549,13 +1549,52 @@ class VerifyExercisesTheSameAccessorTheChecksDo(unittest.TestCase):
         self.assertIn("host(s) reachable", dallas["detail"])
         self.assertNotIn("publicsearch.us", dallas["url"])
 
-    def test_every_host_refusing_is_reported_as_a_failure(self):
+    def test_every_host_disallowing_is_policy_not_failure(self):
+        """A robots.txt disallow is a determination, and a permanent one.
+
+        Counting it as a failure turned the workflow red on every run forever
+        — including runs that screened and published perfectly — because the
+        four clerk portals disallow crawling by policy and always will. An
+        alarm that can never be cleared stops being read.
+        """
         tds.fetch = lambda url, cfg, **kw: (_ for _ in ()).throw(
             tds.RobotsDisallowed(url, "robots.txt disallows this path"))
         rows = tds.verify(self.cfg)
         dallas = next(r for r in rows if r["id"] == "federal_tax_lien/Dallas")
-        self.assertFalse(dallas["ok"])
-        self.assertIn("robots.txt", dallas["detail"])
+        self.assertTrue(dallas["ok"])
+        self.assertTrue(dallas["policy"])
+
+    def test_but_it_is_never_reported_as_a_working_check(self):
+        """Not a failure is not the same as fine. It must still say so."""
+        tds.fetch = lambda url, cfg, **kw: (_ for _ in ()).throw(
+            tds.RobotsDisallowed(url, "robots.txt disallows this path"))
+        rows = tds.verify(self.cfg)
+        dallas = next(r for r in rows if r["id"] == "federal_tax_lien/Dallas")
+        self.assertIn("not permitted", dallas["detail"])
+        self.assertIn("unavailable", dallas["detail"])
+        self.assertNotIn("reachable", dallas["detail"])
+
+    def test_a_host_that_is_merely_broken_still_fails(self):
+        """Only *policy* is exempt. A 404 among the refusals is a real break."""
+        def broken(url, cfg, **kw):
+            if "publicsearch.us" in url:
+                raise tds.RobotsDisallowed(url, "robots.txt disallows this path")
+            raise tds.SourceError(url, "HTTP 404: this URL does not exist")
+
+        tds.fetch = broken
+        rows = tds.verify(self.cfg)
+        for row in rows:
+            if row["kind"].startswith("lien:") and not row["ok"]:
+                self.assertIn("404", row["detail"])
+                break
+        else:
+            self.fail("a genuinely broken host was not reported as a failure")
+
+    def test_policy_refusals_do_not_make_the_run_fail(self):
+        """The exit code is what the workflow reads, so assert on it."""
+        entries = [{"id": "a", "ok": True, "policy": True},
+                   {"id": "b", "ok": True}]
+        self.assertEqual([e for e in entries if not e.get("ok")], [])
 
 
 
@@ -1608,3 +1647,85 @@ class ThePerUrlFilterReachesTheServerSideNarrowing(unittest.TestCase):
         _, report = tds.county_listings(county, self.cfg, "2026-10-06")
         self.assertIn("fetched 4, kept 4", report[0]["detail"])
 
+
+
+class ATransportFailureIsRetriedBeforeItIsBelieved(unittest.TestCase):
+    """No answer is an unknown, and unknowns get retried before they count.
+
+    `fetch` used to break out of its loop on the first transport exception, so
+    one blip failed a source for the whole run. On 2026-09-03 taxsales.lgbs.com
+    served Tarrant's 363 rows and was simultaneously reported broken for three
+    other sources, each on a single ConnectTimeout. Meanwhile a 429 — the
+    server actually telling us something — already got two retries. The unknown
+    was the one case given none.
+    """
+
+    def setUp(self):
+        self.real_session, self.real_robots = tds._session, tds.robots_allows
+        self.real_throttle, self.real_sleep = tds._throttle, tds.time.sleep
+        tds.robots_allows = lambda url, cfg: (True, "ok")
+        tds._throttle = lambda url, cfg: None
+        tds.time.sleep = lambda s: None
+        self.cfg = {"contact_email": "screener@example.org"}
+        self.calls = []
+
+    def tearDown(self):
+        tds._session, tds.robots_allows = self.real_session, self.real_robots
+        tds._throttle, tds.time.sleep = self.real_throttle, self.real_sleep
+
+    def install(self, fail_times, exc=None):
+        outer = self
+
+        class Resp:
+            status_code = 200
+            text = "<html>recovered</html>"
+
+        class Fake:
+            def get(self, url, **kw):
+                outer.calls.append(kw.get("headers", {}).get("User-Agent"))
+                if len(outer.calls) <= fail_times:
+                    raise (exc or ConnectionResetError(104, "reset by peer"))
+                return Resp()
+
+        tds._session = Fake()
+
+    def test_a_single_blip_no_longer_fails_the_source(self):
+        self.install(fail_times=1)
+        self.assertIn("recovered", tds.fetch("https://a.gov/x", self.cfg))
+
+    def test_it_keeps_trying_up_to_the_bound(self):
+        self.install(fail_times=tds.NETWORK_RETRIES)
+        self.assertIn("recovered", tds.fetch("https://a.gov/x", self.cfg))
+        self.assertEqual(len(self.calls), tds.NETWORK_RETRIES + 1)
+
+    def test_but_a_host_that_is_really_down_is_still_reported_down(self):
+        self.install(fail_times=99)
+        with self.assertRaises(tds.SourceError) as caught:
+            tds.fetch("https://down.gov/x", self.cfg)
+        self.assertIn("attempt(s)", caught.exception.detail)
+        self.assertEqual(len(self.calls), tds.NETWORK_RETRIES + 1)
+
+    def test_the_detail_says_how_many_attempts_it_took(self):
+        """An outage reported as one failed request reads like a blip."""
+        self.install(fail_times=99)
+        with self.assertRaises(tds.SourceError) as caught:
+            tds.fetch("https://down.gov/x", self.cfg)
+        self.assertIn(f"{tds.NETWORK_RETRIES + 1} attempt(s)", caught.exception.detail)
+
+    def test_a_retry_does_not_burn_a_user_agent(self):
+        """A timeout is not a refusal, so it must not walk the UA list.
+
+        Walking it would spend the fallback agents on a network blip and leave
+        none for the 403 they exist for.
+        """
+        self.install(fail_times=2)
+        tds.fetch("https://a.gov/x", self.cfg)
+        self.assertEqual(len(set(self.calls)), 1, f"UA changed across retries: {self.calls}")
+
+    def test_a_robots_disallow_is_never_retried(self):
+        """It is a determination. Retrying it would be asking again after no."""
+        tds.robots_allows = lambda url, cfg: (False, "robots.txt disallows this path")
+        self.install(fail_times=0)
+        with self.assertRaises(tds.RobotsDisallowed):
+            tds.fetch("https://nope.gov/x", self.cfg)
+        self.assertEqual(self.calls, [])

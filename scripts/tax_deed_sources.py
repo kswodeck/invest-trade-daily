@@ -81,6 +81,10 @@ _last_request: dict[str, float] = {}
 _host_interval: dict[str, float] = {}
 MAX_HOST_INTERVAL = 8.0
 RATE_LIMIT_RETRIES = 2
+# Transport failures — no HTTP answer at all. Retried because a blip is an
+# unknown, and bounded because a host that is genuinely down should be reported
+# as down inside the run's time budget rather than retried into the timeout.
+NETWORK_RETRIES = 2
 _robots: dict[str, Any] = {}
 
 # Sentinel: robots.txt gave no answer at all, as distinct from answering
@@ -259,6 +263,7 @@ def fetch(url: str, cfg: dict, *, params: dict | None = None) -> str:
     host = urllib.parse.urlsplit(url).netloc
     last: Exception | None = None
     backoffs = 0
+    attempts = 0
     index = -1
     while True:
         index = min(index + 1, len(agents) - 1)
@@ -270,7 +275,23 @@ def fetch(url: str, cfg: dict, *, params: dict | None = None) -> str:
         except SourceError:
             raise
         except Exception as exc:  # noqa: BLE001
+            # No answer at all — a timeout, a reset, a DNS blip. That is an
+            # unknown, not a determination, and this module's whole rule is
+            # that you do not conclude anything from an unknown you have not
+            # retried. It used to `break` on the first one, so a single blip
+            # failed a source for the entire run: on 2026-09-03 taxsales.lgbs
+            # served Tarrant's 363 rows and was reported broken for three other
+            # sources in the same run, each on one ConnectTimeout. A 429 —
+            # which is the server actually telling us something — already got
+            # two retries, so the unknown was the one case given none.
             last = SourceError(url, f"{type(exc).__name__}: {exc}")
+            if attempts < NETWORK_RETRIES:
+                attempts += 1
+                time.sleep(min(2 ** attempts, MAX_HOST_INTERVAL))
+                index -= 1          # same UA: this was not a refusal
+                continue
+            last = SourceError(url, (
+                f"{type(exc).__name__} after {attempts + 1} attempt(s): {exc}"))
             break
         if resp.status_code in (401, 403) and index + 1 < len(agents):
             continue
@@ -2044,11 +2065,13 @@ def verify(cfg: dict) -> list[dict]:
                 out.append(entry)
                 continue
 
-            reachable, refusals = [], []
+            reachable, refusals, disallowed = [], [], []
             for url in candidates:
                 try:
                     fetch(url, cfg)
                     reachable.append(url)
+                except RobotsDisallowed as exc:
+                    disallowed.append(f"{url}: {exc.detail[:90]}")
                 except SourceError as exc:
                     refusals.append(f"{url}: {exc.detail[:90]}")
             if reachable:
@@ -2056,8 +2079,26 @@ def verify(cfg: dict) -> list[dict]:
                     f"{len(reachable)} of {len(candidates)} host(s) reachable"
                     + ("" if spec.get("query_url") else
                        " — but no query_url configured, so this check reports unavailable")))
+            elif disallowed and not refusals:
+                # Every host told us not to crawl. That is a *determination*,
+                # not a breakage: it is permanent, it is already handled, and
+                # there is no config change that fixes it — `respect_robots_txt:
+                # false` is not a supported answer. The check still reports
+                # `unavailable`, which is a material flag that puts the property
+                # in Tier C, so nothing is hidden and nothing reads as clean.
+                #
+                # Reported ok for the same reason a deliberately unconfigured
+                # source is: the run is not failing. Counting it as a failure
+                # made the workflow red on every run forever, including runs
+                # that screened and published perfectly — and an alarm that
+                # cannot ever be cleared is an alarm that stops being read.
+                entry.update(ok=True, policy=True, detail=(
+                    f"not permitted by robots.txt on all {len(candidates)} host(s) — "
+                    f"this check reports unavailable, which is a flag, on every row. "
+                    f"Permanent and not a config error. " + "; ".join(disallowed)[:200]))
             else:
-                entry.update(ok=False, detail="; ".join(refusals)[:300])
+                entry.update(ok=False,
+                             detail="; ".join(refusals + disallowed)[:300])
             out.append(entry)
 
     out.extend(_verify_enrichment(cfg))

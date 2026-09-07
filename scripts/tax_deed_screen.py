@@ -405,6 +405,19 @@ def summarize(cfg: dict, results: list[dict], statements: list[dict],
         out += ["", "### Sources that failed", "",
                 "County sites change format without notice. Each line names the URL to fix.", ""]
         out += [f"- 🔴 `{s['id']}` — {s.get('url')}\n  {s.get('detail')}" for s in broken]
+
+    # Listed separately and never as a failure. These are permanent, they are
+    # already reflected on every row as an unavailable check, and there is
+    # nothing to fix — so they belong in the record, not in the alarm.
+    refused = [s for s in source_report if s.get("policy")]
+    if refused:
+        out += ["", "### Checks not permitted", "",
+                "These hosts disallow crawling in robots.txt. That is their policy and it is "
+                "honoured: the checks report **unavailable**, which is a material flag on "
+                "every row, which is why nothing here reaches Tier A. It is permanent, it is "
+                "not a config error, and `respect_robots_txt: false` is not a supported fix. "
+                "An unavailable check is never a clean one.", ""]
+        out += [f"- ⛔ `{s['id']}` — {s.get('detail')}" for s in refused]
     return out
 
 

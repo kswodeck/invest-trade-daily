@@ -372,3 +372,58 @@ class EveryListFailed(unittest.TestCase):
         self.assertIn("no sales this month", output)
         self.assertIn("Sources that failed", output)
 
+
+
+class ARobotsDisallowIsPolicyNotBreakage(unittest.TestCase):
+    """The four clerk portals disallow crawling and always will.
+
+    Counting that as a source failure returned exit code 1 on every run —
+    including the run that screened 370 listings and published 328 candidates.
+    A workflow that is red whether or not anything is wrong tells you nothing,
+    and the first thing you learn from it is to stop looking.
+    """
+
+    def summary(self, report):
+        cfg = td.load_config()
+        statements = td.statement_report(cfg, ["Dallas"], date(2026, 9, 7), SALE)
+        return "\n".join(screen.summarize(cfg, [], statements, report, SALE,
+                                          date(2026, 9, 7)))
+
+    def policy_entry(self, **over):
+        entry = {"kind": "lien: federal_tax_lien", "id": "federal_tax_lien/Dallas",
+                 "url": "https://dallas.tx.publicsearch.us/", "ok": True, "policy": True,
+                 "detail": "not permitted by robots.txt on all 2 host(s) — this check "
+                           "reports unavailable, which is a flag, on every row."}
+        entry.update(over)
+        return entry
+
+    def test_it_is_not_listed_among_the_failures(self):
+        text = self.summary([self.policy_entry()])
+        self.assertNotIn("Sources that failed", text)
+
+    def test_but_it_is_listed(self):
+        """Silence would read as 'the lien check ran and found nothing'."""
+        text = self.summary([self.policy_entry()])
+        self.assertIn("Checks not permitted", text)
+        self.assertIn("federal_tax_lien/Dallas", text)
+
+    def test_and_says_the_rows_carry_a_flag_for_it(self):
+        text = self.summary([self.policy_entry()])
+        self.assertIn("unavailable", text)
+        self.assertIn("Tier A", text)
+
+    def test_and_says_disabling_robots_is_not_the_fix(self):
+        text = self.summary([self.policy_entry()])
+        self.assertIn("respect_robots_txt", text)
+
+    def test_a_real_failure_alongside_it_still_gets_its_own_section(self):
+        broken = {"kind": "county list", "id": "dallas_auction", "ok": False,
+                  "url": "https://dallas.example.invalid/", "detail": "HTTP 404"}
+        text = self.summary([self.policy_entry(), broken])
+        self.assertIn("Sources that failed", text)
+        self.assertIn("dallas_auction", text)
+        self.assertIn("Checks not permitted", text)
+
+    def test_the_exit_code_ignores_policy_entries(self):
+        report = [self.policy_entry(), {"id": "ok_one", "ok": True}]
+        self.assertEqual([s for s in report if not s.get("ok")], [])

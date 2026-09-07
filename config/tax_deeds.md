@@ -343,6 +343,43 @@ What is **not** worked around, because it should not be: the four
 stay `unavailable`, which is a material flag, which means Tier C. Setting
 `respect_robots_txt: false` to get around that is not a supported fix.
 
+### Not permitted is not broken
+
+The four `publicsearch.us` clerk portals disallow crawling in robots.txt. That
+is honoured, permanently, and `respect_robots_txt: false` is not a supported
+fix — so those checks report `unavailable` on every row, forever, which is a
+material flag and the reason nothing reaches Tier A.
+
+**Verification therefore does not count them as failures.** It used to, and the
+result was exit code 1 on every single run: the 2026-09-03 run screened 370
+listings and published 328 candidates, and still went red, because 9 of its 16
+"failed sources" were the clerk portals declining to be crawled. An alarm that
+can never be cleared is an alarm nobody reads, which costs you the one that
+matters.
+
+They appear under **Checks not permitted** in the summary instead — listed, never
+silent, and never as a working check. A refusal that is *mixed* with a real
+error (a 404 on one host, a disallow on another) is still a failure: something
+that should work does not. And a **county list** that is disallowed still fails
+loudly, because missing a whole county's inventory is invisible in the output —
+an empty tab reads exactly like "no sales this month", the failure this module
+exists to avoid. A lien check that could not run is on the row that names it.
+
+### A transport failure is retried before it is believed
+
+`fetch` used to give up on the first timeout or connection reset. So one blip
+failed a source for a whole run — on 2026-09-03 `taxsales.lgbs.com` served
+Tarrant's 363 rows and was reported broken for three *other* sources in the same
+run, each on a single `ConnectTimeout`.
+
+Meanwhile a 429 already got two retries. That is backwards: a 429 is the server
+telling you something, a timeout is no answer at all, and this module's whole
+rule is that you do not conclude anything from an unknown. `NETWORK_RETRIES`
+gives transport errors two more attempts with backoff, on the *same* User-Agent
+— a blip is not a refusal and must not spend the fallback agents the 403 path
+needs. The failure detail says how many attempts were made, so a genuine outage
+does not read like a blip.
+
 ### Exit codes
 
 | Code | Meaning |
