@@ -427,3 +427,63 @@ class ARobotsDisallowIsPolicyNotBreakage(unittest.TestCase):
     def test_the_exit_code_ignores_policy_entries(self):
         report = [self.policy_entry(), {"id": "ok_one", "ok": True}]
         self.assertEqual([s for s in report if not s.get("ok")], [])
+
+
+class ARunThatRunsOutOfTimeStillLeavesARecord(unittest.TestCase):
+    """A job killed by the workflow's timeout runs no further steps.
+
+    So the snapshot is never committed and the step summary is never written —
+    exactly the failure this module goes out of its way to prevent for exit
+    codes 1 and 2, where the record of what broke has to survive the failure.
+    On 2026-09-07 a run was cancelled at 45m21s and left nothing behind at all.
+
+    Enrichment is the only unbounded part, so it is what gets cut. Everything
+    already fetched is still screened, ranked and written.
+    """
+
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, self.tmp, True)
+
+    def run_with(self, *extra):
+        sources = FixtureSources(None, None)
+        out, err = io.StringIO(), io.StringIO()
+        with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+            code = screen.main(["--dry-run", "--no-verify", "--no-files",
+                                "--sale-date", SALE, *extra], sources=sources)
+        return code, out.getvalue(), err.getvalue()
+
+    def test_the_run_still_succeeds_and_still_reports(self):
+        code, out, _ = self.run_with("--deadline-minutes", "0.0000001")
+        self.assertEqual(code, 0)
+        self.assertIn("DRY RUN", out)
+
+    def test_it_says_it_ran_out_of_time(self):
+        """Silence here would read as 'the appraisal district had nothing'."""
+        _, _, err = self.run_with("--deadline-minutes", "0.0000001")
+        self.assertIn("out of time", err)
+
+    def test_the_summary_says_the_rows_were_never_looked_up(self):
+        _, out, _ = self.run_with("--deadline-minutes", "0.0000001")
+        self.assertIn("ran out of time", out)
+        self.assertIn("never looked up", out)
+
+    def test_zero_disables_it(self):
+        _, out, err = self.run_with("--deadline-minutes", "0")
+        self.assertNotIn("out of time", err)
+        self.assertNotIn("ran out of time", out)
+
+    def test_a_generous_deadline_does_not_fire(self):
+        _, out, err = self.run_with("--deadline-minutes", "60")
+        self.assertNotIn("out of time", err)
+        self.assertNotIn("ran out of time", out)
+
+    def test_the_default_stays_inside_the_workflow_timeout(self):
+        """45 minutes is the job cap. The screener's own clock must beat it."""
+        self.assertLess(screen.DEFAULT_DEADLINE_MINUTES, 45)
+        self.assertGreater(screen.DEFAULT_DEADLINE_MINUTES, 20)
+
+    def test_the_deadline_helper_returns_none_when_disabled(self):
+        self.assertIsNone(screen.enrichment_deadline(0))
+        self.assertIsNone(screen.enrichment_deadline(None))
+        self.assertIsNotNone(screen.enrichment_deadline(5))

@@ -338,6 +338,17 @@ a CAD once per property: three attempts each against a down district on a
 250-property budget is how a fix becomes a 45-minute timeout. Counted per call,
 not per attempt, and cleared by any success.
 
+**A job killed by the workflow's 45-minute cap runs no further steps**, so it
+commits no snapshot and writes no summary — the exact failure the exit codes
+below exist to prevent. That happened on 2026-09-07: cancelled at 45m21s, and
+nothing at all left behind. The screener now keeps its own clock inside the
+job's (`--deadline-minutes`, default 32) and, when it runs out, stops *enriching*
+rather than stopping — enrichment being the only unbounded part, at three
+requests per property. Everything already fetched is still screened and written,
+and the summary says the run was cut short, because a row past the cutoff carries
+`no_cad_match` for having never been looked up rather than for the district
+saying nothing, and those are not the same fact.
+
 Exit codes carry meaning: 0 clean, 1 published with a broken source, 2 every
 county list failed so nothing was screened and the Sheet was left alone,
 anything else a crash. 1 and 2 both write the snapshot and the step summary

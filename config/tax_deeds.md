@@ -390,6 +390,30 @@ than per attempt (counting attempts would trip it inside the first fetch and
 there would be no retry at all), any success clears it, and it is per host, so
 one dead district does not stop the next from getting its retries.
 
+### A run that runs out of time still leaves a record
+
+The workflow caps the job at 45 minutes, and **a job killed by that cap runs no
+further steps** — so the snapshot is never committed and the step summary is
+never written. That is exactly the failure the exit codes below are designed to
+prevent: the record of what broke has to survive the failure, or the only trace
+is raw CI log.
+
+It happened on 2026-09-07. A run was cancelled at 45m21s and left nothing behind
+at all — no snapshot, no summary, no list of which source failed.
+
+So the screener keeps its own clock (`--deadline-minutes`, default 32) safely
+inside the job's. When it runs out it stops *enriching* rather than stopping:
+everything already fetched is still screened, ranked and written. A report that
+says "I ran out of time partway through Tarrant" is worth having; a job that
+vanishes at minute 45 is not.
+
+Enrichment is the right thing to cut because it is the only unbounded part —
+three requests per property at one per second. The summary says so under **This
+run ran out of time**, and it has to: rows past the cutoff carry `no_cad_match`
+because they were never looked up, *not* because the district said nothing, and
+those two must never be conflated. `0` disables the clock; keep any value well
+inside the workflow's `timeout-minutes`.
+
 ### Exit codes
 
 | Code | Meaning |
