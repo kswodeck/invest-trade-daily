@@ -510,9 +510,15 @@ class APacketGateWithholdsAFileNotAProperty(unittest.TestCase):
         self.fixtures = (TODAY, listing, cad, checks, codes)
         self.tmp = Path(tempfile.mkdtemp())
         self.addCleanup(shutil.rmtree, self.tmp, True)
-        self._dir = td.PACKET_DIR
-        td.PACKET_DIR = self.tmp
-        self.addCleanup(lambda: setattr(td, "PACKET_DIR", self._dir))
+        # Both directories, like every other class here. Patching only
+        # PACKET_DIR let the two `screen.main` tests below write a fixture
+        # snapshot straight into the repo's `data/tax_deeds/`, where a later
+        # `git add -A` committed 12 fixture rows over a 1,185-listing run
+        # record. Snapshots are the run history `offer_history` reads.
+        self._saved = (td.SNAPSHOT_DIR, td.PACKET_DIR)
+        td.SNAPSHOT_DIR, td.PACKET_DIR = self.tmp / "data", self.tmp / "reports"
+        self.addCleanup(lambda: setattr(td, "SNAPSHOT_DIR", self._saved[0]))
+        self.addCleanup(lambda: setattr(td, "PACKET_DIR", self._saved[1]))
         self.cfg = td.load_config()
         self.statements = td.statement_report(self.cfg, ["Dallas"], TODAY, SALE)
 
@@ -613,6 +619,12 @@ class APacketGateWithholdsAFileNotAProperty(unittest.TestCase):
         self.assertIn("still screened", text)
         self.assertIn("withholds a file, not a property", text)
         self.assertIn("PACKET_DOCKETS", text)
+        # A test that screens for real must not write into the repo. This one
+        # did, once, and a `git add -A` committed fixture rows over a live run.
+        self.assertTrue(list((self.tmp / "data").glob("*.json")),
+                        "the snapshot did not land in the temp directory")
+        self.assertNotEqual(td.SNAPSHOT_DIR, self._saved[0],
+                            "the real snapshot directory was still in play")
 
     def test_and_those_rows_are_still_published(self):
         """The sentence above has to be true, not just printed."""
