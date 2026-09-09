@@ -1,0 +1,525 @@
+{
+  "date": "2026-09-09",
+  "generated_at_et": "2026-09-09T06:30:48-04:00",
+  "truncated": false,
+  "market_context": {
+    "regime": "mixed",
+    "summary": "An oil supply shock is the tape, and it is a rotation rather than a broad risk-off. The Dow fell about 600 points to 52,786 on 2026-09-08 with the S&P at 7,673.52, but energy, power and technology were the biggest gainers while healthcare and financials led the declines (USO +2.87%, XLE +1.11%, XLU +0.86%, XLK +0.32% against XLV -2.52%, XLF -1.38%, KRE -1.28%, SPY -0.55%). WTI settled 94.24 (+3.01% d/d) and Brent traded near 99 intraday on renewed US-Iran fighting including attacks on Saudi energy facilities, with EIA STEO now expecting Middle East shut-in output to recover only in early 2027. The healthcare leg is idiosyncratic: Novartis fell about 12% on a Phase 3 del-desiran failure and dragged AMGN, DYN and SRPT with it. Gold sold alongside equities (GLD -1.7%), which with the 10-year at 4.78 is a rates story rather than a risk story, and the Fed is now priced to tighten \u2014 the Kalshi 2026-09-16 ladder is 54/55 for a 25bp hike against 44/46 for a hold, corroborated by a 2-year at 4.37% sitting 74bp above effective fed funds of 3.63%. Crypto is flat and uninvolved (BTC 78,974, ETH 2,490, SOL 103.57).",
+    "levels": {
+      "spx": "7673.52 (2026-09-08 close, from a news source \u2014 index quote fetches all failed)",
+      "ndx": "26421.41 (2026-09-08 close, same caveat)",
+      "dji": "52786.07 (2026-09-08 close, same caveat)",
+      "spy": 765.96,
+      "us10y": 4.78,
+      "us2y": 4.37,
+      "us10y_2y": 0.41,
+      "fed_funds_effective": 3.63,
+      "unemployment": 4.1,
+      "wti": 94.24,
+      "brent": "~98-99 intraday 2026-09-08",
+      "gold_gld": 399.72,
+      "btc": 78974,
+      "vix": null,
+      "dxy": null
+    },
+    "econ_calendar": [
+      {
+        "event": "Adobe Q3 FY2026 earnings (after close)",
+        "datetime_et": "2026-09-10T16:05",
+        "importance": "high",
+        "consensus": "EPS est 6.09-6.20 against company guidance of 6.05-6.10; options priced for an ~8.07% move (third-party preview, not computed here)"
+      },
+      {
+        "event": "Oracle Q1 FY2027 earnings (after close)",
+        "datetime_et": "2026-09-10T16:05",
+        "importance": "high",
+        "consensus": "EPS est 1.7766, revenue est $19.53B; ~11% move priced (third-party preview)"
+      },
+      {
+        "event": "August CPI release",
+        "datetime_et": "2026-09-11T08:30",
+        "importance": "high",
+        "consensus": "Kalshi KXCPI-26AUG puts Above 0.3% MoM at 51/57, so ~0.3% is the consensus; KXCPIYOY-26AUG Above 2.9% trades at 99 cents"
+      },
+      {
+        "event": "FOMC decision",
+        "datetime_et": "2026-09-16T14:00",
+        "importance": "high",
+        "consensus": "Kalshi: 25bp hike 54/55, hold 44/46, cut 0/1"
+      },
+      {
+        "event": "FedEx Q1 FY2027 earnings",
+        "datetime_et": "2026-09-16T16:05",
+        "importance": "medium",
+        "consensus": "EPS est 4.0486"
+      },
+      {
+        "event": "Lennar Q3 earnings (after close)",
+        "datetime_et": "2026-09-16T16:05",
+        "importance": "medium",
+        "consensus": "EPS est 1.3147 \u2014 the housing read-across behind the BCC close"
+      },
+      {
+        "event": "September CPI release",
+        "datetime_et": "2026-10-14T08:30",
+        "importance": "high",
+        "consensus": "the first print carrying the September gasoline pass-through; KXCPI-26SEP is quoted but not tradeable (OI 500-1,900, spreads 20-48c)"
+      },
+      {
+        "event": "FOMC decision",
+        "datetime_et": "2026-10-28T14:00",
+        "importance": "high",
+        "consensus": "Kalshi: hold 68/69, 25bp hike 27/28 \u2014 the market prices one-and-done"
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "rank": 1,
+      "instrument": "Adobe Inc",
+      "symbol": "ADBE",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "long_term",
+      "conviction": 3,
+      "last_price": 257.26,
+      "last_price_asof": "2026-09-08T16:00:00-04:00",
+      "price_source": "finnhub (2026-09-08 regular-session close; market session `pre` at fetch, age ~867 min)",
+      "entry": {
+        "ideal": 228.0,
+        "zone_low": 205.0,
+        "zone_high": 240.0,
+        "order_type": "limit",
+        "condition": "only after the 2026-09-10 after-close print has been seen \u2014 do not buy ahead of it. Then accumulate in thirds: first tranche below 240, second below 228, third below 215."
+      },
+      "exit": {
+        "target": 340.0,
+        "target_2": 375.0,
+        "scale_plan": "no trim before the multiple re-rates; the 340 target is 13.6x forward EPS of ~$25 and target_2 375 assumes EPS growth continues through it",
+        "time_stop": "2027-09-30 \u2014 if Digital Media net-new ARR has not held up by four more quarters the thesis has had its time"
+      },
+      "stop": null,
+      "bear_case_price": 190.0,
+      "risk_reward": 2.95,
+      "win_probability": 0.42,
+      "position_size_pct": 3,
+      "risk_tier": "standard",
+      "catalyst": {
+        "event": "A quality franchise de-rated to a single-digit forward multiple on generative-AI displacement fear that has not yet shown up in the numbers. Q3 FY2026 results 2026-09-10 after the close are the dated event that sets the entry, not the reason to own it \u2014 the market prices an ~8% move and consensus EPS $6.09 sits at the top of Adobe guidance of $6.05-6.10, so there is little room to beat and a real chance of the disappointment that creates the price.",
+        "datetime_et": "2026-09-10T16:05",
+        "action": "do not buy ahead of the print. Let 2026-09-10 clear, then accumulate in thirds: first below 240, second below 228, third below 215. Two to three quarters to build; no need to rush.",
+        "wait": true
+      },
+      "thesis": "Adobe has compounded EPS through the whole AI panic \u2014 the fetched quarterly record is 5.31, 5.50, 6.06, 5.96 for $22.83 trailing non-GAAP, with the company guiding Q3 to 6.05-6.10 and consensus revenue near $6.7B on roughly 12% growth \u2014 while the multiple collapsed to about 10.4x forward earnings of ~$25, a level that prices structural decline rather than 12% growth. AI-first ARR more than tripled past $500M, meaning Adobe is currently monetising the technology the de-rating says will kill it, and a $25B repurchase authorisation retires shares into the discount.",
+      "key_risk": "The bear case is not that Adobe misses a quarter, it is that generative image and video models make per-seat Creative Cloud licensing obsolete over five years, in which case earnings stop compounding and a 10x multiple turns out to have been correct rather than cheap. Concrete invalidation: Digital Media net-new ARR falls year-over-year for two consecutive quarters, or Creative Cloud subscription revenue growth drops below 5%. That is the seat erosion the thesis denies, showing up in the numbers rather than in the multiple. Added by the red team, because it is absent above: the earnings print is not the only dated event inside the accumulation window. Oracle reports the same afternoon (2026-09-10) with an ~11% move priced, and a bad enterprise-software tape that evening moves ADBE independently of Adobe's own numbers \u2014 the tranches can fill on someone else's guide.",
+      "counter_argument": "The strongest case against is that cheap software has stayed cheap all year and the positioning evidence is genuinely mixed, not supportive: the fetched analyst trend has bullish share falling 3.1 points with revision direction reading deteriorating, and insiders sold $18.9M against $1.9M bought over six months. The single director purchase \u2014 10,000 shares on the open market at 194.51 on 2026-06-25, near the lows \u2014 is the one insider transaction type with predictive content, but it is $1.9M against $18.9M and it is not enough to turn a net-negative positioning read into a confirmation. RED TEAM: conviction lowered 4 to 3 for exactly that \u2014 the fourth evidence kind counts only if you take the one component of it that agrees. SECOND RED-TEAM POINT, ON THE RATIO: 2.95:1 is computed off the 228 ideal, which is the middle of three tranches and 11.4% below the market. The single most likely partial outcome is that only the first tranche fills below 240, and 240 against the same 190 bear case and 340 target is 2.0:1 \u2014 under the 2.5:1 long-term floor. Full size at an average near 228 is what earns the 2.95; a one-third fill at 240 does not, so do not treat the first tranche as the position.",
+      "evidence": [
+        {
+          "kind": "valuation_anchor",
+          "detail": "Trailing four quarters of non-GAAP EPS from the fetched surprise record total $22.83 (5.31 Sep-25, 5.50 Dec-25, 6.06 Mar-26, 5.96 Jun-26); company Q3 guidance of 6.05-6.10 puts forward-four-quarter EPS near $25. At 257.26 that is ~10.4x forward, a ~9.6% earnings yield. The 340 target is 13.6x that same $25 \u2014 still a discount to any mature software peer, and below the 200-day high of 362.71, so it is a re-rating inside the past year of range rather than a new high. The 190 downside is 7.6x, the multiple the market would pay only if earnings stop growing.",
+          "source": "https://news.alphastreet.com/adobe-adbe-q3-2026-preview-eps-est-6-09-reports-september-10/"
+        },
+        {
+          "kind": "dated_catalyst",
+          "detail": "Adobe Q3 FY2026 results confirmed for 2026-09-10 after the close on the fetched finnhub earnings calendar (EPS est 6.1999, revenue est $6.82B) and in Adobe's own release-date announcement. Options price an ~8.07% move.",
+          "source": "https://www.businesswire.com/news/home/20260831054310/en/Adobe-to-Announce-Q3-FY2026-Earnings-Results-on-Sept.-10-2026"
+        },
+        {
+          "kind": "technical_level",
+          "detail": "Fetched 200 bars: 257.26 last, 20-day 273.33, 50-day 249.94, 200-day 267.60; 200-day range 190.12-362.71, so -29.1% off the high. The 190.12 low is the downside anchor and the 205 bottom of the accumulation zone sits just above it. ATR14 10.40 (4.04%).",
+          "source": "https://www.nasdaq.com/market-activity/stocks/adbe/historical"
+        },
+        {
+          "kind": "positioning",
+          "detail": "Finnhub insider window, 6 months: one open-market purchase \u2014 director David A Ricks, 10,000 shares at 194.51 on 2026-06-25, $1.95M \u2014 against 6 sells totalling $18.9M. Reported in full because the net is negative; the buy is the part that carries signal.",
+          "source": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=ADBE&type=4"
+        }
+      ],
+      "sources": [
+        "https://news.alphastreet.com/adobe-adbe-q3-2026-preview-eps-est-6-09-reports-september-10/",
+        "https://www.businesswire.com/news/home/20260831054310/en/Adobe-to-Announce-Q3-FY2026-Earnings-Results-on-Sept.-10-2026",
+        "https://www.tikr.com/blog/adobe-stock-is-down-about-30-in-2026-heres-what-a-325-valuation-says",
+        "https://www.asktraders.com/analysis/adobe-q3-earnings-preview-what-to-watch-on-september-10"
+      ],
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.95,
+        "claimed_risk_reward": 2.95,
+        "breakeven_probability": 0.253,
+        "stated_win_probability": 0.42,
+        "expectancy_r": 0.659,
+        "claimed_edge": 0.167,
+        "stop_atr_multiple": null,
+        "live_price": 257.26,
+        "live_price_asof": "2026-09-08T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 877.6,
+        "bid": 258.76,
+        "ask": 259.82,
+        "spread_pct": 0.409,
+        "atr14": 10.4029,
+        "checked_at_et": "2026-09-09T06:38:08-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.95:1 clears the 2.5:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 228.0 is -11.4% from live 257.26"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-09-10 is ahead of us"
+          },
+          {
+            "check": "earnings_date",
+            "status": "pass",
+            "detail": "earnings date 2026-09-10 confirmed against the calendar"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "long-term target is valuation-anchored, not ATR-bound"
+          },
+          {
+            "check": "stop_distance",
+            "status": "pass",
+            "detail": "long-term downside is a bear case, not a stop \u2014 no ATR floor applies"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "42% claimed vs 25% break-even at 2.95:1 \u2014 expectancy +0.66R"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-09-08T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "pass",
+            "detail": "bid/ask spread 0.41%; the round trip costs 1% of the target move"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "3% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 3 rests on 4 independent kinds: dated_catalyst, positioning, technical_level, valuation_anchor"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "1 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    },
+    {
+      "rank": 2,
+      "instrument": "Cheniere Energy Inc",
+      "symbol": "LNG",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 3,
+      "last_price": 276.02,
+      "last_price_asof": "2026-09-08T16:00:00-04:00",
+      "price_source": "finnhub (2026-09-08 regular-session close; market session `pre` at fetch, age ~867 min)",
+      "entry": {
+        "ideal": 271.0,
+        "zone_low": 266.0,
+        "zone_high": 276.5,
+        "order_type": "limit",
+        "condition": "accumulate 266.00-276.50 while the stock consolidates under its 20-day (279.54); add only on a daily close above 301, which is the 200-day high"
+      },
+      "exit": {
+        "target": 310.0,
+        "target_2": 335.0,
+        "scale_plan": "trim half at 310; the 335 second target requires the Qatari outage to persist past the November force-majeure horizon"
+      },
+      "stop": 252.0,
+      "risk_reward": 2.05,
+      "win_probability": 0.44,
+      "position_size_pct": 3,
+      "risk_tier": "standard",
+      "catalyst": {
+        "event": "QatarEnergy force majeure LNG cargo cancellations to European and Asian buyers now extended into early November 2026, with Ras Laffan still down ~12.8 Mtpa (~17% of Qatari capacity) after the March missile strikes \u2014 into the Northern Hemisphere heating season",
+        "datetime_et": "2026-11-02T00:00",
+        "action": "accumulate 266-276.5 while the stock consolidates under the 20-day; add on a close above 301",
+        "wait": true
+      },
+      "thesis": "About 20% of the world's seaborne LNG passed through the Strait of Hormuz before the war, and Iranian strikes on Ras Laffan on 18-19 March took out two liquefaction trains plus a GTL unit \u2014 roughly 12.8 Mtpa, about 17% of Qatari capacity \u2014 with QatarEnergy force majeure cancellations to Europe and Asia now running into early November. That makes US Gulf liquefaction the marginal global supplier into winter, and Cheniere is the largest US exporter, running Sabine Pass and Corpus Christi with EIA putting full-year US export volumes near 17.0 Bcf/d.",
+      "key_risk": "Cheniere is a tolling business: the great majority of its volumes are sold under fixed-fee long-term SPAs, so a higher JKM/TTF price only reaches earnings through the smaller portfolio and spot cargo book. A Hormuz de-escalation \u2014 Iran said an Oman transit agreement was nearing completion \u2014 reopens Qatari flows and collapses the international spread before it ever shows in a quarter. Added by the red team: EIA STEO now expects Middle East shut-in output to recover only in early 2027, which is consensus \u2014 the shock has been live since March and is six months old, so the asymmetry here is in the extension of the outage, not in its existence.",
+      "counter_argument": "The strongest case against is that the stock has already run 48% off its 200-day low and the supply shock has been live since March, so it is priced. Two things argue otherwise: LNG has lagged XLE by 4.9% over the past month while leading it by 5.6% over three, meaning it consolidated through the very week crude spiked, and it sits 8.3% below its 200-day high while VLO, PSX, OKE and TRGP are all within 4.5% of theirs \u2014 this is the least extended large-cap energy name on the fetched screen, not the most. RED TEAM, ON THE 310 TARGET, WHICH SYNTHESIS ASKED TO HAVE CHALLENGED: 310 is above the 200-day range high of 300.89, so the idea requires a new one-year high, and a target set inside the existing 262-301 base fails the floor (300 against the 271 entry and 252 stop is 1.53:1). The target is therefore load-bearing and it is kept for one reason: LNG trades above its 20-, 50- and 200-day averages with a dated supply catalyst running into the heating season, so a 3% new high is continuation rather than a stretch. If LNG loses the 266.68 fifty-day the target loses its justification along with the trend \u2014 do not hold the level through a broken base. RED TEAM, ON CONVICTION: the technical_level and positioning items are both computed from the same fetched price series and the same nasdaq URL, so this is two independent confirmations (price and the Qatari force majeure), not three. Conviction 3 is what two kinds support, so the score stands and the count behind it does not.",
+      "evidence": [
+        {
+          "kind": "technical_level",
+          "detail": "Fetched 200 bars: last 276.02, 20-day 279.54, 50-day 266.68, 200-day 240.65; 30-day range 262.01-299.18 and 200-day high 300.89. Entry zone 266-276.5 spans the 50-day up to the 20-day, i.e. the middle of a three-month 262-301 base. Stop 252.00 sits below both the 50-day and the 30-day low.",
+          "source": "https://www.nasdaq.com/market-activity/stocks/lng/historical"
+        },
+        {
+          "kind": "positioning",
+          "detail": "Computed relative strength: LNG +7.76% 1m / +16.66% 3m against SPY -0.94% / +3.62%; vs XLE -4.88% over 1m but +5.62% over 3m. A three-month sector leader that sat out the last month's crude spike.",
+          "source": "https://www.nasdaq.com/market-activity/stocks/lng/historical"
+        },
+        {
+          "kind": "dated_catalyst",
+          "detail": "QatarEnergy extended LNG force majeure cancellations into early November 2026 as Hormuz shipping remained largely halted (reported 2026-08-31); Ras Laffan strikes of 18-19 March removed ~12.8 Mtpa.",
+          "source": "https://www.euronews.com/business/2026/08/31/qatarenergy-extends-lng-cancellations-into-november-as-hormuz-disruption-drags-on"
+        }
+      ],
+      "sources": [
+        "https://www.euronews.com/business/2026/08/31/qatarenergy-extends-lng-cancellations-into-november-as-hormuz-disruption-drags-on",
+        "https://www.csis.org/analysis/battle-hormuz-will-reshape-global-lng-market",
+        "https://en.wikipedia.org/wiki/2026_Strait_of_Hormuz_crisis",
+        "https://www.eia.gov/outlooks/steo/"
+      ],
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.05,
+        "claimed_risk_reward": 2.05,
+        "breakeven_probability": 0.328,
+        "stated_win_probability": 0.44,
+        "expectancy_r": 0.342,
+        "claimed_edge": 0.112,
+        "stop_atr_multiple": 2.4,
+        "live_price": 276.02,
+        "live_price_asof": "2026-09-08T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 877.6,
+        "bid": 277.0,
+        "ask": 278.88,
+        "spread_pct": 0.676,
+        "atr14": 7.9227,
+        "checked_at_et": "2026-09-09T06:38:17-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.05:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 271.0 is -1.8% from live 276.02"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-11-02 is ahead of us"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 4.92 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "stop_distance",
+            "status": "warn",
+            "detail": "stop is 2.4 ATR from entry \u2014 clears the 2.0 ATR floor for a swing stock but sits under the 2.5 ATR level where stop-outs have clustered"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "44% claimed vs 33% break-even at 2.05:1 \u2014 expectancy +0.34R"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-09-08T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "pass",
+            "detail": "bid/ask spread 0.68%; the round trip costs 5% of the target move"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "3% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 3 rests on 3 independent kinds: dated_catalyst, positioning, technical_level"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "1 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    }
+  ],
+  "watchlist": [
+    {
+      "symbol": "VST",
+      "instrument": "Vistra Corp",
+      "demoted_from_rank": 2,
+      "demotion_reason": "Red team: the 2.70:1 ratio is an artifact of an unsupported target. 176 corresponds to no level on the fetched 200 bars \u2014 it sits 11.6% ABOVE the 200-day average of 157.65, which is the first real resistance and which the stock is still trading below, and 21.4% above the 145 entry inside a 15-session swing. Validation already flagged it at 6.52 ATR, beyond the 6.0 guide. The scale plan's own rationale gives it away: it describes 176 as 'just under the 200-day average of 157.65', which it is not. Pulled back to a level that exists, the idea fails the floor \u2014 157.65 is 1.10:1 and even 165 is 1.74:1 against the same 133.50 stop \u2014 and the stop cannot be widened to help because at 2.42 ATR it is already inside the 2.5 ATR band where this book's stop-outs cluster. An idea that only clears 2.0:1 by targeting a price with nothing behind it never cleared it.",
+      "note": "The thesis is not what failed and is not withdrawn: 10,924 MW cleared in the PJM 2028/29 auction at $325/MW-day, a 20-year 2,600 MW Meta nuclear supply agreement, the $4B Cogentrix deal, a CEO open-market purchase at 135.00 on 2026-08-24, and +8.9% versus SPY over a month. It is the levels that do not support a trade at 151.72, with the 200-day average overhead as resistance rather than support.",
+      "trigger": "A target that is a level rather than a number. Either (a) VST reclaims the 157.65 two-hundred-day on volume, which turns it into support and opens the 189.29 range high as a real target off a stop under the reclaimed average, or (b) a deeper pullback toward the 20-day at 142.32 that puts 2.0:1 on the table to 157.65 without moving the stop in."
+    },
+    {
+      "symbol": "DG",
+      "instrument": "Dollar General Corp",
+      "demoted_from_rank": 4,
+      "demotion_reason": "Red team: no source, no recommendation. Every non-price claim in this idea \u2014 the four-for-four beat record, bullish analyst share of 45.0%, the deteriorating revision direction, the 147.75 consensus target and the Bernstein and Barclays levels \u2014 hangs on one URL, and that URL returns 404 on re-check this morning. It is not bot-blocked, it is dead. Worse, this report's own data_quality_notes records that where that article WAS checkable it disagreed with the fetched data, putting DG's 2026-09-08 close at 133.21 against a fetched 127.87. A citation that is wrong on the one fact you can verify does not get to carry the six you cannot. What remains is a moving-average confluence.",
+      "note": "The thesis is undated as well as unsourced: a gasoline pass-through to low-income trade-down traffic is a story that plays out over quarters of comparable sales, and it is here being traded on a 15-session swing with no dated catalyst (validation flagged the missing date). Its own key_risk concedes the channel cuts both ways \u2014 the same fuel price raises DG's distribution cost and takes dollars out of the basket. And the 4% drop on 2026-09-08 came on a record of four straight beats, which says the guide is what matters and the guide is the thing this idea cannot cite. The 1.43% spread costs 9% of the target move on top.",
+      "trigger": "A sourced read on the guidance that caused the 4% drop, plus a dated event inside the horizon \u2014 the next quarterly print, or a monthly comparable-sales or traffic datapoint that shows the trade-down actually arriving rather than being inferred from the crude price."
+    },
+    {
+      "symbol": "XLE",
+      "instrument": "Energy Select Sector SPDR Fund",
+      "demoted_from_rank": 5,
+      "demotion_reason": "Recomputed reward-to-risk is 1.84:1 against the 2.0 swing floor (entry 63.20, target 67.80, stop 60.70). The stop is honest \u2014 2.21 ATR against a 1.8 ATR ETF floor \u2014 so the ratio could only be rescued by raising the target or walking the stop in, which is the failure mode the floor exists to catch. Dropped rather than fixed.",
+      "note": "The energy thesis is intact and is expressed through LNG instead; XLE is 1.14% off its 200-day high with the 20/50/200-day stacked bullish, which is why the ratio is thin \u2014 there is little room left to the target.",
+      "trigger": "A pullback that puts a 2.0:1 ratio back on the table without moving the stop: entry near 62.00 against the same 60.70 stop and 67.80 target, or a decisive close above 65.52 that opens a higher target off a higher stop."
+    },
+    {
+      "symbol": "EQT",
+      "instrument": "EQT Corp",
+      "note": "Laggard US gas producer levered to LNG feedgas demand \u2014 55.12, below its 200-day of 56.13. Cheaper optionality on the same Qatari supply loss than Cheniere, with weaker confirmation; not researched to a level this run.",
+      "trigger": "Reclaim of the 56.13 two-hundred-day on volume, or a further extension of the QatarEnergy force majeure past early November."
+    },
+    {
+      "symbol": "AR",
+      "instrument": "Antero Resources Corp",
+      "note": "The second laggard gas name on the same feedgas thesis at 39.08. Same status as EQT \u2014 reached through the theme, not levelled.",
+      "trigger": "Same as EQT: an extension of the Qatari outage, or a base forming above the 20-day."
+    },
+    {
+      "symbol": "UNG",
+      "instrument": "United States Natural Gas Fund",
+      "note": "10.46 and 38.6% off its high, but it is a rolling futures ETF with contango decay, so it bleeds while waiting. Recorded as the wrong vehicle for a right thesis, not as a candidate.",
+      "trigger": "Nothing makes this actionable at swing horizon; use EQT/AR or LNG instead."
+    },
+    {
+      "symbol": "ORCL",
+      "instrument": "Oracle Corp",
+      "note": "Reports 2026-09-10 after the close with options pricing an ~11% move, so a directional swing into it is a coin flip and any 2.0:1 target would sit inside one implied move. FY2026 free cash flow was -$23.7B with roughly $40B more debt and equity planned for FY2027, and analyst bullish share is 79.6% and falling.",
+      "trigger": "React to the print, do not front-run it \u2014 a level set on the post-earnings range."
+    },
+    {
+      "symbol": "NVS",
+      "instrument": "Novartis AG",
+      "note": "137.70 after a -9.4% worst day on record, against a 30-day low of 137.115. Three trial setbacks in one week \u2014 rap-cel paused after three patient deaths, pelacarsen CV outcomes failure, and the del-desiran HARBOR Phase 3 miss \u2014 which is a pipeline-credibility de-rating rather than one fixable problem, and it impairs the $12B Avidity deal.",
+      "trigger": "No knife-catching on day one. Wait for a base and for management to address the pipeline, not for a bounce."
+    },
+    {
+      "symbol": "ITA",
+      "instrument": "iShares U.S. Aerospace & Defense ETF",
+      "note": "The whole complex sits at or near multi-year lows in month five of a shooting war (LHX 0.96% off its 200-day low, GD, RTX and ITA all at 30-day lows, NOC -33.0%, HII -37.5%), which looks like a mispricing and is not one: without a finalized appropriations bill the framework agreements with the primes cannot be fully funded, the Pentagon cut the FY2026 F-35 request to 24 aircraft from a forecast 48, and there were zero open-market insider purchases across all six primes over six months.",
+      "trigger": "A signed FY2027 defense appropriations bill, or a named munitions supplemental. Until one of those exists this is a hunch, which is a conviction 1 and does not publish."
+    },
+    {
+      "symbol": "KXCPI-26SEP",
+      "instrument": "Kalshi \u2014 September 2026 CPI MoM ladder (released 2026-10-14)",
+      "note": "The right thesis in the wrong book. The September gasoline pass-through genuinely argues Above 0.4% is underpriced at a 35-cent last, but the ask is 71 against open interest of 1,515 and spreads 20-48 cents wide. Paying 71 for something worth maybe 45 is not the trade the thesis describes.",
+      "trigger": "Open interest and a spread that let the ask approach the last price \u2014 roughly a 5-cent market."
+    },
+    {
+      "symbol": "KXFEDDECISION-26SEP-H25",
+      "instrument": "Kalshi \u2014 Fed hikes 25bps at the 2026-09-16 FOMC meeting",
+      "note": "WITHDRAW the unfilled YES @32 published 2026-08-22. It now trades 54 bid / 55 ask, up 22 cents and +69% \u2014 the best call in the book \u2014 but 32 cannot be bought any more, so as an unfilled order the level is dead. If it did fill, hold to the 2026-09-16 resolution. Note also that the book is long both the hike (H25 @32) and the hold (H0 @47) on this same meeting, which nets to a partial hedge rather than a view; neither is re-pitched.",
+      "trigger": "Nothing \u2014 taking a fresh side on 2026-09-16 needs FOMC minutes, a dot plot or speaker commentary, none of which were read this session, against 14 million contracts of open interest and one-cent spreads."
+    },
+    {
+      "symbol": "BTC",
+      "instrument": "Bitcoin",
+      "note": "WITHDRAW the unfilled SELL @63,400 published 2026-08-16. BTC is 78,986, so the level is 19-20% away and unreachable. Crypto is flat and uninvolved in this regime (ETH 2,489.10, SOL 103.76).",
+      "trigger": "None today \u2014 no crypto idea was captured this run."
+    },
+    {
+      "symbol": "/MBTU6",
+      "instrument": "Micro Bitcoin futures, September 2026",
+      "note": "WITHDRAW the unfilled SHORT @64,340 published 2026-08-18. The level is 20% away, and the contract is additionally at or inside its final trading period, which config/universe.md forbids recommending without saying so.",
+      "trigger": "None \u2014 and Robinhood futures availability could not be verified at all this run (support article 404s)."
+    },
+    {
+      "symbol": "LCII",
+      "instrument": "LCI Industries",
+      "note": "WITHDRAW the unfilled BUY @94.00 published 2026-08-18. LCII closed 99.11 at a new 30-day low with its 200-day at 117.97, 37.9% off its high. It is the same RV/housing complex the BCC close is exiting, so holding the order would contradict that call.",
+      "trigger": "None while the housing chain is making lows \u2014 Lennar reports 2026-09-16 and is the read to watch."
+    },
+    {
+      "symbol": "CEG",
+      "instrument": "Constellation Energy Corp",
+      "note": "The unfilled BUY @272.00 published 2026-08-21 is stale \u2014 9.0% below a 299.05 market. No new view is taken: CEG sits just above its 200-day of 296.16, which is the wrong side to chase. VST is the expression of the data-centre power theme captured instead.",
+      "trigger": "A pullback that actually reaches the 272 level, or a base above the 296.16 two-hundred-day."
+    },
+    {
+      "symbol": "LULU",
+      "instrument": "Lululemon Athletica Inc",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 3,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined"
+    },
+    {
+      "symbol": "NKE",
+      "instrument": "Nike Inc Class B",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 4,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined"
+    },
+    {
+      "symbol": "BCC",
+      "instrument": "Boise Cascade Co",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined; bid/ask spread 12.50% \u2014 too wide to trade this thesis",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 5,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined; bid/ask spread 12.50% \u2014 too wide to trade this thesis"
+    },
+    {
+      "symbol": "KXFEDDECISION-26OCT-H25",
+      "instrument": "Kalshi \u2014 Fed hikes 25bps at the 2026-10-28 FOMC meeting",
+      "note": "Demoted by validation: 2 source(s) return 404: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXFEDDECISION, https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXCPI",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 6,
+      "demotion_reason": "2 source(s) return 404: https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXFEDDECISION, https://api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXCPI"
+    }
+  ],
+  "data_quality_notes": "RESEARCH RAN TO COMPLETION. notes.md carries a final RESEARCH COMPLETE block at 06:25 ET that explicitly supersedes an earlier one written at 06:22, so `truncated` is false and nothing in this report is reconstructed. Nine candidates were captured; eight are published and one (XLE) was demoted to the watchlist here in synthesis.\n\nWHAT SYNTHESIS CHANGED. XLE was dropped from the recommendations: its recomputed reward-to-risk is 1.84:1 (entry 63.20, target 67.80, stop 60.70) against the 2.0 swing floor. Its stop is not the problem \u2014 2.21 ATR against the 1.8 ATR ETF floor \u2014 so the only ways to clear the floor would have been raising the target or walking the stop in, both of which are the failure the floor exists to catch. It is on the watchlist with the level that would make it work. Every other ratio was recomputed from the final entry, target and downside rather than taken from the notes: ADBE 2.95 (against a stated 190 bear case, not a stop), VST 2.70, LNG 2.05, DG 2.05, KXFEDDECISION-26OCT-H25 2.13. Stop distances were re-checked in ATRs and all clear their asset-class floors: LNG 2.40, VST 2.42, DG 2.18 against a 2.0 stock floor.\n\nRATIOS CLUSTERED NEAR THE FLOOR \u2014 SAID OUT LOUD. LNG at 2.05, DG at 2.05 and the Fed contract at 2.13 sit just above the 2.0 line, which is the signature of targets fitted to clear the bar. Two things argue they are not: each stop is placed below a real level rather than at a convenient distance (LNG 252.00 below both the 50-day and the 30-day low, DG 116.00 below the 30-day low of 117.51), and the ratios are thin because the entries are close to the market, not because the targets are stretched. The one target worth challenging is LNG's 310, which sits above the 200-day range high of 300.89 \u2014 it requires a new one-year high, and the red team should ask why.\n\nEVERY NEW IDEA IS A PULLBACK ENTRY. All four (ADBE 228 vs 257.26, VST 145 vs 151.72, LNG 271 vs 276.02, DG 125.50 vs 127.87) sit below the market, so each fills only once the trade first goes against it. config/strategy.md flags exactly this pattern \u2014 the first month ran 31 pullback entries against 1 breakout with a 42% fill rate. In each case the level is a named moving average or confluence rather than a reflex discount, but the skew is real and is not hidden.\n\nCONVICTION IS CARRIED CONSERVATIVELY. LNG lists three distinct kinds of evidence and ADBE four, which by the config/strategy.md table would support 4 and 5 respectively; both are published at the score research assigned (3 and 4). The scores are floors on what the evidence holds, not inflations of it.\n\nDATA GAPS, AND WHAT EACH COST. (1) Options-implied moves are unavailable \u2014 yahoo-options returns HTTP 401 for every symbol. Where an implied move appears (ORCL ~11%, ADBE ~8.07%) it is quoted from a named third-party preview and attributed, never computed here. (2) Short interest is unavailable \u2014 api.nasdaq.com timed out \u2014 so there is no days-to-cover or squeeze evidence on any name today. (3) Index quotes failed on all four sources (finnhub needs a CFD subscription, Yahoo 429, stooq 404); SPY/QQQ/IWM are used as proxies and the index levels in market_context come from a news source rather than a fetch, which is why they are written as annotated strings. (4) Robinhood futures availability could not be verified \u2014 the support URL in config/universe.md 404s \u2014 so NO FUTURES CANDIDATE WAS CAPTURED, even though a commodity supply shock is the regime that most wants one. That is a real cost of the gap, not a stylistic choice. (5) No dedicated small-cap liquidity screen was run; the small caps that were checked (EE, FLNG, NFE, LCII, SVRA) were reached through themes. VIX and DXY were not fetched.\n\nA TOOL DEFECT, DIAGNOSED AND WORKED AROUND. market_data.py events initially returned zero rows for every macro query and three unrelated sports shard tickers for \"Fed\", which was first written up as an unavailable source and then corrected at 06:23. Two defects: events() has no server-side search \u2014 it pulls one page of open markets and substring-filters client-side, and Kalshi's first 200 open markets are overwhelmingly sports \u2014 and it reads prices from the legacy integer-cent yes_bid/yes_ask/last_price keys, which Kalshi now serves as null in favour of yes_bid_dollars/yes_ask_dollars decimal strings. Research fetched the Kalshi API directly instead, so every event price in this report is real rather than estimated. The code was not changed \u2014 that needs a test in tests/ \u2014 but this is a live bug worth fixing.\n\nONE SOURCE-VERSUS-FETCH CONFLICT. A Yahoo article states DG \"finished at USD 133.21, down 1.8 percent\" on 2026-09-08, while the finnhub fetch gives DG 127.87 for 2026-09-08 with 133.21 as the prior close. The fetched data is used throughout; the article appears to describe the 09-07 session.\n\nPRICES ARE 2026-09-08 CLOSES, age about 867 minutes at fetch, market session `pre`. At 6am ET that is the freshest honest equity price \u2014 a closed market, not stale data. The Kalshi quote is from 06:24 ET this morning.\n\nCOMPOSITION, DECLARED RATHER THAN ENGINEERED. Eight recommendations: one long_term (ADBE), six swing, one event contract. Three of the eight are position closes (LULU, NKE, BCC) rather than new risk. Nothing intraday cleared the bar and nothing was manufactured to fill the lane \u2014 the only two dated intraday-grade events in range are ORCL and ADBE tomorrow after the close, both priced for 8-11% moves, which is a coin flip rather than an edge. No crypto: BTC 78,986, ETH 2,489, SOL 103.76, all flat and uninvolved in this regime. No futures, for the verification reason above.\n\nCORRELATION. With XLE demoted, two published ideas sit on the crude path \u2014 LNG through the Qatari supply loss and DG through the gasoline pass-through to the low-income consumer \u2014 inside the 3-idea cap. DG is not the hedge it looks like: a crude collapse removes its trade-down driver too. ADBE (software de-rating) and VST (contracted data-centre power) do not move on an Iran headline, and the Fed contract is inversely exposed to the same shock, gaining if the oil-driven inflation read hardens.\n\nPOSITIONS REVIEWED AND HELD WITH NO RECOMMENDATION EMITTED, so their absence here is a decision rather than an omission: GLD (399.72, held; invalidation is a daily close below the 396.45 thirty-day low, and the 2026-09-08 exit at 406.77 correctly did not fill), CCJ (101.97, +8.5%, held but do not add \u2014 the 200-day at 105.46 is directly overhead and the 135 target equals the 200-day range high), the SPY short (765.96, +0.9% in favour, stop deliberately left at 783.50 rather than walked in), TLT (BUY @82.60 and SELL @81.87 net flat; do not re-add with the 10-year at 4.78), and SVRA (5.53, +3.4%, stop 4.60 is 3.6 ATR from entry and clears comfortably).\n\nPENDING ORDERS LEFT LIVE AND UNTOUCHED: EEM @65.60 (market 68.83, below the 66.95 twenty-day \u2014 a real pullback level), DINO @99.50 (market 108.31, near the 97.38 twenty-day), PFE @25.80 (market 27.79), IYR SELL_SHORT @103.60 (market 102.05, needs a 1.5% bounce, sensible with the 10-year at 4.78). Withdrawn stale levels are on the watchlist with reasons: BTC, /MBTU6, LCII, CEG and the September Fed hike contract. The XLE @63.90, DG @134.50 and VST @128.00 pendings are superseded by today's levels rather than withdrawn outright.\n\nTRACK RECORD CONTEXT. The book is 0 for 5 on closed trades at an average -4.3%, which is a sample far too small to fit to \u2014 but it is not nothing, and all five stop-outs were conviction 2-3 swings. Three of today's eight are conviction 3 new ideas in exactly that bucket. Size accordingly.\n\nRED TEAM (phase 2c). Cut two of the eight and left the remaining six standing. CUT VST: the 2.70:1 ratio rested on a 176 target that matches no level on the fetched bars \u2014 11.6% above the 200-day average of 157.65 that the stock still trades below, 21.4% above the entry in 15 sessions, and already flagged at 6.52 ATR. Pulled to a real level the ratio is 1.10:1 at 157.65 and 1.74:1 at 165, and the 2.42 ATR stop is too tight to widen in compensation, so the idea never cleared the floor rather than having just cleared it. The scale plan described 176 as 'just under the 200-day average of 157.65', which is the tell. Thesis kept on the watchlist with the reclaim that would make it tradeable. CUT DG: its single non-price source 404s on re-check \u2014 dead, not bot-blocked \u2014 and it carried every claim in the idea except the moving averages. This report already recorded that the same article disagreed with the fetched close (133.21 against 127.87), so the one verifiable thing in it was wrong. Undated macro thesis, two-sided by its own key_risk, on a 15-session horizon. DOWNGRADED ADBE 4 to 3: its fourth evidence kind is a positioning item that nets AGAINST the thesis ($18.9M sold against $1.9M bought, analyst revisions deteriorating) and counts as a confirmation only by selecting the one component that agrees. Also disclosed on ADBE, because it was not: the 2.95:1 is computed off the 228 ideal at the middle of three tranches, and a first-tranche-only fill below 240 is 2.0:1, under the long-term floor. LOWERED THE OCTOBER FED CONTRACT to 35% from 40%: 40% cannot be decomposed consistently with its own conditional story, which needs P(October | September hike) near 72% while the idea itself concedes back-to-back hikes are rare \u2014 0.54 x 0.45 plus a small unconditional branch is 0.29, the market price. At 35% the edge is about 3 points, not 8. Kept at conviction 2 and 1% because the mechanism (the 2026-10-14 CPI carrying the September gasoline pass-through) is dated and specific. KEPT LNG and its 310 target after challenging it as synthesis asked: 310 does require a new one-year high and any target inside the 262-301 base fails the floor, but LNG trades above all three averages with a live dated catalyst, which VST's target could not claim. Its conviction-3 score is noted as resting on two independent confirmations, not three \u2014 technical_level and positioning are both computed from the same price series and cite the same URL. KEPT the three position closes (LULU, NKE, BCC) untouched. Their validation verdicts read fail only because an exit has no target or stop for direction_consistency, risk_reward and stop_distance to measure; that is the checker's shape, not a defect in the calls, and killing an exit means holding a losing position, which is not a red-team outcome. BCC's 12.5% spread fail is a 75/85 pre-market quote on a $24.4M-a-day name, which is why that exit is a limit into 76.00-79.00 rather than a market order. SOURCE CHECK CORRECTED: the two Kalshi API 404s recorded at 06:32 are not reproducible \u2014 both URLs return 200 on re-check at 06:4x under the validator's own user agent and HEAD method, so that was a transient block and the October Fed contract's only failing check is spurious. The DG 404 is real and reproducible, which is the difference that decided the two. CORRELATION AFTER THE CUTS: with DG gone, LNG is the only remaining idea on the crude path and the Fed contract is inversely exposed to the same shock, so the cluster the original report declared has resolved itself. What is left is one long-term software de-rating, one energy swing, one event lottery ticket and three exits \u2014 two units of new long risk, which is the correct amount to add on a book that is 0 for 5 on closed trades. Validation demoted 4 idea(s) whose numbers did not check out. 2 more carry warnings \u2014 see the validation block on each.",
+  "validation_summary": {
+    "checked": 6,
+    "passed": 0,
+    "warned": 2,
+    "failed": 4,
+    "enforced": true,
+    "demoted": 4
+  }
+}
