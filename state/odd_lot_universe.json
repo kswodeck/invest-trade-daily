@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-09-09T09:54:06-04:00",
-  "last_run_at": "2026-09-09T09:54:06-04:00",
+  "updated_at": "2026-09-09T18:31:46-04:00",
+  "last_run_at": "2026-09-09T18:31:46-04:00",
   "discovery_error": null,
   "open": [
     {
@@ -1119,14 +1119,16 @@
   ],
   "funnel": {
     "queries": 96,
-    "pages": 96,
+    "pages": 95,
     "raw_hits": 91,
     "filings": 15,
     "documents": 35,
     "window": "2026-06-26..2026-09-09",
     "slices": 4,
-    "failed_queries": 0,
-    "failures": [],
+    "failed_queries": 1,
+    "failures": [
+      "SC 13E4F \"odd lots\" 2026-07-21..2026-08-14: HTTPError: 500 Server Error: Internal Server Error for url: https://efts.sec.gov/LATEST/search-index?q=%22odd+lots%22&forms=SC+13E4F&dateRange=custom&startdt=2026-07-21&enddt=2026-08-14"
+    ],
     "rejected_by": {
       "no odd-lot language": 4,
       "no ticker": 4,
