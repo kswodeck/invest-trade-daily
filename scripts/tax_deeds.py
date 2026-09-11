@@ -134,10 +134,11 @@ DEFAULT_THRESHOLDS: dict[str, Any] = {
     "TIER_B_MAX_MINOR_FLAGS": 2,
     "PACKET_TIERS": "A,B,C",
     "PACKET_DOCKETS": "on_docket,over_the_counter,other_sale",
+    "SHEET_DOCKETS": "on_docket,over_the_counter,other_sale,date_unknown",
 }
 
 BOOL_THRESHOLDS = {"REJECT_FLOOD_ZONE"}
-STRING_THRESHOLDS = {"PACKET_TIERS", "PACKET_DOCKETS"}
+STRING_THRESHOLDS = {"PACKET_TIERS", "PACKET_DOCKETS", "SHEET_DOCKETS"}
 
 
 # --------------------------------------------------------------------------
@@ -1305,7 +1306,14 @@ def sheet_rows(results: list[dict], cfg: dict, today: date,
     replaced — so this returns the complete grid and the caller overwrites.
     """
     order = county_order(cfg)
-    candidates = [r for r in results if r["status"] == "candidate"]
+    screened = [r for r in results if r["status"] == "candidate"]
+
+    # The tab is the list you work from, so it carries what can be acted on.
+    # Everything held back is still screened, still tiered, still counted below
+    # and still written to the snapshot in full — see `sheet_dockets`.
+    shown = sheet_dockets(cfg)
+    candidates = [r for r in screened if r["docket"]["state"] in shown]
+    held_back = len(screened) - len(candidates)
     candidates.sort(key=lambda r: sort_key(r, order))
 
     tier_counts = {t: sum(1 for r in candidates if r["tier"] == t) for t in ("A", "B", "C")}
@@ -1315,11 +1323,17 @@ def sheet_rows(results: list[dict], cfg: dict, today: date,
     # and a banner that gives only the first invites the reader to assume they
     # are the same one. In the first live run they were 328 and 18.
     on_docket = sum(1 for r in candidates if r["docket"]["on_docket"])
+    # A tab that quietly shows fewer rows than the run found is the same kind of
+    # lie as one that shows stale rows. The count that was held back is on the
+    # banner, with the reason and the knob that changes it.
+    holding = (f" · {held_back} not-yet-scheduled candidate(s) held off this tab "
+               f"(SHEET_DOCKETS) — screened and in the snapshot, not on a docket"
+               if held_back else "")
     banner = (f"TEXAS TAX DEED CANDIDATES · sale {sale_date} · screened {today.isoformat()} · "
-              f"{on_docket} on this docket of {len(candidates)} candidates "
+              f"{on_docket} on this docket of {len(candidates)} shown "
               f"from {len(results)} listings "
               f"(A {tier_counts['A']} / B {tier_counts['B']} / C {tier_counts['C']}) · "
-              f"'On This Docket' says which rows are biddable at this sale")
+              f"'On This Docket' says which rows are biddable at this sale{holding}")
     statement_line = (
         "§34.015 BIDDER STATEMENT: " +
         (" | ".join(f"{s['county']}: {s['state'].upper()}" for s in statements) or "none configured") +
@@ -1335,15 +1349,29 @@ def sheet_rows(results: list[dict], cfg: dict, today: date,
         listed = sum(1 for r in results if r["listing"].get("county") == name)
         statement = next((s for s in statements if s["county"] == name), None)
         here = sum(1 for r in block if r["docket"]["on_docket"])
+        kept = sum(1 for r in screened if r["listing"].get("county") == name) - len(block)
         header = (f"{name.upper()} COUNTY — {here} on the {sale_date} docket · "
-                  f"{len(block)} candidate(s) of {listed} listed"
+                  f"{len(block)} shown of {listed} listed"
+                  + (f" · {kept} not yet scheduled, held off this tab" if kept else "")
                   + (f" · §34.015 {statement['state'].upper()}" if statement else ""))
         spec["county_rows"].append(len(rows))
         rows.append([header])
 
         if not block:
             spec["note_rows"].append(len(rows))
-            rows.append(["  no listing survived the gates for this county this run"])
+            # Three different facts, and reporting the first as the second is
+            # the mistake this whole module is built not to make: a row held
+            # off the tab passed every gate, and saying it did not is a finding
+            # the run never made.
+            if kept:
+                note = (f"  {kept} candidate(s) here, none of them on a docket — "
+                        f"held off this tab, still screened and in the snapshot "
+                        f"(SHEET_DOCKETS)")
+            elif listed:
+                note = "  no listing survived the gates for this county this run"
+            else:
+                note = "  no listing published for this county this run"
+            rows.append([note])
             continue
 
         for result in block:
@@ -1449,6 +1477,40 @@ def packet_dockets(cfg: dict) -> set[str]:
     when you want the whole pipeline on disk.
     """
     raw = threshold(cfg, "PACKET_DOCKETS")
+    return {part.strip().lower() for part in str(raw).split(",") if part.strip()}
+
+
+def sheet_dockets(cfg: dict) -> set[str]:
+    """Which docket states reach the `Tax Deeds` tab.
+
+    The tab is the list you work from, and 565 of one run's 820 candidates were
+    `not_scheduled` — real inventory the county has not put on any auction. They
+    are not wrong, they are not rejected, and they are not actionable either:
+    there is nothing to register for, nothing to drive to, and no date to be
+    late for. Scrolling past 565 of them to reach the 20 you can bid on is how a
+    working tool stops being used.
+
+    Struck-off property stays, and that is the whole reason this reads the
+    docket state instead of asking whether a row has a sale date.
+    `over_the_counter` has no sale date and never will — there is no auction,
+    because it is bought from the county across the counter, today. It is the
+    most actionable category on the sheet. A "has a date" filter would have
+    deleted all 235 of them.
+
+    `date_unknown` stays too, on the opposite reasoning: the county published no
+    date *and no status explaining why*, so it may well be on this docket with a
+    date this run failed to read. Hiding a row that might be biddable is the
+    failure this module exists to avoid; it carries `no_sale_date`, which ranks
+    it down, and the reader can see it.
+
+    Held-back rows are still screened, still tiered, still counted in the
+    summary and still written to the snapshot in full — `offer_history` reads
+    those snapshots, so a row missing from the tab must never be missing from
+    the record. Set
+    `SHEET_DOCKETS=on_docket,over_the_counter,other_sale,date_unknown,not_scheduled`
+    to put the pipeline back on the tab.
+    """
+    raw = threshold(cfg, "SHEET_DOCKETS")
     return {part.strip().lower() for part in str(raw).split(",") if part.strip()}
 
 

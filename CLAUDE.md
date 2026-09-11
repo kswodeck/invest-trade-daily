@@ -255,17 +255,37 @@ Four rules are load-bearing:
 - **A packet is a file, not a verdict.** One run wrote 572 of them, 541 for
   properties with no auction assigned. `PACKET_DOCKETS` gates which docket states
   get a packet written, and gates *only* that — a row outside it is still
-  screened, tiered, ranked, published to the sheet and in the snapshot, and the
-  gate adds no flag of its own. Having no sale date is never a reason to reject
-  or rank down, and the default proves it rather than excepting it:
-  `over_the_counter` has no sale date and is **kept**, because struck-off
-  property is buyable from the county today and is the most actionable category
-  there is. Gating on "has a date" would have cut exactly the rows a buyer can
-  act on soonest, which is why this reads the docket state. Left out are
+  screened, tiered, ranked, in the snapshot and on the sheet wherever
+  `SHEET_DOCKETS` allows it, and the gate adds no flag of its own. Having no sale
+  date is never a reason to reject or rank down, and the default proves it rather
+  than excepting it: `over_the_counter` has no sale date and is **kept**, because
+  struck-off property is buyable from the county today and is the most actionable
+  category there is. Gating on "has a date" would have cut exactly the rows a
+  buyer can act on soonest, which is why this reads the docket state. Left out are
   `not_scheduled` and `date_unknown`; the run prints how many it withheld and
   says they are still screened, because a packet not written must never read as
-  a property turned down. On the 2026-09-07 run: 265 packets instead of 806, all
-  806 rows still published, none rejected.
+  a property turned down. On the 2026-09-07 run: 265 packets instead of 806, none
+  rejected.
+
+- **The tab is the list you work from, and hiding a row is not rejecting it.**
+  `SHEET_DOCKETS` is the same shape of gate pointed at the `Tax Deeds` tab. Of
+  the 2026-09-10 run's 820 candidates, 565 were `not_scheduled` — real county
+  inventory with no auction assigned, so nothing to register for, nothing to
+  drive to and no date to be late for. Scrolling past 565 of them to reach the 20
+  you can bid on is how a working tool stops being used; the default publishes
+  255 rows of that run. Held-back rows are screened, tiered, counted in the step
+  summary and in the snapshot in full — `offer_history` reads those snapshots, so
+  a row off the tab must never be off the record — and the banner, the county
+  headers and the summary all give the count and name the knob, because two
+  numbers that differ with nothing to explain the gap is how a tool earns
+  distrust. It reads the docket state for the same reason the packet gate does:
+  `over_the_counter` has no date and never will, and is the most actionable
+  category on the sheet — a date filter would have deleted all 235 of them.
+  `date_unknown` stays on the opposite reasoning, since no date *and no status
+  explaining why* may be a date the run failed to read. A county block that ends
+  up empty says **which** of three things happened — nothing published, every
+  listing rejected, or candidates held off the tab — because a held-back row
+  passed every gate and a note saying otherwise is a finding the run never made.
 
 - **Repeat offerings come from the snapshots, not the network.** A property
   matched across `data/tax_deeds/<date>.json` by account, else cause number, else

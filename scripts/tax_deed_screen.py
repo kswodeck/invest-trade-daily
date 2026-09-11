@@ -390,9 +390,29 @@ def summarize(cfg: dict, results: list[dict], statements: list[dict],
         f"{len(results)} listing(s) ingested · {len(candidates)} candidate(s), "
         f"{on_docket} of them on the {sale_date} docket · "
         f"Tier A {tiers['A']} / B {tiers['B']} / C {tiers['C']}", "",
-        # Candidates and rows-you-can-bid-on-that-morning are different numbers.
-        # The first live run published 328 of the first and 18 of the second
-        # under one "sale 2026-10-06" heading.
+    ]
+
+    # The counts above are the run's; the tab carries a subset of them. Said in
+    # the summary as well as on the banner, because a reader comparing the two
+    # numbers and finding no explanation would be right to distrust both.
+    shown = td.sheet_dockets(cfg)
+    off_tab = [r for r in candidates if r["docket"]["state"] not in shown]
+    if off_tab:
+        states: dict[str, int] = {}
+        for result in off_tab:
+            states[result["docket"]["state"]] = states.get(result["docket"]["state"], 0) + 1
+        detail = ", ".join(f"{n} {state.replace('_', ' ')}"
+                           for state, n in sorted(states.items()))
+        out += [f"{len(off_tab)} of those candidate(s) are held off the `{TAB_TITLE}` tab "
+                f"({detail}). The tab is the list you work from, and a property the county "
+                f"has not docketed has nothing to register for and no date to be late for. "
+                f"Nothing is rejected: they are screened, tiered and in the snapshot in "
+                f"full, and `SHEET_DOCKETS` puts them back.", ""]
+
+    # Candidates and rows-you-can-bid-on-that-morning are different numbers.
+    # The first live run published 328 of the first and 18 of the second
+    # under one "sale 2026-10-06" heading.
+    out += [
         "| County | Listed | Candidates | On docket | Not scheduled | A | B | C |",
         "| --- | --- | --- | --- | --- | --- | --- | --- |",
     ]
@@ -574,7 +594,7 @@ def main(argv: list[str] | None = None, sources: Any = None) -> int:
                                for state, n in sorted(withheld.items()))
             print(f"  no packet for {sum(withheld.values())} candidate(s) not on a "
                   f"docket this run covers ({detail}). They are still screened, still "
-                  f"ranked and still on the sheet — this withholds a file, not a "
+                  f"ranked and still in the snapshot — this withholds a file, not a "
                   f"property. PACKET_DOCKETS controls it.")
         if not packets and any(r["status"] == "candidate" for r in results):
             print(f"  note: every candidate fell outside Tier {tiers}. While the county "
@@ -603,7 +623,13 @@ def main(argv: list[str] | None = None, sources: Any = None) -> int:
     if args.dry_run:
         print(f"\n--- DRY RUN: '{TAB_TITLE}' tab, {len(values)} rows ---")
         for row in values[:40]:
-            print("  " + " | ".join(str(cell)[:26] for cell in row))
+            # Single-cell rows are the banner, the county headers and the
+            # notes — the prose an operator reads a dry run for. Truncating
+            # them to a data column's width hid a note that wrongly said a
+            # held-back row had failed the gates, for as long as it was wrong.
+            cells = [str(cell) for cell in row]
+            print("  " + (cells[0] if len(cells) == 1
+                          else " | ".join(cell[:26] for cell in cells)))
         if len(values) > 40:
             print(f"  ... {len(values) - 40} more row(s)")
         print("\nSheet not touched.")

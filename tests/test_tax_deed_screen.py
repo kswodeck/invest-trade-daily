@@ -562,12 +562,20 @@ class APacketGateWithholdsAFileNotAProperty(unittest.TestCase):
         self.assertEqual(result["rejections"], [])
         self.assertIsNotNone(result["tier"])
 
-    def test_and_still_appears_on_the_sheet(self):
+    def test_the_packet_gate_is_not_what_keeps_it_off_the_sheet(self):
+        """Whether a row is published is `SHEET_DOCKETS`, decided separately.
+
+        Withholding the packet must not also withhold the row; the two gates
+        are configured apart so each can be reasoned about on its own.
+        """
         off = self.screened(sale_date=None, status="Available for Future Sale")
         on = self.screened(sale_date=SALE, account="22")
-        self.write([off, on])
-        values, spec = td.sheet_rows([off, on], self.cfg, self.fixtures[0], SALE,
-                                     self.statements)
+        self.write([off, on])          # packets: `off` gets none
+        cfg = dict(self.cfg, thresholds=dict(
+            self.cfg.get("thresholds") or {},
+            SHEET_DOCKETS="on_docket,over_the_counter,other_sale,"
+                          "date_unknown,not_scheduled"))
+        _, spec = td.sheet_rows([off, on], cfg, self.fixtures[0], SALE, self.statements)
         self.assertEqual(len(spec["data_rows"]), 2)
 
     def test_and_the_gate_adds_no_flag_of_its_own(self):
@@ -626,8 +634,15 @@ class APacketGateWithholdsAFileNotAProperty(unittest.TestCase):
         self.assertNotEqual(td.SNAPSHOT_DIR, self._saved[0],
                             "the real snapshot directory was still in play")
 
-    def test_and_those_rows_are_still_published(self):
-        """The sentence above has to be true, not just printed."""
+    def test_and_the_sheet_never_calls_a_held_back_row_a_rejected_one(self):
+        """The sentence above has to be true, not just printed.
+
+        A county whose every candidate is held off the tab used to print "no
+        listing survived the gates for this county", which is a finding the run
+        did not make — those rows passed every gate. The test only passed
+        because the dry run truncated cells to 26 characters and the sentence
+        was never visible, so the dry run prints notes in full now too.
+        """
         class Unscheduled(FixtureSources):
             def county_listings(self, county, cfg, sale_date):
                 rows, report = super().county_listings(county, cfg, sale_date)
@@ -640,10 +655,47 @@ class APacketGateWithholdsAFileNotAProperty(unittest.TestCase):
         with contextlib.redirect_stdout(out), contextlib.redirect_stderr(io.StringIO()):
             code = screen.main(["--dry-run", "--no-verify", "--sale-date", SALE],
                                sources=Unscheduled(None, None))
+        text = out.getvalue()
         self.assertEqual(code, 0)
-        self.assertIn("DRY RUN", out.getvalue())
-        self.assertNotIn("no listing survived the gates for this county",
-                         out.getvalue().split("DALLAS COUNTY")[-1][:200])
+        self.assertIn("DRY RUN", text)
+
+        # The fixture gives both cases, which is what makes this a test of the
+        # distinction rather than of one wording. Dallas's five listings are
+        # all rejected outright; Tarrant's two pass every gate and are held
+        # back only for having no docket.
+        tarrant = text.split("TARRANT COUNTY")[-1].split("JOHNSON COUNTY")[0]
+        self.assertNotIn("no listing survived the gates", tarrant)
+        self.assertIn("none of them on a docket", tarrant)
+        self.assertIn("still screened and in the snapshot", tarrant)
+        dallas = text.split("DALLAS COUNTY")[-1].split("TARRANT COUNTY")[0]
+        self.assertIn("no listing survived the gates", dallas)
+
+        # And the run's own record keeps every held-back row.
+        snapshot = json.loads(sorted((self.tmp / "data").glob("*.json"))[0].read_text())
+        kept = [r for r in snapshot["results"] if r["status"] == "candidate"]
+        self.assertTrue(kept, "held-back candidates vanished from the snapshot")
+        self.assertTrue(all(r["docket"]["state"] == td.NOT_SCHEDULED for r in kept))
+
+    def test_the_step_summary_accounts_for_the_rows_the_tab_does_not_show(self):
+        """A reader comparing the summary's count to the tab's needs the reason.
+
+        The summary counts the run; the tab carries a subset. Two numbers that
+        differ with nothing to explain the gap is how a tool earns distrust.
+        """
+        off = self.screened(sale_date=None, status="Available for Future Sale")
+        on = self.screened(sale_date=SALE, account="31")
+        text = "\n".join(screen.summarize(
+            self.cfg, [off, on], self.statements, [], SALE, self.fixtures[0]))
+        self.assertIn("held off the `Tax Deeds` tab", text)
+        self.assertIn("1 not scheduled", text)
+        self.assertIn("Nothing is rejected", text)
+        self.assertIn("SHEET_DOCKETS", text)
+
+    def test_and_says_nothing_when_the_tab_shows_everything(self):
+        on = self.screened(sale_date=SALE)
+        text = "\n".join(screen.summarize(
+            self.cfg, [on], self.statements, [], SALE, self.fixtures[0]))
+        self.assertNotIn("held off the", text)
 
     def test_the_default_keeps_every_state_that_has_somewhere_to_be(self):
         keep = td.packet_dockets(self.cfg)
