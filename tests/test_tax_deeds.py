@@ -456,8 +456,7 @@ class SheetOutput(unittest.TestCase):
 
     def test_a_county_with_nothing_says_so_rather_than_being_omitted(self):
         text = "\n".join(str(row[0]) for row in self.values if row)
-        self.assertIn("ELLIS COUNTY — 0 on the 2026-10-06 docket · 0 candidate(s)",
-                      text)
+        self.assertIn("ELLIS COUNTY — 0 on the 2026-10-06 docket · 0 shown", text)
         self.assertIn("no listing survived the gates", text)
 
     def test_rows_sort_by_tier_then_bid_to_value(self):
@@ -937,7 +936,8 @@ class DocketInTheOutputs(unittest.TestCase):
 
     def test_the_banner_gives_both_numbers(self):
         values, _ = td.sheet_rows([self.on, self.off], cfg(), TODAY, SALE, self.statements)
-        self.assertIn("1 on this docket of 2 candidates", values[1][0])
+        self.assertIn("1 on this docket of 1 shown", values[1][0])
+        self.assertIn("1 not-yet-scheduled candidate(s) held off", values[1][0])
 
     def test_a_packet_for_an_unscheduled_property_does_not_say_sale_none(self):
         text = td.packet_markdown(self.off, cfg(), self.statements[0])
@@ -956,3 +956,125 @@ class DocketInTheOutputs(unittest.TestCase):
     def test_an_unscheduled_packet_is_filed_away_from_the_sale(self):
         self.assertEqual(td.packet_path(self.off).parent.name, "undated")
         self.assertEqual(td.packet_path(self.on).parent.name, SALE)
+
+
+class TheTabCarriesWhatCanBeActedOn(unittest.TestCase):
+    """565 of one run's 820 candidates were inventory with no auction at all.
+
+    Scrolling past them to reach the 20 you can bid on is how a working tool
+    stops being used. `SHEET_DOCKETS` keeps them off the tab — and off the tab
+    only: they are still screened, still tiered, still counted, still in the
+    snapshot that `offer_history` reads.
+    """
+
+    def setUp(self):
+        self.statements = td.statement_report(cfg(), ["Dallas"], TODAY, SALE)
+
+    def row(self, **over):
+        return td.screen(listing(**over), cad(), checks(), cfg(), TODAY, SALE)
+
+    def tab(self, results, dockets=None):
+        config = cfg()
+        if dockets is not None:
+            config = dict(config, thresholds=dict(config.get("thresholds") or {},
+                                                  SHEET_DOCKETS=dockets))
+        return td.sheet_rows(results, config, TODAY, SALE, self.statements)
+
+    def test_an_unscheduled_auction_listing_is_not_published(self):
+        off = self.row(sale_date=None, status="Available for Future Sale")
+        _, spec = self.tab([off])
+        self.assertEqual(spec["data_rows"], [])
+
+    def test_a_struck_off_listing_is_published_despite_having_no_sale_date(self):
+        """The reason this reads the docket state and not the sale date.
+
+        Struck-off property has no auction and never will — it is bought from
+        the county across the counter, today. A "has a date" filter would have
+        deleted all 235 of them from a live run.
+        """
+        otc = self.row(sale_date=None, sale_type="struck_off")
+        self.assertEqual(otc["docket"]["state"], td.OVER_THE_COUNTER)
+        _, spec = self.tab([otc])
+        self.assertEqual(len(spec["data_rows"]), 1)
+
+    def test_an_on_docket_listing_is_published(self):
+        _, spec = self.tab([self.row(sale_date=SALE)])
+        self.assertEqual(len(spec["data_rows"]), 1)
+
+    def test_a_listing_for_another_sale_is_published(self):
+        _, spec = self.tab([self.row(sale_date="2026-11-03")])
+        self.assertEqual(len(spec["data_rows"]), 1)
+
+    def test_an_unreadable_date_is_published_because_it_may_be_this_docket(self):
+        """No date *and no reason given* might be a date we failed to read.
+
+        Hiding a row that could be biddable is the failure this module exists
+        to avoid, so the benefit of the doubt goes to showing it.
+        """
+        unknown = self.row(sale_date=None, status="Active")
+        self.assertEqual(unknown["docket"]["state"], td.DATE_UNKNOWN)
+        _, spec = self.tab([unknown])
+        self.assertEqual(len(spec["data_rows"]), 1)
+
+    def test_the_held_back_rows_are_not_rejected(self):
+        off = self.row(sale_date=None, status="Available for Future Sale")
+        self.tab([off])
+        self.assertEqual(off["status"], "candidate")
+        self.assertEqual(off["rejections"], [])
+        self.assertIsNotNone(off["tier"])
+
+    def test_and_the_tab_says_how_many_it_held_back(self):
+        """A tab quietly showing fewer rows than the run found is its own lie."""
+        rows, _ = self.tab([self.row(sale_date=SALE),
+                            self.row(sale_date=None, account="9",
+                                     status="Available for Future Sale")])
+        self.assertIn("1 not-yet-scheduled candidate(s) held off this tab", rows[1][0])
+        self.assertIn("SHEET_DOCKETS", rows[1][0])
+        self.assertIn("in the snapshot", rows[1][0])
+
+    def test_the_county_header_counts_match_the_rows_under_it(self):
+        rows, spec = self.tab([self.row(sale_date=SALE),
+                               self.row(sale_date=None, account="9",
+                                        status="Available for Future Sale")])
+        header = rows[spec["county_rows"][0]][0]
+        self.assertIn("1 shown of 2 listed", header)
+        self.assertIn("1 not yet scheduled, held off this tab", header)
+
+    def test_it_is_configurable_back_to_everything(self):
+        off = self.row(sale_date=None, status="Available for Future Sale")
+        _, spec = self.tab([off], dockets="on_docket,over_the_counter,other_sale,"
+                                          "date_unknown,not_scheduled")
+        self.assertEqual(len(spec["data_rows"]), 1)
+
+    def test_the_snapshot_still_records_every_candidate(self):
+        """`offer_history` reads snapshots — a row off the tab must still be in it."""
+        off = self.row(sale_date=None, status="Available for Future Sale")
+        on = self.row(sale_date=SALE, account="9")
+        payload = td.snapshot([off, on], cfg(), TODAY, SALE, self.statements, [])
+        self.assertEqual(len(payload["results"]), 2)
+
+    def note(self, results, **kw):
+        rows, spec = self.tab(results, **kw)
+        return " ".join(str(rows[i][0]) for i in spec["note_rows"])
+
+    def test_an_emptied_county_is_not_reported_as_having_failed_the_gates(self):
+        """The distinction the whole module turns on, in the one place it shows.
+
+        A county block goes empty for three different reasons and they must not
+        share a sentence. A held-back row passed every gate; saying it did not
+        is a finding the run never made.
+        """
+        off = self.row(sale_date=None, status="Available for Future Sale")
+        note = self.note([off])
+        self.assertIn("none of them on a docket", note)
+        self.assertIn("still screened and in the snapshot", note)
+        self.assertNotIn("no listing survived the gates", note)
+
+    def test_a_county_whose_listings_were_all_rejected_still_says_so(self):
+        rejected = td.screen(listing(sale_date=SALE), cad(homestead=True), checks(),
+                             cfg(), TODAY, SALE)
+        self.assertEqual(rejected["status"], "rejected")
+        self.assertIn("no listing survived the gates", self.note([rejected]))
+
+    def test_a_county_that_published_nothing_says_that_instead(self):
+        self.assertIn("no listing published", self.note([]))

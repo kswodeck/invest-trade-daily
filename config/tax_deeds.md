@@ -28,7 +28,7 @@ actually ran is a column of its own, next to the ones that did not.
 | `data/tax_deeds/<date>.json` | the run snapshot, every listing including rejects |
 | `data/tax_deeds/manual/<source>.csv` | operator drop-box for PDF-only counties |
 | `reports/tax_deeds/<sale>/<county>_<acct>.md` | packet per Tier A/B candidate |
-| Google Sheet tab `Tax Deeds` | the shortlist, rewritten in full each run |
+| Google Sheet tab `Tax Deeds` | the shortlist you work from, rewritten in full each run — docketed and over-the-counter rows, per `SHEET_DOCKETS` |
 
 ## Running it
 
@@ -68,6 +68,7 @@ widen a gate for one run without a commit.
 | `MAX_ENRICHMENTS` | 250 | CAD/geocode/flood lookups per county per run |
 | `PACKET_TIERS` | `A,B,C` | which tiers get a due-diligence packet |
 | `PACKET_DOCKETS` | `on_docket,over_the_counter,other_sale` | which docket states get one |
+| `SHEET_DOCKETS` | `on_docket,over_the_counter,other_sale,date_unknown` | which docket states reach the tab |
 
 ## §34.015 — fill this in
 
@@ -106,11 +107,13 @@ the sale being screened. `PACKET_DOCKETS` decides which docket states get one,
 and it is bounded to exactly that: whether a markdown checklist is written.
 
 **Having no sale date is never a reason to reject, rank down, or drop a row.** A
-row outside the set is screened, tiered, ranked, published to the sheet and
-recorded in the snapshot exactly as before, and the gate adds no flag of its
-own. The run prints what it withheld and says so in those words, because a
-packet that was not written must never be mistaken for a property that was
-turned down.
+row outside the set is screened, tiered, ranked, recorded in the snapshot and
+published to the sheet wherever `SHEET_DOCKETS` allows it, and the gate adds no
+flag of its own. The run prints what it withheld and says so in those words,
+because a packet that was not written must never be mistaken for a property
+that was turned down. The two gates are separate knobs on purpose: one decides
+whether a file is written, the other whether a row is worth your morning, and
+neither is a finding about the property.
 
 The default is proof of the rule rather than an exception to it:
 `over_the_counter` **has no sale date and is kept**, because struck-off property
@@ -123,7 +126,43 @@ What it leaves out is `not_scheduled` — real inventory the county has not
 docketed — and `date_unknown`. Set
 `PACKET_DOCKETS=on_docket,over_the_counter,other_sale,not_scheduled,date_unknown`
 to put the whole pipeline back on disk. Against the 2026-09-07 run that is 265
-packets instead of 806, with all 806 rows still on the sheet and none rejected.
+packets instead of 806, with none rejected.
+
+## The tab is the list you work from
+
+`SHEET_DOCKETS` is the same shape of gate pointed at the `Tax Deeds` tab. The
+2026-09-10 run screened 1,207 listings into 820 candidates, and **565 of them
+were `not_scheduled`** — real county inventory with no auction assigned. Nothing
+is wrong with those rows. They are also not actionable: there is nothing to
+register for, nothing to drive to, and no date to be late for. Scrolling past
+565 of them to reach the 20 you can bid on is how a working tool stops being
+used. The default publishes 255 rows of that run instead of 820.
+
+**This hides a row. It never rejects one.** Held-back rows are screened, tiered,
+counted in the step summary and written to the snapshot in full — `offer_history`
+reads those snapshots, so a row missing from the tab must never be missing from
+the record. The banner gives the count and names the knob, the county headers
+give it per county, and the step summary repeats it with the breakdown: two
+numbers that differ with nothing to explain the gap is how a tool earns
+distrust.
+
+It reads the docket state, never "does this row have a sale date", and for the
+same reason as the packet gate. `over_the_counter` has no date and never will —
+struck-off property is bought from the county across the counter rather than at
+an auction — and it is **the most actionable category on the sheet**. A date
+filter would have deleted all 235 of them. `date_unknown` stays on the opposite
+reasoning: no date *and no status explaining why* may be a date this run failed
+to read, and hiding a row that might be biddable is the failure this module
+exists to avoid. It carries `no_sale_date`, which ranks it down where the reader
+can see it.
+
+Set `SHEET_DOCKETS=on_docket,over_the_counter,other_sale,date_unknown,not_scheduled`
+to put the whole pipeline back on the tab.
+
+A county block that ends up empty says **which** of three things happened — no
+listing published, every listing rejected, or candidates held off the tab —
+because a row held back passed every gate, and a note saying it did not is a
+finding the run never made.
 
 ## Which sale a row is for
 
@@ -149,9 +188,12 @@ of a run into Tier C and make the tiers meaningless, the same trap
 | `other_sale` | `sale <date>` | set for a different date |
 | `date_unknown` | `unknown` | nothing published and nothing said — the only unknown of the five |
 
-It changes four things:
+It changes five things:
 
 - **A column**, "On This Docket", beside the sale date.
+- **Whether the row reaches the tab at all.** `SHEET_DOCKETS` and
+  `PACKET_DOCKETS` both read this state. Neither is a finding and neither
+  rejects anything — see "The tab is the list you work from" above.
 - **The sort.** On-docket rows come first, *above* the tier: a Tier A property
   six weeks out is not a better use of tomorrow morning than a Tier B one on
   tomorrow's docket.
