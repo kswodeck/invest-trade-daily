@@ -1,0 +1,330 @@
+{
+  "date": "2026-09-12",
+  "generated_at_et": "2026-09-12T06:35:55-04:00",
+  "truncated": false,
+  "data_quality_notes": "Research ran to completion \u2014 notes.md carries a RESEARCH COMPLETE block at 06:46 ET and a superseding one at 06:54, so `truncated` is false and nothing here is reconstructed. Nineteen candidate lines resolve to 10 distinct ideas (last entry per symbol wins); the extra lines are conviction corrections, one SVRA re-capture adding market cap, and two re-captures fixing mislabelled benchmarks.\n\nSKEW, named rather than balanced away: 1 new long (MET), 2 shorts (SPY existing, XLI new), 2 holds (CCJ, SVRA) and 5 exits (GLD, NKE, LCII, BCC, LULU). This is a risk-reducing report. It is earned by fetched data \u2014 a Fed priced 81% to hike on Wednesday, CPI near 3.5%, a 4.95% 10y, five unrelated bond proxies de-rating together, industrials breaking down \u2014 not by mood, and not by over-fitting the 0-for-6 track record, which at six closed trades is noise and moved no bar. Research rejected an XLV long that would have balanced the optics: the XLV/XLI pair is real but the outright long sits below two declining averages, and one honest leg beats two dressed as conviction.\n\nNO INTRADAY IDEAS, and that is not a gap: this is a Saturday run, there is no intraday setup to have, and all equity entries are for the Monday 2026-09-14 open. No crypto and no event contracts either, each rejected with a stated reason rather than skipped \u2014 the FOMC leg is consensus at 81c with no probability disagreement to trade, every CPI and unemployment strike was untradeably illiquid, and the crypto-up/gold-down divergence could not be reconciled from fetched data, so no crypto direction was taken.\n\nPRICES: every finalist was re-quoted at synthesis. All ten returned Friday 2026-09-11's 16:00 ET close, unchanged from research, because the market is closed \u2014 that is a closed market, not stale data.\n\nSOURCES THAT FAILED: Yahoo returned HTTP 429 on every index symbol (^GSPC, ^NDX, ^DJI, ^RUT, ^VIX, ES, NQ, DXY, ^TNX, gold, WTI) across all four fallbacks, so there is NO index, VIX, dollar, gold-spot or crude level anywhere in this report and `market_context.levels` carries null for each rather than an estimate. SPY 764.29 is the ETF's own quote, not the index. Single-name equity data (finnhub, nasdaq) was unaffected. Also failed: stooq (404 on index tickers), finnhub indices (CFD subscription required), alphavantage (no key), and `market_data.py short NKE` (nasdaq read timeout), so there is no short-interest data in this report. `sma200` is null throughout \u2014 the 120-day window cannot compute it, which is a window limit and not a source failure. No crude price was fetched, so no oil idea was attempted, and PFE, CEG, EEM, DINO, VST and IYR were checked only for level staleness, not re-underwritten.\n\nTWO CODE BUGS found during research, both worth fixing before the next run and neither a dead source: (1) `events()` at scripts/market_data.py:752 returns null prices for every Kalshi market because the API now uses `*_dollars`/`*_fp` field names, and it samples only 200 open markets with a client-side filter, so 'Fed' and 'CPI' both return count 0 \u2014 every event price here came from a direct series fetch instead. (2) `relative_strength()` at scripts/market_data.py:1095 puts `--peer` results in `vs_peer_pct` while `vs_benchmark_pct` stays against SPY; that mislabelled two candidates, caught and re-captured at 06:50. MET's three-month edge over XLF is +2.12 points, not the +7.32 first written, and that weaker number is now in its `key_risk` rather than buried.\n\nRATIOS: recomputed here from the final entry, target and downside rather than trusted. XLI 2.74:1, SPY 2.19:1, MET 2.09:1, CCJ 3.78:1 (long-term, against the 83.15 bear case from the 94.00 entry; 2.83:1 from Friday's close), SVRA 3.53:1. SPY at 2.19 and MET at 2.09 do sit close to the 2.0 swing floor, which is the signature worth being suspicious of \u2014 but both were built stop-first and the stop is the wide one, not the tight one: SPY's 783.50 is 1.88 ATR (floor 1.8 for an ETF) and sits above the 120-day high, MET's 92.90 is 2.29 ATR (floor 2.0) and sits below both the 50-day and the 2026-09-09 swing low. XLI 2.29 ATR and SVRA 3.81 ATR also clear. No target was moved to reach a floor. DG was dropped for exactly this reason: at a compliant 2.0 ATR stop its minimum passing target sits 5.62% above its 120-day high.\n\nFIVE OF THE TEN ARE EXIT INSTRUCTIONS (GLD, NKE, LCII, BCC, LULU) and carry a null target and null stop by construction \u2014 closing a position has no reward-to-risk and needs no stop, since it is the exit. They are ranked by conviction like everything else, and within a conviction band the ideas carrying a ratio are ordered by it while exits are ordered by how urgent and decisive the action is, which is why LCII leads the conviction-4 band and BCC and LULU, both reaffirmations of standing orders, trail it.\n\nCORRELATION CAP: counting only ideas that create or keep exposure, the rate path drives SPY short, XLI short and MET long \u2014 three, at the cap and not over it, and MET is the opposite sign to the two shorts, so the three together are less directional than the count suggests. CCJ and SVRA are idiosyncratic. The five exits create no exposure. Energy was held at its existing three pending ideas and deliberately not extended.\n\nRED TEAM (phase 2c). Cut one, downgraded two, fixed four, kept six untouched. Nine ideas survive.\n\nCUT: SVRA to the watchlist \u2014 unfalsifiable thesis with no dated event by its own admission, one evidence item of one kind, a 0.28 win probability against a 0.221 breakeven with no mechanism named, and an 8.00 target 13.44 ATR away against a 6.0 guide. Its counter_argument conceded the objection and answered only with small size. The live 1% position keeps its 4.60 stop and is not orphaned; it is simply no longer published as a recommendation.\n\nDOWNGRADED: SPY 4 to 3 and MET 4 to 3, each because the one thing distinguishing it from the consensus failed on inspection. SPY's reply to 'the hike is already priced' was the December leg at 58c being unsettled \u2014 re-fetched, KXFEDDECISION-26DEC-H25 trades 58c on 2,754 of 24h volume and 20,635 open interest, 54 bid / 58 ask, against the September hold leg's 8,119,103 and 16.6M. That is a quote, not a market view, and it is a factor of ~2,950 thinner than the contract the report treats as load-bearing elsewhere. MET's reply to the same objection reached for the 23.97-point six-month edge over XLF, which its own key_risk flags as stale \u2014 the three-month edge is 2.12 and the one-month 1.66, so the outperformance predates the quarter and there is none in the recent tape. MET also carries a timescale mismatch now written into its key_risk: float reinvestment accrues over quarters as bonds roll, not over the 15 sessions the swing runs.\n\nFIXED, not cut: XLI's key_risk now states that the 161.00 target is 6.27 ATR out past a 6.0 guide and that the 165.00 trim alone is 1.98:1 \u2014 the target was not manufactured (stop set first at 2.29 ATR, and 164.90 would already clear the floor) but it is the part most likely not to arrive in time. NKE's key_risk gains the risk nobody had named: the exit completes 0.68% above the 120-day low and then stands aside through a dated print 17 days out. GLD's counter_argument is corrected \u2014 'the hedge did not hedge' holds at six months (-29.34 vs SPY) but not at three (-0.38) or one (-0.46), so over the window in which CPI >3.4% actually repriced, gold roughly tracked SPY. The exit stands on price and real yield rather than on that test; conviction held at 5. SPY's key_risk now records that widening its 1.88 ATR stop to the 2.25 ATR band where this report's stop-outs cluster drops the ratio to 1.83:1, under the floor.\n\nCORRELATION, corrected. The synthesis note claimed MET is 'the opposite sign to the two shorts, so the three together are less directional than the count suggests'. That is wrong on the shared factor. The common exposure is the rate path, not equity beta, and on the rate path all three are the same bet: SPY short, XLI short and MET long each lose on a dovish Wednesday, by each idea's own key_risk. Seven percent of book rides one FOMC print in one direction, and the GLD and BCC exits are predicated on the same hike. Three ideas is at the correlation cap and not over it, so nothing was cut on this ground \u2014 but two of the three no longer carry a 4, which is the risk reduction the miscount was hiding.\n\nKEPT UNTOUCHED, explicitly rather than by omission: LCII, BCC, LULU, CCJ, and GLD and NKE at conviction 5. LCII is the strongest idea here and nothing in it needed changing \u2014 1.2440 x PATK 73.40 = 91.31 against a 91.02 close was re-verified from live quotes, and both legs of the merger arithmetic come from primary SEC documents. CCJ already carries a dated, explicit invalidation, which is worth more than the win_probability its validation block asks for and which could not be supplied without inventing one.\n\nVALIDATION ARTIFACTS \u2014 read before acting on the 8-of-10 failure count, because none of the three causes is a defect in an idea and all three were checked directly this phase. (1) The five exits (GLD, NKE, LCII, BCC, LULU) fail direction_consistency, risk_reward and stop_distance because target and stop are null, which is what closing a position means \u2014 validate_report.py has no exit concept, so it will fail every exit instruction this report ever issues. (2) The sources FAIL on GLD, XLI, SPY, MET and BCC is a HEAD-versus-GET artifact: check_sources issues session.head(), and api.elections.kalshi.com answers HEAD with 404 and GET with 200. Both cited markets were fetched directly and carry exactly the data claimed \u2014 KXFEDDECISION-26SEP-H25 last 0.8000, 80 bid / 81 ask, OI 6,321,783; KXCPIYOY-26SEP-T3.4 last 0.7700. The URLs are real. (3) The earnings_date warns on MET and CCJ are a truncation artifact: fetch_context calls md.earnings(45), and the upstream calendar caps at 1500 rows so a 45-day window returns only its far tail. Queried directly, both are confirmed for 2026-11-03 \u2014 MET amc at est EPS 2.5828 on $20.30B, CCJ at est EPS 0.3688. NKE 2026-09-28 at 0.4523 on $11.48B and FDX 2026-09-16 at 4.0486 on $22.59B also re-confirmed. CONSEQUENCE: phase 2d runs validate_report.py --enforce, which demotes every FAIL verdict to the watchlist. On these artifacts it would demote seven of the nine surviving ideas and leave a one-idea report from a research run that completed. Nothing here was edited to dodge that \u2014 the three artifacts are a tooling matter for a separate change with tests, alongside the two market_data.py bugs research already logged. Validation demoted 8 idea(s) whose numbers did not check out. 1 more carry warnings \u2014 see the validation block on each.",
+  "market_context": {
+    "summary": "The Fed is priced to HIKE 25bp on Wednesday 2026-09-16 \u2014 the Kalshi leg repriced from 61c to 81c on $6.29M open interest, with the hold leg down to 20/21c \u2014 and that single fact frames every idea below. The curve is bear-steepening: the 10y at 4.95% against an effective funds rate of 3.63%, positively sloped by 0.33 of a point, which is term premium rather than growth. Long-duration and rate-sensitive assets are fighting the tape (XLU 11.14% off its high, GIS 15.05%, TLT 0.25% off its 120-day low, GLD 11.13% below its high even as inflation expectations repriced UP), while industrials are the worst sector against SPY on both one and six months and the loss is accelerating. Short-duration cash flows that earn the higher rate \u2014 a life insurer's float \u2014 are the one place the same move is a tailwind. No index, VIX or dollar level was obtainable this run, so none is stated.",
+    "regime": "risk-off",
+    "levels": {
+      "us10y": 4.95,
+      "us2y": 4.56,
+      "eff_fed_funds": 3.63,
+      "t10y2y": 0.33,
+      "unemployment": 4.1,
+      "spy_etf": 764.29,
+      "tlt": 80.87,
+      "btc": 77258,
+      "spx": null,
+      "ndx": null,
+      "vix": null,
+      "dxy": null,
+      "gold_spot": null,
+      "wti": null,
+      "note": "spx/ndx/vix/dxy/gold_spot/wti are null because Yahoo returned HTTP 429 on every index symbol across all four fallback sources. spy_etf is the ETF's own quote, not the index. All levels are Friday 2026-09-11 closes except the FRED series, dated 2026-09-10/11."
+    },
+    "econ_calendar": [
+      {
+        "event": "FOMC rate decision \u2014 25bp hike priced at 81c",
+        "datetime_et": "2026-09-16T14:00",
+        "importance": "high",
+        "consensus": "25bp hike (Kalshi 81c; hold leg 20/21c)"
+      },
+      {
+        "event": "FDX Q1 earnings \u2014 freight bellwether",
+        "datetime_et": "2026-09-16T16:00",
+        "importance": "high",
+        "consensus": "est EPS 4.05 on revenue $22.59B"
+      },
+      {
+        "event": "LEN Q3 earnings (amc)",
+        "datetime_et": "2026-09-16T16:15",
+        "importance": "medium",
+        "consensus": "est EPS 1.31 on revenue $8.40B"
+      },
+      {
+        "event": "GIS earnings",
+        "datetime_et": "2026-09-15T08:00",
+        "importance": "medium",
+        "consensus": null
+      },
+      {
+        "event": "CBRL earnings (bmo), PLAY earnings (amc)",
+        "datetime_et": "2026-09-14T08:00",
+        "importance": "low",
+        "consensus": null
+      },
+      {
+        "event": "NKE Q1 FY27 earnings",
+        "datetime_et": "2026-09-28T16:15",
+        "importance": "medium",
+        "consensus": "est EPS 0.4523 on revenue $11.48B"
+      },
+      {
+        "event": "September CPI \u2014 the next tier-one print, outside a 10-session window",
+        "datetime_et": "2026-10-14T08:30",
+        "importance": "high",
+        "consensus": null
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "symbol": "CCJ",
+      "instrument": "Cameco Corporation",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "long_term",
+      "conviction": 3,
+      "entry": {
+        "ideal": 94.0,
+        "zone_low": 88.0,
+        "zone_high": 97.0,
+        "order_type": "limit"
+      },
+      "exit": {
+        "target": 135.0,
+        "scale_plan": "Continuing position \u2014 hold existing size, do not add here. Add only in the 83-88 zone if it trades there."
+      },
+      "stop": null,
+      "bear_case_price": 83.15,
+      "position_size_pct": 3,
+      "last_price": 96.68,
+      "last_price_asof": "2026-09-11T16:00 ET close (market closed; Saturday run)",
+      "catalyst": {
+        "event": "Nuclear fuel demand from datacenter and grid buildout against a long-lead uranium supply base; Q3 results 2026-11-03",
+        "datetime_et": null,
+        "action": "HOLD the position opened 2026-08-17 at 94.00, now 96.68 and +2.9%. No new money at 96.68 \u2014 relative strength does not support adding. Accumulate only into 83-88.",
+        "wait": false
+      },
+      "thesis": "UPDATE \u2014 continuing long-term holding, held rather than added, with one genuine concern now on the record. The nuclear fuel thesis is the rare one here that a hiking Fed does not damage: it is a physical supply-and-contracting story, not a duration bet. But CCJ is lagging badly \u2014 it has given up 29.42 points to XLE over six months and 16.35 over three, so the energy complex is being bought and this is not getting the bid. Bear case 83.15, the 120-day low: 3.78:1 against the 135 target measured from the 94.00 entry the position is on, or 2.83:1 from Friday's 96.68 close if it were being opened today. Both clear the 2.5 long-term floor.",
+      "key_risk": "Lagging relative strength over three separate windows is how a broken thesis usually looks before the news arrives. INVALIDATION, explicit and dated: cut the position if CCJ is still underperforming XLE on a 3-month basis at the 2026-11-03 Q3 report, or if Cameco guides down contracted deliveries or realised price for 2027. Do not average down before that date.",
+      "counter_argument": "The strongest case against holding is the relative strength itself \u2014 a name that cannot keep up with its own sector during that sector's leadership run is being told something. Partially answered: uranium contracting is lumpy and does not track the crude-driven moves lifting XLE, so some divergence is structural. That does not excuse 29 points, which is why the invalidation is dated rather than vague.",
+      "evidence": [
+        {
+          "kind": "positioning",
+          "detail": "Fetched relative strength: CCJ vs XLE -9.10% (1m), -16.35% (3m), -29.42% (6m) \u2014 the concern, measured rather than asserted. Insider check run: zero open-market buys in six months, so no confirming signal there either",
+          "source": "https://www.nasdaq.com/market-activity/stocks/ccj/historical"
+        },
+        {
+          "kind": "technical_level",
+          "detail": "CCJ 96.68 sits above the 50-day SMA of 95.18 and below the 20-day of 100.03; the 135 target is a recovery to the 120-day high of 131.21 rather than a new high, and 83.15 is the 120-day low",
+          "source": "https://www.nasdaq.com/market-activity/stocks/ccj/historical"
+        }
+      ],
+      "sources": [
+        "https://www.nasdaq.com/market-activity/stocks/ccj/historical",
+        "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001009001&type=6-K"
+      ],
+      "rank": 1,
+      "risk_reward": 3.78,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 3.78,
+        "claimed_risk_reward": 3.78,
+        "breakeven_probability": 0.209,
+        "stop_atr_multiple": null,
+        "live_price": 96.68,
+        "live_price_asof": "2026-09-11T20:00:00+00:00",
+        "market_session": "closed",
+        "price_age_minutes": 886.1,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": 3.7629,
+        "checked_at_et": "2026-09-12T06:47:18-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 3.78:1 clears the 2.5:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 94.0 is -2.8% from live 96.68"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "long-term idea, no dated event expected"
+          },
+          {
+            "check": "earnings_date",
+            "status": "warn",
+            "detail": "claims an earnings catalyst but CCJ is not on the fetched calendar"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "long-term target is valuation-anchored, not ATR-bound"
+          },
+          {
+            "check": "stop_distance",
+            "status": "pass",
+            "detail": "long-term downside is a bear case, not a stop \u2014 no ATR floor applies"
+          },
+          {
+            "check": "expectancy",
+            "status": "warn",
+            "detail": "no win_probability stated; this idea needs better than 21% to break even at 3.78:1"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is closed; last price 2026-09-11T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "no bid/ask available (normal outside regular hours)"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "3% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 3 rests on 2 independent kinds: positioning, technical_level"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "1 of 2 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    }
+  ],
+  "watchlist": [
+    {
+      "symbol": "KXFEDDECISION-26SEP-H0",
+      "instrument": "Kalshi \u2014 Fed maintains rate at September 2026 meeting",
+      "note": "CANCEL THIS RESTING ORDER \u2014 the most urgent line in today's report. A standing YES buy at 47c on a contract that is 20 bid / 21 ask and resolves Wednesday 2026-09-16. That is more than twice the market's probability for something settling in two sessions, with no time to be wrong-but-early. This is not a view that the hold outcome is mispriced \u2014 research declined the other side at 81c for lack of an edge. It is only that 47c is the wrong price. Source: https://api.elections.kalshi.com/trade-api/v2/markets/KXFEDDECISION-26SEP-H0",
+      "trigger": "None. Cancel; do not replace."
+    },
+    {
+      "symbol": "DG",
+      "instrument": "Dollar General Corporation",
+      "note": "CANCEL the resting BUY at 134.50 and do not replace it. Re-underwritten properly this run rather than left as a flag: the market at 124.58 is 7.38% BELOW the published entry, so a limit buy there is no longer a pullback entry. The business case is fine \u2014 4 beats in 4 prints, consumer trade-down is real with CPI near 3.5% \u2014 but the risk arithmetic fails. ATR14 is 4.2695 (3.43%), so the 2.0 ATR floor requires a stop at or below 116.04, which requires a target at or above 141.66 to clear 2.0:1 \u2014 and the 120-day high is 134.125. The minimum compliant target sits 5.62% above the highest price DG has traded in 120 sessions.",
+      "trigger": "Interesting again nearer the 120-day low of 99.57, or after the ATR compresses."
+    },
+    {
+      "symbol": "VST",
+      "instrument": "Vistra Corp",
+      "note": "Dead level. The resting BUY at 128.00 is 15.92% below a 148.38 market and should be treated as expired rather than pending.",
+      "trigger": "Re-underwrite from current levels if it is still wanted."
+    },
+    {
+      "symbol": "BTC",
+      "instrument": "Bitcoin (and the /MBTU6 short at 64,340)",
+      "note": "Dead levels, roughly 20% through. BTC is 77,258 against a published SELL at 63,400. Crypto direction was left deliberately unresolved this run: the crypto-up/gold-down divergence could not be reconciled from fetched data, so no new view is offered.",
+      "trigger": "A reconciled read on the crypto/gold divergence, or fresh levels."
+    },
+    {
+      "symbol": "XLV",
+      "instrument": "Health Care Select Sector SPDR Fund",
+      "note": "Rejected as an outright long, kept as a note. The pair case is real \u2014 XLV vs XLI is +5.44/+8.90/+5.81 over 1m/3m/6m \u2014 but XLV at 165.36 sits below both its 20-day (170.89) and 50-day (166.24), after a -3.6% week. 'Better than XLI' is a reason to be short XLI, which this report already is, not a reason to be long XLV.",
+      "trigger": "XLV reclaiming its 20-day with the relative trend intact."
+    },
+    {
+      "symbol": "LEN",
+      "instrument": "Homebuilders (LEN, KBH, ITB) \u2014 short rejected",
+      "note": "Rejected: the move already happened. ITB is 15.83% off its high, LEN 18.73%, KBH 22.74%, all below their 20- and 50-day averages. This is the same observation that justifies exiting BCC, which is only 14.69% off its high and has not yet discounted what the builders have.",
+      "trigger": "A bounce back into the declining averages would make the short late rather than too late."
+    },
+    {
+      "symbol": "SVRA",
+      "instrument": "Savara Inc",
+      "note": "KILLED by the red team, not by price. The thesis is not falsifiable: the catalyst field says in terms that no dated event is scheduled or disclosed, and 'clinical and regulatory progress' is a mood rather than a claim that can be checked and can be wrong. It carries exactly one evidence item, of one kind (technical_level) \u2014 a chart observation, not a confirmation. A 0.28 win probability is claimed against a 0.221 breakeven with no mechanism named anywhere in the thesis, which itself says 'nothing confirmed it'. And the 8.00 target is +49.5% from the 5.35 entry, 13.44 ATR away against a 6.0 ATR guide for a 15-session swing \u2014 more than double. Its own counter_argument concedes the objection is 'close to right' and answers it only with small size; size is a reason an idea does not matter much, not a reason it is right. THE LIVE POSITION IS NOT ORPHANED: the 1% position opened 2026-08-23 at 5.35 keeps its 4.60 stop, which is sound at 3.81 ATR. It is no longer a published recommendation and must not be added to.",
+      "trigger": "A dated readout or filing on the molgramostim programme, or a second independent confirmation. Until then the stop is the whole thesis.",
+      "demoted_from_rank": 10,
+      "demotion_reason": "Unfalsifiable thesis, one evidence kind, no dated catalyst, 13.44 ATR target, unsupported win probability"
+    },
+    {
+      "symbol": "GLD",
+      "instrument": "SPDR Gold Shares",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined; 2 source(s) return 404: https://api.elections.kalshi.com/trade-api/v2/markets/KXFEDDECISION-26SEP-H25, https://api.elections.kalshi.com/trade-api/v2/markets/KXCPIYOY-26SEP-T3.4",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 1,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined; 2 source(s) return 404: https://api.elections.kalshi.com/trade-api/v2/markets/KXFEDDECISION-26SEP-H25, https://api.elections.kalshi.com/trade-api/v2/markets/KXCPIYOY-26SEP-T3.4"
+    },
+    {
+      "symbol": "NKE",
+      "instrument": "NIKE Inc Class B",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 2,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined"
+    },
+    {
+      "symbol": "LCII",
+      "instrument": "LCI Industries",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 3,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined"
+    },
+    {
+      "symbol": "XLI",
+      "instrument": "Industrial Select Sector SPDR Fund",
+      "note": "Demoted by validation: 1 source(s) return 404: https://api.elections.kalshi.com/trade-api/v2/markets/KXFEDDECISION-26SEP-H25",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 4,
+      "demotion_reason": "1 source(s) return 404: https://api.elections.kalshi.com/trade-api/v2/markets/KXFEDDECISION-26SEP-H25"
+    },
+    {
+      "symbol": "BCC",
+      "instrument": "Boise Cascade Company",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined; 1 source(s) return 404: https://api.elections.kalshi.com/trade-api/v2/markets/KXFEDDECISION-26SEP-H25",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 5,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined; 1 source(s) return 404: https://api.elections.kalshi.com/trade-api/v2/markets/KXFEDDECISION-26SEP-H25"
+    },
+    {
+      "symbol": "LULU",
+      "instrument": "Lululemon Athletica Inc",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 6,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined"
+    },
+    {
+      "symbol": "SPY",
+      "instrument": "SPDR S&P 500 ETF Trust",
+      "note": "Demoted by validation: 2 source(s) return 404: https://api.elections.kalshi.com/trade-api/v2/markets/KXFEDDECISION-26SEP-H25, https://api.elections.kalshi.com/trade-api/v2/markets/KXFEDDECISION-26SEP-H0",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 7,
+      "demotion_reason": "2 source(s) return 404: https://api.elections.kalshi.com/trade-api/v2/markets/KXFEDDECISION-26SEP-H25, https://api.elections.kalshi.com/trade-api/v2/markets/KXFEDDECISION-26SEP-H0"
+    },
+    {
+      "symbol": "MET",
+      "instrument": "MetLife Inc",
+      "note": "Demoted by validation: 1 source(s) return 404: https://api.elections.kalshi.com/trade-api/v2/markets/KXFEDDECISION-26SEP-H25",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 8,
+      "demotion_reason": "1 source(s) return 404: https://api.elections.kalshi.com/trade-api/v2/markets/KXFEDDECISION-26SEP-H25"
+    }
+  ],
+  "validation_summary": {
+    "checked": 9,
+    "passed": 0,
+    "warned": 1,
+    "failed": 8,
+    "enforced": true,
+    "demoted": 8
+  }
+}
