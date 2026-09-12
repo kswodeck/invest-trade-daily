@@ -14,7 +14,9 @@ import json
 import shutil
 import sys
 import tempfile
+import time
 import unittest
+import unittest.mock
 from datetime import date
 from pathlib import Path
 
@@ -487,6 +489,48 @@ class ARunThatRunsOutOfTimeStillLeavesARecord(unittest.TestCase):
         self.assertIsNone(screen.enrichment_deadline(0))
         self.assertIsNone(screen.enrichment_deadline(None))
         self.assertIsNotNone(screen.enrichment_deadline(5))
+
+    def test_the_budget_runs_from_the_start_of_the_run_not_from_the_call(self):
+        """A budget measured from an unbounded starting point is not a budget.
+
+        The deadline used to be stamped where it is *used*, which is after
+        source verification — sixteen sources, each with robots checks, retries
+        and timeouts. So the real ceiling was "however long verification took,
+        plus 32 minutes, plus the writes", against a job cap that is a fixed
+        45. The 2026-09-11 run came in at 37m51s — it survived, with about
+        seven minutes to spare, and none of that margin was something the
+        budget was controlling.
+        """
+        started = time.monotonic()
+        spent = 9 * 60          # verification, say
+        deadline = screen.enrichment_deadline(32, started)
+        self.assertLessEqual(deadline - (started + spent), (32 - 9) * 60 + 1,
+                             "time already spent must come out of the budget")
+
+    def test_and_the_run_spends_it_from_the_top(self):
+        """Not just the helper — `main` has to hand it the real start."""
+        stamps = []
+        real = screen.enrichment_deadline
+
+        def spy(minutes, started=None):
+            stamps.append(started)
+            return real(minutes, started)
+
+        with unittest.mock.patch.object(screen, "enrichment_deadline", spy):
+            self.run_with("--deadline-minutes", "60")
+        self.assertEqual(len(stamps), 1)
+        self.assertIsNotNone(stamps[0], "main passed no start stamp, so the "
+                                        "clock restarted after verification")
+        self.assertLessEqual(stamps[0], time.monotonic())
+
+    def test_the_default_leaves_room_for_the_rest_of_the_job(self):
+        """Enrichment is not the last thing the job does.
+
+        After it come screening, the snapshot, the packets, the Sheets write
+        and the commit step — all inside the same 45-minute cap. The default
+        has to leave those enough room, not merely be under 45 itself.
+        """
+        self.assertLessEqual(screen.DEFAULT_DEADLINE_MINUTES, 35)
 
 
 class APacketGateWithholdsAFileNotAProperty(unittest.TestCase):

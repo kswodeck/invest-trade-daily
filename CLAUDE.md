@@ -379,7 +379,11 @@ below exist to prevent. That happened on 2026-09-07: cancelled at 45m21s, and
 nothing at all left behind. The screener now keeps its own clock inside the
 job's (`--deadline-minutes`, default 32) and, when it runs out, stops *enriching*
 rather than stopping — enrichment being the only unbounded part, at three
-requests per property. Everything already fetched is still screened and written,
+requests per property. **That clock starts at the top of the process, not where
+it is used**: stamped at the call site it began after source verification, so
+the real ceiling was "verification, plus 32 minutes, plus the writes" against a
+fixed 45-minute cap. The 2026-09-11 run came in at 37m51s — it survived, with
+seven minutes to spare that the budget was not controlling. Everything already fetched is still screened and written,
 and the summary says the run was cut short, because a row past the cutoff carries
 `no_cad_match` for having never been looked up rather than for the district
 saying nothing, and those are not the same fact.

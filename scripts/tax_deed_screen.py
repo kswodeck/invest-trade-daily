@@ -82,7 +82,7 @@ def col_letter(index: int) -> str:
 DEFAULT_DEADLINE_MINUTES = 32
 
 
-def enrichment_deadline(minutes: float | None) -> float | None:
+def enrichment_deadline(minutes: float | None, started: float | None = None) -> float | None:
     """When to stop enriching, as a monotonic stamp.
 
     The workflow caps the job at 45 minutes, and a job killed by that cap runs
@@ -99,10 +99,21 @@ def enrichment_deadline(minutes: float | None) -> float | None:
     unbounded part: everything already fetched is still screened, still ranked
     and still written. A report that says "I ran out of time after 180 of 370"
     is worth having; a job that vanishes at minute 45 is not.
+
+    **`started` is the whole point of the second parameter.** The clock has to
+    run from the top of the process, not from wherever this is called. It used
+    to be stamped at the call site, which sits *after* source verification —
+    sixteen sources, each with robots checks, retries and timeouts — so the
+    real ceiling was "however long verification took, plus 32 minutes, plus the
+    snapshot, the packets and the Sheets write", against a job cap that is a
+    fixed 45. The 2026-09-11 run finished at 37m51s: it survived, with about
+    seven minutes to spare, and the margin was never something this budget
+    controlled. A budget measured from an unbounded starting point is not a
+    budget.
     """
     if minutes is None or minutes <= 0:
         return None
-    return time.monotonic() + minutes * 60
+    return (time.monotonic() if started is None else started) + minutes * 60
 
 
 def collect(cfg: dict, today: date, sale_date: str, only: list[str] | None = None,
@@ -531,6 +542,9 @@ def main(argv: list[str] | None = None, sources: Any = None) -> int:
                           "job killed by that cap writes nothing at all."))
     args = ap.parse_args(argv)
 
+    # Before anything else, including verification. See `enrichment_deadline`.
+    started = time.monotonic()
+
     cfg = td.load_config(args.config)
     today = datetime.now(ET).date()
     sale_date = args.sale_date or td.next_sale_date(today).isoformat()
@@ -565,7 +579,7 @@ def main(argv: list[str] | None = None, sources: Any = None) -> int:
     source_report: list[dict] = []
     if not every_list_failed:
         results, source_report = collect(cfg, today, sale_date, args.county, sources,
-                                         enrichment_deadline(args.deadline_minutes))
+                                         enrichment_deadline(args.deadline_minutes, started))
     source_report = verification + source_report
 
     for status in statements:
