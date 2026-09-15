@@ -140,11 +140,19 @@ class DryRun(unittest.TestCase):
         self.assertEqual(payload["counties"], ["Dallas", "Tarrant", "Johnson", "Ellis"])
 
     def test_the_snapshot_records_the_thresholds_the_run_actually_used(self):
+        """Against the config, not against literals.
+
+        The point is that the snapshot records what this run used, so a
+        deliberate threshold change is not a test failure — pinning the numbers
+        here made every tuning change look like a regression.
+        """
         self.run_screen()
         payload = json.loads(next((self.tmp / "data").glob("*.json")).read_text())
-        self.assertEqual(payload["thresholds"]["MAX_OPENING_BID"], 20000)
-        self.assertEqual(payload["thresholds"]["QUIET_TITLE_BUDGET"], 3500)
-        self.assertEqual(payload["thresholds"]["HOLDING_MONTHS"], 7)
+        cfg = td.load_config()
+        for name in ("MAX_OPENING_BID", "QUIET_TITLE_BUDGET", "HOLDING_MONTHS"):
+            self.assertEqual(payload["thresholds"][name], td.threshold(cfg, name), name)
+        self.assertEqual(set(payload["thresholds"]), set(td.DEFAULT_THRESHOLDS),
+                         "every threshold the run can read has to be in the record")
 
     def test_packets_are_written_for_tier_a_and_b_only(self):
         self.run_screen()

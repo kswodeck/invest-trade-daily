@@ -5,7 +5,8 @@
   "request_interval_seconds": 1.0,
   "respect_robots_txt": true,
   "thresholds": {
-    "MAX_OPENING_BID": 20000,
+    "MAX_OPENING_BID": 12000,
+    "_MAX_OPENING_BID": "Gate 1 rejects a published minimum bid above this. It bites only on rows that HAVE a published bid: 183 of the 2026-09-11 run's 252 tab rows had none, and a missing bid flags no_opening_bid rather than rejecting, because an unknown is not a finding. Of the 69 priced rows on that tab, 28 were over $12,000. Raising it does not surface un-priced inventory and lowering it does not hide any.",
     "MAX_BID_TO_VALUE": 0.75,
     "TIER_A_BID_TO_VALUE": 0.35,
     "QUIET_TITLE_BUDGET": 3500,

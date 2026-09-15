@@ -51,7 +51,7 @@ widen a gate for one run without a commit.
 
 | Knob | Default | What it does |
 | --- | --- | --- |
-| `MAX_OPENING_BID` | 20000 | Gate 1 rejects a larger minimum bid |
+| `MAX_OPENING_BID` | 12000 | Gate 1 rejects a larger *published* minimum bid |
 | `MAX_BID_TO_VALUE` | 0.75 | Gate 1 rejects above it; also the policy-cap walk-away |
 | `TIER_A_BID_TO_VALUE` | 0.35 | Tier A ceiling |
 | `QUIET_TITLE_BUDGET` | 3500 | in the ownership case only |
@@ -606,7 +606,7 @@ A **rejection** is a determination — something was read and it disqualifies:
 
 | Rejected | Why |
 | --- | --- |
-| opening bid over `MAX_OPENING_BID` | more capital than this is meant to deploy |
+| published opening bid over `MAX_OPENING_BID` | more capital than this is meant to deploy. A *missing* bid is an unknown and flags `no_opening_bid` instead — the cap is a finding about a number, and no number is not a finding |
 | homestead or agricultural exemption | §34.21(a) gives it 2 years to redeem |
 | mineral-only interest | same 2-year period, and no surface to sell |
 | mobile home without the land | it is not real property |
@@ -721,6 +721,96 @@ them ran.
 
 The cap still applies to it. Pricing on the fallback must not become a way
 around Gate 1.
+
+## What we actually know about a lot, measured
+
+Ranking is only as good as the fields behind it, so this is the state of those
+fields on a real run rather than on the schema. Measured against the 252 rows
+the 2026-09-11 run published:
+
+| Field | Rows carrying it | Where it comes from |
+| --- | --- | --- |
+| county, account, address, cause number | 252 / 252 | the county sale list |
+| adjudged value | 248 / 252 | the county sale list |
+| published opening bid | 69 / 252 | the county sale list |
+| sale date | 19 / 252 | the county sale list (the rest are struck-off) |
+| **CAD record** — appraised value, land/improvement split, year built, area, use code | **0 / 252** | never matched, see below |
+| property type, legal description | 0 / 252 | the lists publish neither |
+
+So every ranking decision the tool makes today rests on two numbers from the
+county's own list, and bid-to-value — the one ratio the tiering turns on —
+exists for **69 rows**, because it needs both. On those 69 the ranking works:
+the median is 0.39 and 34 of them are already inside the 0.35 Tier A threshold,
+held at Tier C only by the lien checks nobody is permitted to run.
+
+**The CAD lookup has never once matched.** Not a degraded hit rate — zero, on
+every run there has been: 370, 1,185, 1,207 and 1,209 listings, every row
+flagged `no_cad_match`. The 2026-09-11 summary names the reason for the one
+district that got as far as trying:
+
+```
+DCAD — page rendered but carried no appraised value ×21;
+       the district's own search returned no detail link ×12
+     - Stopped trying this district: gave up after 12 consecutive misses
+```
+
+Two distinct failures are worth separating there. `page rendered but carried no
+appraised value` is **our** parser not finding a number on a page that loaded —
+`parse_cad_record` reads HTML labels, and a district that renders its value
+client-side has none to read. `the district's own search returned no detail
+link` is `cad_search` not recognising the result shape. Neither is the district
+refusing us, which is what `CAD_GIVE_UP_AFTER` was built for: twelve
+consecutive *parser* misses retired DCAD for the whole run, and with it the 800
+Dallas rows behind it. TAD and JohnsonCAD recorded no attempts at all on that
+run, because enrichment ran out of time inside Dallas before reaching them.
+
+### What a working CAD record would buy
+
+Everything below is already in the appraisal roll and already has a consumer in
+this codebase, which is the point — these are not new features, they are
+features that cannot fire:
+
+- **Appraised value**, current rather than a judgment-date figure. Bid-to-value
+  stops depending on a number that can be years stale, and it would exist for
+  248 rows instead of 69.
+- **Land vs improvement split.** `TEARDOWN_IMPROVEMENT_VALUE` is configured at
+  $5,000 and has never once fired, because it reads `cad["improvement_value"]`.
+  It is the difference between a house, a teardown and a bare lot, and at these
+  prices most of the inventory is one of the latter two.
+- **Lot size and frontage.** `frontage_check` and `lot_size_check` both take the
+  CAD record and both currently return unavailable on every row. A 25-foot lot
+  where the zoning minimum is 50 is not a building site, and no other field in
+  the pipeline can tell you that.
+- **Exemptions.** `is_homestead` reads the CAD record. The homestead rejection —
+  a two-year redemption, the single most expensive thing to get wrong — is
+  currently decided on a field that is always absent.
+
+That last one is worth sitting with. Gate 1 rejects homesteads because
+§34.21(a) gives them two years to redeem, and the check reads a record that has
+never been retrieved. Nothing false is published, because an unknown flags
+rather than clears, but the flag is doing all the work and the rejection none.
+
+### Signals not yet collected, in the order they would pay
+
+1. **Census tract context**, from the geocoder that is already wired up. Median
+   home value, owner-occupancy and vacancy rate for the tract place a $5,000 lot
+   against its neighbourhood, which is most of what separates a bargain from a
+   reason. Free, keyless, one request, and the geocode is already being made.
+2. **Flood zone.** `resolve_flood_url` exists and works; the URL is currently
+   nulled, so `flood_zone_unchecked` is on all 252 rows. FEMA NFHL is public and
+   keyless. This is a config change, not a build.
+3. **Years delinquent / suit age.** How long a parcel has been in arrears
+   separates an oversight from an abandonment. Not in any list we parse today.
+4. **Municipal code enforcement and demolition orders.** The liens that actually
+   bite on cheap urban lots, and the ones a title search finds last. City
+   sources, not county — a different set of hosts from the robots-blocked clerk
+   portals.
+5. **Parcel geometry.** Landlocked, or adjacent to something the same owner
+   holds. County GIS services publish this; it is the check no ratio can stand
+   in for.
+
+None of 1–5 is worth building before the CAD lookup matches, because four of
+them are ranking refinements on top of a value the tool does not yet have.
 
 ## Enrichment is rationed
 

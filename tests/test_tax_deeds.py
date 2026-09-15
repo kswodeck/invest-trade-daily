@@ -120,6 +120,30 @@ class Gate1HardDisqualifiers(unittest.TestCase):
                            cad(appraised_value=188000.0), checks(), cfg(), TODAY)
         self.assertIn("opening_bid_over_cap", codes(result["rejections"]))
 
+    def test_the_cap_rejects_just_over_and_keeps_just_under(self):
+        """Whatever the cap is set to, it has to bite exactly at it."""
+        cap = td.threshold(cfg(), "MAX_OPENING_BID")
+        over = td.screen(listing(minimum_opening_bid=cap + 1),
+                         cad(appraised_value=cap * 20), checks(), cfg(), TODAY)
+        self.assertIn("opening_bid_over_cap", codes(over["rejections"]))
+        under = td.screen(listing(minimum_opening_bid=cap),
+                          cad(appraised_value=cap * 20), checks(), cfg(), TODAY)
+        self.assertNotIn("opening_bid_over_cap", codes(under["rejections"]))
+
+    def test_but_it_never_touches_a_listing_with_no_published_bid(self):
+        """The cap is a finding about a number. No number is not a finding.
+
+        183 of the 2026-09-11 run's 252 tab rows published no bid at all, so
+        the cap says nothing about them either way — they carry
+        `no_opening_bid`, which flags and ranks them down. Rejecting them for
+        an unknown is the mistake that hid 544 real candidates on the first
+        live run.
+        """
+        result = td.screen(listing(minimum_opening_bid=None), cad(), checks(),
+                           cfg(), TODAY)
+        self.assertNotIn("opening_bid_over_cap", codes(result["rejections"]))
+        self.assertIn("no_opening_bid", codes(result["flags"]))
+
     def test_bid_to_value_over_the_cap_rejects(self):
         result = td.screen(listing(minimum_opening_bid=14900.0),
                            cad(appraised_value=19000.0), checks(), cfg(), TODAY)
@@ -546,7 +570,8 @@ class Helpers(unittest.TestCase):
     def test_thresholds_read_from_the_environment_first(self):
         import os
         config = cfg()
-        self.assertEqual(td.threshold(config, "MAX_OPENING_BID"), 20000)
+        configured = (config.get("thresholds") or {})["MAX_OPENING_BID"]
+        self.assertEqual(td.threshold(config, "MAX_OPENING_BID"), configured)
         os.environ["MAX_OPENING_BID"] = "5000"
         try:
             self.assertEqual(td.threshold(config, "MAX_OPENING_BID"), 5000.0)
