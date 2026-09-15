@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-09-14T20:51:41-04:00",
-  "last_run_at": "2026-09-14T20:51:41-04:00",
+  "updated_at": "2026-09-15T05:31:12-04:00",
+  "last_run_at": "2026-09-15T05:31:12-04:00",
   "discovery_error": null,
   "open": [
     {
@@ -22,7 +22,7 @@
         "odd lots mentioned but no acceptance-before-proration language"
       ],
       "risk_flags": [],
-      "last_scored": "2026-09-14",
+      "last_scored": "2026-09-15",
       "warnings": [],
       "terms": {
         "has_threshold": true,
@@ -75,7 +75,7 @@
         "no ticker for CIK 0001876006 in the filing or the SEC company list \u2014 cannot price the trade"
       ],
       "risk_flags": [],
-      "last_scored": "2026-09-14",
+      "last_scored": "2026-09-15",
       "warnings": [],
       "terms": {
         "has_threshold": true,
@@ -133,7 +133,7 @@
         "no expiration date could be read from the document"
       ],
       "risk_flags": [],
-      "last_scored": "2026-09-14",
+      "last_scored": "2026-09-15",
       "warnings": [],
       "terms": {
         "has_threshold": true,
@@ -186,7 +186,7 @@
         "no ticker for CIK 0001954360 in the filing or the SEC company list \u2014 cannot price the trade"
       ],
       "risk_flags": [],
-      "last_scored": "2026-09-14",
+      "last_scored": "2026-09-15",
       "warnings": [],
       "terms": {
         "has_threshold": true,
@@ -247,7 +247,7 @@
         "no ticker for CIK 0002031750 in the filing or the SEC company list \u2014 cannot price the trade"
       ],
       "risk_flags": [],
-      "last_scored": "2026-09-14",
+      "last_scored": "2026-09-15",
       "warnings": [],
       "documents_read": [
         "tm2623498d1_ex99-a1ii.htm"
@@ -309,7 +309,7 @@
         "no ticker for CIK 0001918712 in the filing or the SEC company list \u2014 cannot price the trade"
       ],
       "risk_flags": [],
-      "last_scored": "2026-09-14",
+      "last_scored": "2026-09-15",
       "warnings": [],
       "documents_read": [
         "tm2623503d1_ex99-a1ii.htm"
@@ -345,69 +345,6 @@
       "withdrawal_deadline": "2026-09-18",
       "withdrawal_basis": "expiration_date",
       "max_shares_sought": 19264139
-    },
-    {
-      "accession": "0001193125-26-351012",
-      "cik": "0002008602",
-      "company": "Franklin Lexington Private Markets Fund",
-      "ticker": "",
-      "form": "SC TO-I",
-      "filed": "2026-08-14",
-      "url": "https://www.sec.gov/Archives/edgar/data/2008602/000119312526351012/d176314dex99a1ii.htm",
-      "index_url": "https://www.sec.gov/Archives/edgar/data/2008602/000119312526351012/0001193125-26-351012-index.htm",
-      "highlights": [],
-      "documents": [
-        {
-          "name": "d176314dex99a1ii.htm",
-          "type": "EX-99.(A)(1)(II)",
-          "url": "https://www.sec.gov/Archives/edgar/data/2008602/000119312526351012/d176314dex99a1ii.htm"
-        }
-      ],
-      "found_by": "\"odd lot\" / SC TO-I",
-      "first_seen": "2026-09-03",
-      "status": "rejected",
-      "tier": null,
-      "rejections": [
-        "no 'fewer than 100 shares' odd-lot threshold in the document",
-        "odd lots mentioned but no acceptance-before-proration language"
-      ],
-      "risk_flags": [],
-      "last_scored": "2026-09-14",
-      "warnings": [],
-      "documents_read": [
-        "d176314dex99a1ii.htm"
-      ],
-      "document": "d176314dex99a1ii.htm",
-      "terms": {
-        "has_threshold": false,
-        "has_proration_preference": false,
-        "is_cash_offer": true,
-        "consideration": "cash",
-        "is_common_equity": true,
-        "subject_security": "SHARES OF BENEFICIAL INTEREST",
-        "offer_price": null,
-        "dutch_range": null,
-        "price_basis": null,
-        "expiration_date": "2026-09-14",
-        "withdrawal_deadline": "2026-09-14",
-        "withdrawal_basis": "expiration_date",
-        "max_shares_sought": null,
-        "preference_removed": false,
-        "record_holder_condition": null,
-        "restricted_offer": false,
-        "terminated": false,
-        "risk_flags": [
-          "foreign_private_issuer"
-        ]
-      },
-      "odd_lot_paragraph": null,
-      "offer_price": null,
-      "dutch_range": null,
-      "price_basis": null,
-      "expiration_date": "2026-09-14",
-      "withdrawal_deadline": "2026-09-14",
-      "withdrawal_basis": "expiration_date",
-      "max_shares_sought": null
     }
   ],
   "archive": [
@@ -1115,21 +1052,86 @@
       "max_shares_sought": null,
       "outcome": "expired 2026-07-23, never cleared the gates",
       "archived_on": "2026-09-03"
+    },
+    {
+      "accession": "0001193125-26-351012",
+      "cik": "0002008602",
+      "company": "Franklin Lexington Private Markets Fund",
+      "ticker": "",
+      "form": "SC TO-I",
+      "filed": "2026-08-14",
+      "url": "https://www.sec.gov/Archives/edgar/data/2008602/000119312526351012/d176314dex99a1ii.htm",
+      "index_url": "https://www.sec.gov/Archives/edgar/data/2008602/000119312526351012/0001193125-26-351012-index.htm",
+      "highlights": [],
+      "documents": [
+        {
+          "name": "d176314dex99a1ii.htm",
+          "type": "EX-99.(A)(1)(II)",
+          "url": "https://www.sec.gov/Archives/edgar/data/2008602/000119312526351012/d176314dex99a1ii.htm"
+        }
+      ],
+      "found_by": "\"odd lot\" / SC TO-I",
+      "first_seen": "2026-09-03",
+      "status": "expired",
+      "tier": null,
+      "rejections": [
+        "no 'fewer than 100 shares' odd-lot threshold in the document",
+        "odd lots mentioned but no acceptance-before-proration language"
+      ],
+      "risk_flags": [],
+      "last_scored": "2026-09-14",
+      "warnings": [],
+      "documents_read": [
+        "d176314dex99a1ii.htm"
+      ],
+      "document": "d176314dex99a1ii.htm",
+      "terms": {
+        "has_threshold": false,
+        "has_proration_preference": false,
+        "is_cash_offer": true,
+        "consideration": "cash",
+        "is_common_equity": true,
+        "subject_security": "SHARES OF BENEFICIAL INTEREST",
+        "offer_price": null,
+        "dutch_range": null,
+        "price_basis": null,
+        "expiration_date": "2026-09-14",
+        "withdrawal_deadline": "2026-09-14",
+        "withdrawal_basis": "expiration_date",
+        "max_shares_sought": null,
+        "preference_removed": false,
+        "record_holder_condition": null,
+        "restricted_offer": false,
+        "terminated": false,
+        "risk_flags": [
+          "foreign_private_issuer"
+        ]
+      },
+      "odd_lot_paragraph": null,
+      "offer_price": null,
+      "dutch_range": null,
+      "price_basis": null,
+      "expiration_date": "2026-09-14",
+      "withdrawal_deadline": "2026-09-14",
+      "withdrawal_basis": "expiration_date",
+      "max_shares_sought": null,
+      "outcome": "expired 2026-09-14, never cleared the gates",
+      "archived_on": "2026-09-15"
     }
   ],
   "funnel": {
     "queries": 96,
     "pages": 96,
-    "raw_hits": 85,
-    "filings": 13,
-    "documents": 33,
-    "window": "2026-07-01..2026-09-14",
+    "raw_hits": 83,
+    "filings": 12,
+    "documents": 32,
+    "window": "2026-07-02..2026-09-15",
     "slices": 4,
     "failed_queries": 0,
     "failures": [],
     "rejected_by": {
-      "no odd-lot language": 4,
       "no ticker": 4,
+      "no odd-lot language": 2,
       "no consideration stated": 1,
       "not common equity": 1,
       "expired or terminated": 1
