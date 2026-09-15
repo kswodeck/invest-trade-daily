@@ -1,6 +1,6 @@
 # Odd-lot tender screener — 2026-09-15
 
-Run 2026-09-15 05:31 ET (premarket slot). 6 offers tracked, 0 clear every gate: 0 Tier A, 0 Tier B, 0 Tier C.
+Run 2026-09-15 10:27 ET (premarket slot). 6 offers tracked, 0 clear every gate: 0 Tier A, 0 Tier B, 0 Tier C.
 
 **No Tier A opportunities today.** That is the ordinary result — an odd-lot tender with a 3%+ spread and a clean condition set is rare, and the thresholds below are not moved to produce one.
 
@@ -30,14 +30,15 @@ _None._
 ## Expired today
 
 - — Franklin Lexington Private Markets Fund — expired 2026-09-14, never cleared the gates
+- CLYD BEACON TOPCO, INC. — expired 2025-09-29, never cleared the gates
 
 ## Where the universe went
 
 A screener that finds nothing reads exactly like one that is broken. This is the difference.
 
-- **96** full-text queries over `2026-07-02..2026-09-15` returned **83** document hit(s) across **12** filing(s) (**32** exhibits kept as candidates)
+- **96** full-text queries over `2026-07-02..2026-09-15` returned **95** document hit(s) across **13** filing(s) (**36** exhibits kept as candidates)
 - searched as **4** date slice(s), **96** result page(s) read
-- **6** offers open, **12** archived
+- **6** offers open, **13** archived
 
 | Turned away for | Count |
 | --- | --- |
