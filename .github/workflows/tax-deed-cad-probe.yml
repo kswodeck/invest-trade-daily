@@ -1,0 +1,84 @@
+name: Tax Deed CAD Probe
+
+# Diagnostic, on demand only. Never scheduled.
+#
+# The appraisal district lookup has never matched a property — 0 of 370, 1,185,
+# 1,207 and 1,209 listings across every live run — and the screener's own
+# summary can only report which of `cad_record`'s exits was taken. "Page
+# rendered but carried no appraised value" is equally true of a JavaScript
+# shell, of a page worded differently from `CAD_FIELDS`, and of a page saying
+# the account does not exist. This asks which.
+#
+# It has to run here rather than on a laptop or in a sandbox because the four
+# CAD hosts are commonly unreachable from anywhere else; this runner is where
+# the screener itself reaches them, so it is the only place the answer is the
+# screener's answer.
+#
+# Read-only by construction: it writes no cache, records no miss against a
+# district's give-up counter, and never touches the snapshot or the Sheet. It
+# commits nothing. Findings land in the step summary, and the full JSON is an
+# artifact rather than a commit, because a diagnostic is not run history.
+
+on:
+  workflow_dispatch:
+    inputs:
+      district:
+        description: "One CAD key (DCAD/TAD/JohnsonCAD/EllisCAD). Blank means all four."
+        required: false
+        default: ""
+      account:
+        description: "One specific account number. Blank means sample from the newest snapshot."
+        required: false
+        default: ""
+      accounts:
+        description: "Accounts to sample per district"
+        required: false
+        default: "3"
+
+concurrency:
+  # The screener's group. One request per second per host is enforced in
+  # process, so a probe running beside a screening run would double the rate
+  # this module promises the counties.
+  group: tax-deeds
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Probe the appraisal districts
+        env:
+          TAX_DEED_CONTACT_EMAIL: ${{ secrets.TAX_DEED_CONTACT_EMAIL }}
+        run: |
+          set -o pipefail
+          ARGS="--accounts ${{ github.event.inputs.accounts || '3' }}"
+          if [ -n "${{ github.event.inputs.district }}" ]; then
+            ARGS="$ARGS --district ${{ github.event.inputs.district }}"
+          fi
+          if [ -n "${{ github.event.inputs.account }}" ]; then
+            ARGS="$ARGS --account ${{ github.event.inputs.account }}"
+          fi
+          python scripts/tax_deed_cad_probe.py $ARGS --json /tmp/cad_probe.json
+
+      - name: Keep the findings
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cad-probe
+          path: /tmp/cad_probe.json
+          if-no-files-found: warn

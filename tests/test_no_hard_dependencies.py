@@ -30,8 +30,9 @@ PURE_MODULES = [
     "ensure_report", "exposure", "note_late_run", "notify_odd_lot", "odd_lot",
     "publish_odd_lot",
     "publish_sheets", "refresh_prices", "report_runs", "report_state",
-    "schedule_gate", "step_summary", "tax_deed_screen", "tax_deed_sources",
-    "tax_deeds", "validate_report", "watchlist", "weekly_digest",
+    "schedule_gate", "step_summary", "tax_deed_cad_probe", "tax_deed_screen",
+    "tax_deed_sources", "tax_deeds", "validate_report", "watchlist",
+    "weekly_digest",
 ]
 
 # Modules that legitimately need the network stack at import time.
