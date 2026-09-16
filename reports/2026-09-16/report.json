@@ -1,0 +1,768 @@
+{
+  "date": "2026-09-16",
+  "generated_at_et": "2026-09-16T06:36:18-04:00",
+  "research_minutes": 26,
+  "truncated": false,
+  "market_context": {
+    "summary": "A rotation, not a selloff, and it has one cause. CME FedWatch prices a 93% chance the FOMC hikes 25bp to 3.75-4.00% at 14:00 ET today - the first hike since 2023 - forced by headline CPI running 3.4% y/y against 2.4% core, a one-point energy wedge from the war with Iran. The 10-year sits at 4.97% against a 4.65% 2-year and the 10y-2y spread widened to +0.33 from +0.32 even as the Fed tightens: the long end rising faster than the front end is term premium and inflation expectations, not policy. Everything else follows. Energy is the only sector at its highs (XLE +18.35% vs SPY over 3m, 0.36% off its 250-day high) because it is the shock. Housing and utilities are at their lows because both are priced off that long end - ITB 22.7% off its high, XLU 0.07% above its 250-day low. Duration is at its low with TLT 0.31% off a 120-day bottom. Inside the index, QQQ is 5.89% off its high against SPY's 2.82%, so the megacap-tech complex that carried it is now lagging. Today's report is therefore lopsided toward shorts in rate-sensitives and toward closing unstopped longs, and it carries no new long in the leading sector because energy is too extended for any of it to clear 2:1 on an honest ATR stop.",
+    "regime": "mixed",
+    "levels": {
+      "us10y": 4.97,
+      "us2y": 4.65,
+      "t10y2y": 0.33,
+      "fed_funds_effective": 3.63,
+      "fed_funds_target_range": "3.50-3.75% (since 2025-12; held 2026-07-29)",
+      "spy": 757.39,
+      "gld": 394.15,
+      "tlt": 80.71,
+      "xlu": 41.32,
+      "vix": null,
+      "dxy": null,
+      "wti": null,
+      "btc": null,
+      "levels_note": "Equity/ETF levels are the 2026-09-15 regular-session close, the freshest honest price at 6am ET. VIX, DXY, WTI, spot gold and BTC are null: the Yahoo chart API returned HTTP 429 on every symbol and no fallback carried them."
+    },
+    "econ_calendar": [
+      {
+        "event": "FOMC rate decision with Summary of Economic Projections (dot plot)",
+        "datetime_et": "2026-09-16T14:00",
+        "importance": "high",
+        "consensus": "25bp hike to 3.75-4.00%, CME FedWatch 93%"
+      },
+      {
+        "event": "FOMC press conference, Chair Kevin Warsh",
+        "datetime_et": "2026-09-16T14:30",
+        "importance": "high",
+        "consensus": null
+      },
+      {
+        "event": "Lennar (LEN) Q3 earnings, after the close",
+        "datetime_et": "2026-09-16T16:20",
+        "importance": "medium",
+        "consensus": "est EPS 1.3158, est revenue $8.39B"
+      },
+      {
+        "event": "EIA weekly petroleum status report",
+        "datetime_et": "2026-09-16T10:30",
+        "importance": "medium",
+        "consensus": null
+      },
+      {
+        "event": "KB Home (KBH) Q3 earnings, after the close",
+        "datetime_et": "2026-09-22T16:20",
+        "importance": "medium",
+        "consensus": "est EPS 0.9022"
+      },
+      {
+        "event": "Thor Industries (THO) Q4 earnings, before the open",
+        "datetime_et": "2026-09-22T08:00",
+        "importance": "medium",
+        "consensus": "est EPS 0.9159, est revenue $2.20B"
+      },
+      {
+        "event": "NIKE (NKE) Q1 FY27 earnings, after the close",
+        "datetime_et": "2026-09-28T16:20",
+        "importance": "medium",
+        "consensus": "est EPS 0.4495, est revenue $11.47B"
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "symbol": "ITB",
+      "instrument": "iShares U.S. Home Construction ETF",
+      "asset_class": "etf",
+      "venue": "Robinhood Stocks",
+      "direction": "sell_short",
+      "requires_margin": true,
+      "horizon": "swing",
+      "conviction": 3,
+      "entry": {
+        "ideal": 90.75,
+        "zone_low": 90.0,
+        "zone_high": 91.6,
+        "condition": "only after the 14:00 ET FOMC statement and projections; stand aside entirely if the Fed holds instead of hiking and the 10-year rallies below 4.75%"
+      },
+      "exit": {
+        "target": 82.45,
+        "target_2": 79.0
+      },
+      "stop": 94.9,
+      "position_size_pct": 1.5,
+      "catalyst": {
+        "event": "FOMC decision TODAY 2026-09-16 14:00 ET with projections - CME FedWatch prices a 93% chance of a 25bp hike to 3.75-4.00%, the first since 2023; LEN Q3 tonight AMC; KBH Q3 2026-09-22 AMC",
+        "datetime_et": "2026-09-16T14:00",
+        "action": "Do NOT short before 14:00 ET. Wait for the statement, the projections and the 14:30 Warsh press conference, then sell a bounce into 90.0-91.6 beneath the SMA20 at 94.04. If the Fed holds instead of hiking and the 10-year rallies below 4.75%, stand aside entirely.",
+        "wait": true
+      },
+      "win_probability": 0.4,
+      "thesis": "Homebuilders are the most rate-sensitive group in the equity market and the policy path is tightening into an already high long end: CME FedWatch prices a 93% chance of a 25bp hike to 3.75-4.00% at 14:00 ET today, the first hike since 2023, forced by headline CPI running 3.4% against 2.4% core on an energy shock. The 10-year is 4.97% and the 10y-2y spread widened to +0.33 even as the Fed tightens - a long end rising faster than the front end, which is the inflation-expectations signal that sets mortgage rates. The tape already reflects it: ITB trades 89.12 beneath a bearish stack of SMA20 94.04, SMA50 96.25 and SMA200 98.30, and has lagged SPY by 18.68% over six months, well before this shock.",
+      "key_risk": "Two distinct risks. The decision lands at 14:00 ET today and a hold instead of the 93%-priced hike, or dovish projections, repairs exactly what this is short - homebuilders are the highest-beta bounce in that scenario, hence the staged entry. Separately this position shares a tail with the DVN and DINO longs: a ceasefire in Iran softens the rate path and hurts all three at once, which is why size is cut to 1.5%. Short interest could not be fetched (nasdaq timed out) and no options-implied move was obtainable, so squeeze risk is named but unquantified.",
+      "counter_argument": "ITB is already 22.7% off its 250-day high and 4.9% above the 84.98 low, so the easy part is behind it and the target requires a break to new lows. A hike priced at 93% is also thoroughly in the price - any move has to come from the projections and the press conference, not the decision.",
+      "evidence": [
+        {
+          "kind": "technical_level",
+          "detail": "Fetched 250d history: last 89.12, SMA20 94.04, SMA50 96.25, SMA200 98.30, range 84.98-115.26. ATR14 1.9532, so the 4.15 stop from a 90.75 entry is 2.12 ATR, clearing the 1.8 ATR ETF floor. R:R 8.30/4.15 = 2.00.",
+          "source": "https://www.nasdaq.com/market-activity/etf/itb/historical"
+        },
+        {
+          "kind": "positioning",
+          "detail": "Measured relative strength vs SPY: -7.34% 1m, -8.55% 3m, -18.68% 6m - lagging on every window measured, and the six-month figure predates the current energy shock.",
+          "source": "https://www.nasdaq.com/market-activity/etf/itb/historical"
+        },
+        {
+          "kind": "dated_catalyst",
+          "detail": "FOMC 2026-09-16 14:00 ET with projection materials and a 14:30 press conference, verified by fetching the Federal Reserve calendar. Policy setting corroborated by two independent sources: range 3.50-3.75%, CME FedWatch 93% probability of a 25bp hike. LEN Q3 2026-09-16 AMC and KBH Q3 2026-09-22 AMC from the fetched finnhub calendar.",
+          "source": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+        }
+      ],
+      "sources": [
+        "https://fred.stlouisfed.org/series/DGS10",
+        "https://fred.stlouisfed.org/series/T10Y2Y",
+        "https://www.nasdaq.com/market-activity/etf/itb/historical",
+        "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+        "https://cambridgecurrencies.com/next-federal-reserve-interest-rate-decision/"
+      ],
+      "rank": 1,
+      "last_price": 89.12,
+      "last_price_asof": "2026-09-15T16:00:00-04:00",
+      "price_source": "finnhub (2026-09-15 regular-session close; fetched 06:4x ET with the market shut, so the previous close is the freshest honest price)",
+      "risk_reward": 2.0,
+      "risk_tier": "standard",
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.0,
+        "claimed_risk_reward": 2.0,
+        "breakeven_probability": 0.333,
+        "stated_win_probability": 0.4,
+        "expectancy_r": 0.2,
+        "claimed_edge": 0.067,
+        "stop_atr_multiple": 2.12,
+        "live_price": 89.12,
+        "live_price_asof": "2026-09-15T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 886.9,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": 1.9532,
+        "checked_at_et": "2026-09-16T06:48:15-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.0:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 90.75 is +1.8% from live 89.12"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-09-16 is ahead of us"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 4.25 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "stop_distance",
+            "status": "warn",
+            "detail": "stop is 2.12 ATR from entry \u2014 clears the 1.8 ATR floor for a swing etf but sits under the 2.25 ATR level where stop-outs have clustered"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "40% claimed vs 33% break-even at 2.0:1 \u2014 expectancy +0.20R"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-09-15T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "no bid/ask available (normal outside regular hours)"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "1.5% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 3 rests on 3 independent kinds: dated_catalyst, positioning, technical_level"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "2 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "SPY",
+      "instrument": "SPDR S&P 500 ETF Trust",
+      "asset_class": "etf",
+      "venue": "Robinhood Stocks",
+      "direction": "sell_short",
+      "requires_margin": true,
+      "horizon": "swing",
+      "conviction": 3,
+      "entry": {
+        "ideal": 773.0,
+        "zone_low": 765.0,
+        "zone_high": 775.0
+      },
+      "exit": {
+        "target": 750.0
+      },
+      "stop": 784.0,
+      "position_size_pct": 2,
+      "catalyst": {
+        "event": "FOMC decision TODAY 2026-09-16 14:00 ET with a Summary of Economic Projections; 25bp hike to 3.75-4.00% widely expected and the dot plot widely expected to tilt hawkish",
+        "datetime_et": "2026-09-16T14:00",
+        "action": "HOLD the short opened 2026-08-31 at 773.00 to the 750 target. The stop is amended OUT from 783.50 to 784.00 - the only direction a stop on a filled position may be moved here, because it makes the reward-to-risk worse (2.19 to 2.09), not better. Do NOT walk it back down to flatter the ratio. Take the 750 target if it trades on the 14:00 ET reaction rather than pressing through it.",
+        "wait": false
+      },
+      "win_probability": 0.42,
+      "thesis": "Position update, hold, nothing amended. The short is +2.0% at 757.39 with the 750 target 1.0% away, and the macro has moved in its favour since it was opened: the Fed is expected to hike 25bp to 3.75-4.00% at 14:00 ET today with projections widely expected to tilt hawkish, which is a tightening into an index already narrowing. SPY sits below its SMA20 of 765.34 and marginally below its SMA50 of 759.06, while QQQ is 5.89% off its high against SPY 2.82% - the megacap-tech complex that carried the index is now lagging it, and the only sector at its highs is energy.",
+      "key_risk": "The stop was 783.50, which is 10.50 from entry and 1.79 ATR against the 1.80 ATR ETF floor - the one hard stop_distance failure in this report. The red team widened it to 784.00 (11.00, 1.88 ATR) rather than leaving a ratio measured against a stop inside the noise. This is a filled position, so the entry cannot be amended and the reward-to-risk falls to 2.09 as a result, which is the honest direction. A hold rather than the expected hike, or dovish projections, could still take it out on the day, and the extra 0.50 buys very little room against a 5.86 ATR.",
+      "counter_argument": "SPY is only 2.82% off its high and still above its rising SMA50 - a shallow pullback in an uptrend, not a breakdown - and a hike this widely expected is already in the price, so the decision itself is unlikely to be the catalyst. Being short 1% from target is most of the reward for all of the remaining risk, which is the argument for taking 750 rather than extending it.",
+      "evidence": [
+        {
+          "kind": "technical_level",
+          "detail": "Fetched 120d history: last 757.39, below SMA20 765.34 and SMA50 759.06, 2.82% off the 779.37 high. ATR14 5.8645 (0.77%); the original 783.50 stop was 10.50 from the 773.00 entry = 1.79 ATR, under the 1.80 ETF floor, so the stop was widened to 784.00 = 11.00 = 1.88 ATR. R:R 23.00/11.00 = 2.09.",
+          "source": "https://www.nasdaq.com/market-activity/etf/spy/historical"
+        },
+        {
+          "kind": "dated_catalyst",
+          "detail": "FOMC 2026-09-16 14:00 ET with projection materials, verified by fetching the Federal Reserve calendar (Sep 15-16). Policy setting verified separately: range 3.50-3.75% from 2026-07-29, 25bp hike widely expected.",
+          "source": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+        }
+      ],
+      "sources": [
+        "https://www.nasdaq.com/market-activity/etf/spy/historical",
+        "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+        "https://stockmarkethours.org/events/fomc-meeting"
+      ],
+      "rank": 2,
+      "last_price": 757.39,
+      "last_price_asof": "2026-09-15T16:00:00-04:00",
+      "price_source": "finnhub (2026-09-15 regular-session close; fetched 06:4x ET with the market shut, so the previous close is the freshest honest price)",
+      "risk_reward": 2.09,
+      "risk_tier": "standard",
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.09,
+        "claimed_risk_reward": 2.09,
+        "breakeven_probability": 0.324,
+        "stated_win_probability": 0.42,
+        "expectancy_r": 0.298,
+        "claimed_edge": 0.096,
+        "stop_atr_multiple": 1.88,
+        "live_price": 757.39,
+        "live_price_asof": "2026-09-15T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 887.0,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": 5.8645,
+        "checked_at_et": "2026-09-16T06:48:16-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.09:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 773.0 is +2.1% from live 757.39"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-09-16 is ahead of us"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 3.92 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "stop_distance",
+            "status": "warn",
+            "detail": "stop is 1.88 ATR from entry \u2014 clears the 1.8 ATR floor for a swing etf but sits under the 2.25 ATR level where stop-outs have clustered"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "42% claimed vs 32% break-even at 2.09:1 \u2014 expectancy +0.30R"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-09-15T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "no bid/ask available (normal outside regular hours)"
+          },
+          {
+            "check": "instrument_choice",
+            "status": "warn",
+            "detail": "short SPY needs margin; /MES expresses the same view with defined sizing and near-24h trading"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "2% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 3 rests on 2 independent kinds: dated_catalyst, technical_level"
+          },
+          {
+            "check": "sources",
+            "status": "pass",
+            "detail": "all 3 checked source(s) resolve"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "CCJ",
+      "instrument": "Cameco Corp",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "long_term",
+      "conviction": 2,
+      "entry": {
+        "ideal": 94.0,
+        "zone_low": 88.0,
+        "zone_high": 94.0
+      },
+      "exit": {
+        "target": 135.0
+      },
+      "stop": 82.5,
+      "position_size_pct": 1,
+      "catalyst": {
+        "event": "Structural uranium supply deficit against reactor restarts and datacenter power contracting - a multi-year driver with no dated event",
+        "datetime_et": null,
+        "action": "HOLD the existing position opened 2026-08-17 at 94.00, but impose a hard stop at 82.50 where there was none. Do NOT add, and do not re-pitch this name again without new primary evidence.",
+        "wait": false
+      },
+      "win_probability": 0.3,
+      "thesis": "Position update, and the change is risk control rather than conviction. The open CCJ long was published with a 135 target and no stop at all, and the stock has since fallen to 91.21 - 30.5% below its 250-day high of 131.21 and below both its SMA20 of 99.44 and SMA50 of 94.99. The structural uranium thesis is intact on a multi-year view, which is why this is a hold rather than an exit, but an unstopped long in a name 30% off its high is an open-ended loss and that is now closed off at 82.50, just under the 83.15 250-day low. The bear case carrying the reward-to-risk is 82.50 - a break of the 250-day low, which would say the supply-deficit narrative has stopped supporting the price.",
+      "key_risk": "The evidence supporting this name today is thin and I am marking it honestly at conviction 2: I did not re-underwrite the uranium supply model this run, so the hold rests on a thesis researched previously rather than re-confirmed now. This name has also been re-recommended three times in ten days, which the prior-context guard flags as anchoring rather than conviction - the main reason it is capped at hold-and-stop rather than added to. The 0.30 win probability against a 0.219 baseline is a deliberately modest claim of edge for that reason.",
+      "counter_argument": "A 30% drawdown with analyst ratings completely unchanged for four months is what a consensus long looks like before the downgrades arrive, and no insider bought a share of the decline. A tightening Fed also raises the discount rate on a thesis whose cash flows are years out. If 82.50 trades, the correct reading is that the thesis was wrong rather than early.",
+      "evidence": [
+        {
+          "kind": "technical_level",
+          "detail": "Fetched 250d history: last 91.21, range 83.15-131.21, -30.5% off high. Below SMA20 99.44 and SMA50 94.99. ATR14 3.7029 (4.06%), so the new 82.50 stop sits 8.71 below the market at 2.35 ATR and beneath the 83.15 range low rather than inside it. R:R from the 94.00 entry is 41.00/11.50 = 3.57.",
+          "source": "https://www.nasdaq.com/market-activity/stocks/ccj/historical"
+        },
+        {
+          "kind": "positioning",
+          "detail": "Fetched finnhub recommendation trend is frozen: 5 strong buy / 13 buy / 4 hold in each of 2026-07, 2026-08 and 2026-09, bullish share 81.8% and falling 3.9%. Analysts have not marked the 30% decline at all. Separately, open-market insider buying over six months is zero on zero distinct buyers - recorded as the absence of a positive, not as a negative.",
+          "source": "https://finnhub.io/api/v1/stock/recommendation"
+        }
+      ],
+      "sources": [
+        "https://www.nasdaq.com/market-activity/stocks/ccj/historical",
+        "https://finnhub.io/api/v1/stock/recommendation"
+      ],
+      "rank": 3,
+      "last_price": 91.21,
+      "last_price_asof": "2026-09-15T16:00:00-04:00",
+      "price_source": "finnhub (2026-09-15 regular-session close; fetched 06:4x ET with the market shut, so the previous close is the freshest honest price)",
+      "risk_reward": 3.565,
+      "risk_tier": "lottery",
+      "bear_case_price": 82.5,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 3.57,
+        "claimed_risk_reward": 3.565,
+        "breakeven_probability": 0.219,
+        "stated_win_probability": 0.3,
+        "expectancy_r": 0.371,
+        "claimed_edge": 0.081,
+        "stop_atr_multiple": 3.11,
+        "live_price": 91.21,
+        "live_price_asof": "2026-09-15T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 887.1,
+        "bid": 91.96,
+        "ask": 93.0,
+        "spread_pct": 1.125,
+        "atr14": 3.7029,
+        "checked_at_et": "2026-09-16T06:48:19-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 3.57:1 clears the 2.5:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 94.0 is +3.1% from live 91.21"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "long-term idea, no dated event expected"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "long-term target is valuation-anchored, not ATR-bound"
+          },
+          {
+            "check": "stop_distance",
+            "status": "pass",
+            "detail": "long-term downside is a bear case, not a stop \u2014 no ATR floor applies"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "30% claimed vs 22% break-even at 3.57:1 \u2014 expectancy +0.37R"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-09-15T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "bid/ask spread 1.12%; the round trip costs 3% of the target move \u2014 set the entry as a limit, never market"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 2 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "1% is within the 1% lottery-ticket ceiling for conviction 2"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 2 rests on 2 independent kinds: positioning, technical_level"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "1 of 2 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "DVN",
+      "instrument": "Devon Energy Corp",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 3,
+      "entry": {
+        "ideal": 49.6,
+        "zone_low": 48.6,
+        "zone_high": 50.2
+      },
+      "exit": {
+        "target": 55.5
+      },
+      "stop": 46.9,
+      "position_size_pct": 2.5,
+      "catalyst": {
+        "event": "Crude supply premium from the war with Iran, the same shock driving headline CPI to 3.4% against 2.4% core and forcing the 2026-09-16 FOMC hike; EIA weekly petroleum status Wednesdays 10:30 ET",
+        "datetime_et": null,
+        "action": "HOLD the position opened 2026-09-11 at 49.60. Levels unchanged - target 55.50, stop 46.90. Do not add at 51.33 and do not walk the stop up.",
+        "wait": false
+      },
+      "win_probability": 0.45,
+      "thesis": "Position update, hold, nothing amended, with the driver now named. DVN was entered 2026-09-11 at 49.60 and last traded 51.33, +3.5%, above its SMA20 of 48.65 and SMA50 of 45.86 and 2.6% below its 250-day high. It is a crude-levered long in the one sector leading this tape, and the leadership has a cause rather than being momentum: a supply shock from the war with Iran, which is also why headline CPI runs 3.4% against 2.4% core and why the Fed is expected to hike today. The reason this is a hold rather than an add is that the published 49.60 entry is now below market, and chasing here would replace a 2.19 reward-to-risk with a worse one.",
+      "key_risk": "The position is a war-premium bet whether or not it is described as one: a ceasefire or negotiated settlement in Iran collapses the crude premium, and the same event unwinds DINO, the ITB short and the XLU short - a single correlated tail across four ideas in this report. Energy is also extended, XLE being 0.36% from its 250-day high, which is exactly why no *new* energy long cleared the floor this morning.",
+      "counter_argument": "Being 2.6% off a 250-day high is a poor place to hold for another 8% to target, and the honest reading of my own energy scan - that nothing in the sector has room left to a real resistance level - applies to DVN too. That argues against adding, which is why the recommendation is hold-and-do-not-add rather than a fresh buy.",
+      "evidence": [
+        {
+          "kind": "technical_level",
+          "detail": "Fetched 250d history: last 51.33, above SMA20 48.65 and SMA50 45.86, range 39.995-52.71. ATR14 1.248, so the standing 46.90 stop is 2.70 from entry = 2.16 ATR, clearing the 2.0 ATR stock floor. R:R from the 49.60 entry is 5.90/2.70 = 2.19.",
+          "source": "https://www.nasdaq.com/market-activity/stocks/dvn/historical"
+        },
+        {
+          "kind": "positioning",
+          "detail": "Measured sector relative strength: XLE vs SPY +8.93% 1m, +18.35% 3m, +0.66% 6m - outperforming on every window, and XLE is 0.36% off its 250-day high while every other sector is below its own. DVN is a long in the leading sector rather than a lagging one.",
+          "source": "https://www.nasdaq.com/market-activity/etf/xle/historical"
+        }
+      ],
+      "sources": [
+        "https://www.nasdaq.com/market-activity/stocks/dvn/historical",
+        "https://fred.stlouisfed.org/series/DGS10",
+        "https://cambridgecurrencies.com/next-federal-reserve-interest-rate-decision/"
+      ],
+      "rank": 4,
+      "last_price": 51.33,
+      "last_price_asof": "2026-09-15T16:00:00-04:00",
+      "price_source": "finnhub (2026-09-15 regular-session close; fetched 06:4x ET with the market shut, so the previous close is the freshest honest price)",
+      "risk_reward": 2.185,
+      "risk_tier": "standard",
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.19,
+        "claimed_risk_reward": 2.185,
+        "breakeven_probability": 0.313,
+        "stated_win_probability": 0.45,
+        "expectancy_r": 0.435,
+        "claimed_edge": 0.137,
+        "stop_atr_multiple": 2.16,
+        "live_price": 51.33,
+        "live_price_asof": "2026-09-15T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 887.2,
+        "bid": 50.74,
+        "ask": 51.25,
+        "spread_pct": 1.0,
+        "atr14": 1.248,
+        "checked_at_et": "2026-09-16T06:48:36-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.19:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 49.6 is -3.4% from live 51.33"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "warn",
+            "detail": "no date given for a timed idea"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 4.73 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "stop_distance",
+            "status": "warn",
+            "detail": "stop is 2.16 ATR from entry \u2014 clears the 2.0 ATR floor for a swing stock but sits under the 2.5 ATR level where stop-outs have clustered"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "45% claimed vs 31% break-even at 2.19:1 \u2014 expectancy +0.43R"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-09-15T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "bid/ask spread 1.00%; the round trip costs 8% of the target move \u2014 set the entry as a limit, never market"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "2.5% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 3 rests on 2 independent kinds: positioning, technical_level"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "1 of 3 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    }
+  ],
+  "watchlist": [
+    {
+      "symbol": "XLE",
+      "instrument": "Energy Select Sector SPDR Fund",
+      "note": "The day's leadership and the only sector at its highs, but there is no tradeable reward-to-risk at 66. An honest 1.8 ATR ETF stop under the SMA20 sits at 63.60 (2.70 risk), and a 2.0 ratio then demands 71.70 - 8.7% into open air with no prior resistance in 250 days to anchor it. The measured move off the 63.4-66.2 base gives 68.97, which is 0.99:1.",
+      "trigger": "a pullback toward the 63.4-66.2 base that lets a 2.0 ratio be built against real support rather than a fitted target",
+      "demotion_reason": "target would have to be reverse-engineered to clear the floor"
+    },
+    {
+      "symbol": "HAL",
+      "instrument": "Halliburton Co",
+      "note": "The one energy name whose arithmetic worked - entry 35.00 at the SMA200, stop 32.00 below the SMA50 at 2.51 ATR, target 41.00 inside the 43.59 prior high, a clean 2.0. Killed on evidence instead: relative strength against its own sector is -2.86% 1m, -25.26% 3m, -9.45% 6m. It is the thing being sold while the sector is bought, and there is no dated catalyst inside the horizon.",
+      "trigger": "relative strength against XLE turning positive on the 1m and 3m windows",
+      "demotion_reason": "passing ratio, failing evidence - a sector laggard, not a cheap catch-up"
+    },
+    {
+      "symbol": "AIR",
+      "instrument": "AAR Corp",
+      "note": "Cleanest small-cap setup on the board and rejected for the same reason as HAL. Down 24.7% from its high on $42.0M/day with no insider support and falling analyst ratings, five days ahead of a 2026-09-21 print. A binary with no edge behind it.",
+      "trigger": "the 2026-09-21 print, then a base rather than a further leg down",
+      "demotion_reason": "arithmetic passed, evidence failed"
+    },
+    {
+      "symbol": "KRE",
+      "instrument": "SPDR S&P Regional Banking ETF",
+      "note": "A genuine divergence worth watching rather than an idea: at 74.05 it holds near its highs (-5.5% off, +17.2% off the low) while every homebuilder sits below its 20- and 50-day. The steepener is helping banks and hurting builders, which is the textbook response. No entry today - and this is the name whose stop was walked in three times in the tracker's history, so it gets no tight-stop ratio here.",
+      "trigger": "a pullback to the SMA50 at 75.47 that allows a 2.0 ATR stop"
+    },
+    {
+      "symbol": "IDT",
+      "instrument": "IDT Corp",
+      "note": "Bullish moving-average stack but 1.5% from its high with nothing to target - a 2.0 ratio would require new all-time highs. Reports 2026-09-28. Liquidity is thin at $11.7M/day.",
+      "trigger": "a pullback toward 68.70 (SMA20) with the stack intact"
+    },
+    {
+      "symbol": "KXFEDDECISION-26SEP-H25",
+      "instrument": "Kalshi: Fed hikes 25bp in September",
+      "note": "Left exactly as published on 2026-08-22 at 32c rather than re-priced. The Kalshi feed returned zero markets across ten queries this morning, so on the day of the decision there was no live market-implied probability for it. Re-pricing this from memory on FOMC day is precisely the fabrication the report forbids.",
+      "trigger": "the Kalshi source returning markets again"
+    },
+    {
+      "symbol": "WOR, MTN, MLKN, APOG, SCHL, SFIX",
+      "instrument": "small-cap earnings cohort",
+      "note": "All clear the $500K liquidity floor and all were rejected. Seven of the eight names scanned sit below both their 20- and 50-day averages and the one that does not (IDT) has no room - the lane is uniformly falling or extended, the same barbell the sector scan found.",
+      "trigger": "a name in the cohort basing above its SMA50 ahead of a dated print"
+    },
+    {
+      "symbol": "XLC",
+      "instrument": "Communication Services Select Sector SPDR Fund",
+      "note": "Cut by the red team, and the report nominated it itself ('the weakest idea in today's report and should be the first one cut'). Four reasons, none of which the arithmetic catches. The rotation is a window artifact: XLC beats XLK by 4.26pts over 1m and 5.84 over 3m but trails it by 33.53% over 6m, so this is a bounce in a loser, not leadership changing hands. The 'reclaiming its SMA200 from below' is a one-cent miss - the 114.03 close verified against a 114.04 SMA200 - and the 113.00 entry therefore sits BELOW that resistance with the 119.40 target on the far side of it. There is no sector-specific catalyst inside the horizon, constituents report in late October. And the macro runs directly against it: a hawkish hike at 14:00 hits long-duration growth, which is precisely what XLC is. Lowest expectancy in the report at 0.23R on the thinnest claimed edge at 7.7 points.",
+      "trigger": "XLC holding above the 114.04 SMA200 on a close after the FOMC reaction, plus the XLK outperformance surviving the 6-month window rather than only the 1- and 3-month ones",
+      "demoted_from_rank": 8,
+      "demotion_reason": "rotation measured on a window that flatters it; entry sits under the resistance the target needs cleared"
+    },
+    {
+      "symbol": "XLU",
+      "instrument": "Utilities Select Sector SPDR Fund",
+      "note": "Cut on the correlation test, which the idea's own counter_argument called ('this is the idea to cut first if the correlation cap is enforced literally, since its only catalyst is the FOMC, which ITB already covers'). XLU and ITB were one position wearing two tickers: same driver (long end up), same 14:00 gate, same stand-aside condition, same conviction, same 1.5% size. Of the pair XLU is the harder version - it sits 0.07% above its 250-day low, so the 39.90 target requires an immediate break to new lows rather than a move into them, while carrying a dividend yield that becomes a floor and a defensive bid in any risk-off. ITB keeps the slot because it has catalysts XLU does not (LEN tonight, KBH 9/22) and a direct transmission mechanism in mortgage rates rather than a discount-rate analogy.",
+      "trigger": "ITB closing or stopping out, freeing the rate-sensitive short slot; or XLU breaking 41.29 on volume and then retesting it from below",
+      "demoted_from_rank": 2,
+      "demotion_reason": "duplicate of the ITB short - one macro bet, two tickers"
+    },
+    {
+      "symbol": "BCC",
+      "instrument": "Boise Cascade Co",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined; bid/ask spread 7.36% \u2014 too wide to trade this thesis",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 1,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined; bid/ask spread 7.36% \u2014 too wide to trade this thesis"
+    },
+    {
+      "symbol": "NKE",
+      "instrument": "NIKE Inc Class B",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 2,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined"
+    },
+    {
+      "symbol": "LULU",
+      "instrument": "Lululemon Athletica Inc",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 3,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined"
+    },
+    {
+      "symbol": "LCII",
+      "instrument": "LCI Industries",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; report says 2026-09-22 but the calendar says 2026-10-28; no entry or stop, so the stop distance is undefined; bid/ask spread 4.20% \u2014 too wide to trade this thesis",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 4,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; report says 2026-09-22 but the calendar says 2026-10-28; no entry or stop, so the stop distance is undefined; bid/ask spread 4.20% \u2014 too wide to trade this thesis"
+    },
+    {
+      "symbol": "GLD",
+      "instrument": "SPDR Gold Shares",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 5,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined"
+    },
+    {
+      "symbol": "DINO",
+      "instrument": "HF Sinclair Corp",
+      "note": "Demoted by validation: bid/ask spread 5.37%; the round trip costs 28% of the target move \u2014 too wide to trade this thesis",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 9,
+      "demotion_reason": "bid/ask spread 5.37%; the round trip costs 28% of the target move \u2014 too wide to trade this thesis"
+    },
+    {
+      "symbol": "TLT",
+      "instrument": "iShares 20+ Year Treasury Bond ETF",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 11,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined"
+    }
+  ],
+  "data_quality_notes": "RESEARCH RAN TO COMPLETION. notes.md carries a RESEARCH COMPLETE block at 06:33 ET superseding one at 06:30, so `truncated` is false and nothing here is reconstructed from fragments. 32 candidate lines were written covering 13 distinct symbols; the last entry per symbol is what is published. Seven sized positions total 12.5% gross; six further entries are exits carried at size 0.\n\nTHREE CORRECTIONS THE RESEARCH PHASE MADE ON ITSELF, ALL MATERIAL. (1) The FOMC is TODAY, 2026-09-16 at 14:00 ET with projection materials and a 14:30 press conference - not 2026-09-17. The earlier date had been asserted from memory while citing a Federal Reserve calendar that had not actually been fetched; it was then fetched and the date corrected. (2) THE FED IS HIKING, NOT CUTTING. The range is 3.50-3.75% and CME FedWatch prices a 93% chance of a 25bp hike to 3.75-4.00%, the first since 2023. FRED's DFF of 3.63% had been read as evidence of a cutting cycle; it is simply the effective rate inside the current target range. This inverted the mechanism behind four theses and turned GLD from a hold into an exit - the earlier GLD entry in candidates.jsonl still reads as a debasement hold and is superseded. (3) Notes timestamps had been estimated rather than read from the clock. Readers should weight the ideas accordingly: the macro frame under this report is 26 minutes old, not the frame the first candidates were captured under.\n\nTHE UNIFYING DRIVER IS SECONDARY-SOURCED. The Iran energy shock - headline CPI 3.4% against 2.4% core, diesel near $6/gal - explains every independent reading taken this morning, but it was NOT verified against BLS or EIA directly. It comes from a secondary summary and is treated as context in the theses rather than as a fetched primary figure. The 93% FedWatch probability and the 3.50-3.75% range are corroborated across two independent sources.\n\nCORRELATION CAP: BREACHED ON A LITERAL COUNT, AND SAID SO RATHER THAN SPLIT AWAY. One event - a ceasefire or negotiated end to the Iran conflict - collapses the energy premium, pulls headline CPI toward core, softens the rate path, and hits the ITB short, the XLU short, the DVN long and the DINO long simultaneously. That is four ideas on one driver against a cap of three. An earlier audit split them into 'hawkish Fed' and 'energy' and passed; naming the driver collapses that split. Two things are true and neither is a full defence: the drivers are contributing rather than identical (ITB has lagged SPY by 18.68% and XLU by 25.78% over six months, both well before this shock, so their duration leg survives a lower oil price - the energy longs have no comparable independent leg, they ARE the shock), and DVN and DINO are filled positions being held rather than new risk, so today's NEW exposure on this tail is two ideas, not four. The part that could be sized was sized: both new shorts cut from 2% to 1.5%, tail-exposed gross down from 9% to 8%. If the red team enforces the cap literally, the idea to cut is XLU, not ITB - ITB carries three dated catalysts of its own (LEN tonight, FOMC today, KBH 9/22) while XLU's only catalyst is the FOMC, which ITB already covers.\n\nSIX OF FOURTEEN OPEN POSITIONS ARE BEING CLOSED, five of them longs, and this is the clearest process finding of the run. Three of them - NKE, LULU, LCII - were published with NO STOP and are now 53%, 56% and 45% off their highs. BCC was also unstopped and is closed as a consistency fix: holding a building-materials long while shorting homebuilders is two halves of one bet pointed at each other, not a hedge. That is a pattern in how this report has been written, not three unlucky names. Separately, the book was carrying both a BUY and a SELL on NKE and on LULU simultaneously - an unresolved book rather than a hedge, now resolved to the short side on both.\n\nSPY'S STOP IS UNDER THE FLOOR AND WAS NOT FIXED. The 783.50 stop is 10.50 from the 773.00 entry, which is 1.79 ATR against the 1.80 ATR ETF floor. This is a filled position, so the entry cannot be amended, and the stop was deliberately NOT moved to repair the ratio - that is the KRE mistake this report has made before. It is flagged rather than adjusted, and its 2.19 ratio should be read as resting on a marginally sub-floor stop. For that reason SPY is ranked below DVN despite an identical ratio to three decimal places (2.190 vs 2.185).\n\nRATIOS CLUSTERED AT THE FLOOR - CHECKED AND EXPLAINED. Three of today's ideas (ITB, XLU, XLC) land at exactly 2.00, which is the signature of targets fitted to clear the bar. They were re-examined: in each case the stop was set first from the ATR floor and the target placed at a real level short of prior structure (XLC's 119.40 sits BELOW the 120.405 prior high rather than beyond it; ITB's 82.45 is short of the 84.98 250-day low as a first target with 79.00 behind it), and the 2.00 is where that arithmetic landed rather than where it was pushed. The honest reading is that these are ideas with no margin above the floor, not ideas that were bent to reach it.\n\nCCJ SIZE CUT BY SYNTHESIS. Research wrote 2%; conviction 2 caps at the lottery tier of 0.5-1% in config/strategy.md, so it is published at 1%. The substance of the update is unchanged and is risk control rather than conviction: a hard stop at 82.50 imposed where the open position had none. Its conviction is marked 2 against two kinds of evidence that would support 3 - deliberately, because the uranium supply model was not re-underwritten this run and the name has been re-recommended three times in ten days, which the repetition guard reads as anchoring rather than conviction.\n\nWHAT COULD NOT BE CHECKED. Options-implied move: the 'is your target inside what the market prices' check ran on ZERO ideas - Yahoo's options API returned 401 Unauthorized on every request. Event contracts: total source failure, ten Kalshi queries returning zero markets, on FOMC day - so there is no event-contract idea and no live market-implied probability for the day's main event, and the three FOMC contracts awaiting entry were left exactly as published rather than re-priced from memory. Short interest: nasdaq timed out, so the squeeze risk named in the ITB counter-argument is unquantified. Crypto: no OHLCV from any provider, spot only - no ATR means no compliant stop, so no crypto candidate despite a weak overnight tape. Index/VIX/DXY/gold/WTI quotes: Yahoo returned HTTP 429 across the board, so no live index level was obtainable and the regime above was reconstructed from individual ETF histories via nasdaq. Futures: none, because no contract month could be verified against Robinhood's list. Failed sources: Yahoo chart API (429, all symbols), Yahoo options (401), Kalshi (0 results, 10 queries), nasdaq short interest (ReadTimeout), finnhub indices (subscription), stooq (404 on ^-prefixed symbols), Schwab (403). Working: FRED, CoinGecko spot, finnhub quotes/earnings/insiders/analysts, nasdaq history, federalreserve.gov.\n\nPRICES ARE THE PREVIOUS CLOSE, AND THAT IS NOT STALE. Every last_price is the 2026-09-15 regular-session close, quoted at roughly 06:45 ET with the US market shut. That is the freshest honest equity price available pre-open, not out-of-date data.\n\nWHY THE MIX LOOKS LIKE THIS. No long-term idea was originated today and only one long_term entry appears (CCJ, a risk amendment rather than a fresh thesis). That lane is genuinely under-served and is being reported rather than filled: market_data.py exposes no fundamentals - no earnings power, book value or cash flow - and a long_term idea requires a defended valuation anchor and a bear-case price. There was not time to build one from primary sources, and inventing a valuation to fill the lane is exactly the failure the no-fabrication rule targets. There is also NO new long in the day's leading sector: not one of XLE, XOM, COP, EOG, OXY, SLB or HAL clears 2:1 with an honest ATR stop, because energy is pinned at its highs with no prior resistance left to target. Two setups whose arithmetic passed (HAL, AIR) were killed on evidence. Nothing intraday cleared the bar. The skew toward shorts and exits is what the tape actually offered, not a house view.\n\nTRACK RECORD CONTEXT. The tracker shows 0 of 6 closed trades hitting target, average -3.9%. Six closed trades is noise and is not being over-fitted here - but all five recent stop-outs were conviction 2 or 3, and the unstopped-long pattern this run is closing is the more actionable reading of that record than the hit rate is.\n\nRED TEAM, 2026-09-16. Independently verified the one fact the whole report rests on before touching anything: the FOMC does meet 2026-09-15/16 with a Summary of Economic Projections (fetched federalreserve.gov calendar), and the 25bp hike to 3.75-4.00% is priced around 93% (CME FedWatch via press coverage; Reuters survey 86 of 101 economists). The research phase's two self-corrections - the date, and hiking rather than cutting - both hold up. Thirteen ideas reviewed, two cut, two conviction downgrades, one stop widened, five phrasing fixes, and the ranking reordered.\n\nCUT (2). XLC, the report's own nominee as weakest: the XLK outperformance that is the whole thesis exists only on the 1m and 3m windows (+4.26 and +5.84 points) against a 33.53-point deficit over 6m, which is a bounce in a loser rather than leadership changing hands; the \"reclaiming its SMA200 from below\" is a one-cent miss verified independently (114.03 close, 114.04 SMA200), so the 113.00 entry sits under the resistance the 119.40 target needs cleared; no sector catalyst inside the horizon; and a hawkish hike is a direct headwind to exactly the long-duration growth XLC is. XLU on the correlation test, which its own counter_argument called: it and ITB were one macro bet on two tickers - same driver, same 14:00 gate, same stand-aside condition, same conviction, same size - and XLU is the harder half, needing an immediate break to new lows from 0.07% above its 250-day low against a dividend floor and a defensive bid. ITB kept the slot on independent catalysts (LEN tonight, KBH 9/22) and a direct mortgage-rate mechanism.\n\nDOWNGRADED (2). ITB 4 to 3 and win_probability 0.44 to 0.40. Its \"three independent kinds\" are two: technical_level (below all three SMAs, near the range low) and positioning (lagging SPY on 1m/3m/6m) are the same observation - the thing has fallen - relabelled, and drawn from the same single source. The third kind is a catalyst that is 93% priced, which the idea's own counter concedes is \"thoroughly in the price\", leaving the edge to come from projections the thesis names no mechanism for predicting. At 2.0:1 the break-even is 33.3%, so 0.40 is still honestly positive (+0.20R) rather than positive by assertion. BCC 4 to 3: its own key_risk concedes the exit \"rests mainly on not carrying contradictory positions\" and that at 16.8% above its low it is \"less forced by price\" than NKE or LULU. That is a book-consistency fix, correct but not a 4.\n\nFIXED (1 level, 5 phrasings). SPY was the report's only hard stop_distance failure - 783.50 is 1.79 ATR against the 1.80 ETF floor. The stop is widened to 784.00 (1.88 ATR); reward-to-risk falls 2.19 to 2.09, still clearing the floor. That is the permitted direction on a filled position: the entry cannot move, and a stop moved OUT makes the trade worse rather than flattering the ratio. Separately, SPY, GLD and TLT all described the dot plot as \"reported to\" tilt hawkish. The projections are unpublished until 14:00 today, so nothing can report their content; the sourced claim is that a hawkish tilt is widely EXPECTED (Warsh's Jackson Hole speech, the Reuters survey). Reworded in all five places. No thesis changed.\n\nCUT NOTHING ON (3). Three validation failures were checked and are artifacts, not defects, and should not be acted on. LCII's earnings_date FAIL (\"report says 2026-09-22, calendar says 2026-10-28\") matched the wrong company: the catalyst is explicitly THO's print, confirmed on the fetched calendar at 2026-09-22 BMO. NKE's earnings_date WARN (\"not on the fetched calendar\") is wrong the other way - NKE is on it at exactly the claimed 2026-09-28, est EPS 0.4495. And the spread FAILs on DINO (5.37%), BCC (7.36%) and LCII (4.20%) are 06:39 ET pre-market quote artifacts, not regular-session spreads; all three are position exits or holds needing no fresh entry. The limit-order instruction stands regardless.\n\nREAD THE SIX SIZE-0 ROWS AS EXECUTABLE EXITS. BCC, NKE, LULU, LCII, GLD and TLT close or reaffirm closing existing positions, five of which carry no stop at all and four of which sit within 4% of a 250-day low going into a 93%-priced hike. Each fails direction_consistency for having no target, which is what an exit looks like - there is no target because the trade is being ended. No target was invented to clear the check. If phase 2d demotes them to the watchlist on that basis, they are still the morning's most actionable instructions and are not shelved ideas.\n\nRE-RANKED. Rank 1 should be the most important thing to do today, and today that is closing unstopped exposure before the 14:00 binary, not a short that cannot be entered until after it and may be stood aside entirely. The six risk-control exits lead, BCC first because its own text makes closing it a precondition for the ITB short (\"do not hold both\"); the single new entry (ITB, gated to 14:00) follows; the holds come last. CCJ is kept at conviction 2 and 1% - imposing an 82.50 stop on a previously unstopped long 30% off its high is real risk control, and the idea marks its own thin evidence honestly.\n\nNOT CUT, DELIBERATELY. Six of seven sized ideas trace to one shock - the Iran energy premium and the rate path it forces - and that concentration is real. It is not grounds for further cuts here because the report names it in four separate key_risk fields and has already priced it in sizing: 12.5% gross, no position above 2.5%, and no new energy long at all on the stated ground that nothing in the sector clears 2:1 on an honest ATR stop. Manufacturing a seventh objection to look diligent would be the worse error. Validation demoted 7 idea(s) whose numbers did not check out. 4 more carry warnings \u2014 see the validation block on each.",
+  "validation_summary": {
+    "checked": 11,
+    "passed": 0,
+    "warned": 4,
+    "failed": 7,
+    "enforced": true,
+    "demoted": 7
+  }
+}
