@@ -1,0 +1,601 @@
+{
+  "date": "2026-09-17",
+  "generated_at_et": "2026-09-17T06:40:00-04:00",
+  "research_minutes": 34,
+  "truncated": false,
+  "data_quality_notes": "Research ran 06:01-06:35 ET and closed with a RESEARCH COMPLETE block plus a 06:35 amendment, so nothing here is reconstructed from fragments. Eight ideas: five carry risk (GNRC, PFE, DINO, JBHT, SVRA) and three are exits that close positions and open nothing (CEG, GLD, DVN).\n\nPRICES. Every last_price is the 2026-09-16 regular-session close, re-fetched at synthesis from Finnhub and stamped 2026-09-16T20:00Z. The market is shut; that is the freshest honest equity price, not stale data. One exception matters: GNRC's 175.11 is the close BEFORE the Amazon 8-K hit, and it traded ~240.80 after hours (+37.5%). The 205-218 entry is deliberately far below where it will likely open, and if it never trades back there the idea should go unfilled rather than be chased.\n\nSOURCES THAT FAILED. (1) Yahoo returned HTTP 429 for the whole run, so there is no SPX, NDX, DJI, RUT, VIX, DXY, /ES or /NQ level anywhere in this report; index figures are quoted as ETF proxies (SPY, USO, UUP) or FRED series instead, and the missing ones are written as null rather than recalled from memory. (2) Kalshi returned count=0 for CPI, rate, FEDDECISION, Fed decision, recession, Bitcoin, S&P, inflation, GDP and unemployment; an unfiltered call returned 40 cross-category sports markets with null prices on every leg. The event-contract lane was unusable, so none is recommended. (3) api.nasdaq.com timed out on short interest for both GNRC and JBHT. That gap is material for JBHT specifically - shorting a name after a 13.3% drop without knowing how crowded the short already is - and it is stated in that idea's key_risk and is why size is held to 2%. (4) BTC price history failed on every source, so there is no BTC ATR and no BTC swing level; the crypto lane was researched and deliberately rejected rather than published on inferred levels.\n\nWHY THE COUNT IS WHAT IT IS. Two new positions, not more, and the reason is arithmetic rather than pessimism. A swing idea needs a stop at least 2.0 ATR wide AND a reward-to-risk of at least 2.0, which together demand a target roughly 4 ATR away. In this tape the names that are working sit within 4 ATR of their 200-day highs, so the target has to be printed above the 52-week high to clear the floor - the exact defect DVN is being closed for. XOM (1.75 at a defensible 176.00 target) and MET (a 2.0 ATR stop forces a 104.89 target above a 100.93 200-day high) were both rejected on that arithmetic and not on the story. GNRC clears only because a 37.5% after-hours gap opened real geometry between a 212 entry and a 258 target.\n\nRATIOS, CHECKED THE SUSPICIOUS WAY. DINO at 2.10 and JBHT at 2.08 both sit just above the 2.0 swing floor, which is the signature of targets fitted to clear the bar. Both were examined for it. DINO's levels are unchanged from the 2026-08-22 entry and were explicitly NOT tightened - walking the stop in would have lifted the ratio while making the trade worse. JBHT's 200.00 target sits well inside the stock's own 200-day range (low 172.79) rather than requiring a new low, and its 274.00 stop is set at the pre-warning close, 2.55 ATR out. Stop distances in ATR: GNRC 2.03, DINO 2.31, JBHT 2.55, SVRA 3.78 - all clear the 2.0 stock floor. GNRC's 2.03 is the weakest of them and is computed on a 4.51% ATR measured BEFORE a 37% gap, so true forward volatility is almost certainly higher and that stop is effectively tighter than it reads.\n\nPFE's ratio is published with its sensitivity rather than as a single flattering number: 2.66 against a 22.00 bear case, but 1.95 against a 20.00 bear case if the dividend is cut - in which case it fails the 2.5 long_term floor. That assumption is the thing to argue with.\n\nSKEW, STATED NOT APOLOGISED FOR. Nothing intraday, no futures, no crypto, no event contracts. Three are judgement calls (no intraday setup cleared, no futures view better expressed than the cash leg, crypto rejected after research); one is a data failure (event contracts). The correlation budget also shaped this: the rates-up driver already carries the XLU and ITB shorts published 2026-09-16, so KBH, XHB and a bond short were all rejected on concentration rather than merit. DINO long and the JBHT short share one variable - wide diesel cracks - and are closer to one trade than two; a reader should size them together.\n\nRED TEAM (phase 2c). Cut JBHT (rank 4, short, conviction 4): the 200.00 target was anchored only on sitting inside the 200-day range, which says the level is reachable and not that it is right, and at 2.08:1 the idea fails at any target above ~210 - plus it was the incremental leg of a one-variable diesel-crack cluster the report identified with DINO and then published anyway. Downgraded GNRC 4 to 3 and cut its size 2.5% to 2.0% (its 2.02 ATR stop multiple is computed on a pre-gap ATR, and two of three evidence items are the same 8-K read twice); PFE 4 to 3 (clears the 2.5 floor by 6% on a bear case its own key_risk says the live scenario breaches, and its claim to be rate-immune contradicts the same report's XLU short); CEG 4 to 3 (the author calls it the weakest call, its own positioning evidence argues against it, and rank 1 buys the datacenter-power demand this exit sells). Kept DINO, GLD, DVN and SVRA. Seven ideas remain: three carrying risk, three exits, one held lottery ticket. Fixed two 404 source URLs on GLD - robinhood.com/us/en/etf/<SYM>/ 404s for both GLD and SLV where /us/en/stocks/<SYM>/ resolves; the levels themselves were fetched and are unchanged.\n\nTWO PIPELINE FACTS THE READER NEEDS, NEITHER FIXED HERE. (1) The GLD, CEG and DVN exits carry validation verdict 'fail' for having no target and no stop, which is what an exit IS - it closes a position and opens nothing. scripts/validate_report.py has no exit-aware path, so if phase 2d runs with --enforce these three will be demoted to the watchlist with the boilerplate 'Republish only once the numbers check out', and three deliberate close instructions will read as three ideas that failed on merit. They did not. Treat any such demotion note on GLD, CEG or DVN as an artifact. (2) Exits do not close positions in state/open_positions.json. merge_report keys on (symbol, direction), so a 'sell' row does not match the live 'buy' row - it opens a new one. This has already happened once and is visible in state today: a GLD sell published 2026-09-08 is still sitting pending with no entry fill, while the GLD buy from 2026-08-22 is still open. Today's three exits will do the same unless they are demoted first. Both of these are code problems, out of scope for a phase that edits report.json, and both are recorded here rather than worked around so that nobody reads the resulting rows as trades. Validation demoted 4 idea(s) whose numbers did not check out. 3 more carry warnings \u2014 see the validation block on each.",
+  "market_context": {
+    "summary": "The Fed hiked. On 2026-09-16 the FOMC raised the target range 25bp to 3.75-4.00%, unanimously, the first hike since 2023, with a median dot showing at least one more in 2026; Chair Warsh said inflation has been too high for too long and that the standard for confidence has not been satisfied. The 10-year closed ~5.01%, its highest since 2007, after reversing up from a 4.94% intraday low during the press conference. The tape rotated rather than broke: Dow -1.2%, S&P 500 -0.4%, Nasdaq roughly flat, with the selling concentrated in duration and rate-sensitive value, and futures reported higher overnight. Energy is the only sector working, and it is the same story rather than a separate one - USO sits 4.4% off its 200-day high against a 200-day average of 110.45, so the inflation being hiked into has a large energy component. This report's open book was positioned for the opposite regime, which is why three longs are closed today and only two new positions opened.",
+    "regime": "mixed",
+    "levels": {
+      "us10y": 5.01,
+      "us10y_note": "2026-09-16 close per Yahoo live blog; FRED 2026-09-15 print was 5.00%",
+      "us2y": 4.67,
+      "fed_funds_effective": 3.63,
+      "curve_10y_2y": 0.27,
+      "spy": 754.05,
+      "tlt": 80.88,
+      "gld": 391.74,
+      "uso": 156.17,
+      "uup": 28.4,
+      "btc": 76355,
+      "spx": null,
+      "ndx": null,
+      "vix": null,
+      "dxy": null,
+      "wti": null,
+      "gold": null,
+      "levels_note": "Index, VIX, DXY, WTI and spot gold are null because Yahoo returned HTTP 429 for the entire run and Finnhub refuses index quotes. ETF proxies and FRED series are substituted where they exist. All equity/ETF levels are the 2026-09-16 close."
+    },
+    "econ_calendar": [
+      {
+        "event": "Initial jobless claims",
+        "datetime_et": "2026-09-17T08:30",
+        "importance": "medium",
+        "consensus": "211K, +2K"
+      },
+      {
+        "event": "Philadelphia Fed manufacturing survey",
+        "datetime_et": "2026-09-17T08:30",
+        "importance": "high",
+        "consensus": "25.0 vs 41.4 prior - a large expected deceleration"
+      },
+      {
+        "event": "New Residential Construction (housing starts / building permits)",
+        "datetime_et": "2026-09-17T08:30",
+        "importance": "high",
+        "consensus": null
+      },
+      {
+        "event": "KBH Q3 earnings (AMC)",
+        "datetime_et": "2026-09-22T16:20",
+        "importance": "medium",
+        "consensus": "EPS 0.9022, revenue $1.307B"
+      },
+      {
+        "event": "JBHT Q3 FY2026 earnings (AMC)",
+        "datetime_et": "2026-10-13T16:20",
+        "importance": "high",
+        "consensus": "EPS 2.1835, into a 5-10% earnings decline warned on 2026-09-16"
+      },
+      {
+        "event": "SVRA PDUFA target action date - molgramostim (MOLBREEVI) in autoimmune PAP",
+        "datetime_et": "2026-11-22T00:00",
+        "importance": "high",
+        "consensus": null
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "rank": 1,
+      "symbol": "GNRC",
+      "instrument": "Generac Holdings Inc",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 3,
+      "last_price": 175.11,
+      "last_price_asof": "2026-09-16T20:00:00+00:00",
+      "price_source": "finnhub",
+      "entry": {
+        "ideal": 212.0,
+        "zone_low": 205.0,
+        "zone_high": 218.0,
+        "order_type": "limit",
+        "condition": "Only on a pullback into 205-218 after the first 60 minutes of trade have set a range. Do not buy the opening print. If it never trades back into the zone, leave it unfilled."
+      },
+      "exit": {
+        "target": 258.0,
+        "target_2": 285.0,
+        "scale_plan": "Trim half at 258, hold the remainder toward 285 with the stop trailed to entry once 258 prints."
+      },
+      "stop": 196.0,
+      "risk_reward": 2.88,
+      "win_probability": 0.42,
+      "position_size_pct": 2.0,
+      "risk_tier": "standard",
+      "catalyst": {
+        "event": "Generac/Amazon long-term supply agreement for up to $8B of data-center backup generators, executed 2026-09-16 and disclosed by 8-K; the stock closed 175.11 and traded ~240.80 after hours, about +37.5%",
+        "datetime_et": "2026-09-17T09:30",
+        "action": "Wait for the pullback, do not chase the open. Let the first 60 minutes set a range, then buy only into 205-218 - the shelf where the $200.93 warrant strike, the SMA50 at 204.56 and the SMA200 at 209.78 sit together. An unfilled idea costs nothing; chasing a 37% gap does.",
+        "wait": true
+      },
+      "thesis": "The 8-K is a contract, not a press release: Amazon agreed to buy up to $8 billion of backup power generators for its data centers, with initial deliveries specified at $2.4 billion across 2027 and 2028, and Generac issued Amazon a warrant over 1,693,745 shares struck at $200.9266 and expiring 2033-09-16. GNRC had been left for dead at 175.11, down 40.9% from its 200-day high of 296.44 and below its 50-day (204.56) and 200-day (209.78), priced as a cyclical tied to storm season and housing. The deal reprices it as datacenter power infrastructure, which is the one capex line still being raised.",
+      "key_risk": "$8 billion is a ceiling on aggregate gross payments, not a committed order book - only the $2.4 billion of 2027-2028 initial deliveries is scheduled, and the rest vests Amazon warrants rather than obliging Amazon to buy. The 8-K discloses no exclusivity and no termination terms, so the headline number is the most fragile part of it. SECOND, AND THE REASON SIZE CAME DOWN: the 2.02 ATR stop multiple is computed on a 7.9036 ATR measured entirely before a 37.5% gap. No post-gap bar exists yet, so today there is no honest forward ATR at all - the single number arguing the 196 stop is wide enough is the one number the catalyst invalidated, and it is almost certainly overstating the multiple by a factor rather than a margin. The 205-218 shelf is a real level (warrant strike 200.93, SMA50 204.56, SMA200 209.78) and the 2.88 ratio is honest arithmetic on it, but risk per unit is understated, which is answered by holding size to 2% rather than by pretending the ATR is knowable. Third, absent from the original write-up: a company with roughly $10B of equity value contracting to deliver $2.4B of generators across 2027-2028 has a capacity problem before it has a revenue problem, and issuing equity into a 37% gap is the cheapest capital it will ever see - a raise is a live risk that nothing in the 8-K rules out.",
+      "counter_argument": "The strongest case against is that the move already happened - buying after +37.5% is paying for the entire re-rating, and the $8B is a headline ceiling that may never be drawn. The answer is in the filing rather than in the narrative: $2.4B of deliveries across 2027-2028 is specified, against a company whose whole equity value was about $10B at the 175.11 close, so even the contracted floor is material rather than decorative. And Amazon taking a warrant struck at 200.93 - 14.7% above the undisturbed price - is Amazon choosing share-price exposure over a pure discount, which is a counterparty with the books open pricing the shelf this idea is trying to buy. That is also why the entry sits at 205-218 rather than at the open: the case is for the contract, not for the gap. RED TEAM: conviction lowered 4 to 3 on evidence independence. Three kinds are listed and the check passes on kind alone, but the primary_document item and the counter_argument_answered item are both readings of the same 8-K - the warrant strike argument IS the filing - so this rests on one document plus one analyst-revision series, not three independent confirmations. The thesis survives intact; what it does not support is a 4. Note also that with the stock bid 234.00/235.50 after hours, a fill at 205-218 requires roughly a 12% round trip down from there, which would itself be new information about the deal's reception - so treat an unfilled idea as the base case and re-read the tape rather than the thesis if it does fill.",
+      "evidence": [
+        {
+          "kind": "primary_document",
+          "detail": "Read the 8-K itself: up to $8B aggregate gross payments, $2.4B initial deliveries in 2027 and 2028, warrant over 1,693,745 shares at $200.9266 expiring 2033-09-16 with 307,954 shares vested immediately and the remainder vesting on payments received",
+          "source": "https://www.sec.gov/Archives/edgar/data/0001474735/000143774926030550/gnrc20260915_8k.htm"
+        },
+        {
+          "kind": "positioning",
+          "detail": "Fetched Finnhub recommendation trend: 21 of 28 analysts bullish (10 strong buy, 11 buy, 7 hold, zero sell) at 2026-09-01, bullish share 75.0% and improving, +4.6pp over four months - the sell side was already revising up before the deal",
+          "source": "https://www.benzinga.com/trading-ideas/movers/26/09/61831070/generac-stock-soars-on-8-billion-amazon-data-center-deal"
+        },
+        {
+          "kind": "counter_argument_answered",
+          "detail": "Tested the deal against its own dilution: the warrant is 1.69M shares against a company worth roughly $10B at 175.11, and it is struck 14.7% ABOVE the undisturbed close rather than at or below it, so Amazon paid up for the exposure instead of extracting a discount",
+          "source": "https://www.tipranks.com/news/company-announcements/generac-enters-strategic-equity-linked-supply-deal-with-amazon"
+        }
+      ],
+      "sources": [
+        "https://www.sec.gov/Archives/edgar/data/0001474735/000143774926030550/gnrc20260915_8k.htm",
+        "https://www.benzinga.com/trading-ideas/movers/26/09/61831070/generac-stock-soars-on-8-billion-amazon-data-center-deal",
+        "https://www.tipranks.com/news/company-announcements/generac-enters-strategic-equity-linked-supply-deal-with-amazon"
+      ],
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.88,
+        "claimed_risk_reward": 2.88,
+        "breakeven_probability": 0.258,
+        "stated_win_probability": 0.42,
+        "expectancy_r": 0.63,
+        "claimed_edge": 0.162,
+        "stop_atr_multiple": 2.02,
+        "live_price": 175.11,
+        "live_price_asof": "2026-09-16T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 884.3,
+        "bid": 234.5,
+        "ask": 235.5,
+        "spread_pct": 0.426,
+        "atr14": 7.9036,
+        "checked_at_et": "2026-09-17T06:44:54-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.88:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "warn",
+            "detail": "entry 212.0 is +21.1% from live 175.11 \u2014 far from the market"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-09-17 is ahead of us"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 5.82 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "stop_distance",
+            "status": "warn",
+            "detail": "stop is 2.02 ATR from entry \u2014 clears the 2.0 ATR floor for a swing stock but sits under the 2.5 ATR level where stop-outs have clustered"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "42% claimed vs 26% break-even at 2.88:1 \u2014 expectancy +0.63R"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-09-16T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "pass",
+            "detail": "bid/ask spread 0.43%; the round trip costs 2% of the target move"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "2.0% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 3 rests on 3 independent kinds: counter_argument_answered, positioning, primary_document"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "1 of 3 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    },
+    {
+      "rank": 2,
+      "symbol": "PFE",
+      "instrument": "Pfizer Inc",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "long_term",
+      "conviction": 3,
+      "last_price": 27.46,
+      "last_price_asof": "2026-09-16T20:00:00+00:00",
+      "price_source": "finnhub",
+      "entry": {
+        "ideal": 27.46,
+        "zone_low": 25.5,
+        "zone_high": 28.0,
+        "order_type": "limit",
+        "condition": "Add only under 26.50, near the 26.34 the CEO paid on 2026-08-12 and the SMA50 at 26.48. Build in thirds over the next two quarters rather than in one clip."
+      },
+      "exit": {
+        "target": 42.0,
+        "time_stop": "No time stop. The invalidation is a condition, not a date: two consecutive quarters of withdrawn or cut adjusted-EPS guidance, or a Phase 3 failure in the berobenatide obesity program."
+      },
+      "stop": null,
+      "bear_case_price": 22.0,
+      "risk_reward": 2.66,
+      "position_size_pct": 3,
+      "risk_tier": "standard",
+      "catalyst": {
+        "event": "Post-LOE pipeline maturing 2028-2029: the patent cliff erodes ~$1.5B of revenue in 2026, $4.5B in 2027 and over $6B in 2028, against ~20 Phase 3 oncology programs from the $43B Seagen deal and a Metsera-based obesity pipeline running 10 pivotal studies in 2026 with first approval targeted 2028",
+        "datetime_et": null,
+        "action": "Continue the accumulation opened 2026-08-18 at 27.60 - this is an unfinished build, not a new idea. Add only under 26.50, in thirds, over the next two quarters. There is no reason to rush and no stop.",
+        "wait": false
+      },
+      "thesis": "Update to the 2026-08-18 long: thesis intact, continuing the accumulation and giving it the invalidation it never had - PFE was the last open long in this book carrying neither a stop nor a stated bear case. Pfizer is priced as a melting ice cube and is being bought by the people who can see the pipeline. Reaffirmed FY2026 guidance is $59.5-62.5B revenue and $2.80-3.00 adjusted EPS, so at 27.46 the stock trades on 9.2-9.8x this year's earnings with a dividend near 6%, while the market pays mid-teens multiples for pharma that has visibly cleared its cliff. It is also the one long in this report that a hiking Fed does not fight, which matters on a day when the rest of the book had to be cut for exactly that reason.",
+      "key_risk": "The cliff is real and front-loaded against a pipeline that pays late: over $6B of annual revenue erosion by 2028 versus a first obesity approval only targeted for 2028, so there are roughly two years where the erosion is certain and the offset is not. If the pipeline slips, the ~61% payout ratio on $2.80 EPS becomes ~78% on a depressed $2.20, and a dividend cut is the event that takes the shares below the bear case rather than to it.",
+      "counter_argument": "The strongest case against is that the sell side is right and getting more right - only 38.9% of analysts are bullish, 20 of 36 sit on hold, and the revision direction is deteriorating (-2.8pp). I am explicitly disagreeing, and the honest reason is that the same names have been lukewarm through four consecutive EPS beats (0.77 vs 0.69, 0.75 vs 0.72, 0.66 vs 0.58, 0.87 vs 0.64). The second objection matters more and the sensitivity is on the page rather than hidden: the 2.66 reward-to-risk depends on a 22.00 bear case, which assumes the dividend survives. If instead a cut takes the stock to a 20.00 bear case, the ratio falls to 1.95 and this idea does NOT clear the 2.5 long_term floor. That is the number to argue with. RED TEAM: conviction lowered 4 to 3, on two counts the original missed. First, 2.66 clears 2.5 by 6% of headroom on a bear case the author chose, and this idea's own key_risk names the dividend cut as the event that takes the shares BELOW that bear case - so the floor is cleared under the base case and breached under precisely the scenario identified as the live risk. That is a 3, not a 4; it is not a kill, because a ~61% payout on reaffirmed $2.80-3.00 guidance makes a near-term cut the tail rather than the case. Second, the thesis claims PFE is 'the one long in this report that a hiking Fed does not fight.' That is the weakest sentence on the page. A ~6% dividend yield is a spread against the risk-free rate, and with the 10-year at 5.01% and the dot plot signalling more, that spread is compressing - which is the identical mechanism this same report uses to justify the CEG exit and the standing XLU short. Pfizer is not rate-immune; it is rate-exposed through its yield and merely not rate-exposed through its earnings. Accumulate on the valuation, not on a claimed macro hedge that the rest of the book contradicts.",
+      "evidence": [
+        {
+          "kind": "positioning",
+          "detail": "Fetched insider data: 3 open-market buys by 3 distinct buyers over six months, $2.96M bought against $0.13M sold - including CEO Albert Bourla buying 38,000 shares at $26.34 on 2026-08-12",
+          "source": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000078003&type=4&dateb=&owner=include&count=40"
+        },
+        {
+          "kind": "valuation_anchor",
+          "detail": "Reaffirmed FY2026 guidance of $59.5-62.5B revenue and $2.80-3.00 adjusted EPS puts 27.46 at 9.2-9.8x; the 42 target is 12.5x on ~$3.40 adjusted EPS in the post-2029 growth phase the company guides to at a high-single-digit revenue CAGR - method shown, not asserted",
+          "source": "https://www.tikr.com/blog/pfizer-raises-2026-revenue-guidance-to-62-billion-heres-whats-behind-the-beat"
+        },
+        {
+          "kind": "counter_argument_answered",
+          "detail": "Quantified the cliff instead of waving at it: LOE erosion of ~$1.5B (2026), $4.5B (2027), $6B+ (2028), roughly $17-18B cumulative, set against ~20 Phase 3 oncology programs from the $43B Seagen acquisition and 10 Metsera obesity pivotal studies in 2026 targeting first approval in 2028",
+          "source": "https://finance.yahoo.com/sectors/healthcare/articles/pfizer-bets-acquired-drugs-offset-125100888.html"
+        }
+      ],
+      "sources": [
+        "https://www.tikr.com/blog/pfizer-raises-2026-revenue-guidance-to-62-billion-heres-whats-behind-the-beat",
+        "https://finance.yahoo.com/sectors/healthcare/articles/pfizer-bets-acquired-drugs-offset-125100888.html",
+        "https://stockstory.org/us/stocks/nyse/pfe/news/earnings-call/pfe-q1-deep-dive-oncology-obesity-pipeline-and-legal-milestones-shape-outlook"
+      ],
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.66,
+        "claimed_risk_reward": 2.66,
+        "breakeven_probability": 0.273,
+        "stop_atr_multiple": null,
+        "live_price": 27.46,
+        "live_price_asof": "2026-09-16T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 884.4,
+        "bid": 27.5,
+        "ask": 27.56,
+        "spread_pct": 0.218,
+        "atr14": 0.5293,
+        "checked_at_et": "2026-09-17T06:44:54-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.66:1 clears the 2.5:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 27.46 is +0.0% from live 27.46"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "long-term idea, no dated event expected"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "long-term target is valuation-anchored, not ATR-bound"
+          },
+          {
+            "check": "stop_distance",
+            "status": "pass",
+            "detail": "long-term downside is a bear case, not a stop \u2014 no ATR floor applies"
+          },
+          {
+            "check": "expectancy",
+            "status": "warn",
+            "detail": "no win_probability stated; this idea needs better than 27% to break even at 2.66:1"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-09-16T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "pass",
+            "detail": "bid/ask spread 0.22%; the round trip costs 0% of the target move"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "3% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 3 rests on 3 independent kinds: counter_argument_answered, positioning, valuation_anchor"
+          },
+          {
+            "check": "sources",
+            "status": "pass",
+            "detail": "all 3 checked source(s) resolve"
+          }
+        ]
+      }
+    },
+    {
+      "rank": 3,
+      "symbol": "DINO",
+      "instrument": "HF Sinclair Corp",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 4,
+      "last_price": 113.97,
+      "last_price_asof": "2026-09-16T20:00:00+00:00",
+      "price_source": "finnhub",
+      "entry": {
+        "ideal": 107.5,
+        "zone_low": 105.0,
+        "zone_high": 109.0,
+        "condition": "Existing position only. No new money at 113.97 - the entry zone is recorded because it is where the position was opened on 2026-08-22, not because it is being re-offered."
+      },
+      "exit": {
+        "target": 128.0
+      },
+      "stop": 97.75,
+      "risk_reward": 2.1,
+      "win_probability": 0.45,
+      "position_size_pct": 2.5,
+      "risk_tier": "standard",
+      "catalyst": {
+        "event": "Record refined-product cracks: NY Harbor ULSD vs WTI at $107.35 on 2026-09-01 and the WTI 3-2-1 near $59/bbl against a 2010-2021 average of ~$19; EIA weekly petroleum status every Wednesday 10:30 ET",
+        "datetime_et": null,
+        "action": "Hold, unamended. Do NOT add at 113.97 and do NOT walk the stop up - tightening it would lift the ratio while making the trade strictly worse, which is the KRE mistake. New money does not go here.",
+        "wait": false
+      },
+      "thesis": "Update to the 2026-08-22 long: thesis intact, levels unchanged, and this is now the report's single energy position after the DVN exit - which is deliberate. The refining driver is independent of the rate trade that dominates the rest of the book: the shortage is in refined products rather than crude, with more than 7M bpd of Middle Eastern and Russian product flows offline and global refinery throughput running 4.2M bpd below last year. DINO is the measured leader in the sector, up 19.98% over one month against XLE's 2.32%.",
+      "key_risk": "Crack spreads are the most violently mean-reverting series in energy and they are at records, so the thesis and the exit signal are the same number - a normalisation toward even half the current spread takes the earnings power out faster than any chart level would warn. DINO is also 0.71% from its 200-day high, so there is no overhead price memory to lean on if it turns. The 97.75 stop is 2.31 ATR from the 107.50 entry, which clears the 2.0 swing floor but sits under the 2.5 level where this report's stop-outs have clustered; it is left unchanged regardless, because the position is filled and walking a stop in on a winner is the KRE mistake. RED TEAM: with the JBHT short cut, DINO is now the report's sole expression of the wide-crack view rather than one of two correlated legs - that concentrates the thesis in the leg with defined risk and an established entry, which is the intended outcome, but it means a crack normalisation now has one clean way into the book instead of two muddled ones. Size it as the whole energy position, not as half of one.",
+      "counter_argument": "The strongest case against is explicit and published: CNBC on 2026-08-17 argued refiner stocks were on a nearly unprecedented run and that history says it ends soon. I accept that for new money, which is exactly why today's report adds no refining exposure and rejected VLO and PSX outright despite the same driver. The narrower question here is whether an existing position opened at 107.50 with a 97.75 stop should be closed at 113.97, and the answer is no: the stop is already 2.31 ATR from entry, so the risk is defined and the position is not being managed by hope.",
+      "evidence": [
+        {
+          "kind": "positioning",
+          "detail": "Computed relative strength: DINO vs XLE +17.66% over 1 month and +55.52% over 3 months; absolute 6-month return 95.05% against SPY's 12.41% - sector leadership, measured not assumed",
+          "source": "https://robinhood.com/us/en/stocks/DINO/"
+        },
+        {
+          "kind": "technical_level",
+          "detail": "Close 113.97 against fetched SMA20 102.73, SMA50 93.53 and SMA200 67.60, -0.71% off the 200-day high of 114.79; the 97.75 stop is 2.31 ATR from the 107.50 entry on a 4.2221 ATR",
+          "source": "https://robinhood.com/us/en/stocks/DINO/"
+        },
+        {
+          "kind": "counter_argument_answered",
+          "detail": "Sourced the bear case rather than asserting it away - CNBC 2026-08-17 on the unprecedented refiner run and likely mean reversion - and acted on it by refusing to add new refining exposure today rather than by closing a defined-risk position",
+          "source": "https://www.cnbc.com/2026/08/17/refiner-stocks-are-on-a-nearly-unprecedented-run-history-says-it-could-end-soon.html"
+        }
+      ],
+      "sources": [
+        "https://oilprice.com/Energy/Crude-Oil/Global-Fuel-Squeeze-Triggers-US-Refiners-Stocks-Rally.html",
+        "https://www.forbes.com/sites/garthfriesen/2026/07/23/refining-stocks-soar-as-crack-spread-hits-record-high-in-2026/",
+        "https://www.cnbc.com/2026/08/17/refiner-stocks-are-on-a-nearly-unprecedented-run-history-says-it-could-end-soon.html"
+      ],
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.1,
+        "claimed_risk_reward": 2.1,
+        "breakeven_probability": 0.323,
+        "stated_win_probability": 0.45,
+        "expectancy_r": 0.395,
+        "claimed_edge": 0.127,
+        "stop_atr_multiple": 2.31,
+        "live_price": 113.97,
+        "live_price_asof": "2026-09-16T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 884.5,
+        "bid": 114.1,
+        "ask": 117.0,
+        "spread_pct": 2.51,
+        "atr14": 4.2221,
+        "checked_at_et": "2026-09-17T06:44:55-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.1:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 107.5 is -5.7% from live 113.97"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "warn",
+            "detail": "no date given for a timed idea"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 4.86 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "stop_distance",
+            "status": "warn",
+            "detail": "stop is 2.31 ATR from entry \u2014 clears the 2.0 ATR floor for a swing stock but sits under the 2.5 ATR level where stop-outs have clustered"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "45% claimed vs 32% break-even at 2.1:1 \u2014 expectancy +0.40R"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-09-16T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "bid/ask spread 2.51%; the round trip costs 13% of the target move \u2014 set the entry as a limit, never market"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 4 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "2.5% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 4 rests on 3 independent kinds: counter_argument_answered, positioning, technical_level"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "1 of 3 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    }
+  ],
+  "watchlist": [
+    {
+      "symbol": "JBHT",
+      "instrument": "J.B. Hunt Transport Services Inc",
+      "note": "Cut by the red team from rank 4 (short, conviction 4, 2%). Three reasons, and the first is the one that decides it. (1) The 200.00 target has no anchor. Its stated justification is that it 'sits well inside the 200-day range' against a 172.79 low - that establishes the level is reachable, not that it is right, and no estimate cut or multiple bridges a warned 5-10% earnings decline to a further 15.5% de-rating from 236.73. The ratio is 2.08 against a 2.0 floor, so the idea dies at any target above ~210 (1.67:1): the entire trade rests on a number chosen with no level work behind it. That is the target-fitted-to-clear-the-bar signature. (2) Correlation. The report itself states DINO long and this short 'are closer to one trade than two' - both are long the diesel crack - then published both and told the reader to size them together. Naming a cluster is not managing one. JBHT is the newer, incremental leg and the weaker of the pair, so it is the one cut; DINO is a filled position with defined risk and measured sector leadership. (3) Short interest is unknown - api.nasdaq.com timed out - and the entry instruction is to short a bounce into 244-256 with an ideal of 250.00, which is the exact high of the 2026-09-16 gap-down session. Shorting into a retrace of the whole post-warning range is indistinguishable from shorting into the squeeze the missing data cannot rule out. The 274.00 stop above the gap does bound that at 24 points, which is why this is a cut rather than a condemnation - the structure is sound and the target is not.",
+      "trigger": "A target derived from estimates rather than from range position - a sell-side cut to FY2026 EPS, or a defensible trough multiple on the warned-down number - plus a short-interest read from a working source. If DINO closes first, the correlation objection also falls away."
+    },
+    {
+      "symbol": "VLO",
+      "instrument": "Valero Energy / refining complex (also PSX, MPC)",
+      "note": "Right driver, wrong entry. Record product cracks are real - ULSD vs WTI $107.35 on 2026-09-01, the 3-2-1 near $59/bbl against a ~$19 2010-2021 average, on >7M bpd of offline Middle Eastern and Russian product flows. But VLO at 403.28 is 0.98% off its 200-day high after a ~143% 12-month return and PSX is 1.0% off; buying a record spread at a record share price is buying the peak of a mean-reverting series. The report owns this driver through DINO and will not double it.",
+      "trigger": "A crack-spread pullback that takes the group 10%+ off its highs while the product-supply deficit is still intact."
+    },
+    {
+      "symbol": "MET",
+      "instrument": "MetLife Inc",
+      "note": "The best long that fits a hiking Fed, and it still fails the floor on arithmetic. Adjusted ROE 17%, investment spread 119bps at the top of guidance, four consecutive EPS beats, 70.8% of analysts bullish with zero sells, trading ~9.9x. But long_term gives (124-96)/(96-77.40) = 1.51 against a 2.5 floor, and as a swing a 2.0 ATR stop forces a 104.89 target above the 200-day high of 100.93. Refused to reverse-engineer either leg.",
+      "trigger": "A price near 88-90, which would put the long_term ratio above 2.5 without moving the target."
+    },
+    {
+      "symbol": "IBIT",
+      "instrument": "iShares Bitcoin Trust / BTC",
+      "note": "Researched and deliberately rejected, not skipped. Spot bitcoin ETFs took $3.52B of August net inflows across 16 of 21 trading days and $3.8B over three weeks into 2026-09-05, which explains why BTC held against a hawkish macro - but the hike was ~87% priced, the dot plot extends the headwind rather than removing it, and BTC's post-hike reaction was +0.53%, which is resilience rather than confirmation. Second, independent blocker: BTC price history failed on every source, so there is no BTC ATR and no honest swing level to publish against crypto's 2.5 ATR floor. IBIT 43.04 sitting above both its 50-day (39.35) and 200-day (42.16) is the divergence worth re-checking.",
+      "trigger": "A sourceable catalyst plus a working BTC price-history feed, so levels come from bitcoin rather than an ETF proxy."
+    },
+    {
+      "symbol": "KBH",
+      "instrument": "KB Home",
+      "note": "Rejected on correlation, not merit. Q3 is 2026-09-22 AMC (est EPS 0.9022, revenue $1.307B) into a housing complex where LEN just missed on both lines and guided gross margin to ~16% on aggressive incentives, and where ITB, XHB, LEN, DHI and KBH all sit below their 20-, 50- and 200-day. The rates-up driver already carries the XLU and ITB shorts published 2026-09-16; a third would breach the cap.",
+      "trigger": "Room in the rates-up budget - i.e. the XLU or ITB short closing."
+    },
+    {
+      "symbol": "EEM",
+      "instrument": "iShares MSCI Emerging Markets ETF",
+      "note": "Open position, held, nothing amended - recorded here rather than published as a recommendation because a 'hold, unchanged' would be noise. 65.72 against the 65.60 entry with the 63.00 stop sitting 3.05 ATR below. The dollar is a genuine headwind (UUP 28.40 is 0.7% off its 200-day high and above all three averages) and EEM has slipped under its SMA20 and SMA50, but it holds well above its SMA200 at 62.21.",
+      "trigger": "A break of 65.00 forces a re-examination."
+    },
+    {
+      "symbol": "CCJ",
+      "instrument": "Cameco Corp",
+      "note": "Deliberately not re-pitched. The 2026-09-16 report said in terms not to re-pitch this name without new primary evidence, and none was found today. Closed 90.90, 32.8% off its high and below all three moving averages, held under the existing 82.50 stop. Recorded as restraint rather than quietly dropped.",
+      "trigger": "New primary evidence - a contract, a filing, or a production update."
+    },
+    {
+      "symbol": "AZO",
+      "instrument": "AutoZone Inc",
+      "note": "Neither side clears. Closed 2849.04 - the exact low of the session and its 200-day low - three sessions before Q4 earnings on 2026-09-22 BMO, 28.7% off its high and below all three averages, with a mixed surprise record (two beats, two larger misses). 81.2% of analysts bullish with zero sell ratings into a 28.7% drawdown is downgrade fuel rather than support. Long is a knife into a binary; short is a coin flip on a print.",
+      "trigger": "The 2026-09-22 print, after which the binary is resolved and a level can be set."
+    },
+    {
+      "symbol": "SPY",
+      "instrument": "SPDR S&P 500 ETF Trust",
+      "note": "The 2026-08-31 short's 750.00 target printed intraday on 2026-09-16 (bar low 749.60), so grading should close that row at target without a duplicate recommendation. Explicitly NOT re-shorting: SPY has been recommended four times in ten days, it closed back above the low at 754.05, futures were reported higher overnight, and the 200-day sits far below at 715.49. Re-shorting here would be anchoring, not conviction.",
+      "trigger": "A fresh macro catalyst and a level that is not simply yesterday's."
+    },
+    {
+      "symbol": "GLD",
+      "instrument": "SPDR Gold Shares",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 4,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined"
+    },
+    {
+      "symbol": "CEG",
+      "instrument": "Constellation Energy Corp",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 5,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined"
+    },
+    {
+      "symbol": "DVN",
+      "instrument": "Devon Energy Corp",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined; bid/ask spread 10.59% \u2014 too wide to trade this thesis",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 6,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined; bid/ask spread 10.59% \u2014 too wide to trade this thesis"
+    },
+    {
+      "symbol": "SVRA",
+      "instrument": "Savara Inc",
+      "note": "Demoted by validation: bid/ask spread 18.11%; the round trip costs 37% of the target move \u2014 too wide to trade this thesis",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 7,
+      "demotion_reason": "bid/ask spread 18.11%; the round trip costs 37% of the target move \u2014 too wide to trade this thesis"
+    }
+  ],
+  "validation_summary": {
+    "checked": 7,
+    "passed": 0,
+    "warned": 3,
+    "failed": 4,
+    "enforced": true,
+    "demoted": 4
+  }
+}
