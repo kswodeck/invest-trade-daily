@@ -1,6 +1,6 @@
 # Odd-lot tender screener — 2026-09-18
 
-Run 2026-09-18 09:48 ET (premarket slot). 6 offers tracked, 0 clear every gate: 0 Tier A, 0 Tier B, 0 Tier C.
+Run 2026-09-18 18:31 ET (evening slot). 8 offers tracked, 0 clear every gate: 0 Tier A, 0 Tier B, 0 Tier C.
 
 **No Tier A opportunities today.** That is the ordinary result — an odd-lot tender with a 3%+ spread and a clean condition set is rare, and the thresholds below are not moved to produce one.
 
@@ -20,6 +20,8 @@ _None._
 
 | Ticker | Form | Filed | Reason |
 | --- | --- | --- | --- |
+| PRIF-PD | SC TO-I | 2026-09-18 | no live price for PRIF-PD (no quote source answered) |
+| XFLT | SC TO-I | 2026-09-18 | no 'fewer than 100 shares' odd-lot threshold in the document; odd lots mentioned but no acceptance-before-proration language; an exchange offer for other securities, not cash; no expiration date could be read from the document |
 | NFJ | EX-99.(A)(1)(III) | 2026-09-01 | odd lots mentioned but no acceptance-before-proration language |
 | — | EX-99.(B) | 2026-09-01 | no ticker for CIK 0001876006 in the filing or the SEC company list — cannot price the trade |
 | — | EX-99 | 2026-09-01 | odd lots mentioned but no acceptance-before-proration language; no cash consideration stated in the document; subject security is not common equity (unidentified security); no expiration date could be read from the document |
@@ -31,17 +33,19 @@ _None._
 
 A screener that finds nothing reads exactly like one that is broken. This is the difference.
 
-- **96** full-text queries over `2026-07-05..2026-09-18` returned **95** document hit(s) across **13** filing(s) (**36** exhibits kept as candidates)
+- **96** full-text queries over `2026-07-05..2026-09-18` returned **104** document hit(s) across **15** filing(s) (**40** exhibits kept as candidates)
 - searched as **4** date slice(s), **96** result page(s) read
-- **6** offers open, **13** archived
+- **8** offers open, **13** archived
 
 | Turned away for | Count |
 | --- | --- |
+| no odd-lot language | 4 |
 | no ticker | 4 |
-| no odd-lot language | 2 |
+| expired or terminated | 2 |
 | no consideration stated | 1 |
 | not common equity | 1 |
-| expired or terminated | 1 |
+| no price | 1 |
+| an exchange offer, not cash | 1 |
 
 ## Thresholds in force
 
