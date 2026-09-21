@@ -1,0 +1,228 @@
+{
+  "date": "2026-09-21",
+  "generated_at_et": "2026-09-21T06:32:47-04:00",
+  "truncated": false,
+  "data_quality_notes": "Research ran to completion \u2014 notes.md carries a RESEARCH COMPLETE block, so `truncated` is false and nothing here is reconstructed from fragments. 8 captured lines, 7 unique ideas (SMH appears twice; the later line supersedes it with the stop disclosure and size cut from 3% to 2%).\n\nWHAT THE IDEA COUNT MEANS. All seven are swing and four of seven are position closes (LCII, NKE, CEG, TLT). That is stated rather than apologised for: a 16-position book with a 1/7 hit rate and four unstopped or noise-stopped losers needed exits more than it needed new risk this morning. Only three ideas are new. No intraday idea (the market was shut all weekend; there was no live equity tape). No long_term idea, and that is the deliberate gap worth flagging \u2014 a long_term call needs a defended valuation anchor and a bear-case price, and market_data.py exposes no fundamentals (no earnings power, book value, FCF or multiple). Silver was tested on both the swing and long clocks and failed both; ACN, COST and the power complex were examined as de-ratings and rejected on fetched evidence. The only valuation anchor buildable all run was LCII's, and it existed because a merger fixed the exchange ratio. Nothing was manufactured to fill the lane.\n\nPRICES. Every equity and ETF price is the 2026-09-18 close, fetched with session 'pre' and an age of ~3,749 minutes. At 06:00 ET Monday with the market shut that is the freshest honest price, not stale data. Crypto (BTC 84,599) is the only genuinely live price in this run and it is on the watchlist, not in a recommendation.\n\nSOURCES THAT FAILED. Yahoo returned HTTP 429 on every index, FX and commodity symbol (^GSPC, ^NDX, ^DJI, ^RUT, ^VIX, ES=F, NQ=F, DX-Y.NYB, ^TNX, GC=F, CL=F), so there is NO VIX, dollar, futures, gold or crude print anywhere in this report \u2014 liquid ETF proxies via finnhub are used instead and named as such, and market_context.levels carries null for what could not be fetched rather than an estimate. yahoo-options returned HTTP 401 on every symbol, so the SMH 671.83 and XRT 77.86 targets were NOT checked against the options-implied move that config/strategy.md requires; this is carried in each idea's counter_argument rather than passed over silently. Kalshi returned 0 markets across five macro queries, so no event contract could be priced or re-checked \u2014 including the three sitting in 'awaiting entry', two of which reference a September Fed decision that has now happened. api.nasdaq.com `short` timed out twice, so there is no short-interest or days-to-cover read on any name, which matters most for the XRT short. Working: FRED, finnhub (quotes, earnings calendar, insiders, analysts), nasdaq history/ATR/SMA, SEC EDGAR, coingecko standalone.\n\nARITHMETIC. Every ratio was recomputed at synthesis from the final entry, target and stop against a freshly fetched ATR14, not carried over from the notes: XRT 2.459 (1.88 ATR, ETF floor 1.8), KMX 2.924 (2.37 ATR, stock floor 2.0), SMH 3.327 (1.87 ATR, ETF floor 1.8). All three clear both floors. The spread 2.46 / 2.92 / 3.33 is deliberately not the just-above-2.0 cluster that signals targets fitted to the bar, and all three targets are measured 150-day range extremes rather than constructed numbers. Claimed edge over the 1/(1+R:R) break-even is +9.1, +10.5 and +9.9 points respectively \u2014 real but modest, and none large enough to need a bigger thesis to carry it.\n\nTWO DISCLOSURES THE RED TEAM SHOULD SEE RATHER THAN REDISCOVER. (1) SMH is borderline and is ranked first anyway. Its 555.00 stop is 1.87 ATR, clearing the 1.8 ETF floor by 0.07; the structurally safer stop below the 537.73 base low is 3.11 ATR but leaves R:R at 1.996, a hair UNDER the 2.0 swing floor, so the wide-stop version does not publish at all. The tighter stop giving the better ratio is exactly the tell this repo documents on KRE. It was derived independently \u2014 below the 09-17 low, below the 20d SMA, below the base midpoint \u2014 and the mitigations are size cut to 2%, the full calculation in key_risk, and the missing options check named. If one idea is cut today it should be this one. (2) XRT's conviction is 3, not the 4 its three distinct evidence kinds would score. It was discounted on purpose because the dated catalyst is AZO's print, a read-across to XRT rather than XRT's own event. Under-claiming is the safe direction.\n\nDECLARED CONFLICT, NOT AN ERROR. KMX long and XRT short point opposite ways at the same cohort. XRT is the retail basket, lagging SPY on every window; KMX is the one name beating that basket by 33.78% over 6m with the only clean multi-buyer, zero-sell insider cluster found across 22 names. Long the divergence, short the aggregate reduces net consumer exposure rather than doubling it, and neither idea needs the other to be right. Correlation cap respected: no more than 3 ideas depend on any one driver.\n\nNOT REACHED: healthcare/biotech beyond the XBI level, financials beyond KRE, international ex-EEM, and any systematic small-cap screen \u2014 small caps were reachable only through the earnings calendar, which is a narrow door.\n\nRED TEAM (phase 2c). Cut 2 of 7, downgraded 1, re-ranked the rest; 5 remain. Every number below was recomputed from a freshly fetched ATR14 and SMA set, not read off the report.\n\nCUT SMH (was rank 1, conviction 4). Its own disclosure was correct and is the reason: the 555.00 stop is the tightest placement clearing the 1.8 ETF floor, at no fetched level, and the structural stop below the 537.73 base low gives 1.996:1 \u2014 under the swing floor. A ratio that exists only at a fitted stop is the KRE artifact, so the trade never cleared the bar. The 6.22-ATR target against a 6.0 guide compounds it.\n\nCUT XRT (was rank 5, conviction 3), on an error the report made twice rather than on judgement: evidence and counter_argument both state the 87.20 stop sits above the broken 50d SMA, and the 50d SMA is 87.8334 \u2014 the stop is 0.63 below the level whose reclaim the report itself calls the invalidation, so the short stops out before its thesis is disproved. Placed honestly above the 50d the ratio is 1.84:1, and 1.988:1 even a cent above it. The 2.46:1 was never available. The consumer read-across thesis survives on the watchlist; the levels did not.\n\nKMX 4 to 3, kept at rank 5. It survives because its stop is the one of the three at structure \u2014 48.80 below the 49.37 60-day range low, 2.37 ATR, clearing the 2.0 stock floor unaided \u2014 and because a target pulled in to the 6.0 ATR guide still gives 2.53:1. Downgraded because two of its three evidence kinds are backward-looking (June insider buys, 6-month relative strength) against a rate shock the report concedes it cannot price, and because cutting XRT removed the short leg of the declared pair: the same position is now an outright consumer long rather than the hedged divergence it was scored as. Conviction should follow the risk it actually carries.\n\nKEPT ALL FOUR POSITION CLOSES (NKE, CEG, LCII, TLT) and re-ranked them above the one new idea, because each is actionable at today's open while KMX cannot trigger until after 09-29. Their 'fail' verdicts are mechanical artifacts of the close shape, not defects: direction_consistency, risk_reward and stop_distance all fail for want of a target and stop, which a full exit does not have. LCII's parity arithmetic was re-verified independently (PATK 68.71 x 1.2440 = 85.4752 against LCII 85.60, a 0.15% premium \u2014 no spread left to hold for). CEG's catalyst was undated and is now stamped 2026-09-21T09:30, matching its own stated action of closing at Monday's open. LCII's and TLT's catalysts are dated in the past and were left that way: for a close, a catalyst that has already resolved is the reason to act, not an error to tidy.\n\nTWO VALIDATION FLAGS CHECKED AND DISMISSED. The earnings_date warn fired on four ideas claiming an earnings catalyst; all six dated catalysts in this report (MU 09-30, KMX 09-29, NKE 09-28, COST 09-24, AZO 09-22, KBH 09-22) were re-fetched from the finnhub calendar and every one confirms, so the warn is a lookup artifact. KMX's spread FAIL (bid 57.27 / ask 61.40 = 6.96%) is an out-of-hours quote artifact, not a tradability finding \u2014 the same fetch prints a 45.4% spread on LCII, which is not a real market in a $2.1B S&P name at 06:34 on a Monday with the exchange shut. KMX turns over $99M a day; the entry is a limit order placed after 09-29 and the spread is checkable at fill time. Neither flag changed a decision.\n\nNOT CUT AND WORTH SAYING PLAINLY: the two kills are the same defect found twice, not a quota. Both had a stop placed to clear a floor instead of to mark where the thesis is wrong, and in both cases moving the stop to the level the report itself named dropped the ratio below 2.0. KMX had the same warn on its stop_distance and passed the same test, which is why it is still here. What remains is an honest morning: four exits that reduce risk today, and one conditional entry a week out. Validation demoted 5 idea(s) whose numbers did not check out. 0 more carry warnings \u2014 see the validation block on each.",
+  "market_context": {
+    "summary": "The Fed HIKED 25bp on 2026-09-17 \u2014 effective fed funds 3.63% to 3.88%, verified in FRED rather than assumed \u2014 into 4.1% unemployment and a firm CPI (+0.40% m/m NSA in August). The informative part is what the bond market did with it: both 2s and 10s FELL through the hike (10y 5.01% to 4.94%, 2y 4.74% to 4.67%), so the market is reading the move as growth-restrictive rather than inflation-permissive. That takes long-duration bonds off the obvious-short list and is why the TLT short is being covered.\n\nThe tape is one market in two halves. Mega-cap tech led Friday (QQQ +0.63%) while breadth was poor (SPY -0.12%, IWM -0.47%), and of twenty sector baskets fetched only XLK and SMH trade above both their 20d and 50d averages. Everything rate-sensitive or consumer-facing \u2014 ITB, IYR, XLI, KRE, XLB, XLU (-1.42%, the worst of the ten majors) \u2014 is below both.\n\nThe single most coherent signal is a cohort, not a name: seven fetched consumer-facing names and six of them within 7% of a 150-day low (CCL +0.1% above its low, NKE +0.03%, COST +0.8%, AZO +1.4%, LULU +2.8%, KBH +7.0%), into a Fed that just tightened. That argues against bargain-hunting the cohort rather than for it, and the two broken consumer longs already on the book (NKE -11.2%, LULU -14.7%) are the evidence that catching this knife has cost money once already. The one honest exception is KMX, which is beating the basket with insiders buying \u2014 hence long the divergence, short the aggregate.\n\nOne unresolved divergence worth naming: precious metals ROSE through the hike (SLV +1.63%, the best of the ten majors; GLD +0.71%), which a pure real-rate story does not predict. It was worked hard and priced on neither the swing nor the long clock, so it sits on the watchlist rather than in a recommendation.",
+    "regime": "mixed",
+    "levels": {
+      "spy": 761.69,
+      "qqq": 721.45,
+      "iwm": 284.1,
+      "us10y": 4.94,
+      "us2y": 4.67,
+      "t10y2y": 0.25,
+      "fed_funds_effective": 3.88,
+      "unemployment": 4.1,
+      "gld": 401.17,
+      "slv": 59.93,
+      "tlt": 81.25,
+      "btc": 84599,
+      "vix": null,
+      "dxy": null,
+      "spx": null,
+      "ndx": null,
+      "wti": null,
+      "gold": null,
+      "_note": "ETF proxies are used where an index could not be fetched: yahoo returned HTTP 429 on every index, FX and commodity symbol, so vix, dxy, spx, ndx, wti and gold are null rather than estimated. Equity/ETF levels are 2026-09-18 closes; btc is live (coingecko). Rates and unemployment are FRED."
+    },
+    "econ_calendar": [
+      {
+        "event": "AutoZone Q4 earnings (bmo) \u2014 consumer trade-down read-across to retail",
+        "datetime_et": "2026-09-22T08:00",
+        "importance": "medium",
+        "consensus": "EPS 54.80 on $6.78B"
+      },
+      {
+        "event": "KB Home Q3 earnings (amc) \u2014 homebuilder read on the rate shock",
+        "datetime_et": "2026-09-22T16:30",
+        "importance": "medium",
+        "consensus": "EPS 0.90 on $1.31B"
+      },
+      {
+        "event": "Conagra annual meeting \u2014 say-on-pay vote, ISS and Glass Lewis both against",
+        "datetime_et": "2026-09-23T00:00",
+        "importance": "low",
+        "consensus": null
+      },
+      {
+        "event": "Costco Q4 earnings (amc)",
+        "datetime_et": "2026-09-24T16:15",
+        "importance": "medium",
+        "consensus": "EPS 6.67 on $96.75B"
+      },
+      {
+        "event": "NIKE Q1 FY27 earnings \u2014 the unstopped long being closed ahead of it",
+        "datetime_et": "2026-09-28T16:15",
+        "importance": "high",
+        "consensus": "EPS 0.4495 on $11.47B"
+      },
+      {
+        "event": "CarMax Q2 FY27 earnings \u2014 the KMX entry waits for this",
+        "datetime_et": "2026-09-29T00:00",
+        "importance": "high",
+        "consensus": "EPS 0.717 on $7.01B"
+      },
+      {
+        "event": "Micron Q4 earnings (amc) \u2014 semiconductor cycle bellwether, the SMH catalyst",
+        "datetime_et": "2026-09-30T16:20",
+        "importance": "high",
+        "consensus": "EPS 32.2164 on $52.10B"
+      }
+    ]
+  },
+  "recommendations": [],
+  "watchlist": [
+    {
+      "symbol": "SMH",
+      "instrument": "VanEck Semiconductor ETF",
+      "note": "Red team CUT from rank 1. The 3.33:1 ratio is an artifact of a stop fitted to the floor rather than to structure \u2014 the KRE failure mode this repo documents. The 555.00 stop is 1.87 ATR, the tightest placement that clears the 1.8 ETF floor (a stop below the 20d SMA at 557.82 would be 1.73 ATR and fail it outright), and it sits at no fetched level. The structural stop below the 537.73 base low is 537.00 = 3.11 ATR, and at that honest distance reward-to-risk is 89.83/45.00 = 1.996 \u2014 under the 2.0 swing floor. There is therefore no version of this trade with a defensible stop that clears the bar; the published version exists only because the stop was moved in. Compounding it, the 671.83 target is the exact 150-day range high, 6.22 ATR from entry against a 6.0 ATR swing guide with 15 sessions to run, on a basket that is -13.17% over 3m and lagging SPY by 15.17% \u2014 and the options-implied move could not be checked (yahoo-options HTTP 401). Synthesis flagged this itself and said if one idea were cut it should be this one. Agreed, and the arithmetic was re-derived from a fresh ATR14 of 14.4517 rather than taken from the report.",
+      "trigger": "a pullback deep enough that a stop below the 537.73 base low still clears 2.0:1, or a breakout above 580.81 that establishes a nearer measured target than the 150-day high"
+    },
+    {
+      "symbol": "XRT",
+      "instrument": "SPDR S&P Retail ETF",
+      "note": "Red team CUT from rank 5, on a defect the report did not catch. The 87.20 stop is described twice \u2014 in the technical_level evidence and again in counter_argument \u2014 as sitting 'above the broken 50d SMA'. It does not. The 50d SMA is 87.8334 (refetched this run), so the stop is 0.63 BELOW the very level whose reclaim counter_argument names as the thesis invalidation: the short is stopped out before its own invalidation is reached, which is a stop placed in noise rather than at structure, and 87.20 corresponds to nothing fetched. Put the stop where the report says it already is and the ratio collapses \u2014 at 88.10 (above the 50d) risk is 3.60 = 2.50 ATR and reward-to-risk is 6.64/3.60 = 1.84; even at 87.84, one cent above the SMA, it is 1.988. No honest placement clears the 2.0 floor, so the published 2.46:1 never existed. The read-across thesis itself (a tightening Fed into a consumer cohort at 150-day lows) is intact and is what to re-derive from \u2014 the level set is what failed, not the idea.",
+      "trigger": "a bounce that actually reaches the 87.83 50d SMA, leaving room for a stop above it and a 2.0+ ratio down to the 77.86 range low; AZO's 09-22 print is the read to watch"
+    },
+    {
+      "symbol": "IBIT",
+      "instrument": "iShares Bitcoin Trust",
+      "note": "Best setup found this run and deliberately not published: IBIT closed 46.02 (+6.3%) against a 150-day high of 46.56 and BTC spot ran to 84,599 (+5.29% 24h) over the weekend, so the breakout is confirmed in two independent sources. It sits at the high of every bar available with genuinely nothing overhead, so any target is constructed \u2014 clearing R:R 2.0 requires 54.90, which gives exactly 2.00:1 and is the reverse-engineered number the floor exists to prevent.",
+      "trigger": "a retest and hold of 46.50 that also produces a real overhead level to target, or a dated catalyst; honest stop 42.30 (2.91 ATR) is already available"
+    },
+    {
+      "symbol": "ETHA",
+      "instrument": "iShares Ethereum Trust",
+      "note": "Same shape and same blocker as IBIT: closed 19.92 against a 150-day high of 20.12, 0.99% off it, nothing overhead to target. Re-checked over the full 150-day window rather than 90 in case the short window hid resistance; it did not.",
+      "trigger": "a measurable resistance level above the 20.12 high"
+    },
+    {
+      "symbol": "SLV",
+      "instrument": "iShares Silver Trust",
+      "note": "The most interesting thing on Friday's tape \u2014 best of the ten ETFs fetched at +1.63%, closing 59.93 above its 20d SMA in the same week the Fed hiked, and metals up through a hike is a real signal. It prices on neither clock: swing gives R:R 1.09 against real overhead at 64.31, and reaching 2.0 needs 68.00, above every level in 60 sessions. The long_term version, anchored on the GLD/SLV ratio mean-reverting from 6.69 to 5.77 (target 69.53, bear case 49.61), gives 1.37 against a 2.5 floor.",
+      "trigger": "a pullback that makes the 55.90 stop cheap enough for the 64.31 target to clear 2.0, or a break above 64.31 creating new structure"
+    },
+    {
+      "symbol": "ITB",
+      "instrument": "iShares U.S. Home Construction ETF",
+      "note": "Purest expression of 'Fed hikes into a soft consumer' with a dated catalyst (KBH 2026-09-22 amc, est EPS 0.90), and KBH insiders sold $16.58M across 8 sales with zero buys. The trade arrived too late to price: ITB at 87.41 is only 2.9% above its 150-day low, so a bounce entry at 90.50 with an honest 1.8-ATR stop targets the range low for R:R 1.49, and reaching 2.0 needs a target below the low itself. XRT is the same thesis where the numbers do work.",
+      "trigger": "a bounce back toward the 95.68 50d SMA restoring room to the 84.98 low"
+    },
+    {
+      "symbol": "COST",
+      "instrument": "Costco Wholesale",
+      "note": "Rejected rather than watched-for-entry: the 'quality compounder on sale into a catalyst' shape is there (895.31, 18.4% off the high, 0.8% off the low, earnings 09-24 amc) but all three fetched checks point the wrong way \u2014 lagging SPY on every window and lagging its own sector XLP too, analyst revisions deteriorating, and zero insider buys against $1.54M sold.",
+      "trigger": "insider buying or a revision turn; price alone is not the signal"
+    },
+    {
+      "symbol": "AEHR",
+      "instrument": "Aehr Test Systems",
+      "note": "Everything except the insiders said buy \u2014 90.9% bullish and improving, last quarter beat by 1529%, back above the 50d SMA into a 10-01 print. Killed by 49 open-market sells worth $47.54M in six months against zero buys, roughly 1.6% of a $3.05B company sold into exactly that strength. Its levels would also have been constructed: no fetched resistance between 93.49 and the 147.40 high.",
+      "trigger": "insider selling stopping"
+    },
+    {
+      "symbol": "BTC",
+      "instrument": "Bitcoin \u2014 stale resting short @ 63,400",
+      "note": "Housekeeping, not an idea: the BTC SELL @ 63,400 published 2026-08-16 and the /MBTU6 SHORT @ 64,340 published 2026-08-18 are both ~25% below spot (84,599) and were never filled. The weekend breakout invalidates both; they should not stay on the book as live levels. /MBTU6 would also now be inside its expiry window and no tradeable contract month was verified this run.",
+      "trigger": "cancel both; re-derive levels from current structure if the short thesis is revisited"
+    },
+    {
+      "symbol": "VST",
+      "instrument": "Vistra Corp \u2014 stale resting buy @ 128.00",
+      "note": "Filings sweep cleared the thesis but the order is stale: the 09-09/09-14 S-3ASR and 424B5/424B2 are $1.5B of junior subordinated notes (7.000% and 7.250%, maturity 2057) to redeem preferred stock \u2014 debt, not dilution, so the buy is not invalidated. VST closed 140.67, 9.9% above the 128.00 entry, unfilled since 08-24. Worth naming that 7% junior sub money was raised the same week the Fed hiked.",
+      "trigger": "a pullback to 128.00, or re-derive the entry from current levels"
+    },
+    {
+      "symbol": "CAG",
+      "instrument": "Conagra Brands \u2014 resting buy @ 15.00 about to fill",
+      "note": "Not a thesis break but on the record: three Form 3s and a DEFA14A on 2026-09-14 are additional proxy material on the say-on-pay vote ahead of the 2026-09-23 annual meeting, with both ISS and Glass Lewis recommending against and the board arguing back. Conagra concedes FY26 was challenging, cut incentive payouts 7.6% and paid long-term performance shares at 35.7% of target. CAG closed 15.13 against the 15.00 entry, with earnings 09-29 six sessions later.",
+      "trigger": "already at the entry; governance noise is a size consideration, not a cancel"
+    },
+    {
+      "symbol": "KHC",
+      "instrument": "Kraft Heinz \u2014 resting buy @ 23.00, false alarm resolved",
+      "note": "A Form 25 filed 2026-09-08 looked like a delisting on an order published the day before. Read both documents: it is a voluntary withdrawal from Nasdaq under 17 CFR 240.12d2-2(c) and the accompanying 8-A12B registers the same common stock on the NYSE, trading from 2026-09-14. A listing transfer, not a delisting \u2014 same ticker, same shares, still Robinhood-tradeable. The pending buy stands unchanged; KHC closed 24.43, still above the entry.",
+      "trigger": "a pullback to 23.00"
+    },
+    {
+      "symbol": "DINO",
+      "instrument": "HF Sinclair \u2014 open long, deliberately not amended",
+      "note": "The position is +7.8% and 1.5% off its 150-day high, so the instinct is to raise the 97.75 stop. Deliberately not doing it: entry 107.50 less 2.0x ATR14 (4.359) is 98.78, so any raise puts the stop inside the ATR floor and validation would correctly read the improved ratio as the stop-walking this repo documents on KRE. The right amendment here is none.",
+      "trigger": "a higher low that supports a stop at or below 98.78"
+    },
+    {
+      "symbol": "DVN",
+      "instrument": "Devon Energy \u2014 open long, stop flagged",
+      "note": "Flagged rather than amended: the 46.90 stop was set inside the 2.0 ATR floor at publication \u2014 1.25 ATR against ATR14 of 1.36 \u2014 so this position is exposed to the tight-stop failure mode that took out all ten of the first month's stop-outs. Widening the stop on a losing position (-2.0%) adds risk, so no amendment is made; the flag is the deliverable. Already recommended 4x in 10 days and deliberately not re-pitched.",
+      "trigger": "note at review; do not re-pitch"
+    },
+    {
+      "symbol": "GLD",
+      "instrument": "SPDR Gold Shares \u2014 stale resting sell @ 406.77",
+      "note": "The 09-08 resting GLD SELL conflicts with the open GLD BUY. Metals rose through the 25bp hike (GLD +0.71%, SLV +1.63% Friday), which resolves the conflict in the long's favour. Treating the resting sell as stale rather than re-pitching it.",
+      "trigger": "cancel the resting sell"
+    },
+    {
+      "symbol": "KXFEDDECISION-26SEP-H25",
+      "instrument": "Kalshi \u2014 Fed decision September, resolved or near-resolved",
+      "note": "Cannot be re-checked: the Kalshi source was degraded all run, returning 0 markets for 'Fed decision', 'unemployment', 'GDP', 'government shutdown' and 'Bitcoin', and only null-priced tennis markets for 'Fed'. This contract and KXFEDDECISION-26SEP-H0 @47 both reference a September decision that has now happened \u2014 the Fed hiked 25bp \u2014 so they are resolved or near-resolved, but no settlement price could be fetched and none will be stated.",
+      "trigger": "a working Kalshi quote"
+    },
+    {
+      "symbol": "KXFEDDECISION-26OCT-H25",
+      "instrument": "Kalshi \u2014 Fed decision October",
+      "note": "Same degraded source, still unresolved as an event: published at 28 on 2026-09-02, never filled, and not re-priceable this run. The September hike is material new information for it and no price was available to act on.",
+      "trigger": "a working Kalshi quote"
+    },
+    {
+      "symbol": "NKE",
+      "instrument": "NIKE Inc Class B",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 1,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined"
+    },
+    {
+      "symbol": "CEG",
+      "instrument": "Constellation Energy Corp",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 2,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined"
+    },
+    {
+      "symbol": "LCII",
+      "instrument": "LCI Industries",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; catalyst dated 2026-09-10 already passed \u2014 positioning around it is wrong; no entry or stop, so the stop distance is undefined; bid/ask spread 45.45% \u2014 too wide to trade this thesis",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 3,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; catalyst dated 2026-09-10 already passed \u2014 positioning around it is wrong; no entry or stop, so the stop distance is undefined; bid/ask spread 45.45% \u2014 too wide to trade this thesis"
+    },
+    {
+      "symbol": "TLT",
+      "instrument": "iShares 20+ Year Treasury Bond ETF",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; catalyst dated 2026-09-17 already passed \u2014 positioning around it is wrong; no entry or stop, so the stop distance is undefined",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 4,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; catalyst dated 2026-09-17 already passed \u2014 positioning around it is wrong; no entry or stop, so the stop distance is undefined"
+    },
+    {
+      "symbol": "KMX",
+      "instrument": "CarMax Inc",
+      "note": "Demoted by validation: bid/ask spread 6.96%; the round trip costs 30% of the target move \u2014 too wide to trade this thesis",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 5,
+      "demotion_reason": "bid/ask spread 6.96%; the round trip costs 30% of the target move \u2014 too wide to trade this thesis"
+    }
+  ],
+  "validation_summary": {
+    "checked": 5,
+    "passed": 0,
+    "warned": 0,
+    "failed": 5,
+    "enforced": true,
+    "demoted": 5
+  }
+}
