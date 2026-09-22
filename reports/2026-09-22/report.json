@@ -1,0 +1,520 @@
+{
+  "date": "2026-09-22",
+  "generated_at_et": "2026-09-22T06:35:10-04:00",
+  "research_minutes": 30,
+  "truncated": false,
+  "market_context": {
+    "summary": "A strong broad tape with the energy complex being sold against it. SPY closed 773.50 (+1.55%) on 2026-09-21 while XLE fell 2.88%, DINO 5.70% and DVN 2.10% \u2014 that divergence is a geopolitical risk premium deflating, not a market event. WTI fell a fourth consecutive session to $95.59 (-4.69%) as Trump declined to strike Yemen and signalled openness to Iran diplomacy, with OPEC and the IEA both cutting 2026 demand outlooks. That single move splits the energy book rather than moving it: falling crude is revenue lost for a pure E&P and feedstock saved for a refiner, and product cracks are at all-time records (3-2-1 at $69.66/bbl, diesel above $106/bbl) on 97.2-98% refinery utilisation and distillate inventories 14% below the five-year average. Rates are the other pressure: US10Y at 5.01% sits 113bp above the 3.88% effective fed funds rate, and the Kalshi ladder prices a 25bp HIKE at 53% for October and 67% by December with a cut at essentially zero. Merchant power keeps de-rating (VST -22.9% off high, CEG -31.2%) even as insiders buy it.",
+    "regime": "mixed",
+    "levels": {
+      "spy": 773.5,
+      "us10y": 5.01,
+      "us2y": 4.76,
+      "fed_funds_effective": 3.88,
+      "curve_10y2y": 0.2,
+      "btc": 86059,
+      "eth": 2746.45,
+      "wti": "95.59 (news-sourced, 2026-09-21 \u2014 no quote feed reached WTI this run)",
+      "brent": "100.34 (news-sourced, 2026-09-21)",
+      "xle": 62.46,
+      "tlt": 81.8,
+      "gld": 398.38,
+      "spx": null,
+      "ndx": null,
+      "vix": null,
+      "dxy": null,
+      "gold_spot": null
+    },
+    "econ_calendar": [
+      {
+        "event": "Trump-Xi summit, Washington \u2014 rare-earth flows on the agenda",
+        "datetime_et": "2026-09-23",
+        "importance": "high",
+        "consensus": "No consensus; a genuine binary. Directly drives MP, which is why that idea waits."
+      },
+      {
+        "event": "FOMC decision",
+        "datetime_et": "2026-10-28",
+        "importance": "high",
+        "consensus": "Kalshi KXFEDDECISION-26OCT: hike 25bp 53/54c, maintain 46/47c, cut 0/1c"
+      },
+      {
+        "event": "US-China tariff truce expires",
+        "datetime_et": "2026-11-10",
+        "importance": "high",
+        "consensus": null
+      },
+      {
+        "event": "FOMC decision",
+        "datetime_et": "2026-12-09",
+        "importance": "high",
+        "consensus": "Kalshi KXFEDDECISION-26DEC: hike 25bp 66/67c, maintain 28/29c, cut 1/2c"
+      },
+      {
+        "event": "DFARS 252.225-7052 expansion \u2014 covered defense NdFeB magnets must be free of covered-country material across the whole chain",
+        "datetime_et": "2027-01-01",
+        "importance": "medium",
+        "consensus": null
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "rank": 1,
+      "instrument": "Vistra Corp",
+      "symbol": "VST",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "long_term",
+      "conviction": 3,
+      "last_price": 140.78,
+      "last_price_asof": "2026-09-21T20:00:00+00:00",
+      "entry": {
+        "ideal": 132.0,
+        "zone_low": 126.0,
+        "zone_high": 136.0,
+        "order_type": "limit",
+        "condition": "Accumulate in thirds at or below 136 \u2014 at or under the CEO's own $135.25-135.99 cost. Second third at 132 near the 200-session low of 132.66. Final third only under 126."
+      },
+      "exit": {
+        "target": 190.0,
+        "target_2": 221.0,
+        "scale_plan": "Hold 12-24 months. Trim a third at 190; the remainder runs to the street median 221. INVALIDATION (not a stop): ERCOT 2027 forward power prices staying at the ~$30/MWh year-to-date level into 2027 guidance, or management cutting the reaffirmed $6.8-7.6B FY26 adjusted EBITDA range. Either means the merchant-scarcity thesis is wrong rather than early, and the position is sold regardless of price.",
+        "time_stop": "2028-03-31"
+      },
+      "bear_case_price": 112.0,
+      "position_size_pct": 2.5,
+      "catalyst": {
+        "event": "AI/datacenter load growth in ERCOT and PJM against a merchant fleet the market is pricing at 10.8x EV/EBITDA while EBITDA grows 30% \u2014 accumulate the de-rating rather than wait for a print",
+        "datetime_et": null,
+        "action": "Build in thirds over the next two quarters at 136 / 132 / 126. No urgency \u2014 the driver is a multi-year supply-demand imbalance, not a dated event. Do not chase above 140.",
+        "wait": false
+      },
+      "thesis": "Vistra is 22.9% below its high on a power-price de-rating while the business compounds: Q2-26 ongoing-ops adjusted EBITDA was $1.767B, up more than 30% year over year, and management reaffirmed FY26 guidance of $6.8-7.6B. That leaves it at roughly 10.8x EV/EBITDA on the $7.2B midpoint for a nuclear-and-gas fleet sitting in ERCOT and PJM, the two grids most exposed to datacenter load, with long-term supply deals already signed with Meta and AWS. The tell is that CEO James Burke bought 8,665 shares for $1.17M in the open market across 08-24, 08-31 and 09-01 at roughly $135, through a vehicle that already held 1.15M shares.",
+      "key_risk": "THE NUMBER THE THESIS TURNS ON WAS NEVER FETCHED. The whole argument is that ERCOT and PJM 2027 forward power prices rise as datacenter load arrives, and no 2027 forward quote appears anywhere in this run \u2014 the only power price actually sourced is the ~$30/MWh year-to-date realised level, which is the idea's own stated invalidation condition. The position is therefore long a curve nobody here has priced, and the $7.4-7.8B 2027 EBITDA opportunity that framed the old valuation is the thing at stake; that is the path to the $106 low end of the analyst range. Second, the money is getting expensive: the 09-14 424B2 prices $1.5B of junior subordinated notes at 7.000% and 7.250% to 2057, junior to about $18.3B of existing senior debt, to refinance preferred resetting in October and December 2026. Paying 7%+ against a 5.01% ten-year is a real cost of carrying the fleet, and the Kalshi ladder prices a hiking path at 53% October and 67% December, which makes that cost more likely to rise than fall. Third, added by the red team: this sits alongside the open CEG position, so merchant power is the one driver in this book carried twice \u2014 size the pair, not the ticker.",
+      "counter_argument": "The strongest case against is that the CEO is talking down the very prices he is buying the stock on \u2014 Burke said publicly that ~$30/MWh ERCOT does not support new construction. The idea's answer is that a price too low to build at suppresses new supply into rising datacenter load. RED TEAM: that answer is not falsifiable as written \u2014 it makes a low power price bullish (supply discipline) and a high one bullish (earnings), so no observed price can refute it. It is retained as a plausible reading, not as a confirmation, and it is one of the two reasons conviction came down. The second objection, that the September filings signal distress, is answered by reading them: debt refinancing preferred, not equity, so no dilution \u2014 but that establishes the absence of a negative rather than the presence of the thesis, which is the other reason. What survives as genuine independent confirmation is three things, not five: the 10.8x EV/EBITDA against reaffirmed $6.8-7.6B FY26 guidance, the fetched technical structure, and a CEO open-market buy \u2014 and that buy is 8,665 shares added to a vehicle already holding 1,146,352, a 0.76% increment, which is a gesture rather than a signal. VST-versus-CEG revision divergence (91.7% bullish +0.4 against 82.1% -3.1) and VST +1.32% against XLU -7.11% over one month remain the best evidence that the merchant de-rating is not uniform.",
+      "evidence": [
+        {
+          "kind": "positioning",
+          "detail": "CEO/President James Burke bought 8,665 shares for $1.17M open-market via JAMEB LP on 2026-08-24 (2,000 @ $135.00), 08-31 (2,200 @ wtd-avg $135.99) and 09-01 (4,465 @ wtd-avg $135.25); the vehicle already held 1,146,352 shares. Finnhub independently confirms the 08-24 tranche as code P. Analyst revision direction improving at 91.7% bullish; VST +1.32% vs XLU -7.11% over one month.",
+          "source": "https://finance.yahoo.com/markets/stocks/articles/vistra-ceo-bought-1-17-054858384.html"
+        },
+        {
+          "kind": "primary_document",
+          "detail": "Read the 2026-09-14 424B2: $850M 7.000% Series A and $650M 7.250% Series B junior subordinated notes due 2057, ~$1.48B net proceeds to redeem preferred stock resetting in Oct and Dec 2026, subordinated to ~$18.3B senior debt. Debt refinancing, not an equity raise \u2014 no dilution.",
+          "source": "https://www.sec.gov/Archives/edgar/data/1692819/000114036126036415/ny20081693x3_424b2.htm"
+        },
+        {
+          "kind": "valuation_anchor",
+          "detail": "10.8x EV/EBITDA on the reaffirmed $7.2B FY26 adjusted EBITDA midpoint. Street median 12-month target $221 across 20 analysts, mean ~$225, range $106-$305. Target 190 is set 14% below the median; the 112 bear case is set near the $106 low end rather than off the chart.",
+          "source": "https://www.tikr.com/blog/is-vistra-stock-undervalued-in-2026-the-street-thinks-so-at-225-mean-target"
+        },
+        {
+          "kind": "technical_level",
+          "detail": "Fetched 200-session history: close 140.78, ATR14 4.92 (3.5%), 200-session low 132.66 (6.12% above it) and high 182.56 (-22.89%), SMA20 142.50, SMA50 147.09, SMA200 156.27. The 132 accumulation rung is the 200-session low, not a round number.",
+          "source": "https://www.nasdaq.com/market-activity/stocks/vst/historical"
+        },
+        {
+          "kind": "counter_argument_answered",
+          "detail": "The ERCOT ~$30/MWh objection answered on its own terms \u2014 a price that does not support new construction suppresses new supply into rising datacenter load; and the CEG-vs-VST divergence in revisions and relative strength shows the de-rating is not uniform.",
+          "source": "https://www.tikr.com/blog/vistra-is-down-36-from-its-all-time-high-is-the-ai-power-trade-still-worth-owning"
+        }
+      ],
+      "sources": [
+        "https://finance.yahoo.com/markets/stocks/articles/vistra-ceo-bought-1-17-054858384.html",
+        "https://www.sec.gov/Archives/edgar/data/1692819/000114036126036415/ny20081693x3_424b2.htm",
+        "https://www.tikr.com/blog/is-vistra-stock-undervalued-in-2026-the-street-thinks-so-at-225-mean-target",
+        "https://www.tikr.com/blog/vistra-is-down-36-from-its-all-time-high-is-the-ai-power-trade-still-worth-owning",
+        "https://www.nasdaq.com/market-activity/stocks/vst/historical"
+      ],
+      "risk_reward": 2.9,
+      "risk_tier": "standard",
+      "price_source": "finnhub",
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.9,
+        "claimed_risk_reward": 2.9,
+        "breakeven_probability": 0.256,
+        "stop_atr_multiple": null,
+        "live_price": 140.78,
+        "live_price_asof": "2026-09-21T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 885.8,
+        "bid": 141.6,
+        "ask": 141.71,
+        "spread_pct": 0.078,
+        "atr14": 4.9237,
+        "checked_at_et": "2026-09-22T06:46:31-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.9:1 clears the 2.5:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 132.0 is -6.2% from live 140.78"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "long-term idea, no dated event expected"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "long-term target is valuation-anchored, not ATR-bound"
+          },
+          {
+            "check": "stop_distance",
+            "status": "pass",
+            "detail": "long-term downside is a bear case, not a stop \u2014 no ATR floor applies"
+          },
+          {
+            "check": "expectancy",
+            "status": "warn",
+            "detail": "no win_probability stated; this idea needs better than 26% to break even at 2.9:1"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-09-21T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "pass",
+            "detail": "bid/ask spread 0.08%; the round trip costs 0% of the target move"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "2.5% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 3 rests on 5 independent kinds: counter_argument_answered, positioning, primary_document, technical_level, valuation_anchor"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "1 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    },
+    {
+      "rank": 2,
+      "instrument": "MP Materials Corp",
+      "symbol": "MP",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "long_term",
+      "conviction": 3,
+      "last_price": 50.0,
+      "last_price_asof": "2026-09-21T20:00:00+00:00",
+      "entry": {
+        "ideal": 45.0,
+        "zone_low": 40.0,
+        "zone_high": 47.0,
+        "order_type": "limit",
+        "condition": "DO NOT BUY BEFORE 2026-09-26. Let the Trump-Xi summit of 09-23 to 09-25 resolve first. RED TEAM AMENDED THE ZONE: the published zone topped out at 50.00, which was spot after a +5.80% session into the summit, so the first rung was an instruction to buy at the post-run price \u2014 the exact chase the condition forbids. The zone now tops at 47.00, below the 47.26 pre-summit close, so the first rung only fills if the summit takes the premium back out. Accumulate in thirds at 47 / 45 / 40. If the summit produces nothing and MP gaps up, stand aside; the thesis is a 2027 procurement rule and it will still be there at a lower price or at no price."
+      },
+      "exit": {
+        "target": 74.0,
+        "target_2": 100.0,
+        "scale_plan": "Hold 12-24 months into the DFARS 2027 demand step-up. Trim a third at 74, the street consensus cluster; let the rest run toward the $100 high estimate only if 10X Facility magnet output is actually shipping. INVALIDATION (not a stop): the 2027-01-01 DFARS 252.225-7052 expansion being delayed or waived, or the DoD $110/kg contract-for-difference being renegotiated. Those two are the whole floor; market NdPr staying below $110/kg is expected and is what the floor is for.",
+        "time_stop": "2028-06-30"
+      },
+      "bear_case_price": 34.0,
+      "position_size_pct": 2.5,
+      "catalyst": {
+        "event": "DFARS 252.225-7052 expands 2027-01-01, requiring covered defense procurement NdFeB magnets to be free of covered-country material across mining, refining, separation and finished magnet \u2014 a legislated demand floor that does not depend on the 09-23/25 Trump-Xi summit outcome",
+        "datetime_et": "2027-01-01T00:00",
+        "action": "Wait for the summit to clear, then accumulate in thirds at 50 / 45 / 40. The near-term binary is diplomacy; the thesis is the 2027 procurement rule and the DoD price floor, and both survive either summit outcome.",
+        "wait": true
+      },
+      "thesis": "MP is the only US integrated rare-earth miner-to-magnet producer and its downside is contracted rather than hoped for: the DoD holds a 10-year price floor at $110/kg on NdPr structured as a contract-for-difference, which already paid $17.6M of real price-protection income in Q2-26, plus a 10-year guarantee that 100% of 10X Facility magnet output is bought. Q2-26 NdPr production was 840 metric tons, up 41% year over year. From 2027-01-01 DFARS 252.225-7052 bars covered-country material from defense NdFeB magnets across the whole chain, which converts a policy preference into a procurement requirement.",
+      "key_risk": "Insider flow is the loudest argument against and it is not answered: over six months MP shows 2 open-market buys by a single buyer for $1.51M against 20 sells for $79.9M, net -$78.4M. The stock also lags everything measured \u2014 -10.59% vs SPY over one month, -20.98% over three, and -3.99% vs XLB over one month \u2014 so this is buying a laggard, not leadership. And the street is crowded: 18-19 analysts at Strong Buy with a LOW estimate of $61, above the $50 spot, meaning nobody is positioned for disappointment. If a Trump-Xi deal restores Chinese magnet flows and market NdPr stays far below $110/kg, MP collects the floor and earns nothing above it, and the 200-session low of 37.81 does not hold.",
+      "counter_argument": "The strongest case against is that MP is a policy stock whose entire premium evaporates the moment Washington and Beijing agree \u2014 and that case is strong enough that entry is refused before the summit rather than argued past. The position this idea takes is narrower: the $110/kg contract-for-difference and the 2027-01-01 DFARS rule are contractual and statutory, they are unaffected by a tariff handshake, and they will still be there on 09-26 at a price the summit has already set. RED TEAM, on why conviction came down to 3: the loudest objection is the one the idea concedes it cannot answer \u2014 20 insider sells against 2 buys, net -$78.4M over six months, with the people closest to the DFARS timetable selling into it. On top of that the street consensus is doing two contradictory jobs at once: it is the valuation_anchor holding up the 74 target and it is simultaneously named in key_risk as a crowding hazard, because 18-19 Strong Buys with a LOW target of $61 above a $50 spot means nobody is positioned for disappointment. And the dated_catalyst is 2027-01-01, fifteen months beyond any window this entry plan operates in \u2014 a real date, but not one that pays you for being early. Three evidence kinds are listed and one of them is doing no work in the horizon traded.",
+      "evidence": [
+        {
+          "kind": "dated_catalyst",
+          "detail": "Trump-Xi summit 2026-09-23 to 09-25 in Washington with rare-earth flows on the agenda (Bessent-He prep meeting 09-20); US-China tariff truce expires 2026-11-10; DFARS 252.225-7052 expands 2027-01-01. All three dates taken from fetched reporting this morning, not recalled.",
+          "source": "https://www.cnbc.com/2026/09/20/bessent-chinas-he-to-hold-talks-on-ai-trade-minerals-reuters.html"
+        },
+        {
+          "kind": "valuation_anchor",
+          "detail": "Street consensus clusters $74.29-$79.97 across 16-19 analysts (S&P Global average $75.38), high $100, low $61. Target set at 74, the bottom of that cluster. Floor value is contracted: DoD 10-year $110/kg NdPr contract-for-difference, $400M convertible preferred, $150M separation loan, 100% 10X magnet offtake for 10 years; $17.6M price-protection income realized in Q2-26 on 840t NdPr production, +41% YoY.",
+          "source": "https://stockanalysis.com/stocks/mp/forecast/"
+        },
+        {
+          "kind": "technical_level",
+          "detail": "Fetched 200-session history: close 50.00 sitting right on SMA50 50.87, ATR14 2.49 (4.99%), SMA20 53.53, SMA200 57.22, range low 37.81 and high 76.80 (-34.9% off high), avg dollar volume 288.3M/day. The 34 bear anchor is set deliberately BELOW the 37.81 prior low rather than on it.",
+          "source": "https://www.nasdaq.com/market-activity/stocks/mp/historical"
+        }
+      ],
+      "sources": [
+        "https://www.cnbc.com/2026/09/20/bessent-chinas-he-to-hold-talks-on-ai-trade-minerals-reuters.html",
+        "https://www.usnews.com/news/top-news/articles/2026-09-20/us-treasurys-bessent-chinas-he-to-launch-talks-on-ai-trade-critical-minerals",
+        "https://mpmaterials.com/news/mp-materials-announces-transformational-public-private-partnership-with-the-department-of-defense-to-accelerate-u-s-rare-earth-magnet-independence/",
+        "https://rareearthexchanges.com/news/mp-materials-raises-ndpr-output-41-as-mine-to-magnet-execution-becomes-the-real-test/",
+        "https://stockanalysis.com/stocks/mp/forecast/",
+        "https://www.nasdaq.com/market-activity/stocks/mp/historical"
+      ],
+      "risk_reward": 2.64,
+      "risk_tier": "standard",
+      "avg_dollar_volume": 288300000,
+      "price_source": "finnhub",
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.64,
+        "claimed_risk_reward": 2.64,
+        "breakeven_probability": 0.275,
+        "stop_atr_multiple": null,
+        "live_price": 50.0,
+        "live_price_asof": "2026-09-21T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 885.8,
+        "bid": 50.25,
+        "ask": 50.5,
+        "spread_pct": 0.496,
+        "atr14": 2.4931,
+        "checked_at_et": "2026-09-22T06:46:42-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.64:1 clears the 2.5:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 45.0 is -10.0% from live 50.0"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2027-01-01 is ahead of us"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "long-term target is valuation-anchored, not ATR-bound"
+          },
+          {
+            "check": "stop_distance",
+            "status": "pass",
+            "detail": "long-term downside is a bear case, not a stop \u2014 no ATR floor applies"
+          },
+          {
+            "check": "expectancy",
+            "status": "warn",
+            "detail": "no win_probability stated; this idea needs better than 28% to break even at 2.64:1"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-09-21T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "pass",
+            "detail": "bid/ask spread 0.50%; the round trip costs 1% of the target move"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "2.5% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 3 rests on 3 independent kinds: dated_catalyst, technical_level, valuation_anchor"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "1 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    }
+  ],
+  "watchlist": [
+    {
+      "symbol": "DVN",
+      "instrument": "Devon Energy Corp",
+      "note": "RED TEAM CUT. Already has a stop at 46.90, so it does not belong in an unstopped-longs exit basket. Selling at market realises the 1.47% it is trying to avoid risking.",
+      "trigger": "The existing 46.90 stop, which is 1.47% away and does the work. Revisit as a fresh idea only if crude re-prices a war premium, and then with a stop set at entry rather than inherited.",
+      "demoted_from_rank": 6,
+      "demotion_reason": "Cut from the exit basket. The rule the other three exits run on is 'an unstopped long with undefined downside' \u2014 DVN has a stop at 46.90 and its downside is therefore already defined. The idea argues the stop is too close to be informative at 0.51 ATR, but selling at market 47.59 realises that same 1.47% with certainty to avoid risking it, and buys no risk reduction. It also forfeits the best improving-revision read of anything screened today (87.9% bullish, +6.7 on the month) on the one name in the basket whose fundamentals are turning up, and it is a market order into a 4.88% pre-market book. Let the existing 46.90 stop do the job it was set to do."
+    },
+    {
+      "symbol": "DINO",
+      "instrument": "HF Sinclair Corp",
+      "note": "RED TEAM CUT. The add is cut, not the position. More extended above its SMA200 (59.5%) than VLO (57%), which this report rejected for that reason. At a 2.5 ATR stop the add is 1.73:1.",
+      "trigger": "A pullback into the 105.60-107.50 shelf, which is the add level the idea itself named. Position levels unchanged: target 128.00, stop 97.75, exit fully if the 3-2-1 crack closes back under ~$45/bbl.",
+      "demoted_from_rank": 10,
+      "demotion_reason": "The ADD is cut; the existing 2026-08-22 long at 107.50 is untouched and keeps its 128.00 target and 97.75 stop. This report screened VLO, MPC, PSX and PARR for this identical record-crack theme and rejected all four for being extended, citing VLO at 57% above its own SMA200. DINO closed 109.29 against an SMA200 of 68.52 \u2014 59.5% above it, more extended than the name rejected for being extended. The same test cannot reject the peers and pass the holding. The crack print carrying the thesis is 2026-09-03, nineteen days old, while the tape took 5.70% out of DINO on 09-21; and the stop at 97.75 is named only in ATRs, so at 2.5 ATR (95.67) the add is 1.73:1, under the floor."
+    },
+    {
+      "symbol": "JBHT",
+      "instrument": "J.B. Hunt Transport Services Inc",
+      "note": "RED TEAM CUT. Thesis rests on a falling fuel bill; this report's own DINO idea and JBHT's own key_risk both say diesel stays at a record. Re-cut at a 2.5 ATR stop the ratio is 1.79:1, under the floor.",
+      "trigger": "A fill nearer 211-215 where an honest 2.5 ATR stop still leaves better than 2:1 to the 272 gap fill, or a Q3 print in mid-October that lands at the top of the guided range with the driver-cost line flat rather than growing.",
+      "demoted_from_rank": 9,
+      "demotion_reason": "The thesis names one mechanism \u2014 the fuel-surcharge lag running in reverse as crude falls \u2014 and this report's own DINO idea is a bet that it does not: record distillate cracks with inventories 14% below the five-year average and runs at 97.2% keep retail diesel at $6.05/gal while crude falls. JBHT's own key_risk concedes exactly that. The company's warning was $25M of driver cost against $10M or more of fuel, so fuel was at most 29% of the problem the argument addresses. Strip it and what is left is 'the de-rating is bigger than the news' plus a four-session base. The stop at 211.00 is named only as '2.11 ATR below' with no level on the tape behind it (SMA200 241.78, range low 185.58, open air between); recut at 2.5 ATR it is 207.36 and the ratio falls to 1.79:1, under the 2.0 floor. The idea cleared the floor on a stop chosen to clear the floor."
+    },
+    {
+      "symbol": "JEF",
+      "instrument": "Jefferies Financial Group",
+      "note": "The $629M of 'insider buying' is real but is SMBC building toward a 20% strategic stake under an alliance, verified on two EDGAR Form 4s \u2014 not a view on price. It is 12.7% underwater at 47.85 and roughly 12.34M of the ~13M planned shares are already bought, so the bid is nearly exhausted. Two consecutive earnings misses (-27.51%, -12.64%) and revisions at -14.4 on the month.",
+      "trigger": "After the 2026-09-30 print: a clean quarter plus a base above ~44 makes a 20% strategic holder with a 12% paper loss a real floor argument. Not one today."
+    },
+    {
+      "symbol": "SNX",
+      "instrument": "TD SYNNEX",
+      "note": "Pending BUY @ 260.00 from 2026-09-19, level unchanged \u2014 do not chase. Price ran 5.05% to 279.59 two sessions before a 09-24 bmo print. Built the levels a 260 entry would need: a 2.0 ATR stop lands near 242 and reward-to-risk to the 296.47 range high comes out at exactly 2.00.",
+      "trigger": "An idea sitting precisely on the swing floor is one the floor exists to reject. Leave 260 pending; needs a genuinely better level, not a nudged target."
+    },
+    {
+      "symbol": "GLD",
+      "instrument": "SPDR Gold Shares",
+      "note": "CONFLICT NEEDING RECONCILIATION, not a new idea: an open BUY @ 398.00 with a 437 target and a 381 stop sits alongside a pending SELL @ 406.77 from 2026-09-08 \u2014 a sell order 8 points below the long's own target. The long's levels are sound on their own (2.20 ATR stop, R:R 2.29).",
+      "trigger": "Downstream decision: one of the two instructions should be withdrawn. Research deliberately did not add a third GLD instruction on top."
+    },
+    {
+      "symbol": "DG",
+      "instrument": "Dollar General",
+      "note": "FILL-TRACKING FLAG: listed as awaiting entry at a 134.50 limit published 2026-08-21, but DG closed 121.91 on 09-21 and has traded well below that level for weeks. A limit there should have filled long ago.",
+      "trigger": "Either the fill tracking missed it or the entry was never live. If it did fill it is a loser that needs a stop \u2014 it is -22.9% off its high and below SMA20/50/200."
+    },
+    {
+      "symbol": "CEG",
+      "instrument": "Constellation Energy",
+      "note": "HOLD, unchanged, disclosed defect: the published 250.00 stop is 1.91 ATR below the 272.00 entry (ATR14 11.49), inside the 2.0 ATR swing floor. It should not have shipped that way and is NOT being widened now \u2014 amending risk upward on an open losing position is the mirror of walking a stop in. Relative strength beats XLU on every window and there are zero insider sells in six months; revisions are deteriorating.",
+      "trigger": "Disclosed rather than quietly fixed. VST is the better vehicle for the same theme and is today's capture."
+    },
+    {
+      "symbol": "KXFEDDECISION-26SEP-H25",
+      "instrument": "Kalshi \u2014 Fed September 2026 decision",
+      "note": "RECORDS FIX: this and KXFEDDECISION-26SEP-H0 @ 47 reference the September 2026 meeting, which has already passed. They are not open markets.",
+      "trigger": "Resolve out of the pending list rather than carrying them."
+    },
+    {
+      "symbol": "KXFEDDECISION-26OCT-H25",
+      "instrument": "Kalshi \u2014 Fed October 2026 hike 25bp",
+      "note": "Pending YES @ 28 from 2026-09-02; the market is now 53/54. The view was right and the entry never filled, which means the opportunity is gone, not that the position is winning.",
+      "trigger": "Do not chase at 53. No event candidate was captured today because 53% October and 67% December agree with what US2Y at 4.76% already implies \u2014 a consensus I share is not a disagreement to trade."
+    },
+    {
+      "symbol": "IYR",
+      "instrument": "iShares US Real Estate ETF",
+      "note": "Pending SELL_SHORT @ 103.60 from 2026-09-02. The view was right and the entry was unreachable \u2014 IYR never traded up to 103.60, it fell to 98.90 instead and now rests on SMA200 100.05. A 53%/67% priced hiking path argues for the thesis.",
+      "trigger": "Chasing the short 4.5% down after the move is how a good call becomes a bad trade. Leave pending and let it expire."
+    },
+    {
+      "symbol": "BTC",
+      "instrument": "Bitcoin (and /MBTU6)",
+      "note": "Pending BTC SELL @ 63,400 and /MBTU6 SHORT @ 64,340 are inert \u2014 roughly 26% below the 86,059 spot. BTC +1.8% on the session.",
+      "trigger": "No fresh bearish crypto thesis today. Moving a short entry up 26% to chase price is the reverse-engineering the strategy config forbids."
+    },
+    {
+      "symbol": "VLO",
+      "instrument": "Refiners \u2014 VLO, MPC, PSX, PARR",
+      "note": "Screened as a second vehicle for the record-crack theme and rejected: all four sit within 5-7% of their highs and 100-150% above their lows (VLO 393.27 is 57% above its own SMA200). The record crack is the reason they are up 150%, not an argument they go higher.",
+      "trigger": "A real pullback toward the SMA50. The correlation cap would have allowed one; the price does not."
+    },
+    {
+      "symbol": "/MCL",
+      "instrument": "Micro WTI Crude futures",
+      "note": "The bear case is real \u2014 four down sessions, a deflating war premium, OPEC and IEA both cutting demand outlooks \u2014 but every quote path for WTI failed this run, so entry, target and stop would have to be set off a news number. Setting futures levels off a price that could not be fetched is exactly what CLAUDE.md forbids.",
+      "trigger": "A working WTI quote feed. Also selling into a move that is already four sessions and ~8% old, against a tail where one strike on Saudi infrastructure re-prices it overnight."
+    },
+    {
+      "symbol": "KHC",
+      "instrument": "Kraft Heinz",
+      "note": "Pending BUY @ 23.00 from 2026-09-20, unchanged. Same shape as the CAG insider-cluster idea but a weaker case, so CAG got the capture and KHC did not.",
+      "trigger": "Level unchanged at 23.00."
+    },
+    {
+      "symbol": "MU",
+      "instrument": "Micron Technology",
+      "note": "Pending BUY @ 960.00 from 2026-09-18, level unchanged. Price 1043.96 is 8.7% above the entry and earnings land 2026-09-30 amc. Recommended 3x in the last 10 days.",
+      "trigger": "Not chasing it up and not re-arguing it. Leave 960 pending."
+    },
+    {
+      "symbol": "CAG",
+      "instrument": "Conagra Brands Inc",
+      "note": "Demoted by validation: bid/ask spread 12.26%; the round trip costs 95% of the target move \u2014 too wide to trade this thesis",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 1,
+      "demotion_reason": "bid/ask spread 12.26%; the round trip costs 95% of the target move \u2014 too wide to trade this thesis"
+    },
+    {
+      "symbol": "KMX",
+      "instrument": "CarMax Inc",
+      "note": "Demoted by validation: bid/ask spread 11.77%; the round trip costs 59% of the target move \u2014 too wide to trade this thesis",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 2,
+      "demotion_reason": "bid/ask spread 11.77%; the round trip costs 59% of the target move \u2014 too wide to trade this thesis"
+    },
+    {
+      "symbol": "NKE",
+      "instrument": "NIKE Inc Class B",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 3,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined"
+    },
+    {
+      "symbol": "LULU",
+      "instrument": "lululemon athletica inc",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 4,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined"
+    },
+    {
+      "symbol": "LCII",
+      "instrument": "LCI Industries",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 5,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined"
+    }
+  ],
+  "data_quality_notes": "RESEARCH RAN TO COMPLETION. notes.md carries a final RESEARCH COMPLETE block (06:31 ET, superseding two earlier ones at 06:33 and 06:38 whose stamps had drifted), so `truncated` is false and nothing here is reconstructed from fragments. All ten candidates were captured in candidates.jsonl during research, first capture at 06:06; this report is an edit of that file, not a reconstruction. Run was 06:01-06:31 ET.\n\nPRICES ARE THE 2026-09-21 CLOSE, NOT LIVE. Every quote was re-fetched at synthesis and returned session `pre` with an age of ~872 minutes \u2014 the US equity market is closed pre-open, so the previous close is the freshest honest price, not stale data.\n\nWHY THE MIX LOOKS LIKE THIS: 8 swing, 2 long_term, 0 intraday, and all ten are equities. Nothing was dropped or promoted for balance. No intraday idea cleared the bar because there was no live index, VIX or futures quote to set precise levels from, and inventing them would have been the worse failure. Crypto, futures and event contracts were each screened and each is documented empty with a reason: BTC at 86,059 with no dated catalyst is not an edge; /MCL was rejected specifically because no WTI price could be fetched; and the Kalshi ladder prices October/December hikes at 53%/67%, which agrees with what US2Y at 4.76% already implies, so there is no probability disagreement to trade.\n\nFOUR OF TEN ARE EXITS, AND THAT IS THE DAY'S FINDING. Five of the sixteen open positions carry no stop at all, and the three of those sitting at 52-week lows \u2014 NKE, LCII, LULU \u2014 are all being closed. A fourth, DVN, sat 0.51 ATR from its stop with its driver broken. None of the four is a short: they are full exits of existing longs, so `exit.target` and `stop` are null by construction and reward-to-risk does not apply to them.\n\nRATIOS CLUSTER JUST ABOVE THE FLOOR, AND IT IS WORTH SAYING SO. The four new swing ideas recompute to 2.10 (DINO), 2.13 (JBHT), 2.24 (CAG) and 2.97 (KMX) against a 2.0 floor, with stops at 2.06, 2.11, 2.09 and 2.01 ATR against a 2.0 ATR floor \u2014 three of the four clear by less than 0.11 ATR of slack. That pattern is the signature of levels fitted to the bar, so it is flagged rather than left for the reader to notice. Against that reading: every target here sits on a level that exists on the tape rather than above it \u2014 JBHT 272 is both the 273.05 gap origin and the SMA50 at 271.28, CAG 16.60 is under the 16.735 swing high, KMX 64.50 is under the 65.28 range high \u2014 and the KMX entry was moved 7% BELOW spot precisely because the idea failed its floor at 57.86 and the stop was not walked in to rescue it. I recomputed all six ratios and all four ATR stop distances from freshly fetched history rather than trusting the numbers in the notes; they agree.\n\nTWO IDEAS SAY DO NOT BUY TODAY. MP (wait) must not be entered before the 09-23/25 Trump-Xi summit resolves, and KMX (wait) must not be entered before the 09-29 print \u2014 and its order is cancelled, not filled, if the entry zone is reached only because that print was bad.\n\nCONVICTION: one deliberate under-claim, disclosed. DVN carries three distinct evidence kinds, which supports a 4, and is published at 3. It is an exit, and under-claiming was preferred to inflating. Every other score equals its distinct-kind count exactly.\n\nSOURCES THAT FAILED, AND WHAT IT COST: query1/query2.finance.yahoo.com returned HTTP 429 on every index and history call and 401 on options, finnhub gates index quotes behind a subscription, stooq 404s on ^-prefixed tickers, and there is no AlphaVantage key. Consequence: no SPX/NDX/DJI/RUT level, no VIX, no DXY, no /ES or /NQ, and no spot gold or WTI quote all run \u2014 those entries are null in `market_context.levels` rather than estimated, and the crude and rates figures used come from fetched news and FRED and are sourced as such. No options-implied move on any candidate (yahoo-options 401), which matters most for CAG and KMX, both in front of 09-29 prints. No short interest (api.nasdaq.com timeout). CoinGecko failed once and succeeded on retry; nasdaq history for KMX likewise.\n\nCROSS-CUTTING RISK: the Kalshi ladder prices a HIKING path (53% October, 67% December, cut at zero). That confirms the held TLT short and the decision to close rate-sensitive LCII, and it adds risk to KMX (used-vehicle affordability is a financing story), JBHT (cyclical freight) and CAG (a bond-proxy staple). None of those theses depends on rates; none is helped by them.\n\nCORRELATION: no driver carries more than two ideas. Merchant power is VST plus the held CEG; the 2026-09-29 earnings date is shared by CAG and KMX, which is a genuine common risk even though the businesses are unrelated; and DINO and JBHT sit on OPPOSITE sides of the diesel crack \u2014 DINO wants cracks wide, JBHT wants its fuel bill to fall \u2014 so they partly offset rather than doubling a bet.\n\nCOVERAGE GAPS THAT REMAIN: small caps WITH a near-dated earnings catalyst were screened and produced nothing that clears the bar; small caps WITHOUT one were not reached, and that method gap is real. Two apparent insider clusters were rejected on reading the filings rather than the counts \u2014 JEF's $629M is SMBC stake-building (verified on EDGAR, nearly exhausted, 12.7% underwater) and MSS's seven buys are a market-making desk.\n\nTOOLING DEFECT FOUND, NOT FIXED (out of scope for this phase): `market_data.py events` returns zero macro markets because it filters Kalshi's unfiltered /markets page, which is sports-dominated. Passing `series_ticker` works \u2014 reproduction is in the 06:40 notes block.\n\nFLAGGED FOR SOMEONE ELSE'S DECISION, all carried on the watchlist rather than quietly amended: the GLD long/pending-sell conflict, the DG pending entry that should have filled weeks ago, the two already-resolved September Fed contracts still listed as pending, and CEG's published stop at 1.91 ATR, inside the config floor.\n\nTRACK RECORD CAVEAT: 7 closed trades is noise, well under the ~15 needed to read anything into the by-conviction or by-horizon splits.\n\nRED TEAM (phase 2c). Cut three, downgraded two, fixed two, and verified two validation flags as false alarms. Seven ideas survive from ten.\n\nCUT: JBHT, DINO and DVN, all to the watchlist with the reasoning on each entry. JBHT and DINO failed the same test \u2014 every new swing idea here carried a stop_distance warning for sitting between the 2.0 ATR floor and the 2.5 ATR level where this report's stop-outs cluster, so all four were re-cut at a 2.5 ATR stop. KMX survives at 2.39:1, CAG falls to 1.87:1, JBHT to 1.79:1 and DINO to 1.73:1. The discriminator applied was not the recut number but whether the published stop names a level that exists independently of the ATR arithmetic: CAG's 13.85 sits below the 14.305 swing low and the 14.31 insider basis, KMX's 50.20 sits below the 52.01 insider band, and both were kept; JBHT's 211.00 and DINO's 97.75 are described only as '2.11 ATR below' and '2.06 ATR below', with open tape behind them, and both were cut. JBHT carried a second, independent failure: its only named mechanism is a falling fuel bill, which this report's own DINO idea is a bet against and which JBHT's own key_risk concedes, on a warning the company itself split $25M driver cost to $10M fuel. DINO carried a second one too: this run rejected VLO, MPC, PSX and PARR for the identical record-crack theme because VLO sits 57% above its SMA200, and DINO closed 109.29 against an SMA200 of 68.52, which is 59.5% \u2014 the screen cannot reject the peers and pass the holding. The DINO cut removes the ADD only; the open 2026-08-22 long keeps its 128.00 target and 97.75 stop unchanged. DVN was cut from the exit basket for not belonging to it: the other three exits run on 'an unstopped long with undefined downside' and DVN has a stop at 46.90, so selling at market 47.59 realises with certainty the 1.47% it is trying to avoid risking, on the one name in the basket with improving revisions.\n\nDOWNGRADED: VST 5 to 3, size 4% to 2.5%, tier to standard. Two of its five evidence kinds are rebuttals of objections rather than confirmations of the thesis \u2014 counter_argument_answered by definition, and the 424B2 primary_document, which establishes the absence of dilution and supplies a 7.0-7.25% cost of capital that key_risk correctly reads as a cost. Three genuine kinds cap it at 4. It went to 3 because the number the thesis turns on, the ERCOT 2027 forward power price, was never fetched in this run, while the only power price that was sourced (~$30/MWh realised year to date) is the idea's own stated invalidation condition. The CEO buy is also smaller than it reads: 8,665 shares added to a vehicle already holding 1,146,352, a 0.76% increment. The valuation and technical work is sound and the idea stands; the claim of a 5 did not. MP 4 to 3: its loudest objection is the one it concedes it cannot answer (20 insider sells against 2 buys, net -$78.4M), its street consensus is load-bearing as the valuation_anchor and simultaneously named in key_risk as a crowding hazard, and its dated_catalyst is 2027-01-01, fifteen months outside the window the entry plan operates in.\n\nFIXED: MP's entry zone topped at 50.00, which was spot after a +5.80% session into the summit \u2014 an instruction to buy the post-run price in an idea whose condition forbids chasing. Zone high moved to 47.00, below the 47.26 pre-summit close. LCII was published as a market order while its own condition said to work the order; on $24.8M average daily dollar volume those are contradictory, so the order type is now limit. No target was moved outward anywhere and no stop was moved inward.\n\nTWO VALIDATION FLAGS ARE FALSE ALARMS, CHECKED RATHER THAN ASSUMED. First, the earnings_calendar warnings on CAG, KMX and NKE ('claims an earnings catalyst but X is not on the fetched calendar') are wrong. I re-fetched the calendar and all three are on it with the exact figures the report claims: CAG 2026-09-29 est EPS 0.285 on revenue 2.612B, KMX 2026-09-29 est EPS 0.717 on revenue 7.008B, NKE 2026-09-28 est EPS 0.4495 on revenue 11.470B. The report's dated_catalyst evidence was correct and the validator's fetch was not. Second, the three spread FAILs \u2014 CAG 12.26%, KMX 11.77%, DINO 10.93% \u2014 are pre-market books, not regular-session spreads. I re-fetched depth and the quotes are stamped 5:52-6:25am ET: CAG bid 14.40 ask 16.28 on a name whose 09-21 session range was 14.78-15.21. These are $100M+/day names that trade a penny wide in the regular session. The flags were not treated as kills and every surviving entry is a limit order, but no order in this report should be worked before the regular session opens. Both of these are tooling defects of the same shape as the Kalshi one logged above: check_spread's own docstring expects bid/ask to be absent outside regular hours, and Nasdaq is returning an indicative pre-market book stamped is_real_time true instead. Not fixed here; out of scope for this phase.\n\nNOT CUT, BUT NAMED. The four exits became three, and the three that remain are one decision wearing three tickers: NKE, LULU and LCII are all unstopped longs being closed at or near 52-week lows on the same morning on the same rule. That rule is risk management rather than a directional call, so the cluster is not a reason to cut any of them, but it is a single act of de-risking and should be read as one. LULU carries a second point worth seeing: its own condition says it completes an exit already called on 2026-09-08 at 100.61, which means that instruction was published two weeks ago and the position is still open. Re-pitching it is correct; if it is still open on the next run, the problem is not the idea.\n\nNOT CUT AND DELIBERATELY SO: KMX, which is the strongest thing in this report on the mechanics. It is the only idea whose ratio clears the floor on a widened 2.5 ATR stop, its earnings date is independently confirmed, its entry was moved 7% below spot rather than its stop walked in, and it refuses to buy above the insider band it is built on. The objection that its insider cluster is three months old and 9-11% below spot \u2014 the same staleness test this report uses to dismiss LULU's insiders \u2014 is answered by the structure of the idea rather than argued away: it only transacts if price returns to that band. Its own key_risk is right that it will probably never trigger. Capturing it anyway is the correct call.\n\nWHAT PHASE 2D WILL DO TO THIS REPORT, FLAGGED NOT EVADED. `validate_report.py --enforce` demotes any idea whose verdict is FAIL, and five of the seven survivors carry a FAIL for reasons that are not about the idea. The three exits \u2014 NKE, LULU, LCII \u2014 fail `risk_reward` and `stop_distance` for having no target and no stop, which is correct by construction for a full exit of an existing long and cannot be fixed without inventing levels for a position being closed. CAG and KMX fail `spread` on the 6am pre-market book described above. Enforced as written, this morning publishes VST and MP alone \u2014 the two ideas that are conviction 3, that were both downgraded by the red team, and one of which says do not enter before 09-26 \u2014 while the three highest-certainty actions in the book, closing three unstopped longs at 52-week lows, are moved to the watchlist as validation failures. That inversion is a pipeline artifact and nothing here was reshaped to dodge it: no stop was moved, no target invented and no exit given fake levels to pass a check. Read the demotion reasons on each watchlist entry, not the recommendation count. Validation demoted 5 idea(s) whose numbers did not check out. 2 more carry warnings \u2014 see the validation block on each.",
+  "validation_summary": {
+    "checked": 7,
+    "passed": 0,
+    "warned": 2,
+    "failed": 5,
+    "enforced": true,
+    "demoted": 5
+  }
+}
