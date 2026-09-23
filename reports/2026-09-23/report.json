@@ -1,0 +1,254 @@
+{
+  "date": "2026-09-23",
+  "generated_at_et": "2026-09-23T06:35:01-04:00",
+  "truncated": false,
+  "market_context": {
+    "summary": "A two-speed tape, and the split is the rate. QQQ (747.46) and SPY (773.38) closed within 1% of their 120-day highs \u2014 QQQ ran +6.1% in four sessions \u2014 while every rate-sensitive sleeve made new lows: XLU 40.53 sits AT its 120-day low of 40.45 (-15.0% off the high), KRE -9.1%, IYR -8.8%, TLT 81.75 and -6.9% off its high. The driver is the long end: a 4.96% 10y against a 3.88% effective funds rate is +108bp of term premium with a +0.25 2s10s \u2014 a fiscal-supply tape, not a growth scare. Yesterday's single-stock action was almost entirely Meta's Muse launch: the market sold everything it decided depends on consumer inertia (SCHW -6%, ALL -5.5%, JPM/WFC -3%+, BKNG -3.9%, EXPE -3.7%, S&P Financials -2%), and the counter-catalyst landed this morning \u2014 Amazon has blocked Muse from its store for accessing it without authorisation. The useful work was separating the names that deserved the selloff (SCHW's cash-sorting risk, the OTAs) from those that did not: the tape had already priced principal-vs-agent correctly the same session, buying MAR +1.6% and DAL +1.7% while selling ABNB -3.0%. With SPY 0.8% off its high this is a rotation, not a risk-off, and a rotation can reverse on one soft CPI.",
+    "regime": "mixed",
+    "levels": {
+      "us10y": 4.96,
+      "us2y": 4.76,
+      "fed_funds_effective": 3.88,
+      "curve_10y_2y": 0.25,
+      "unemployment": 4.1,
+      "spx": null,
+      "ndx": null,
+      "vix": null,
+      "dxy": null,
+      "wti": null,
+      "gold": null,
+      "btc": 85833,
+      "spy": 773.38,
+      "qqq": 747.46,
+      "iwm": 287.21,
+      "tlt": 81.75,
+      "xlu": 40.53,
+      "gld": 400.07,
+      "levels_note": "SPX, NDX, VIX, DXY, WTI and spot gold are null because Yahoo returned HTTP 429 for every index, futures and FX symbol this morning; Finnhub refuses indices, stooq 404s on ^-prefixed symbols and there is no AlphaVantage key. Equity/ETF figures are 2026-09-22 regular-session closes via Nasdaq history; rates are FRED as of 2026-09-21/22; BTC is CoinGecko spot."
+    },
+    "econ_calendar": [
+      {
+        "event": "General Mills (GIS) fiscal Q1 2027 earnings \u2014 before the open, Q&A webcast 09:00 ET. ABSENT from the fetched Finnhub calendar; found from a pre-market story.",
+        "datetime_et": "2026-09-23T07:00",
+        "importance": "high",
+        "consensus": "EPS 0.72"
+      },
+      {
+        "event": "Cintas (CTAS) and Paychex (PAYX) earnings \u2014 before the open",
+        "datetime_et": "2026-09-23T07:00",
+        "importance": "medium",
+        "consensus": null
+      },
+      {
+        "event": "TD SYNNEX (SNX) Q3 FY26 earnings \u2014 before the open",
+        "datetime_et": "2026-09-24T08:00",
+        "importance": "high",
+        "consensus": "EPS 4.75"
+      },
+      {
+        "event": "Darden (DRI) earnings \u2014 before the open",
+        "datetime_et": "2026-09-24T08:00",
+        "importance": "medium",
+        "consensus": "EPS 2.08"
+      },
+      {
+        "event": "Costco (COST) earnings \u2014 after the close",
+        "datetime_et": "2026-09-24T16:15",
+        "importance": "high",
+        "consensus": "EPS 6.66"
+      },
+      {
+        "event": "Carnival (CCL) earnings \u2014 date contested: fetched calendar says 09-28 bmo, secondary coverage says 09-29 09:15 ET",
+        "datetime_et": "2026-09-28T08:00",
+        "importance": "medium",
+        "consensus": null
+      },
+      {
+        "event": "NIKE (NKE) Q1 FY2027 earnings \u2014 after the close (company-announced 2026-08-28)",
+        "datetime_et": "2026-10-01T16:15",
+        "importance": "high",
+        "consensus": null
+      }
+    ]
+  },
+  "data_quality_notes": "RESEARCH RAN TO COMPLETION \u2014 notes.md carries a RESEARCH COMPLETE block (06:30 ET, amended, superseding an earlier one whose stamp had run ahead of the wall clock), so `truncated` is false and nothing here is reconstructed from fragments. 9 unique candidates from 10 captured lines; RCL appears twice and the second, re-levelled line supersedes the first.\n\nSKEW, AND WHY: seven of nine recommendations are position management, not new risk. Only ALL and RCL are new positions, and only RCL is actionable at the market today (ALL carries wait:true \u2014 the first tranche is at 217.00, 5.4% below the last close). That is what the day actually offered against a book carrying 17 open positions and 12 awaiting-entry orders, several of them stale. Nothing intraday, no futures, no crypto and no event contract cleared the bar, each for a stated reason: CTAS and PAYX report within two hours with no fundamental edge on either; event contracts are unpriceable (below); bitcoin is 0.79% off its high after +13.5% in four sessions via IBIT, so there is nothing to short and nothing worth chasing, and the index-futures lane needs an index level that could not be fetched. A third new idea was explicitly declined rather than padded \u2014 the cross-sector de-rating screen produced UNH as the one genuine long-term candidate and it was carried to tomorrow because a half-researched mega-cap thesis is the failure mode, not the fix.\n\nRATIOS: only two ideas are directional trades with a downside level; the other seven are exits, trims or withdrawals and carry no reward-to-risk by construction. Both were recomputed here from the final levels. RCL: entry 237.00, stop 220.00, target 272.00 = 2.06 against a 2.0 swing floor, stop 2.04 ATR against a 2.0 stock floor, break-even hit rate 32.7% against a claimed 40% (7.3 points of edge). FLAGGING IT HONESTLY: 2.06 is barely above the floor, and the entry was explicitly solved backwards from it \u2014 the pre-market had moved 234.89 to 238.85 before the open, and rather than nudge the target the research solved (272-E)/(E-220) >= 2.0 for E <= 237.33 and set 237.00. That is the better of the two ways to respond, but it is still fitting a level to the floor and the reader should size it as such. The idea carries its own kill switch: above 239.50 it is to be SKIPPED, not re-levelled. ALL: entry 215.00, bear case 195.00, target 272.00 = 2.85 against a 2.5 long-term floor, break-even 26.0% against a claimed 45% \u2014 19.0 points of edge, just under the 20-point line where a claim is called large. The evidence that would actually carry that number \u2014 Allstate's historical rate-filing approval rates \u2014 was NOT researched.\n\nCONVICTION: every score equals the number of distinct evidence kinds listed, except RCL, which lists four kinds (supporting a 5) and is published at 4 deliberately. It is a knife catch at a 200-day low and is sized 2% speculative; inflating the score to match the evidence count would be the wrong direction of error on this report's record.\n\nWHAT COULD NOT BE CHECKED:\n- Index, volatility, FX and commodity levels. Yahoo returned HTTP 429 for every one (^GSPC, ^NDX, ^DJI, ^RUT, ^VIX, ES=F, NQ=F, DX-Y.NYB, ^TNX, GC=F, CL=F); Finnhub refuses indices; stooq 404s on ^-symbols; no AlphaVantage key. The regime read is assembled from sector ETF history instead, and no index or VIX number appears anywhere in this report.\n- Options-implied moves. Yahoo's options endpoint returns HTTP 401. NO target in this report was checked against what the options market prices, RCL's included.\n- Short interest and days-to-cover. api.nasdaq.com `short` timed out (20s) on every symbol. No crowding read on any name.\n- Event contracts. Kalshi returns count 0 for exact queries and unpriced multi-leg tickers for loose ones, so the three awaiting-entry KXFEDDECISION-* contracts could not be marked and no event idea was published.\n- THE EARNINGS CALENDAR IS INCOMPLETE. Finnhub omitted General Mills, which reports before the open TODAY and is the direct read-across for the open CAG position \u2014 it was found from a pre-market story, not from the data source this run is built on. Treat the calendar as a floor, not a list. CCL's date is also contested between sources, which is why no CCL trade was published.\n- RCL pro-forma leverage and covenants. The 8-K discloses neither. Partly addressed via the August 424B5, but the post-deal balance sheet is unverified and it is the open question in key_risk.\n- Boise Cascade's +4.4% move on 09-22: no catalyst identifiable in the sources checked, so none was written.\n\nPRICES: equity quotes re-fetched at synthesis returned the 2026-09-22 regular-session close for every symbol (session 'pre', age ~871 minutes) \u2014 that is a closed market, not stale data. Where a real-time pre-market read existed it is carried in last_price_asof; RCL's last_price is the 06:28 ET pre-market print of 238.85 because that idea's entry zone depends on it. GLD and EEM pre-market depth failed, and ALL's pre-market quote was ignored as noise on a 9.9% spread.\n\nSOURCES THAT FAILED: query1/query2.finance.yahoo.com (429 on chart endpoints, 401 on options), Finnhub quote for indices (subscription required), stooq (404 on ^-prefixed symbols), api.nasdaq.com `short` for all symbols and `depth` for GLD/EEM (timeouts), Kalshi events (no matches), bloomberg.com (403), nasdaq.com market-activity earnings page (60s timeout). SOURCES THAT WORKED: api.nasdaq.com historical and depth, Finnhub (quotes, earnings calendar, profiles, analysts, insiders), SEC EDGAR (three primary documents read today \u2014 the RCL 8-K, the RCL 424B5 and the Allstate Exhibit 99), FRED, CoinGecko.\n\nTRACK RECORD CONTEXT: 7 closed of 36 tracked is well under the ~15 needed to mean anything, so the 1/7 target rate is noise and is not being over-fit. What is not noise is the structural point the book surfaced today: several open longs (NKE, LULU, LCII, BCC, PFE) carry no stop and targets 50-75% away. NKE is being closed because a dated binary event forced the issue; the rest are on the watchlist as a book-structure problem.\n\nRED TEAM (phase 2c) \u2014 cut 1 of 9, downgraded 1, left 7 management calls standing.\n\nCUT RCL, the only new position that was actionable at the market today. The 8-K is real and says\nexactly what the thesis quotes \u2014 verified against the filing \u2014 but it was not news. CNBC published\n\"Royal Caribbean nears $3 billion deal to take 50% equity stake in Sandals\" on 2026-09-22, the same\nsession the stock fell 6.1%, so the market sold with the 50%/$3.0bn structure already in front of it.\nThe research read only the investing.com write-up of the FT piece (\"majority stake\", \">$6bn valuation\")\nand inferred the tape had feared something larger; it had not. Being right about the filing and early\nto it are different things, and this was neither. The filing also confirms the objection rather than\nretiring it \u2014 ~$3.0bn of new committed debt for a 50/50 land-resort JV \u2014 while the evidence item filed\nas `counter_argument_answered` (the August $1.25bn 424B5) establishes only that RCL can refinance,\nwhich is a different question. Full reasoning is on the watchlist entry.\n\nDOWNGRADED ALL from conviction 4 to 3 and win_probability from 0.45 to 0.33. Two reasons, neither of\nwhich kills the idea. First, the report itself states the 45% was unsupported \u2014 Allstate's historical\nrate-filing approval rates, the one mechanism that would carry a 19-point edge over a 26% break-even,\nwere not researched \u2014 so the number is now set where the evidence actually reaches (+0.27R rather than\n+0.73R). Second, ALL's 5.5% fall on 09-22 was a group move: Progressive, Primerica and Trupanion fell\nwith it as the market marked down severe-weather-exposed personal lines. The thesis reads the 17.2%\nde-rating as a single-name overreaction of about 11x; the report's own counter-argument computes that\ncapitalising $1.1bn/yr at 12x reproduces the decline almost exactly, and the group move is evidence for\nthe counter-argument. Both are now recorded in `key_risk` and `counter_argument`. The staged 217/210/202\nentry, 6.3% below the market and explicitly `wait: true`, is what keeps it publishable.\n\nCUT NOTHING ELSE, and that is a finding rather than a pass. Seven of the eight survivors are position\nmanagement \u2014 a stop honoured (DVN), a stop finally raised on the book's only winner (EEM), two\ncontradictory GLD orders reconciled, two resting bids withdrawn after the move they were waiting for\nhappened without them (SNX, MU), and two exits ahead of dated events (CAG into this morning's General\nMills print, NKE into 10-01). Each carries a counter-argument that names what doing it costs, and none\nof them widens a stop or nudges a target. There is nothing here to manufacture an objection about.\n\nRANKING CHANGED. With RCL gone the report contains no new position that is actionable at today's open,\nso the ranks now run by what has a deadline today: CAG must be halved before 09:30 ET, DVN exits at the\nopen, EEM's stop and GLD's order conflict are today's work. ALL is rank 5 because it is a limit order\n6.3% below the market, not because it is the weakest idea.\n\nFACTS THE RED TEAM VERIFIED INDEPENDENTLY: the RCL 8-K (50% / ~$3.0bn / Morgan Stanley committed debt /\nearly-2027 close, no earnout); the Allstate Exhibit 99 ($748m pre-tax, $591m after-tax, 21 events, ~50%\none wind-and-hail event, $1.43bn/$1.13bn July-August, 216m policies \u2014 and confirmed it says nothing\nabout rate filings, which is why the win probability came down); General Mills reporting this morning\nwith Q&A at 8:00am CT; SNX 2026-09-24 bmo; and NIKE's own announcement of 2026-10-01 after the close.\n\nTWO VALIDATOR ARTIFACTS THE READER SHOULD NOT ACT ON. The report shows 9 of 9 ideas failing, and most\nof that is mechanical. (a) Every idea carries a `sources` FAIL for a 404 on\n`api.nasdaq.com/api/quote/<SYM>/historical`. `check_sources` sends a bare HEAD; that endpoint needs\nquery parameters and 404s without them. The data behind it was genuinely fetched. It is a citation-\nhygiene defect \u2014 an unparameterised API root is not a citable URL \u2014 not a hallucinated source, and not\ngrounds to cut anything. (b) The wide-spread FAILs on ALL (9.93%), CAG (12.54%), SNX (5.01%) and DVN\n(4.09%) are pre-market quotes on large caps, ALL's being bid 228.00 against a 251.83 ask on a $58bn name\nwith $416m of daily volume. They are not the spread anyone trades at 09:30. Separately, the\n`direction_consistency` / `risk_reward` / `stop_distance` failures on the seven management calls are the\nvalidator scoring an exit as if it were an entry: a trade being closed has no target by construction.\nThe one contested date left standing: Finnhub's calendar carries NKE at 2026-09-28, against 2026-10-01\nafter the close in NIKE's own 2026-08-28 announcement. The primary source governs, but if the position\nis still open, treat the earlier date as the deadline and not the later one.\n\n8 recommendations remain, all at conviction 3; RCL is on the watchlist with its reason. Validation demoted 8 idea(s) whose numbers did not check out. 0 more carry warnings \u2014 see the validation block on each.",
+  "recommendations": [],
+  "watchlist": [
+    {
+      "symbol": "UNH",
+      "instrument": "UnitedHealth Group Inc",
+      "note": "The deepest liquid de-rating on the long-term screen \u2014 372.95, -19.2% off the 461.62 high, $1.77bn ADV \u2014 but grinding down below both its 388.38 20-day and 402.26 50-day with no catalyst fetched. Whether the medical-loss-ratio and Medicare Advantage problems are cyclical or structural is a full morning's work and was not done.",
+      "trigger": "a researched view on the MLR trajectory, plus a close back above the 20-day"
+    },
+    {
+      "symbol": "COST",
+      "instrument": "Costco Wholesale Corp",
+      "note": "899.41, -18.0% off its high and below both averages, which looks like the quality-on-sale setup \u2014 but relative strength is -24.9% vs SPY over 6m and -8.8% vs XLP, EPS surprises -1.90% and -1.54%, analyst bullish share falling. A compounder whose own numbers are deteriorating while it de-rates is just a stock going down.",
+      "trigger": "the 2026-09-24 amc print, with the actual margin line in hand"
+    },
+    {
+      "symbol": "META",
+      "instrument": "Meta Platforms Inc",
+      "note": "Right thesis, impossible entry: 736.595 is 3.8 ATR above its 631 20-day after a +11% session on the Muse launch, and 2.7% off the 757.27 high. Amazon has since blocked Muse from its store, which contradicts the universal-shopping-agent premise after the re-rating rather than before it.",
+      "trigger": "a pullback toward the 20-day, or evidence Muse gets authorised retailer access"
+    },
+    {
+      "symbol": "XLU",
+      "instrument": "Utilities Select Sector SPDR",
+      "note": "Closing AT its 120-day low of 40.45, -15.0% off the high, 3.0 ATR below its 20-day. A long is constructible at 40.60 / stop 39.48 / target 42.85 for R:R 2.01. Rejected for a book reason, not a chart reason: it needs long-end yields to fall while the open TLT SELL and awaiting-entry IYR SELL_SHORT both need them to rise.",
+      "trigger": "close the TLT short, or a dated catalyst that is not just 'oversold'"
+    },
+    {
+      "symbol": "V",
+      "instrument": "Visa Inc",
+      "note": "The best contrarian argument of the day and still not a trade: the networks are the rails an agent has to run on, and Muse settles over Stripe/Shopify into Visa and Mastercard. But V only fell 2.14% \u2014 there is no dislocation to fade \u2014 and the setup clears 2.0 exactly only with the target on the 385.57 120-day high.",
+      "trigger": "a genuine agent-driven dislocation in payments, i.e. a 5%+ single-session repricing"
+    },
+    {
+      "symbol": "DRI",
+      "instrument": "Darden Restaurants Inc",
+      "note": "Four consecutive EPS misses (-0.26%, -0.80%, -2.05%, -2.55%) with deteriorating analyst revisions, reporting 2026-09-24 bmo. Not shorted: the misses are all under 3% and the stock is 7.1% off its high on its 20-day, so the market has seen all four and does not care \u2014 and a short with a hard stop into a bmo print gaps through the stop.",
+      "trigger": "a miss large enough to be a pattern rather than noise"
+    },
+    {
+      "symbol": "CCL",
+      "instrument": "Carnival Corp",
+      "note": "Beats and improving ratings but the weakest thing in its sector, at a 120-day low 29.5% off its high. Also the date is contested \u2014 the fetched calendar says 09-28 bmo, secondary coverage says 09-29 09:15 ET \u2014 and no trade was published on an unresolved earnings date.",
+      "trigger": "a confirmed report date from the company"
+    },
+    {
+      "symbol": "SCHW",
+      "instrument": "Charles Schwab Corp",
+      "note": "-6.1% on Muse day and NOT an overreaction: the real agent-adjacent risk is cash sorting into bills, which attacks the sweep NIM that is Schwab's earnings engine, and with the 10y near 5% that pressure exists without any agent. Nothing to fade.",
+      "trigger": "evidence the sweep balance trend is stabilising"
+    },
+    {
+      "symbol": "BKNG",
+      "instrument": "Booking Holdings Inc",
+      "note": "Muse thesis is plausibly correct here \u2014 a pure intermediary is what an agent routes around. 164.22, -24.4% off its high and near the 150.14 120-day low. No fade, and no short either: 24% off the high is late to be selling.",
+      "trigger": "evidence of direct-booking share stabilising, or a capitulation low"
+    },
+    {
+      "symbol": "VST",
+      "instrument": "Vistra Corp",
+      "note": "Awaiting-entry BUY at 132.00 is left working UNCHANGED. Unlike the SNX and MU bids withdrawn today, this one sits 6.0% below the market on the 132.66 120-day low \u2014 a level the tape has actually traded, not a reflex discount. Not re-pitched because no new dated catalyst was fetched.",
+      "trigger": "a print into 132.66, or a fresh catalyst worth a full recommendation"
+    },
+    {
+      "symbol": "KHC",
+      "instrument": "The Kraft Heinz Co",
+      "note": "Awaiting-entry BUY at 23.00 unchanged. KHC 24.00, 4.3% above the bid, between its 23.95 low and the 24.94 20-day \u2014 a genuine pullback level still in range. Note the same GIS read-across risk that halved CAG today applies here if the bid fills this morning.",
+      "trigger": "a print into 23.00 after the GIS reaction is priced"
+    },
+    {
+      "symbol": "DG",
+      "instrument": "Dollar General Corp",
+      "note": "Awaiting-entry BUY at 134.50 unchanged. DG 122.63, 8.8% below the bid \u2014 this was never a pullback entry but a breakout trigger, and it has not triggered.",
+      "trigger": "a trade through 134.50"
+    },
+    {
+      "symbol": "IYR",
+      "instrument": "iShares US Real Estate ETF",
+      "note": "Awaiting-entry SELL_SHORT at 103.60 unchanged. IYR 98.68, so the short entry is 5.0% above the market and will not fill without a bounce. It is the same long-end bet as the open TLT short, which is why XLU was rejected rather than added.",
+      "trigger": "a bounce into 103.60"
+    },
+    {
+      "symbol": "BTC",
+      "instrument": "Bitcoin",
+      "note": "The awaiting-entry BTC SELL at 63,400 and the /MBTU6 SHORT at 64,340 are ~25% below spot (85,833) and are dead levels, not live orders; /MBTU6 is also a September contract now at or past expiry. IBIT ran +13.5% in four sessions to 0.79% off its 120-day high \u2014 nothing to short and nothing worth chasing.",
+      "trigger": "cancel both; re-pitch only on a fetched bearish basis"
+    },
+    {
+      "symbol": "KXFEDDECISION-26SEP-H25",
+      "instrument": "Kalshi Fed decision contracts (three open orders)",
+      "note": "All three awaiting-entry KXFEDDECISION-* contracts are UNMARKABLE today. Kalshi search returns count 0 for exact queries and unpriced multi-leg junk for loose ones, so there is no live implied probability for any event contract this morning.",
+      "trigger": "a working Kalshi price feed"
+    },
+    {
+      "symbol": "LULU",
+      "instrument": "Lululemon / LCII / BCC \u2014 open longs with no downside defined",
+      "note": "Flagged as a book-structure problem, not a trade. LULU (entry 115.00, now 103.73, target 180) and LCII (entry 94.00, now 87.92, target 138) are no-stop longs with targets 74% and 57% away \u2014 the same shape as the NKE position being closed today, but without a dated event forcing the issue. BCC jumped +4.4% on 09-22 with no catalyst identifiable in the sources checked, so none was written.",
+      "trigger": "define a stop or an invalidation for each, or close them"
+    },
+    {
+      "symbol": "RCL",
+      "instrument": "Royal Caribbean Cruises Ltd",
+      "note": "Red team cut this. The thesis was that the 2026-09-23 8-K disclosed something 'materially smaller' than the FT report that took the stock down 6.1% on 09-22, so the 8-K was a repricing catalyst. It was not new information: CNBC published 'Royal Caribbean nears $3 billion deal to take 50% equity stake in Sandals' on 2026-09-22 (https://www.cnbc.com/2026/09/22/royal-caribbean-sandals.html), the same session the stock fell. The market had the 50%/$3.0bn structure in front of it and sold anyway, so the 8-K confirms the tape rather than contradicting it and there is no edge to be early to. Second, the 8-K confirms the worry instead of answering it: ~$3.0bn of cash funded by committed Morgan Stanley debt is new leverage for a 50/50 JV in land-based resorts, and the 'counter_argument_answered' evidence \u2014 the 2026-08-10 $1.25bn 424B5 \u2014 shows only that RCL can refinance floating-rate paper at a fixed rate, which is a different question from whether $3.0bn of incremental debt is well spent. That drops the genuine confirmations to two (primary_document, technical_level), since the fourth kind, 'positioning', was itself listed as evidence AGAINST the trade. With the catalyst gone what remains is a knife catch at a new 200-day low, closing at the low of a 3.7-ATR down day, 19.6% off its 08-25 high in a sector-wide de-rating, on a 2.06:1 ratio whose 237.00 entry the research states plainly was solved backwards out of the 2.0 floor, with a 2.04 ATR stop and a 40% win probability against a 32.7% break-even that nothing supports.",
+      "trigger": "pro-forma leverage and covenants disclosed (the 8-K gives neither), or the cruise complex stops making lower lows \u2014 a close back above the 263.00 20-day. Do not re-enter on the deal news itself; it is priced.",
+      "demoted_from_rank": 2,
+      "demotion_reason": "the catalyst was already public when the stock fell on it; the edge never existed"
+    },
+    {
+      "symbol": "CAG",
+      "instrument": "Conagra Brands Inc",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined; bid/ask spread 12.54% \u2014 too wide to trade this thesis; 2 source(s) return 404: https://api.nasdaq.com/api/quote/CAG/historical, https://api.nasdaq.com/api/quote/GIS/historical",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 1,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined; bid/ask spread 12.54% \u2014 too wide to trade this thesis; 2 source(s) return 404: https://api.nasdaq.com/api/quote/CAG/historical, https://api.nasdaq.com/api/quote/GIS/historical"
+    },
+    {
+      "symbol": "DVN",
+      "instrument": "Devon Energy Corp",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined; bid/ask spread 4.09% \u2014 too wide to trade this thesis; 2 source(s) return 404: https://api.nasdaq.com/api/quote/DVN/historical, https://api.nasdaq.com/api/quote/XLE/historical",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 2,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined; bid/ask spread 4.09% \u2014 too wide to trade this thesis; 2 source(s) return 404: https://api.nasdaq.com/api/quote/DVN/historical, https://api.nasdaq.com/api/quote/XLE/historical"
+    },
+    {
+      "symbol": "EEM",
+      "instrument": "iShares MSCI Emerging Markets ETF",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined; 1 source(s) return 404: https://api.nasdaq.com/api/quote/EEM/historical",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 3,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined; 1 source(s) return 404: https://api.nasdaq.com/api/quote/EEM/historical"
+    },
+    {
+      "symbol": "GLD",
+      "instrument": "SPDR Gold Shares",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined; 1 source(s) return 404: https://api.nasdaq.com/api/quote/GLD/historical",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 4,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined; 1 source(s) return 404: https://api.nasdaq.com/api/quote/GLD/historical"
+    },
+    {
+      "symbol": "ALL",
+      "instrument": "The Allstate Corporation",
+      "note": "Demoted by validation: bid/ask spread 9.93%; the round trip costs 37% of the target move \u2014 too wide to trade this thesis; 1 source(s) return 404: https://api.nasdaq.com/api/quote/ALL/historical",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 5,
+      "demotion_reason": "bid/ask spread 9.93%; the round trip costs 37% of the target move \u2014 too wide to trade this thesis; 1 source(s) return 404: https://api.nasdaq.com/api/quote/ALL/historical"
+    },
+    {
+      "symbol": "SNX",
+      "instrument": "TD SYNNEX Corp",
+      "note": "Demoted by validation: bid/ask spread 5.01%; the round trip costs 33% of the target move \u2014 too wide to trade this thesis; 1 source(s) return 404: https://api.nasdaq.com/api/quote/SNX/historical",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 6,
+      "demotion_reason": "bid/ask spread 5.01%; the round trip costs 33% of the target move \u2014 too wide to trade this thesis; 1 source(s) return 404: https://api.nasdaq.com/api/quote/SNX/historical"
+    },
+    {
+      "symbol": "NKE",
+      "instrument": "NIKE Inc Class B",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined; 1 source(s) return 404: https://api.nasdaq.com/api/quote/NKE/historical",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 7,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined; 1 source(s) return 404: https://api.nasdaq.com/api/quote/NKE/historical"
+    },
+    {
+      "symbol": "MU",
+      "instrument": "Micron Technology Inc",
+      "note": "Demoted by validation: 1 source(s) return 404: https://api.nasdaq.com/api/quote/MU/historical",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 8,
+      "demotion_reason": "1 source(s) return 404: https://api.nasdaq.com/api/quote/MU/historical"
+    }
+  ],
+  "validation_summary": {
+    "checked": 8,
+    "passed": 0,
+    "warned": 0,
+    "failed": 8,
+    "enforced": true,
+    "demoted": 8
+  }
+}
