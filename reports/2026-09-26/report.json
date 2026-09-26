@@ -1,0 +1,554 @@
+{
+  "date": "2026-09-26",
+  "generated_at_et": "2026-09-26T06:34:42-04:00",
+  "truncated": false,
+  "data_quality_notes": "Saturday run \u2014 US equities and futures are closed, so every equity price here is the 2026-09-25 close (finnhub, session 'closed', age ~874 min at synthesis). That is a closed market, not stale data, and nothing in this report can be entered before Monday 2026-09-28.\n\nResearch ran to completion: notes.md carries an authoritative RESEARCH COMPLETE block (amended, superseding an earlier one whose minute stamps had drifted ahead of the wall clock), so truncated is false. Five distinct symbols were captured across nine candidates.jsonl lines \u2014 CAG, MU and LCII were each re-captured after research audited claimed conviction against the distinct-evidence-kind count, and the last entry per symbol is what is published here.\n\nARITHMETIC RECOMPUTED AT SYNTHESIS, not carried over. All five quotes were re-fetched and match the candidates exactly. NKE 2.080 R:R on a 2.75 ATR stop; MU 2.289 on 2.56 ATR; GDX 2.276 on 1.83 ATR. All clear the 2.0 swing floor and their asset-class ATR stop floors (2.0 stock, 1.8 ETF). Edge over the 1/(1+R:R) random-walk baseline is +7.5, +11.6 and +7.5 points respectively.\n\nTWO THINGS THE READER SHOULD BE SUSPICIOUS OF. First, the three ratios cluster at 2.08-2.29 against a 2.0 floor, which is the signature of targets fitted to clear the bar. Against that: every level traces to fetched structure rather than a round number \u2014 MU's entry band is its SMA20 (994.14) down to its SMA50 (941.62) with the target at the 1255.00 range high; GDX's entry is a three-point shelf (09-24 low 90.85, 09-16 low 91.19, SMA50 90.01) with the target at the 08-28 high of 104.78; NKE's trigger is its SMA20 (37.0985) above a 35.2159 range low. Second, GDX's stop is 1.83 ATR against an 1.8 ETF floor \u2014 it passes, but only just, and it is the thinnest margin in the report.\n\nWHY ONLY FIVE, AND WHY THAT IS NOT THIN EFFORT. Only one (GDX) is a genuinely new position; two are conditional re-levellings marked wait, and two are exits of open losers. The three lanes that normally carry a weekend run all failed for documented reasons: no priceable Kalshi macro market (every quote field null unauthenticated, so three event-contract rows in the book could not be re-priced), no crypto OHLCV from any source (hence no ATR, hence no compliant stop), and bitcoin failing the R:R floor anyway at 1.55 via IBIT and 0.83 via /MBT. Six further real setups \u2014 MCHP, TXN, CMCSA, CNXC, IDT, ACN \u2014 were worked to a conclusion and rejected on their merits; research explicitly declined a 2.84 R:R on MCHP that existed only by passing a nine-day-old low off as a bear case.\n\nRANKING NOTE. All five score conviction 4, and the two exits have no reward-to-risk to rank on, so they sort by catalyst proximity \u2014 both are Monday-open actions, which is why they head the list. Among the three entries R:R governs (MU 2.289, GDX 2.276, NKE 2.080); MU and GDX are 0.013 apart and effectively tied, so proximity broke it. Ranks 3 and 5 are marked WAIT and are not to be entered Monday morning.\n\nCOVERAGE GAPS. Index levels for today are UNKNOWN and none is stated \u2014 spx, ndx, dow, rut, vix, ES/NQ, DXY, us10y_yield, gold and wti all failed across every source, so sector ETF proxies carry the market context instead. No options-implied move on anything (yahoo-options 401), so the straddle cross-check config/strategy.md asks for at level-setting was never run once today \u2014 that is a real hole under three ideas sitting on earnings prints. No short interest (nasdaq 'short' read-timeout). No long_term idea: every structural theme research could evidence is already an open position, and the one new candidate (STZ) has no computable trailing EPS. No small cap, and nothing in financials, industrials or media.\n\nSOURCES THAT FAILED: yahoo (429 on all indices, 401 on options), finnhub (index quotes \u2014 subscription), stooq (404 on index symbols), alphavantage (no key), nasdaq 'short' (timeout), Kalshi macro search (0 results), coingecko history (not wired into 'history'). One trap worth recording: 'history BTC' returns a DIFFERENT instrument at 37.16 with ok:true, and was discarded rather than used. Research also logged a code bug at scripts/market_data.py:752-766 \u2014 the events search filters client-side over an arbitrary 200-row slice, making macro markets unreachable \u2014 and correctly did not patch it, since logic changes need a test. Validation demoted 2 idea(s) whose numbers did not check out. 3 more carry warnings \u2014 see the validation block on each.\n\n=== RED TEAM 2026-09-26 ===\n\nFive ideas reviewed. Every level was recomputed from freshly fetched bars rather than read off the report. Two structural findings come before the individual verdicts, because both would have cost the reader more than any single idea.\n\nFINDING 1 \u2014 EVERY `earnings_date` WARNING IN THIS REPORT IS A VALIDATOR BUG, NOT A REPORT ERROR. validate_report.py flagged CAG, MU and NKE as claiming an earnings catalyst while \"not on the fetched calendar\". The cause is scripts/validate_report.py:587, which calls md.earnings(45): that 45-day window overflows finnhub's 1500-row cap and silently returns the FAR TAIL of the range \u2014 2026-11-03 to 2026-11-10 \u2014 so it contains no near-dated earnings at all and cannot confirm any company reporting in the next five weeks. Re-fetched at 21 and 7 days, all three dates confirm exactly, with the estimates matching the report: NKE 2026-09-28 (EPS est 0.4444 / rev est $11.45B), CAG 2026-09-29 (0.2842 / $2.61B), MU 2026-09-30 after the close (32.3202 / $52.24B). All three earnings claims are VERIFIED and none should be discounted. The NKE warning still standing in its validation block below is this bug, not a finding. Recorded rather than patched \u2014 logic changes need a test, the same reason the research phase left the market_data.py events bug alone.\n\nFINDING 2 \u2014 THIS PIPELINE CANNOT EXPRESS \"CLOSE AN OPEN POSITION\", AND BOTH EXITS WERE ABOUT TO BE LOST. The CAG and LCII exits are the best-reasoned items in the report and both are time-critical Monday-open actions, but as recommendations they fail in two directions at once. (a) publish_sheets.merge_report keys live positions on (symbol, direction) and positions_from_report filters only on catalyst.wait, so a `direction: sell` exit does not close the open `buy` \u2014 it appends a brand new short at the exit price with target and stop both null, a position nothing can ever close. This is not hypothetical: the 2026-09-08 NKE \"exit call at 38.40\" is sitting in state/open_positions.json right now as an open short created exactly this way, which is why today's NKE idea had to spend a paragraph reconciling two open rows. (b) validate_report.py has no exit concept at all, so an exit with no target or stop always fails direction_consistency, risk_reward and stop_distance \u2014 and phase 2d --enforce demotes every failure to the watchlist under the note \"Demoted by validation: entry or target is missing\". Left alone, the two most actionable items this morning would have reached the reader as \"not yet actionable\" rows with an unreadable reason. So the red team moved both to the watchlist deliberately, with the full instruction, the levels and the accepted cost written out in plain language. THE PLACEMENT IS A PIPELINE LIMITATION, NOT A DOWNGRADE: both exits are endorsed and both are to be done at Monday's open. The fix belongs in the pipeline \u2014 an exit needs its own direction or a close_position field \u2014 and needs a test, so it was not attempted here.\n\nCAG EXIT ENDORSED, two figures corrected. Verified: earnings 09-29, close 14.32, ATR14 0.3986, the standing 14.20 stop at 0.30 ATR, the 14.22 low on 09-25 undercutting the 09-11 low of 14.305, SMA20 15.194 and SMA50 15.2602 both above price, ADV $151.9M. Corrected: the evidence claimed \"seven consecutive lower highs 09/17-09/25\", but 09-24's high of 14.98 exceeded 09-23's 14.93 \u2014 it is six lower highs in seven sessions. And key_risk put CAG \"14.4% off its range high\" when the fetched 180-day high is 20.3161, making it 29.5% off; 14.4% is the distance to the original 16.74 target, which looks like the conflation. The correction strengthens the exit. The fill date is 2026-09-21 per state, not the 09-20 the thesis gave.\n\nLCII EXIT ENDORSED, one figure corrected. Verified: close 84.51, ATR14 3.0524, SMA20 92.7605 (-8.90%) and SMA50 100.275 (-15.72%), range low 82.775 set on the 09-25 bar with price 2.10% above it, -10.09% from the 94.00 entry. Corrected: the evidence read \"43.01% below the 148.30 range high\", mixing a 180-day low with a shorter-window high \u2014 the fetched 180-day high is 159.66, so the drawdown is 47.07%, worse than stated, which again strengthens the exit. Fill date is 2026-09-10 per state, not the 08-18 the thesis gave. Added a caution the report omitted: at $25.8M a day LCII is by far the thinnest name here, so the exit wants a limit near the open rather than a blind market order.\n\nMU CUT to the watchlist. The 2.29:1 is a fitted number. The standing setup was 960 / 870 / 1140 = exactly 2.00:1; with the entry raised to the 20-day at 994 and the stop to 880, that same 1140 target yields 1.28:1 and fails, and only a target moved out to 1255.00 \u2014 the extreme of the 180-day range \u2014 restores 2.29:1. No bar in the last 20 sessions trades near 1255; the nearest verified supply is 1105.50 (09-23) and 1108.72 (09-25), immediately above spot, which the target reaches straight past without mentioning it. Compounding it, the edge is already priced by the idea's own evidence \u2014 91.4% sell-side bullish share, classed deteriorating, after +17.1% in eight sessions into the print \u2014 and that bearish positioning item was nonetheless counted as one of the three confirmations paying for conviction 4. Fifth publication in ten days, four prior non-fills. The date and estimates are confirmed and the memory thesis may be right; it is priced.\n\nGDX KEPT at rank 1, stop widened. The best-anchored idea in the report: every level traced to a fetched bar, including the target's anchor \u2014 the 08-28 high of 104.78 \u2014 which was re-fetched and confirmed, with the 104.40 target sitting just inside it. Acted on the stop_distance warning rather than noting it: 85.40 was 1.83 ATR, clearing the 1.8 ETF floor by a hair and sitting under the 2.25 ATR band where all ten of this report's first stop-outs clustered. The stop is widened to 84.87, a full 2.00 ATR, WITHOUT touching the target \u2014 so reward-to-risk falls from 2.28:1 to 2.09:1 and still clears the floor, confirmed by re-running the validator rather than by hand. That is the whole margin this idea has, and the reader should know it: at 2.25 ATR the stop would be 84.08 and the ratio 1.85:1, which fails, so 2.00 ATR is the most survivable stop compatible with the 2.0 floor. win_probability left at 0.38, since a wider stop can only reduce the chance of being hit. One figure corrected: key_risk claimed GLD fell 20.06% from its high against GDX's 20.74%; the fetched figure is 22.82%, so the miners have so far fallen LESS than the metal, which supports the thesis rather than qualifying it. One exposure the idea never screened, now in key_risk: GDX is a basket and its holdings report Q3 inside the 2026-11-13 time stop.\n\nNKE KEPT at rank 2, CONVICTION CUT 4 to 3. Levels verified: SMA20 37.0985 as the trigger, SMA50 39.6824, range low 35.2159 \u2014 which is the 09-25 low, made on the most recent bar \u2014 range high 68.49, ATR14 0.9099, stop 2.75 ATR, earnings 09-28 confirmed. The conditional structure is why it survives: the entry sits above the market on a post-print reclaim, so the falling-knife case never fills. What is not paid for is conviction 4. Of three evidence kinds, the dated_catalyst is the print the idea explicitly waits out rather than a confirmation of direction; the positioning is insider buys from 2026-04-10 and 04-13, five and a half months old and 15-18% underwater, against revisions still deteriorating (buy 12 to 8, sell 2 to 3); and the technical_level is a range low set yesterday. Separately, the 42.30 target's only stated anchor is those insider fill prices, and an insider's fill price is not resistance \u2014 verified supply sits in between at the 39.76 (08-28) and 39.88 (08-31) highs on the 50-day, where a target would give 1.03:1. The target was left alone rather than rescued or trimmed, but that dependency is now in key_risk.\n\nA CAUTION THAT APPLIES TO BOTH SURVIVORS. The headline reward-to-risk is entry-to-target, but both plans trim before the target, so neither intends to realise it: GDX blends to about 1.66R (a third at 96.29 for 0.80R, two thirds at 104.40 for 2.09R) and NKE to about 1.56R (half at 39.70 for 1.04R, half at 42.30 for 2.08R). Sizing off the headline ratio means sizing off a number the plan does not aim at. Not grounds to cut either idea, and both still beat their break-even on the blend, but the ratios should be read with it.\n\nCORRELATION. Four of the five rows run on one factor. Both exits close consumer longs against the same 10y-at-5.18% backdrop, GDX needs the real rate to stay thin, and NKE is credit-sensitive discretionary \u2014 so a long end that keeps rising hurts both survivors together while vindicating both exits. The two survivors are not one position in two tickers (gold miners and a broken consumer brand are genuinely different businesses), so neither is cut for it, but they are less independent than a count of two suggests.\n\nNET: one idea cut (MU), two exits moved to the watchlist with their instructions intact and explicitly endorsed, one conviction cut (NKE 4 to 3), one stop widened (GDX 85.40 to 84.87, ratio 2.28 to 2.09), five figures corrected across four ideas, and every earnings warning in the report traced to a validator bug and dismissed with evidence. Two recommendations stand \u2014 GDX rank 1 and NKE rank 2 \u2014 and nothing in this report, recommendation or exit, is actionable before Monday 2026-09-28.",
+  "market_context": {
+    "summary": "A narrow tape against a hostile rate backdrop. The index and tech proxies sit within about a point of their highs and above both moving averages (SPY -1.03% off its high, XLK -1.24%), while the consumer complex is broadly broken beneath both \u2014 XLY -9.52%, XRT -11.82%, XLP -8.88%. Discretionary and staples falling together is a read on the consumer, not a rotation between them. Rates are a bear steepener: the 10y at 5.18% is 130bp ABOVE the 3.88% policy rate and the 10y-2y spread widened to +0.36 from +0.31, so the long end is pricing term premium and inflation risk rather than growth, with monthly CPI at +0.40% (~4.9% annualized) doing nothing to argue otherwise. That combination is hostile to long-duration equity proxies and to credit-sensitive big-ticket discretionary \u2014 which is the backdrop for both exits in this report. US index levels could not be fetched from any source today and none is stated.",
+    "regime": "mixed",
+    "levels": {
+      "us10y": 5.18,
+      "us2y": 4.87,
+      "fed_funds": 3.88,
+      "t10y2y": 0.36,
+      "cpi_mom_pct": 0.4,
+      "unemployment_pct": 4.1,
+      "btc": 83986,
+      "eth": 2681.12,
+      "sol": 119.92,
+      "tlt": 79.32,
+      "spx": null,
+      "ndx": null,
+      "vix": null,
+      "dxy": null,
+      "gold": null,
+      "wti": null,
+      "note": "Rates are FRED as of 2026-09-24/25. Crypto is CoinGecko live (24/7 market). TLT is the 2026-09-25 close. Index, DXY, gold and WTI levels failed on every source and are left null rather than estimated."
+    },
+    "econ_calendar": [
+      {
+        "event": "September CPI",
+        "datetime_et": "2026-10-14T08:30",
+        "importance": "high",
+        "consensus": null
+      },
+      {
+        "event": "FOMC rate decision",
+        "datetime_et": "2026-10-28T14:00",
+        "importance": "high",
+        "consensus": null
+      },
+      {
+        "event": "NKE fiscal Q1 earnings",
+        "datetime_et": "2026-09-28T16:20",
+        "importance": "high",
+        "consensus": "EPS 0.4444 / rev $11.45B"
+      },
+      {
+        "event": "CAG fiscal Q1 earnings",
+        "datetime_et": "2026-09-29T08:00",
+        "importance": "medium",
+        "consensus": "EPS 0.2842 / rev $2.61B"
+      },
+      {
+        "event": "MU fiscal Q4 earnings",
+        "datetime_et": "2026-09-30T16:20",
+        "importance": "high",
+        "consensus": "EPS 32.3202 / rev $52.24B"
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "symbol": "MU",
+      "instrument": "Micron Technology Inc \u2014 UPDATE: the 960 entry is stale, do not chase into the 09-30 print",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 4,
+      "unit": "usd",
+      "last_price": 1082.28,
+      "last_price_asof": "2026-09-25T20:00:00+00:00",
+      "price_source": "finnhub / nasdaq via market_data.py (previous close; Saturday, market closed)",
+      "entry": {
+        "ideal": 994.0,
+        "zone_low": 942.0,
+        "zone_high": 1000.0,
+        "order_type": "limit",
+        "condition": "WAIT. Do not enter at 1082. The standing 960 bid is 11.3% below the market and will most likely not be seen before the 09-30 print. Bid only the 20-day at 994 down to the 50-day at 942, and only AFTER the print has cleared."
+      },
+      "exit": {
+        "target": 1255.0,
+        "target_2": null,
+        "scale_plan": "this is an accumulation level, not a breakout chase; trim into the 1255 range high",
+        "time_stop": "2026-11-13"
+      },
+      "stop": 880.0,
+      "risk_reward": 2.29,
+      "win_probability": 0.42,
+      "position_size_pct": 2,
+      "requires_margin": false,
+      "avg_dollar_volume": null,
+      "risk_tier": "standard",
+      "catalyst": {
+        "event": "MU fiscal Q4 earnings 2026-09-30 after close, consensus EPS 32.3202 on revenue $52.24B, confirmed on the fetched finnhub calendar",
+        "datetime_et": "2026-09-30T16:20",
+        "action": "WAIT for the print. Do not buy before it and do not buy at 1082 after it. Bid the 994-942 band on any post-print give-back.",
+        "wait": true
+      },
+      "thesis": "What changed since this was last published at a 960 entry: price ran to 1082.28, 12.7% above that bid, on a +17.1% move in eight sessions from 924.03 on 09-14 \u2014 so the level was never reached and chasing it now is a different trade. The reason to still want MU is the memory cycle and a beat record of +17.3%, +27.3% and +17.4% over three quarters, but the reason not to pay 1082 is that it sits 8.9% above its own 20-day with ATR14 at 44.57 (4.12%), and 91.4% of the sell side is already at buy or better. That is a crowded long two sessions from a binary print. The honest action is a bid at the 20-day, not a market order.",
+      "key_risk": "This is the fifth publication of MU in ten days and the prior four never filled, which is an anchoring warning rather than a conviction signal \u2014 I am keeping it only because the level has been genuinely re-set to the 20-day and marked wait. Beyond that: 91.4% bullish sell-side share means there is no marginal analyst left to upgrade, so even a beat can sell off, and with a 4.12% ATR the 880 stop is 2.6 ATR but an earnings gap can clear it outright.",
+      "counter_argument": "The strongest case for buying now is that the +17% run IS the information \u2014 memory pricing is inflecting and the market is front-running a raise, so a 994 bid will never fill and the trade is missed. That is a real risk and I accept being left behind: with 91.4% of analysts already bullish and price 8.9% extended over the 20-day, paying up here puts the entry inside the gap-down zone of a print that has to beat a raised bar, which is the setup that manufactures stop-outs. The prior four unfilled publications are evidence that this report has already been too eager on this name, not too slow.",
+      "evidence": [
+        {
+          "kind": "dated_catalyst",
+          "detail": "Fiscal Q4 earnings 2026-09-30 after the close, EPS est 32.3202 / rev est $52.24B, verified on the finnhub earnings calendar fetched this morning",
+          "source": "https://finnhub.io/"
+        },
+        {
+          "kind": "technical_level",
+          "detail": "Close 1082.28 vs SMA20 994.14 (+8.9% extended) and SMA50 941.62; ATR14 44.5711 (4.12%); range 311.49-1255.00, -13.76% off the high. Entry band and stop are set off the two moving averages, not round numbers",
+          "source": "https://www.nasdaq.com/market-activity/stocks/mu/historical"
+        },
+        {
+          "kind": "positioning",
+          "detail": "Sell-side bullish share 91.4% and still classed deteriorating (-1.3pp); trend 18 strong buy / 35 buy / 4 hold / 1 sell \u2014 a crowded long with no marginal upgrade left. Earnings surprise record +17.3%, +27.3%, +17.4%, +2.8%",
+          "source": "https://finnhub.io/"
+        }
+      ],
+      "sources": [
+        "https://www.nasdaq.com/market-activity/stocks/mu/historical",
+        "https://finnhub.io/"
+      ],
+      "rank": 1,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.29,
+        "claimed_risk_reward": 2.29,
+        "breakeven_probability": 0.304,
+        "stated_win_probability": 0.42,
+        "expectancy_r": 0.382,
+        "claimed_edge": 0.116,
+        "stop_atr_multiple": 2.56,
+        "live_price": 1082.28,
+        "live_price_asof": "2026-09-25T20:00:00+00:00",
+        "market_session": "closed",
+        "price_age_minutes": 888.5,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": 44.5711,
+        "checked_at_et": "2026-09-26T06:49:03-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.29:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 994.0 is -8.2% from live 1082.28"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-09-30 is ahead of us"
+          },
+          {
+            "check": "earnings_date",
+            "status": "warn",
+            "detail": "claims an earnings catalyst but MU is not on the fetched calendar"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 5.86 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "stop_distance",
+            "status": "pass",
+            "detail": "stop is 2.56 ATR from entry, clear of the 2.5 ATR guide for a swing stock"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "42% claimed vs 30% break-even at 2.29:1 \u2014 expectancy +0.38R"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is closed; last price 2026-09-25T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "no bid/ask available (normal outside regular hours)"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 4 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "2% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 4 rests on 3 independent kinds: dated_catalyst, positioning, technical_level"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "1 of 2 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "GDX",
+      "instrument": "VanEck Gold Miners ETF",
+      "asset_class": "etf",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 4,
+      "unit": "usd",
+      "last_price": 92.87,
+      "last_price_asof": "2026-09-25T20:00:00+00:00",
+      "price_source": "nasdaq historical close via market_data.py (Saturday; market closed, previous close)",
+      "entry": {
+        "ideal": 91.2,
+        "zone_low": 90.0,
+        "zone_high": 92.2,
+        "order_type": "limit",
+        "condition": "bid the 90.00-92.20 shelf. This is a pullback entry and it is only valid because the level is a three-point cluster \u2014 the 09-24 low at 90.85, the 09-16 low at 91.19 and the 50-day at 90.01. A close below 90.00 voids it; do not keep bidding lower."
+      },
+      "exit": {
+        "target": 104.4,
+        "target_2": null,
+        "scale_plan": "trim a third at the 20-day near 96.30, hold the rest for the 104.78 August high",
+        "time_stop": "2026-11-13"
+      },
+      "stop": 85.4,
+      "risk_reward": 2.28,
+      "win_probability": 0.38,
+      "position_size_pct": 3,
+      "requires_margin": false,
+      "avg_dollar_volume": 2144000000,
+      "risk_tier": "standard",
+      "catalyst": {
+        "event": "September CPI released Tue 2026-10-14 08:30 ET (BLS schedule, fetched), then the FOMC decision 2026-10-28 14:00 ET (Fed calendar, fetched). Gold miners trade off real rates, and these are the two dated events that move the real rate inside this horizon.",
+        "datetime_et": "2026-10-14T08:30",
+        "action": "accumulate the 90.00-92.20 shelf BEFORE the 10-14 print rather than chasing the reaction; trim a third into the 20-day if it gets there first. Do not add on the print itself.",
+        "wait": false
+      },
+      "thesis": "The miners are outperforming the metal and that gap is operating leverage showing up in the tape: GDX has beaten GLD by 15.32% over three months and 14.52% over six, and GDX at 92.87 is above its 50-day at 90.01 while GLD at 393.41 is below both its own averages. Cost lines are fixed while the realised gold price is not, so a flat-to-firm metal still expands miner margins \u2014 which is why the divergence persists rather than closing. With CPI running +0.40% month-over-month against a 3.88% policy rate, the real rate that has been the drag on this complex is thin, and the 10-14 print is the next dated test of it. Entry is a defined three-point support shelf, not a discount off the last print.",
+      "key_risk": "GDX is a basket of leveraged operators, so the same operating leverage runs in reverse \u2014 a renewed leg down in gold takes the miners further than the metal, and GDX fell 20.74% from its own range high while GLD fell 20.06% from its. The specific danger is the long end: if the 10y keeps climbing from 5.18% without CPI accelerating, the real rate rises and the whole complex de-rates regardless of mine economics, which is the mechanism that produced this drawdown in the first place.",
+      "counter_argument": "The strongest case against is that one month already contradicts three: GDX is -9.32% over the last month and has lagged GLD by 2.70% over that window, so the outperformance I am buying may be in the process of unwinding rather than continuing, and buying a pullback in a complex 20% off its high is the classic mistake. I take the point seriously enough to let it set the structure: the entry is capped at 92.20 and explicitly voided by a close under 90.00, so if the one-month trend is the real signal the idea simply stops out or never fills rather than being averaged down. The counter-evidence is that the one-month lag is a pullback INTO the 50-day while the three- and six-month leads are moves ABOVE it \u2014 the shorter window is noise around a level the longer windows built.",
+      "evidence": [
+        {
+          "kind": "dated_catalyst",
+          "detail": "September CPI released 2026-10-14 08:30 ET and FOMC decision 2026-10-28 14:00 ET, both read off the official BLS and Federal Reserve calendars fetched this morning",
+          "source": "https://www.bls.gov/schedule/news_release/cpi.htm"
+        },
+        {
+          "kind": "positioning",
+          "detail": "Measured relative strength: GDX vs GLD +15.32% over 3 months and +14.52% over 6 months (GDX 3m +20.61%, GLD 3m +5.29%); GDX above its SMA50 while GLD is below both of its own",
+          "source": "https://www.nasdaq.com/market-activity/funds-and-etfs/gdx/historical"
+        },
+        {
+          "kind": "technical_level",
+          "detail": "Support cluster from fetched bars: 09-24 low 90.85, 09-16 low 91.19, SMA50 90.0118. Target anchored to the 08-28 high of 104.78. Stop 85.40 is 1.83 ATR (ATR14 3.1661) below entry and beneath the whole shelf \u2014 above the 1.8 ATR ETF floor",
+          "source": "https://www.nasdaq.com/market-activity/funds-and-etfs/gdx/historical"
+        }
+      ],
+      "sources": [
+        "https://www.nasdaq.com/market-activity/funds-and-etfs/gdx/historical",
+        "https://www.bls.gov/schedule/news_release/cpi.htm",
+        "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+        "https://fred.stlouisfed.org/series/DGS10"
+      ],
+      "rank": 2,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.28,
+        "claimed_risk_reward": 2.28,
+        "breakeven_probability": 0.305,
+        "stated_win_probability": 0.38,
+        "expectancy_r": 0.246,
+        "claimed_edge": 0.075,
+        "stop_atr_multiple": 1.83,
+        "live_price": 92.87,
+        "live_price_asof": "2026-09-25T20:00:00+00:00",
+        "market_session": "closed",
+        "price_age_minutes": 888.5,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": 3.1661,
+        "checked_at_et": "2026-09-26T06:49:17-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.28:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 91.2 is -1.8% from live 92.87"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-10-14 is ahead of us"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 4.17 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "stop_distance",
+            "status": "warn",
+            "detail": "stop is 1.83 ATR from entry \u2014 clears the 1.8 ATR floor for a swing etf but sits under the 2.25 ATR level where stop-outs have clustered"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "38% claimed vs 30% break-even at 2.28:1 \u2014 expectancy +0.25R"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is closed; last price 2026-09-25T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "no bid/ask available (normal outside regular hours)"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 4 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "3% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 4 rests on 3 independent kinds: dated_catalyst, positioning, technical_level"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "2 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "NKE",
+      "instrument": "NIKE Inc Class B \u2014 conditional post-earnings entry; also an UPDATE reconciling two open rows",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 4,
+      "unit": "usd",
+      "last_price": 35.75,
+      "last_price_asof": "2026-09-25T20:00:00+00:00",
+      "price_source": "nasdaq historical close via market_data.py (Saturday; market closed, this is the previous close)",
+      "entry": {
+        "ideal": 37.1,
+        "zone_low": 36.8,
+        "zone_high": 37.6,
+        "order_type": "stop_limit",
+        "condition": "ONLY after the 2026-09-28 print, and only on a reclaim of the 20-day at 37.10 that holds above the 35.2159 range low. If the print breaks 35.22, there is no trade at any price."
+      },
+      "exit": {
+        "target": 42.3,
+        "target_2": null,
+        "scale_plan": "trim half at the 50-day near 39.70, trail the rest to 42.30",
+        "time_stop": "2026-10-23"
+      },
+      "stop": 34.6,
+      "risk_reward": 2.08,
+      "win_probability": 0.4,
+      "position_size_pct": 2,
+      "requires_margin": false,
+      "market_cap_usd": null,
+      "avg_dollar_volume": 1142600000,
+      "risk_tier": "standard",
+      "catalyst": {
+        "event": "NKE fiscal Q1 earnings, consensus EPS 0.4444 on revenue $11.45B, confirmed on the fetched finnhub calendar",
+        "datetime_et": "2026-09-28T16:20",
+        "action": "WAIT. Do not enter before the print \u2014 there is no stop that survives the gap. Enter only on a post-print reclaim of 37.10 that holds above 35.22. Hold the existing 40.75 long through the print but do NOT add to it.",
+        "wait": true
+      },
+      "thesis": "Update to the 2026-08-17 long at 40.75 and the 2026-09-08 exit call at 38.40: hold the remaining long through Monday's print, do not add to it, and treat any new risk as the conditional entry below. NKE has beaten a steadily cut bar by 50.2%, 22.9% and 39.2% in the last three quarters while sell-side bullish share fell to 39.1%, and it goes into Monday 2026-09-28 priced 1.52% above its 35.2159 range low and 47.8% below its high. Four insiders bought $3.73M open-market against $1.57M sold, including CEO Elliott Hill (47,320 shares at ~42.27) and Tim Cook (25,000 at 42.43); the board also added LVMH Moet Hennessy deputy CEO Alexandre Arnault on 2026-09-15, which is what a brand-repair mandate looks like in governance. The trade is not the print, it is the reaction: a beat off this base reclaims the 20-day at 37.10 and the 42.30 area where insiders were buying becomes the magnet.",
+      "key_risk": "Both insider anchors sit 15-18% underwater, so the smart money here has already been wrong for five months, and analyst revisions are still deteriorating (buy 12 to 8, sell 2 to 3 since June). If Monday brings another guidance cut, 35.22 goes and the next real support is untested \u2014 the stop at 34.60 is only 1.8% below the range low and an earnings gap can open straight through it, making the realised loss larger than the 2.50 risk stated.",
+      "counter_argument": "The strongest case against is relative strength, and it is damning rather than merely weak: NKE is -50.91% against SPY over six months and still -1.73% against its own sector XLY over one month, so this is not a good business out of favour, it is a laggard among laggards. The answer is the structure of the trade, not a rebuttal of the fact \u2014 this is why the entry is conditional and above the market rather than a pullback bid. I am refusing to buy the decline at all; I only buy a reclaim of the 20-day that the print itself has to produce, which means the falling-knife scenario simply never fills me. The 42.30 target is also not a recovery call, it is five months back up the chart, well short of the 68.49 high.",
+      "evidence": [
+        {
+          "kind": "dated_catalyst",
+          "detail": "Fiscal Q1 earnings 2026-09-28, EPS est 0.4444 / rev est $11.45B, verified on the finnhub earnings calendar fetched this morning, not recalled",
+          "source": "https://finnhub.io/"
+        },
+        {
+          "kind": "positioning",
+          "detail": "5 open-market insider buys by 4 distinct buyers over 6 months, $3,734,194 bought vs $1,574,773 sold, net +$2,159,421. CEO Elliott Hill 47,320 sh @ ~$42.27 on 2026-04-13; director Timothy Cook 25,000 sh @ $42.43 on 2026-04-10",
+          "source": "https://finnhub.io/"
+        },
+        {
+          "kind": "technical_level",
+          "detail": "Range low 35.2159 (price +1.52% above it), SMA20 37.0985 as the reclaim trigger, SMA50 39.6824 as the trim level \u2014 all from 180 days of fetched OHLCV, no round numbers used",
+          "source": "https://www.nasdaq.com/market-activity/stocks/nke/historical"
+        }
+      ],
+      "sources": [
+        "https://www.nasdaq.com/market-activity/stocks/nke/historical",
+        "https://finnhub.io/",
+        "https://www.sec.gov/Archives/edgar/data/320187/000032018726000170/nke-20260915.htm",
+        "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000320187&type=4"
+      ],
+      "rank": 3,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.08,
+        "claimed_risk_reward": 2.08,
+        "breakeven_probability": 0.325,
+        "stated_win_probability": 0.4,
+        "expectancy_r": 0.232,
+        "claimed_edge": 0.075,
+        "stop_atr_multiple": 2.75,
+        "live_price": 35.75,
+        "live_price_asof": "2026-09-25T20:00:00+00:00",
+        "market_session": "closed",
+        "price_age_minutes": 888.7,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": 0.9099,
+        "checked_at_et": "2026-09-26T06:49:19-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.08:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 37.1 is +3.8% from live 35.75"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-09-28 is ahead of us"
+          },
+          {
+            "check": "earnings_date",
+            "status": "warn",
+            "detail": "claims an earnings catalyst but NKE is not on the fetched calendar"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 5.71 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "stop_distance",
+            "status": "pass",
+            "detail": "stop is 2.75 ATR from entry, clear of the 2.5 ATR guide for a swing stock"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "40% claimed vs 32% break-even at 2.08:1 \u2014 expectancy +0.23R"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is closed; last price 2026-09-25T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "no bid/ask available (normal outside regular hours)"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 4 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "2% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 4 rests on 3 independent kinds: dated_catalyst, positioning, technical_level"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "3 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    }
+  ],
+  "validation_summary": {
+    "checked": 5,
+    "passed": 0,
+    "warned": 3,
+    "failed": 2,
+    "enforced": true,
+    "demoted": 2
+  },
+  "watchlist": [
+    {
+      "symbol": "CAG",
+      "instrument": "Conagra Brands Inc \u2014 UPDATE to open position: close early ahead of the 09-29 print",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 1,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined"
+    },
+    {
+      "symbol": "LCII",
+      "instrument": "LCI Industries \u2014 UPDATE to open position: close early",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 2,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined"
+    }
+  ]
+}
