@@ -1425,6 +1425,7 @@ def normalize_listing(raw: dict, county: str, source: dict, cfg: dict) -> dict:
         "account": (raw.get("account") or "").strip(),
         "account_key": td.normalize_account(raw.get("account")),
         "address": (raw.get("address") or "").strip(),
+        "city": (raw.get("city") or "").strip(),
         "legal_description": (raw.get("legal_description") or "").strip(),
         "property_type": (raw.get("property_type") or "").strip(),
         "owner_name": (raw.get("owner_name") or "").strip(),
@@ -1870,24 +1871,62 @@ def environmental_check(listing: dict, cad: dict | None, cfg: dict) -> dict:
 # Gate 3 checks
 # --------------------------------------------------------------------------
 
-def geocode(address: str, cfg: dict) -> tuple[float, float] | None:
+# One request per address per run. The flood check and the city both want the
+# same match, and geocoding twice for one parcel would double the only
+# per-property request left now that the CADs are the bottleneck.
+_place_cache: dict[str, dict | None] = {}
+
+
+def geocode_place(address: str, cfg: dict) -> dict | None:
+    """What the Census geocoder knows about this address, or None.
+
+    Returns the point *and* the matched address components, because the city is
+    the part a human wants and the coordinates are the part the NFHL wants, and
+    they arrive in the same response. `city` may be absent from a match that
+    still carries coordinates, so callers check the field they need rather than
+    assuming a match answers everything.
+    """
     spec = cfg.get("geocoder") or {}
     url = spec.get("url")
     if not url or not address:
         return None
+    key = address.strip().upper()
+    if key in _place_cache:
+        return _place_cache[key]
+
+    place: dict | None = None
     try:
         payload = fetch_json(url, cfg, params={
             "address": address, "benchmark": spec.get("benchmark", "Public_AR_Current"),
             "format": "json"})
     except SourceError:
+        # Not cached: a transport failure says nothing about the address, and
+        # caching it would make one blip permanent for the rest of the run.
         return None
+
     matches = (((payload or {}).get("result") or {}).get("addressMatches") or [])
-    if not matches:
+    if matches:
+        best = matches[0]
+        coords = best.get("coordinates") or {}
+        parts = best.get("addressComponents") or {}
+        place = {
+            "lon": float(coords["x"]) if coords.get("x") is not None else None,
+            "lat": float(coords["y"]) if coords.get("y") is not None else None,
+            "city": (parts.get("city") or "").strip(),
+            "state": (parts.get("state") or "").strip(),
+            "zip": (parts.get("zip") or "").strip(),
+            "matched": (best.get("matchedAddress") or "").strip(),
+            "source": url,
+        }
+    _place_cache[key] = place
+    return place
+
+
+def geocode(address: str, cfg: dict) -> tuple[float, float] | None:
+    place = geocode_place(address, cfg)
+    if not place or place.get("lon") is None or place.get("lat") is None:
         return None
-    coords = matches[0].get("coordinates") or {}
-    if coords.get("x") is None or coords.get("y") is None:
-        return None
-    return float(coords["x"]), float(coords["y"])
+    return float(place["lon"]), float(place["lat"])
 
 
 _flood_layer_cache: dict[str, str] = {}

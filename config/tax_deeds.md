@@ -57,6 +57,7 @@ widen a gate for one run without a commit.
 | `QUIET_TITLE_BUDGET` | 3500 | in the ownership case only |
 | `HOLDING_MONTHS` | 7 | 180-day redemption plus a month |
 | `REJECT_FLOOD_ZONE` | false | a flood hit is a material flag; true makes it a reject |
+| `REJECT_COMMERCIAL_USE` | true | a use *read* as commercial or industrial rejects; false keeps it with a material flag. An unreadable use never rejects |
 | `EFFECTIVE_TAX_RATE` | 0.023 | DFW ad valorem, for holding and post-judgment taxes |
 | `MONTHLY_CARRY` | 75 | insurance and utilities on a vacant parcel |
 | `POST_JUDGMENT_YEARS` | 1.0 | years of taxes assumed accrued since judgment |
@@ -210,6 +211,74 @@ It changes five things:
 determination, not an unknown, so the flag is now only for the genuine case —
 no date published and no reason given. That removed 336 false unknowns from
 that one run.
+
+## Commercial and industrial are rejected when the use was read
+
+The filter is Gate 1's own rule pointed at one more field. A use that was
+**read** and is commercial disqualifies; a use nothing published is an unknown,
+and an unknown has never rejected anything in this module.
+
+What counts as read, best source first:
+
+1. **The SPTB category code** on the CAD record. Every Texas appraisal district
+   reports one and it is a controlled vocabulary, which makes it the only
+   non-guess answer to "what is this". **F1** real commercial, **F2** real
+   industrial, **L1**/**L2** the personal-property equivalents, **J** anything a
+   utility. A single-family, B multifamily, C vacant lots, D acreage, E farm
+   improvements, M mobile homes, O residential inventory all stay.
+2. **A use description** — the CAD's `land_use_description` or `property_type`,
+   or the county list's own `property_type` — for districts and feeds that
+   publish words instead of a code.
+
+What is deliberately **not** consulted:
+
+- **The street address.** `11970 N CENTRAL EXPY` reads commercial to a person
+  and is not evidence. This module does not infer.
+- **`legal_description`.** Subdivisions are platted as `INDUSTRIAL ADDITION` and
+  `BUSINESS PARK ESTATES`, and a house on a lot inside one is a house. Only a
+  field whose job is to say what the property is used for gets to answer that.
+
+**Today this gate rejects nothing**, and saying so is the point. The county
+lists publish no property type and the CAD lookup has never matched, so all 224
+rows of the 2026-09-11 run carry `property_use_unknown` (material) and none is
+rejected. The gate starts working the moment a CAD record arrives — which is
+the same blocker as everything else on that row.
+
+`property_use_unknown` is **material**, not `universal`. It is on every row
+today for the same reason `no_cad_match` is, and like that flag it will clear
+when the data arrives — unlike `occupancy_unknown`, which is on every row
+permanently and by nature, and so carries `universal` to keep the tiers
+meaningful.
+
+The check runs **before** the `if not cad` block in `gate1_hard_disqualifiers`,
+because that block returns in both of its branches. Placed after it the filter
+never ran at all: no row in that run has a CAD record, so it read as working
+while rejecting and flagging nothing. It does not need a CAD — the county list's
+own property type answers it wherever a feed publishes one.
+
+## The city column
+
+`City` sits beside `County`, because the two are read together and the drive-by
+depends on the answer. Three sources, best first, and the row records which one
+answered because they are not equally good:
+
+| Source | `city_source` | Why it ranks there |
+| --- | --- | --- |
+| the county's own list | `county list` | authoritative and free |
+| the CAD situs, parsed | `CAD situs` | published, but the city is the second-to-last comma field rather than a field of its own |
+| the Census geocoder | `geocoder` | the Census matching an address string — a very good guess, and still a guess |
+
+**A blank means not determined, never "no city".** Plenty of this inventory is
+unincorporated county land where the answer is legitimately not a city name, and
+nothing here fills the cell in from the fact that the row is in Dallas County.
+Of the 2026-09-11 run's 252 rows, 250 published a street address with no city on
+it at all — two carried `, DALLAS, TX` and the rest nothing.
+
+The geocoder is the only one of the three that costs a request, so it is asked
+only when the county list and the CAD situs have both come up empty, only for
+listings inside `MAX_ENRICHMENTS`, and only before the deadline. `geocode_place`
+caches per address for the run, so the flood check and the city share one
+lookup rather than geocoding the same parcel twice.
 
 ## Deadlines before the sale
 
@@ -608,6 +677,7 @@ A **rejection** is a determination — something was read and it disqualifies:
 | --- | --- |
 | published opening bid over `MAX_OPENING_BID` | more capital than this is meant to deploy. A *missing* bid is an unknown and flags `no_opening_bid` instead — the cap is a finding about a number, and no number is not a finding |
 | homestead or agricultural exemption | §34.21(a) gives it 2 years to redeem |
+| use read as commercial or industrial | SPTB category F1, F2, L1, L2 or J, or a use description saying so. An *unreadable* use flags `property_use_unknown` instead |
 | mineral-only interest | same 2-year period, and no surface to sell |
 | mobile home without the land | it is not real property |
 | sale date already passed | the sale happened |

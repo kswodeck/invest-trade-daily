@@ -287,6 +287,35 @@ Four rules are load-bearing:
   listing rejected, or candidates held off the tab — because a held-back row
   passed every gate and a note saying otherwise is a finding the run never made.
 
+- **Commercial and industrial reject when the use was *read*; an unreadable use
+  flags.** Gate 1's own rule pointed at one more field. What counts as read is
+  the SPTB category on the CAD record — F1 real commercial, F2 real industrial,
+  L1/L2 the personal-property equivalents, J a utility; A/B/C/D/E/M/O all stay —
+  then a use description from the CAD or the county list. Not consulted: the
+  street address, because `11970 N CENTRAL EXPY` reads commercial to a person
+  and is not evidence, and `legal_description`, because subdivisions are platted
+  as `INDUSTRIAL ADDITION` and a house on a lot inside one is a house. **Today
+  the gate rejects nothing** — the lists publish no property type and the CAD
+  lookup has never matched, so all 224 rows of the 2026-09-11 run carry
+  `property_use_unknown` and none is rejected; it starts working when a CAD
+  record arrives. That flag is `material`, not `universal`: it is on every row
+  for the same reason `no_cad_match` is and clears with the same fix, unlike
+  `occupancy_unknown`, which is on every row permanently and by nature. The
+  check sits **before** the `if not cad` block, which returns in both branches —
+  placed after it the filter never ran at all and read as working while
+  rejecting and flagging nothing.
+
+- **The City column is three sources deep, and blank means not determined.**
+  `city_of` resolves the county list's own city, else the CAD situs parsed at its
+  second-to-last comma field, else the Census geocoder, and records which in
+  `city_source` because they are not equally good. Blank is **never** "no city":
+  much of this inventory is unincorporated county land, and nothing fills the
+  cell in from the county name. 250 of the 2026-09-11 run's 252 rows published a
+  street address carrying no city at all. The geocoder is the only source that
+  costs a request, so it is asked only when the other two came up empty, and
+  `geocode_place` caches per address so the flood check and the city share one
+  lookup.
+
 - **Repeat offerings come from the snapshots, not the network.** A property
   matched across `data/tax_deeds/<date>.json` by account, else cause number, else
   county and address, and offered at two or more prior sales, is flagged
