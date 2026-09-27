@@ -1,0 +1,209 @@
+{
+  "date": "2026-09-27",
+  "generated_at_et": "2026-09-27T06:41:48-04:00",
+  "research_minutes": 39,
+  "truncated": false,
+  "data_quality_notes": "SHAPE OF THE DAY, stated first because it is the finding and not a shortfall: this run produced ZERO new directional entries. All seven recommendations are position management \u2014 two closes (CCJ, CAG), two pending-order withdrawals (MU, /MBTU6), two holds with amended plans (TLT, LCII), and one explicit wait (NKE). Research reached RESEARCH COMPLETE inside its budget at ~39 minutes, so nothing here is truncation. Two independent reasons were documented. (1) The geometry refuses: a 2.0 ATR stop floor plus a 2:1 ratio needs about 4 ATR of room to a defensible level, and today's low-ATR leaders sit too close to their highs (XLV 1.34% ATR, 3.34% off high; QQQ 1.28%, 0.55% off high) while high-ATR names need targets larger than any level in the data supports. Rejections documented in notes.md: SOL, BTC, ETH, KMX, XLV, ITB, XRT, CCL. (2) The correlation cap binds: TLT, XLU and the pending IYR are already three ideas on the rising-long-yield driver, so the ITB and XRT shorts are refused on the cap despite working geometry. Research recorded explicitly that it declined a CCL short it could have dressed up, because the pull to publish it was about the shape of the page rather than the merit of the idea. I have not padded it back in.\n\nTHE RUN'S MOST IMPORTANT FINDING: the Federal Reserve HIKED 25bp on 2026-09-16 to a 3.75-4.00% target range, unanimously 12-0, its first increase since 2023, under chair Kevin Warsh, with a dot plot pointing to another. Verified three ways: the Kalshi contract KXFEDDECISION-26SEP-H25 is finalized result YES (and the paired H0 finalized NO), FRED effective fed funds at 3.88% sits mid-band for that range, and three independent news sources. An October hike prices at 63.5% and a cut at literally zero. This is an active hiking cycle, not a higher-for-longer pause, and much of the open book is on the wrong side of it. Research also flags that the stated driver is spiralling oil, which makes the energy longs (XLE, DINO, pending OXY) and the rate shorts (TLT, XLU, IYR) one trade seen from both ends: six positions on one oil-to-CPI-to-hikes impulse, where the correlation counter scores them as two sleeves of three. That is the next run's first job.\n\nPRICES. Today is Sunday 2026-09-27. Every equity and ETF price here is the 2026-09-25 (Friday) close from finnhub, session 'closed', age ~2,319 minutes (~38.7h). That is a closed market, not stale data. I re-quoted all six equity symbols at synthesis and every one matched the figure captured during research, so nothing was revised. The BTC proxy price for the /MBTU6 withdrawal (84,748) is live from CoinGecko.\n\nRATIOS RECOMPUTED. Only two ideas have a computable ratio; the other five are exits, withdrawals or a wait, and carry none by construction. TLT: from the filled 81.87 entry, a 78.00 target against the 83.30 stop is 3.87/1.43 = 2.71:1, clearing the 2.0 swing floor, against a break-even hit rate of 27.0% and a claimed 58% win probability. LCII: from the filled 94.00 entry, the 138 target against a defended 65 bear case is 44/29 = 1.52:1, which FAILS the 2.5 long_term floor. I am publishing that failure rather than engineering around it: a filled entry cannot be rewritten to make a ratio work, the recommendation is hold-do-not-add rather than buy, and demotion to the watchlist by the enforcement pass is the correct outcome. The value of the amendment is that it attaches the invalidation condition the position has never carried (net margin below 3% for two consecutive quarters, a dividend cut, or a current ratio below 2.0). No ratio here clusters just above its floor \u2014 there are only two of them, one comfortably clear and one openly failing.\n\nSTOP DISTANCE, checked the other way. One honest flag on the top-ranked idea: measured against today's ATR14 of 0.8039, TLT's unchanged 83.30 stop is 1.43 points or 1.78 ATR from the 81.87 filled entry, a hair under the 1.8 ETF floor. I have not moved it. The entry is filled and cannot be amended; from spot the stop is 4.95 ATR away while the target is 1.64 ATR away, so the position is not exposed to ordinary daily range; and widening a winning short's stop to satisfy a floor computed against an ATR that has changed since publication would make the trade worse to make a check pass. Flagging it for the red team rather than quietly fixing it. Research's own systematic sweep of all 13 open positions with price history found worse: SNX was published with a stop 1.39 ATR from entry against a 2.0 floor, and XLE (0.92 ATR from spot), CEG (1.48) and DINO (1.74) are now very exposed. Distance from spot compresses as a trade moves against you and is a risk statement rather than a rule violation, but the CCJ close is precisely this problem judged to be terminal.\n\nONE EDIT I MADE TO A CANDIDATE, declared: LCII arrived with an entry zone of 78-88 sitting beneath its own 94.00 fill, which contradicts the same candidate's explicit instruction not to average down. I removed the zone and made the prohibition an entry condition. Nothing else was changed beyond prepending the position-update sentence the four open-position amendments needed.\n\nCONVICTION. Every score equals the count of distinct evidence kinds, with one deliberate exception. TLT is the only 5 and has four kinds including a settled primary document. Five ideas at 4 carry three kinds each. LCII carries three kinds, which the table scores as a 4, and research set it to 3 on purpose because the position has no insider support in either direction and its ratio fails from the filled entry. check_conviction_evidence will therefore report a supported score of 4 against a stated 3 \u2014 that flag is expected and should NOT be corrected upward. The documented failure mode is inflation, not caution.\n\nCOVERAGE GAPS AND FAILED SOURCES. No VIX, DXY, gold spot, WTI, SPX/NDX/RUT or index-futures level today: finnhub refuses indices without a CFD subscription, yahoo returned 429 on all quotes and history and 401 on options, stooq returned 404 and is now behind a JavaScript proof-of-work challenge (not circumvented, by design). TLT was the only macro quote that returned. No ATR for NKE or CAG \u2014 the two open positions with earnings inside two sessions \u2014 because nasdaq returns HTTP 200 with zero rows for both across three attempts; finnhub /stock/candle 403s on this key. That gap is load-bearing and it cost two things: NKE became a wait rather than a trade because a stop could not be justified from price history, and CAG could not be re-stopped, which is part of why the answer there is to close rather than widen. No short interest or days-to-cover for any name (nasdaq ReadTimeout). No options-implied move for any name (yahoo 401), so strategy.md's 'is the target inside what options price' check was not run on anything today. No relative-strength sweep and no SEC filings sweep \u2014 out of budget. The CME contract-specs page timed out in WebFetch, so the /MBTU6 expiry rule was verified by search instead.\n\nEIGHT PENDING ORDERS NOT RE-VERIFIED, recorded as a gap rather than implied to have been checked: DG 134.50, VST 132.00, IYR 103.60, KHC 23.00, OXY 54.00, TLT 79.90, GLD SELL 406.77, and GDX 91.20 \u2014 the last of which was in fact re-checked and left standing, with its levels on the watchlist. GDX was published 2026-09-26, one day before the hiking-cycle finding, and gold miners into rising real rates deserve a fresh look.\n\nTWO TOOLING BUGS FOUND, WITH FIXES, because they have been silently degrading event-contract coverage. (1) market_data.py events fetches only the first 200 open Kalshi markets unsorted and filters client-side, so every macro query returns sports; the fix is to pass series_ticker to /markets (KXFEDDECISION, KXCPI, KXCPIYOY, KXU3, KXRECSSNBER). (2) The /markets list returns yes_bid, yes_ask and last_price as null for every market, which is why event contracts have looked unpriceable; real prices are in /markets/{ticker}/orderbook. Also worth a guard: merge_report's one-position-per-(symbol, direction) rule treats sell and sell_short as different directions, so the open TLT SELL and the pending TLT SELL_SHORT are one view tracked as two positions; and nothing caught two mutually exclusive event contracts on the same FOMC meeting being carried at once. A method note for anyone re-deriving crypto figures: CoinGecko /coins/{id}/ohlc must be called with days=30, which returns 4-hourly data; days=90 returns 4-day buckets and yields an ATR roughly double the true daily figure.\n\nTRACK RECORD CONTEXT. 8 closed of 40 tracked, 1 of 8 hitting target, average -3.2%. That sample is far under the ~15 closed trades needed to mean anything and should not be over-fitted. What is not noise is the pattern research identified in the stop-distance sweep: the closed losses share tight stops, and the structural finding of the day is that those stops cannot be widened after a fill without breaking the ratio that justified publishing the idea. That is the honest reason two of today's seven recommendations are closes.\n\nA SECOND DECLARED EDIT: the two pending-order withdrawals arrived treated differently \u2014 MU carried catalyst.wait true and /MBTU6 carried false. Both are withdrawals with a null entry, so neither can fill and neither should open a tracked position; I set /MBTU6 to wait true to match MU. A cancelled order is the clearest case there is of 'do not enter'.\n\nRED TEAM (phase 2c). Cut one, downgraded one, fixed three, and cleared two of the mechanical\nfailures as false. Nothing here was invented to look diligent: the report's central macro claim was\nattacked first and it held completely.\n\nWHAT I VERIFIED RATHER THAN TOOK ON TRUST. The whole report rests on the Fed having hiked, and that\nevidence was flagged with a source failure, so it was the first thing checked. All four Kalshi\nendpoints return HTTP 200 on re-fetch: KXFEDDECISION-26SEP-H25 is status finalized, result yes,\nexpiration_value 'Hike 25bps'; the paired H0 is finalized result no; 26OCT-H25 is active at 63 bid /\n64 ask; 26DEC-H25 at 68/69. Every figure synthesis published off those contracts is exact. TLT's\ntechnicals were re-derived from a fresh 130-bar pull and also match to the share: ATR14 0.8039,\nSMA20 81.369, SMA50 82.2472, range 78.83-87.79, -9.65% off high, +0.62% off low, and the escalating\nvolumes 53,502,360 / 59,160,590 / 62,576,660 with the 78.83 low printed on 2026-09-25. All six equity\nquotes re-quoted unchanged. So the two `sources` FAIL flags are BOTH FALSE and must not be read as\nfabrication: the Kalshi 404s were transient, and every nasdaq 404 (CCJ, MU, LCII, and TLT's technical\nleg) is a citation-form defect \u2014 `api.nasdaq.com/api/quote/<SYM>/historical` does not resolve without\nthe query parameters that market_data.py actually sends, so the URL written into `sources` is a stem,\nnot a dead source. Worth fixing in the research phase; not grounds to kill an idea.\n\nCUT: /MBTU6, from rank 6 to the watchlist in full. A terminated contract, catalyst dated two days in\nthe past, no entry, no target, no stop, carried at conviction 4. The content was right and the\nplacement was wrong \u2014 cancelling a dead order is housekeeping, not a recommendation, and a 'short'\nrow on an expired instrument is misreadable as live.\n\nFIXED, and this is the finding of the pass: CAG and CCJ would each have opened a phantom SHORT\nposition. Both say in their own text 'this is an exit, not a short', and both carried direction sell\nwith catalyst.wait false and an entry price at spot. merge_report keys on (symbol, direction); the\nlive positions are CAG buy and CCJ buy, so ('CAG','sell') and ('CCJ','sell') matched nothing and\nopened new rows. Simulated against state/open_positions.json before the fix: 'opened 2, amended 0',\nCAG sell pending at 14.32 and CCJ sell pending at 88.07, each with target None and stop None. This\nbug has already fired once and is in the performance record \u2014 2026-09-08's NKE exit recommendation at\n38.40 is sitting in state as an open, filled NKE SELL position with no target and no stop, which is\nnot a trade anyone took. Today's NKE rec endorses that row ('any existing exit recommendation at\n38.40 stands'), so it will persist until someone corrects the state file; recorded here rather than\ncorrected, because rewriting stored history is not this phase's job. The fix applied is\ncatalyst.wait true on both, which is what MU and /MBTU6 already used for exactly this reason \u2014 a\nwithdrawal is the clearest case of 'do not enter', and a close is the same case with a price attached.\nVerified after the fix: opened 0, amended 0, and both longs keep their own target and stop. Flipping\ndirection to buy to force an amendment was tested and rejected: it writes a {target None, stop None}\namendment onto each filled long, stripping CAG's 16.74/14.20 and CCJ's 135.00/82.50 and leaving two\npositions that grading can never close. The entry zones were removed from both for the same reason\nsynthesis removed LCII's \u2014 an entry zone on an exit row is an invitation to put on the opposite trade.\n\nFIXED: TLT's entry zone, which is the same defect on the highest-conviction idea on the page, where it\ndoes the most damage. The row advertised zone 79.30-81.90 against a spot of 79.32 \u2014 the zone's lower\nbound was spot \u2014 while publishing 2.71:1. That ratio holds only from the 2026-09-02 fill at 81.87.\nFrom spot the identical 78.00 target and 83.30 stop are 1.32 points of reward against 3.98 of risk:\n0.33:1, a break-even hit rate of 75.1%, and at the stated 58% win probability an expectancy of -0.91\npoints, -0.23R. A reader entering in the advertised zone would take a negative-expectancy trade off a\nrow reading 2.71:1. Zone removed, ideal kept at 81.87 as the fill it is, with the prohibition made an\nentry condition. The 58% was also justified against the wrong denominator: the 27.0% break-even comes\nfrom entry-to-target versus entry-to-stop, while the 58% was argued from spot-to-target versus\nspot-to-stop. Stated consistently, the 4.95 ATR distance to the stop is not asymmetry \u2014 it is the\nreason there is little payoff left. Levels themselves untouched: the 78.00 target was NOT moved out\nand the 83.30 stop was NOT moved in, which is the manipulation this phase exists to catch.\n\nDOWNGRADED: TLT conviction 5 to 4, the only 5 on the page and the one that would be sized largest.\ncheck_conviction_evidence passes it on four distinct kinds and it is right about the labels, but it\ncounts kinds and cannot see that two pairs collapse. primary_document (the settled September FOMC\ncontract) and dated_catalyst (the active October contract) are one fact \u2014 the Fed is hiking \u2014 read off\nthe same exchange's same series, backward and forward. technical_level and the volume half of\npositioning are one observation off one nasdaq price series, and 'positioning' carries no positioning\ndata at all: the report states plainly that short interest and days-to-cover failed for every name.\nWhat remains is two genuinely independent confirmations \u2014 Kalshi/FRED on the hiking cycle, and TLT's\nown tape breaking down \u2014 plus the FRED 10s2s bear steepener as a third that is real but macro rather\nthan positioning. That is a 4. Also relevant to the size: the thesis is now fully public. The hike was\neleven days ago, an October hike prices at 63.5% and a cut at zero, and the position is already +3.1%.\nBeing right and being early are different, and this is the former.\n\nNOT CHANGED, deliberately, because cutting to look busy is as harmful as missing something.\nLCII stays exactly as published, failing at 1.52:1 against the 2.5 long_term floor. Synthesis is right\nthat a filled entry cannot be rewritten to rescue a ratio and right to publish the failure for the\nenforcement pass to demote rather than engineer around it; the amendment's value is the invalidation\ncondition the position never had. I add only that LCII is an open long 2.1% above a 52-week low with\nno stop of any kind, which the row does say. NKE's wait stands: refusing to trade a binary event with\nno ATR to place a stop from is correct, and the opportunity cost is named honestly in key_risk. MU's\nwithdrawal stands, with one mechanical note \u2014 wait true means the tracker skips it, so publishing this\ndoes NOT remove the pending MU buy at 960 from state; that order has to be cancelled at the broker,\nand the row is advisory. CORRELATION TEST: no cut. Today's only maintained directional exposure is\nTLT short duration; everything else is an exit, a withdrawal or a wait, and two of the six actions\n(CAG, CCJ) reduce gross exposure. The six-position oil-to-CPI-to-hikes cluster synthesis identified\nis real and is a property of the open book rather than of today's recommendations, and the right place\nto act on it is the next run, as synthesis said.\n\nRE-RANKED by what needs an order placed rather than by conviction, because every row is position\nmanagement and nothing here is sizeable. CAG 1 and CCJ 2 are the two that require an order at the\n2026-09-28 open \u2014 CAG most urgently, since its 14.20 stop sits 2 cents under Friday's 14.22 low and\nfires on almost any Monday gap, which is the entire reason for the exit. TLT 3 and LCII 4 are holds\nrequiring no action. NKE 5 and MU 6 are a wait and a cancellation. Six recommendations remain, one\nwas cut, and the only two figures I would still not lean on are the two `sources` failures, which are\nfalse.\n Validation demoted 6 idea(s) whose numbers did not check out. 0 more carry warnings \u2014 see the validation block on each.",
+  "market_context": {
+    "summary": "An active hiking cycle that the book had not priced, and a tape splitting cleanly along it. The Fed hiked 25bp on 2026-09-16 to 3.75-4.00%, unanimously 12-0 \u2014 its first increase since 2023 \u2014 with a dot plot pointing to another and a chair committed to a timelier return to 2%; October prices at 63.5% for a further hike and 0% for a cut, December at 68.5%. The 10-year is 5.18% and rising, with 10s2s bear-steepening from 0.31 to 0.36, so the long end is repricing faster than the front. The resulting internals are the most useful fact available today: mega-cap tech and semis sit at their highs (QQQ 0.55% off its 120-day high, SMH above both averages) while everything rate-sensitive and domestically cyclical rolls over (IWM -7.6%, ITB -15.9%, XRT -11.8%, XLF and KRE both below both averages). Banks are notably NOT working despite the steepener, which kills the textbook NIM trade on evidence. The stated driver of the hike is inflation from spiralling oil, which means the energy longs and the rate shorts in this book are one trade viewed from two ends rather than two diversified sleeves.",
+    "regime": "mixed",
+    "levels": {
+      "us10y": 5.18,
+      "us10y_2y_spread": 0.36,
+      "fed_funds_effective": 3.88,
+      "fed_funds_target": "3.75-4.00% after a 25bp hike on 2026-09-16",
+      "btc": 84748.0,
+      "tlt": 79.32,
+      "qqq": 744.5,
+      "smh": 606.56,
+      "iwm": 281.97,
+      "itb": 89.43,
+      "xrt": 82.47,
+      "xlv": 170.7,
+      "vix": null,
+      "dxy": null,
+      "gold": null,
+      "wti": null,
+      "spx": null,
+      "ndx": null,
+      "note": "Equity/ETF levels are the 2026-09-25 close (finnhub, session closed, ~38.7h old); BTC is live from CoinGecko. VIX, DXY, gold, WTI and the index levels are null because finnhub requires an indices subscription, yahoo returned 429 and stooq is behind a proof-of-work challenge."
+    },
+    "econ_calendar": [
+      {
+        "event": "NKE (NIKE) fiscal Q1 earnings \u2014 EPS est 0.4444, rev est 11.452B",
+        "datetime_et": "2026-09-28T16:15",
+        "importance": "high",
+        "consensus": "EPS 0.4444 on revenue 11,451,807,997"
+      },
+      {
+        "event": "CCL (Carnival) Q earnings, before the open \u2014 EPS est 1.3712",
+        "datetime_et": "2026-09-28T07:00",
+        "importance": "medium",
+        "consensus": "EPS 1.3712"
+      },
+      {
+        "event": "CAG (Conagra) fiscal Q1 earnings, before the open \u2014 EPS est 0.2842, rev est 2.615B",
+        "datetime_et": "2026-09-29T08:30",
+        "importance": "high",
+        "consensus": "EPS 0.2842 on revenue 2,614,954,892"
+      },
+      {
+        "event": "UEC (Uranium Energy) Q results, before the open \u2014 read-through to the uranium complex and CCJ",
+        "datetime_et": "2026-09-29T09:30",
+        "importance": "medium",
+        "consensus": null
+      },
+      {
+        "event": "MU (Micron) fiscal Q4 earnings, after the close \u2014 EPS est 32.3202, rev est 52.241B",
+        "datetime_et": "2026-09-30T16:20",
+        "importance": "high",
+        "consensus": "EPS 32.3202 on revenue 52,241,283,687"
+      },
+      {
+        "event": "FOMC decision \u2014 Kalshi prices a further 25bp hike at 63.5%, a cut at 0%",
+        "datetime_et": "2026-10-28T14:00",
+        "importance": "high",
+        "consensus": "63.5% implied probability of a 25bp hike"
+      }
+    ]
+  },
+  "recommendations": [],
+  "watchlist": [
+    {
+      "symbol": "/MBTU6",
+      "instrument": "CME Micro Bitcoin futures, September 2026 \u2014 terminated 2026-09-25",
+      "note": "Cancelled order, moved off the recommendation list by the red team. Cancel the resting /MBTU6 short at 64,340 (2026-08-18) and the paired BTC spot sell at 63,400 (2026-08-16). Do not roll to /MBTV6 or /MBTZ6. The contract terminated 2026-09-25 so it cannot fill at any price, and the view is gone too: BTC is 84,748, leaving the 64,340 entry 24% below spot in an instrument printing 30-day highs. A compliant 2.5 ATR crypto stop on a fresh short from 84,748 sits at 91,000 and needs a 72,244 target to clear 2:1, below the entire 30-day range \u2014 there is no compliant short to roll into.",
+      "trigger": "A new view argued from scratch on a live contract, not a re-strike of this one. Nothing here is actionable.",
+      "demoted_from_rank": 6,
+      "demotion_reason": "A terminated contract with a catalyst dated 2026-09-25 that has already passed, no entry, no target and no stop, carried at conviction 4. It is order housekeeping, and a 'short' row on a dead instrument is the kind of thing a reader can misread as live. Preserved in full here rather than deleted."
+    },
+    {
+      "symbol": "ITB",
+      "instrument": "iShares U.S. Home Construction ETF",
+      "note": "Short found with workable geometry and the right macro \u2014 89.43, -15.93% off its 120-day high, the purest casualty of a 5.18% 10-year. Refused on the correlation cap, not on merit: TLT, XLU and IYR already make three ideas on the rising-long-yield driver.",
+      "trigger": "A slot opens on the rate driver \u2014 one of TLT SELL, XLU SELL_SHORT or the pending IYR SELL_SHORT closes."
+    },
+    {
+      "symbol": "XRT",
+      "instrument": "SPDR S&P Retail ETF",
+      "note": "Same finding as ITB: 82.47, -11.82% off its high, below both moving averages, refused on the correlation cap rather than on the setup.",
+      "trigger": "A slot opens on the rising-long-yield driver."
+    },
+    {
+      "symbol": "KMX",
+      "instrument": "CarMax Inc",
+      "note": "Best insider signal of the day. Rejected because reward-to-risk fails once the stop clears the 2.0 ATR floor.",
+      "trigger": "A target defensible from price history that clears 2:1 against a stop at least 2.0 ATR wide."
+    },
+    {
+      "symbol": "CCL",
+      "instrument": "Carnival Corp",
+      "note": "Short whose geometry clears (23.70 stop = 2.03 ATR, 19.35 target = exactly 2:1) but whose target is a projection 9.8% below the 120-day low with nothing in the data anchoring it. Declined explicitly rather than published to give the page a fresh directional idea. Reports 2026-09-28 before the open.",
+      "trigger": "Post-print price action that establishes the 19.35 area as a real level rather than an extrapolation."
+    },
+    {
+      "symbol": "CEG",
+      "instrument": "Constellation Energy Corp",
+      "note": "Open long, -3.2%, held but flagged: below SMA20 274.27 and SMA50 271.94, -19.93% off its high, stop only 1.48 ATR from spot. Not closed because it has an insider buy beneath it (Crandall, $417,931 at 278.62, 2026-08-11) and a datacenter-power demand story \u2014 the two things CCJ lacked. It is the next CCJ if the moving averages are not reclaimed.",
+      "trigger": "Failure to reclaim SMA50 271.94, or the stop closing inside 1.0 ATR of spot."
+    },
+    {
+      "symbol": "BCC",
+      "instrument": "Boise Cascade Co",
+      "note": "Open long, +0.8%, and the weakest fundamental case among the holds: building products in a hiking cycle with ITB -15.93%, on a 25.5x P/E and a 1.64% net margin, carrying no stop and no invalidation condition.",
+      "trigger": "Attach an invalidation condition, as LCII now has, or exit. A close below SMA20 76.59 is the near-term tell."
+    },
+    {
+      "symbol": "SNX",
+      "instrument": "TD SYNNEX Corp",
+      "note": "Open long, +1.2%, working \u2014 kept for that reason, recorded as a governance flag. It was published with a stop 1.39 ATR from its entry against a 2.0 floor, which is the pre-check_stop_distance failure mode reaching the page.",
+      "trigger": "No action while it works; if it rolls over, the stop is too close to be trusted."
+    },
+    {
+      "symbol": "GDX",
+      "instrument": "VanEck Gold Miners ETF",
+      "note": "Pending buy at 91.20 re-checked and left standing \u2014 the entry sits 1.19 above SMA50 support and only 0.53 ATR below spot at 92.87, which is a pullback entry on a real level. Not overturned, but gold's read is genuinely unresolved: GLD is -12.32% off its high and below both averages, yet the Fed is hiking because of inflation.",
+      "trigger": "A close below SMA50 90.01 invalidates the level the entry rests on."
+    },
+    {
+      "symbol": "GLD",
+      "instrument": "SPDR Gold Shares",
+      "note": "Book-hygiene contradiction, unresolved for want of time: the pending GLD SELL at 406.77 should be expressed as the open GLD long's scale-out, not as an independent short of the thing the book is long.",
+      "trigger": "Restate the 406.77 order as a scale-out on the open long."
+    },
+    {
+      "symbol": "TLT",
+      "instrument": "iShares 20+ Year Treasury Bond ETF \u2014 duplicate pending order",
+      "note": "Tracking duplicate, not a second idea: the pending TLT SELL_SHORT at 79.90 is the same view as the open TLT SELL at 81.87. merge_report keys on (symbol, direction) and treats sell and sell_short as distinct, so one view is carried as two positions.",
+      "trigger": "Cancel the 79.90 order, or merge it into the open short."
+    },
+    {
+      "symbol": "KXFEDDECISION-26OCT-H25",
+      "instrument": "Kalshi \u2014 Fed hikes 25bp at the October 2026 meeting",
+      "note": "Priced and coherent but deliberately not traded. The market is 63/64 for a hike and a cut is bid zero; my own estimate from CPI at +0.40% MoM, a 5.18% 10-year and flat 4.1% unemployment is roughly 65-72%. A 2-8 point gap is inside my own error bars, and the Fed is hiking into visible damage in the rate-sensitive cohort, which is a real reason to skip October.",
+      "trigger": "A gap of 15 points or more between a defended estimate and the market, rather than a lean."
+    },
+    {
+      "symbol": "SOL",
+      "instrument": "Solana \u2014 rejected long",
+      "note": "Breakout long rejected on geometry: once the stop clears the 2.5 ATR crypto floor, reward-to-risk fails the 2.0 swing floor. BTC and ETH longs fail identically, and a BTC short fails from the other side (a 2.5 ATR stop at 91,000 needs a 72,244 target, below the 30-day low).",
+      "trigger": "A pullback that puts a defensible level within 4 ATR of a target the 30-day range supports."
+    },
+    {
+      "symbol": "CAG",
+      "instrument": "Conagra Brands Inc",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 1,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined"
+    },
+    {
+      "symbol": "CCJ",
+      "instrument": "Cameco Corp",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined; 1 source(s) return 404: https://api.nasdaq.com/api/quote/CCJ/historical",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 2,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined; 1 source(s) return 404: https://api.nasdaq.com/api/quote/CCJ/historical"
+    },
+    {
+      "symbol": "TLT",
+      "instrument": "iShares 20+ Year Treasury Bond ETF",
+      "note": "Demoted by validation: stop is 1.78 ATR from entry \u2014 inside the noise; a swing etf stop must clear 1.8 ATR; 3 source(s) return 404: https://api.elections.kalshi.com/trade-api/v2/markets/KXFEDDECISION-26SEP-H25, https://api.elections.kalshi.com/trade-api/v2/markets/KXFEDDECISION-26OCT-H25/orderbook",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 3,
+      "demotion_reason": "stop is 1.78 ATR from entry \u2014 inside the noise; a swing etf stop must clear 1.8 ATR; 3 source(s) return 404: https://api.elections.kalshi.com/trade-api/v2/markets/KXFEDDECISION-26SEP-H25, https://api.elections.kalshi.com/trade-api/v2/markets/KXFEDDECISION-26OCT-H25/orderbook"
+    },
+    {
+      "symbol": "LCII",
+      "instrument": "LCI Industries",
+      "note": "Demoted by validation: computed 1.52:1 is below the 2.5:1 floor for long_term; 1 source(s) return 404: https://api.nasdaq.com/api/quote/LCII/historical",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 4,
+      "demotion_reason": "computed 1.52:1 is below the 2.5:1 floor for long_term; 1 source(s) return 404: https://api.nasdaq.com/api/quote/LCII/historical"
+    },
+    {
+      "symbol": "NKE",
+      "instrument": "NIKE Inc Class B",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; no entry price; no entry or stop, so the stop distance is undefined",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 5,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; no entry price; no entry or stop, so the stop distance is undefined"
+    },
+    {
+      "symbol": "MU",
+      "instrument": "Micron Technology Inc",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; no entry price; no entry or stop, so the stop distance is undefined; 1 source(s) return 404: https://api.nasdaq.com/api/quote/MU/historical",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 6,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; no entry price; no entry or stop, so the stop distance is undefined; 1 source(s) return 404: https://api.nasdaq.com/api/quote/MU/historical"
+    }
+  ],
+  "validation_summary": {
+    "checked": 6,
+    "passed": 0,
+    "warned": 0,
+    "failed": 6,
+    "enforced": true,
+    "demoted": 6
+  }
+}
