@@ -469,9 +469,24 @@ class SheetOutput(unittest.TestCase):
 
     def test_the_header_lands_on_the_frozen_row(self):
         self.assertEqual(self.values[td.HEADER_ROW - 1], td.HEADERS)
-        self.assertEqual(len(td.HEADERS), 23)
         self.assertEqual(td.HEADERS[td.COL_TIER], "Tier")
         self.assertIn("Value Source", td.HEADERS)
+
+    def test_every_data_row_has_a_cell_per_header(self):
+        """The property a column count was standing in for.
+
+        A literal 23 here had to be edited every time a column was added, which
+        tested the edit rather than the grid. What matters is that no row is
+        short: a data row with fewer cells than headers silently shifts every
+        value after the gap into the wrong column.
+        """
+        self.assertTrue(self.spec["data_rows"], "no data rows to check")
+        for index, _ in self.spec["data_rows"]:
+            self.assertEqual(len(self.values[index]), len(td.HEADERS),
+                             f"row {index} does not line up with the header")
+
+    def test_city_sits_beside_county_because_it_is_read_with_it(self):
+        self.assertEqual(td.HEADERS.index("City"), td.HEADERS.index("County") + 1)
 
     def test_counties_are_blocked_in_dallas_tarrant_johnson_ellis_order(self):
         banners = [self.values[row][0] for row in self.spec["county_rows"]]
@@ -981,6 +996,184 @@ class DocketInTheOutputs(unittest.TestCase):
     def test_an_unscheduled_packet_is_filed_away_from_the_sale(self):
         self.assertEqual(td.packet_path(self.off).parent.name, "undated")
         self.assertEqual(td.packet_path(self.on).parent.name, SALE)
+
+
+class CommercialAndIndustrialAreRejectedWhenTheUseWasRead(unittest.TestCase):
+    """The gate's own rule, applied to one more field.
+
+    A use that was read and is commercial disqualifies. A use nothing published
+    is an unknown, and an unknown has never rejected anything in this module —
+    that is the rule that stopped 544 real candidates being thrown away on the
+    first live run, and it applies here whether or not it makes the filter look
+    busy today.
+    """
+
+    def screened(self, cad_over=None, **listing_over):
+        return td.screen(listing(**listing_over), cad(**(cad_over or {})), checks(),
+                         cfg(), TODAY)
+
+    def test_an_sptb_commercial_category_rejects(self):
+        result = self.screened({"land_use_code": "F1"})
+        self.assertIn("commercial_or_industrial", codes(result["rejections"]))
+
+    def test_so_does_industrial(self):
+        self.assertIn("commercial_or_industrial",
+                      codes(self.screened({"land_use_code": "F2"})["rejections"]))
+
+    def test_and_personal_commercial_and_industrial_and_utilities(self):
+        for code in ("L1", "L2", "J3", "J"):
+            with self.subTest(code=code):
+                result = self.screened({"land_use_code": code})
+                self.assertIn("commercial_or_industrial", codes(result["rejections"]))
+
+    def test_single_family_is_kept(self):
+        result = self.screened({"land_use_code": "A"})
+        self.assertNotIn("commercial_or_industrial", codes(result["rejections"]))
+        self.assertNotIn("property_use_unknown", codes(result["flags"]))
+
+    def test_and_so_are_the_other_residential_and_land_categories(self):
+        for code in ("A1", "B", "C1", "D1", "E", "M1", "O"):
+            with self.subTest(code=code):
+                result = self.screened({"land_use_code": code})
+                self.assertNotIn("commercial_or_industrial", codes(result["rejections"]),
+                                 f"{code} is residential or land, not commercial")
+
+    def test_a_use_description_rejects_when_there_is_no_code(self):
+        result = self.screened({"land_use_code": None,
+                                "land_use_description": "Warehouse / Light Industrial"})
+        self.assertIn("commercial_or_industrial", codes(result["rejections"]))
+
+    def test_the_county_lists_own_property_type_is_enough(self):
+        result = self.screened({"land_use_code": None, "land_use_description": None},
+                               property_type="COMMERCIAL - RETAIL STRIP")
+        self.assertIn("commercial_or_industrial", codes(result["rejections"]))
+
+    def test_a_residential_property_type_is_a_determination_not_an_unknown(self):
+        result = self.screened({"land_use_code": None, "land_use_description": None},
+                               property_type="Single Family Residence")
+        self.assertNotIn("property_use_unknown", codes(result["flags"]))
+
+    def test_nothing_readable_flags_and_never_rejects(self):
+        """The common case today, and the one that must not turn into a reject."""
+        result = self.screened({"land_use_code": None, "land_use_description": None},
+                               property_type="")
+        self.assertNotIn("commercial_or_industrial", codes(result["rejections"]))
+        self.assertIn("property_use_unknown", codes(result["flags"]))
+        self.assertEqual(result["status"], "candidate")
+
+    def test_and_the_unknown_costs_the_property_its_rank(self):
+        """Material, so it can never read as a clean screen."""
+        result = self.screened({"land_use_code": None, "land_use_description": None},
+                               property_type="")
+        entry = next(f for f in result["flags"] if f["code"] == "property_use_unknown")
+        self.assertEqual(entry["severity"], td.MATERIAL)
+
+    def test_the_street_address_is_never_evidence(self):
+        """It reads commercial to a person. This module does not infer."""
+        result = self.screened({"land_use_code": None, "land_use_description": None},
+                               property_type="", address="11970 N CENTRAL EXPY")
+        self.assertNotIn("commercial_or_industrial", codes(result["rejections"]))
+
+    def test_nor_is_a_subdivision_platted_as_industrial(self):
+        """A house on a lot inside INDUSTRIAL ADDITION is a house."""
+        result = self.screened(
+            {"land_use_code": "A", "land_use_description": None},
+            legal_description="INDUSTRIAL ADDITION BLOCK 4 LOT 7")
+        self.assertNotIn("commercial_or_industrial", codes(result["rejections"]))
+
+    def test_the_rejection_names_the_field_that_said_so(self):
+        result = self.screened({"land_use_code": "F1"})
+        detail = next(r for r in result["rejections"]
+                      if r["code"] == "commercial_or_industrial")["detail"]
+        self.assertIn("F1", detail)
+        self.assertIn("CAD", detail)
+
+    def test_it_runs_when_no_appraisal_district_record_matched(self):
+        """Placed after the `if not cad` block, this never ran at all.
+
+        That block returns in both branches, and no row in the 2026-09-11 run
+        has a CAD record — so the filter read as working, rejected nothing, and
+        flagged nothing either. It does not need a CAD: the county list's own
+        property type answers it when the feed publishes one.
+        """
+        result = td.screen(listing(property_type="COMMERCIAL WAREHOUSE"), None,
+                           checks(), cfg(), TODAY)
+        self.assertIn("commercial_or_industrial", codes(result["rejections"]))
+
+    def test_and_flags_the_unknown_when_no_record_matched_either(self):
+        result = td.screen(listing(property_type=""), None, checks(), cfg(), TODAY)
+        self.assertIn("property_use_unknown", codes(result["flags"]))
+
+    def test_the_whole_of_a_real_run_gets_the_flag_rather_than_none_of_it(self):
+        """The shape of the bug, at run scale: 224 rows or 0, never in between.
+
+        Every row of that run lacks a CAD record and a property type, so the
+        honest output is the flag on all of them. Zero was the symptom.
+        """
+        # The fixture publishes a property type; that run's rows do not.
+        rows = [td.screen(listing(account=str(n), property_type=""), None,
+                          checks(), cfg(), TODAY)
+                for n in range(5)]
+        flagged = sum(1 for r in rows
+                      if any(f["code"] == "property_use_unknown" for f in r["flags"]))
+        self.assertEqual(flagged, len(rows))
+
+    def test_it_can_be_turned_off_into_a_flag_without_becoming_silent(self):
+        config = dict(cfg(), thresholds=dict(cfg().get("thresholds") or {},
+                                             REJECT_COMMERCIAL_USE=False))
+        result = td.screen(listing(), cad(land_use_code="F1"), checks(), config, TODAY)
+        self.assertNotIn("commercial_or_industrial", codes(result["rejections"]))
+        entry = next(f for f in result["flags"] if f["code"] == "commercial_or_industrial")
+        self.assertEqual(entry["severity"], td.MATERIAL)
+
+
+class TheCityComesFromTheBestSourceThatHasIt(unittest.TestCase):
+    """Three sources, not equally good, so the row records which answered.
+
+    And a blank means **not determined**, never "no city": plenty of this
+    inventory is unincorporated county land where the answer is legitimately
+    not a city name. Nothing here fills it in from the county.
+    """
+
+    def test_the_county_list_wins_when_it_publishes_one(self):
+        self.assertEqual(td.city_of({"city": "Grand Prairie"},
+                                    {"situs": "1 MAIN ST, DALLAS, TX 75201"},
+                                    {"city": "Irving"}),
+                         ("Grand Prairie", "county list"))
+
+    def test_the_cad_situs_is_next(self):
+        city, source = td.city_of({}, {"situs": "1234 MAIN ST, DUNCANVILLE, TX 75116"},
+                                  {"city": "Irving"})
+        self.assertEqual((city, source), ("Duncanville", "CAD situs"))
+
+    def test_the_geocoder_is_last_because_it_is_a_guess(self):
+        self.assertEqual(td.city_of({}, None, {"city": "Irving"}), ("Irving", "geocoder"))
+
+    def test_nothing_is_blank_and_never_the_county_name(self):
+        city, source = td.city_of({"county": "Dallas"}, None, None)
+        self.assertEqual(city, "")
+        self.assertEqual(source, "")
+
+    def test_an_all_caps_city_is_title_cased_for_reading(self):
+        self.assertEqual(td.city_of({"city": "MESQUITE"}, None)[0], "Mesquite")
+
+    def test_a_mixed_case_city_is_left_exactly_as_published(self):
+        self.assertEqual(td.city_of({"city": "DeSoto"}, None)[0], "DeSoto")
+
+    def test_a_situs_with_no_city_field_is_not_mined_for_one(self):
+        self.assertEqual(td.city_of({}, {"situs": "1234 MAIN ST"}), ("", ""))
+
+    def test_nor_is_a_situs_whose_city_slot_is_a_number(self):
+        """A trailing ZIP shifted into the city slot is not a city."""
+        self.assertEqual(td.city_of({}, {"situs": "1234 MAIN ST, 75201, TX"}), ("", ""))
+
+    def test_the_sheet_carries_it_and_the_source_does_not_leak_into_the_cell(self):
+        statements = td.statement_report(cfg(), ["Dallas"], TODAY, SALE)
+        row = td.screen(listing(city="Mesquite"), cad(), checks(), cfg(), TODAY, SALE)
+        row["listing"]["city_source"] = "county list"
+        values, spec = td.sheet_rows([row], cfg(), TODAY, SALE, statements)
+        index, _ = spec["data_rows"][0]
+        self.assertEqual(values[index][td.HEADERS.index("City")], "Mesquite")
 
 
 class TheTabCarriesWhatCanBeActedOn(unittest.TestCase):

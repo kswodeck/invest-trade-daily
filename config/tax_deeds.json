@@ -12,6 +12,8 @@
     "QUIET_TITLE_BUDGET": 3500,
     "HOLDING_MONTHS": 7,
     "REJECT_FLOOD_ZONE": false,
+    "REJECT_COMMERCIAL_USE": true,
+    "_REJECT_COMMERCIAL_USE": "Gate 1 rejects property whose use was READ and is commercial or industrial — SPTB category F1, F2, L1, L2 or J on the CAD record, or a use description saying so. Set false to keep those rows with a material flag instead. Either way an unreadable use never rejects: it flags property_use_unknown, because an unknown is not a finding. That flag is on every row of the 2026-09-11 run, since the county lists publish no property type and the CAD lookup matched nothing — so this gate rejects nothing today and starts working the moment a CAD record arrives. The street address is deliberately not consulted: '11970 N CENTRAL EXPY' reads commercial to a person and is not evidence. Nor is legal_description, because subdivisions are platted as 'INDUSTRIAL ADDITION' and a house inside one is a house.",
     "EFFECTIVE_TAX_RATE": 0.023,
     "MONTHLY_CARRY": 75,
     "POST_JUDGMENT_YEARS": 1.0,
@@ -134,6 +136,24 @@
             "precinct": [
               "precinct",
               "pct"
+            ],
+            "city": [
+              "city",
+              "city name",
+              "situs city",
+              "property city",
+              "municipality",
+              "town"
+            ],
+            "property_type": [
+              "property type",
+              "property use",
+              "land use",
+              "use code",
+              "class",
+              "category",
+              "improvement type",
+              "type of property"
             ]
           },
           "_verified": "2026-09-03: HTTP 403 — the host refused a non-browser User-Agent. Not a format change. Confirm the real Dallas portal URL from the Dallas County Tax Office site, or use the manual CSV drop.",
@@ -205,6 +225,24 @@
             ],
             "status": [
               "status"
+            ],
+            "city": [
+              "city",
+              "city name",
+              "situs city",
+              "property city",
+              "municipality",
+              "town"
+            ],
+            "property_type": [
+              "property type",
+              "property use",
+              "land use",
+              "use code",
+              "class",
+              "category",
+              "improvement type",
+              "type of property"
             ]
           },
           "_verified": "2026-09-03: taxsales.lgbs.com fetched 200 but contains no HTML table — it is a JavaScript app. Find the JSON endpoint the page calls and switch this source to \"format\": \"json\".",
@@ -298,6 +336,24 @@
             "precinct": [
               "precinct",
               "pct"
+            ],
+            "city": [
+              "city",
+              "city name",
+              "situs city",
+              "property city",
+              "municipality",
+              "town"
+            ],
+            "property_type": [
+              "property type",
+              "property use",
+              "land use",
+              "use code",
+              "class",
+              "category",
+              "improvement type",
+              "type of property"
             ]
           },
           "_verified": "2026-09-03: same JavaScript app as dallas_struck_off — no HTML table to parse. Needs the JSON endpoint or a manual CSV.",
@@ -390,6 +446,24 @@
             ],
             "status": [
               "status"
+            ],
+            "city": [
+              "city",
+              "city name",
+              "situs city",
+              "property city",
+              "municipality",
+              "town"
+            ],
+            "property_type": [
+              "property type",
+              "property use",
+              "land use",
+              "use code",
+              "class",
+              "category",
+              "improvement type",
+              "type of property"
             ]
           },
           "_verified": "2026-09-03: HTTP 403 — the host refused a non-browser User-Agent.",
@@ -480,6 +554,24 @@
             ],
             "status": [
               "status"
+            ],
+            "city": [
+              "city",
+              "city name",
+              "situs city",
+              "property city",
+              "municipality",
+              "town"
+            ],
+            "property_type": [
+              "property type",
+              "property use",
+              "land use",
+              "use code",
+              "class",
+              "category",
+              "improvement type",
+              "type of property"
             ]
           },
           "_verified": "2026-09-03: same JavaScript app as dallas_struck_off.",

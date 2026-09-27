@@ -166,6 +166,7 @@ def collect(cfg: dict, today: date, sale_date: str, only: list[str] | None = Non
                 print(f"  ⏱ out of time — enriching no further. Everything already "
                       f"fetched is still screened, and the snapshot is still written.",
                       file=sys.stderr)
+            place = None
             if id(listing) in enrich and not out_of_time:
                 try:
                     cad = sources.cad_record(county.get("cad", ""),
@@ -173,6 +174,15 @@ def collect(cfg: dict, today: date, sale_date: str, only: list[str] | None = Non
                 except Exception as exc:  # noqa: BLE001
                     print(f"  CAD lookup failed for {listing.get('account')}: {exc}",
                           file=sys.stderr)
+                # Only when the cheaper sources did not already answer. The
+                # county list and the CAD situs are both free and both better
+                # than a match on an address string.
+                if not listing.get("city") and not (cad or {}).get("situs"):
+                    try:
+                        place = sources.geocode_place(listing.get("address") or "", cfg)
+                    except Exception as exc:  # noqa: BLE001
+                        print(f"  geocode failed for {listing.get('address')!r}: {exc}",
+                              file=sys.stderr)
                 try:
                     checks = sources.run_checks(listing, cad, cfg)
                 except Exception as exc:  # noqa: BLE001 - an exception is not a clean check
@@ -181,6 +191,13 @@ def collect(cfg: dict, today: date, sale_date: str, only: list[str] | None = Non
                     checks = [td.check_record(name, td.UNAVAILABLE, "check raised",
                                               f"{type(exc).__name__}: {exc}")
                               for name in td.LIEN_CHECKS]
+
+            # Resolved onto the listing so every output reads one field with one
+            # meaning, and `city_source` says which of the three answered —
+            # the county's own list, a parsed CAD situs, or the geocoder's
+            # match, which is a good guess and still a guess.
+            city, city_source = td.city_of(listing, cad, place)
+            listing["city"], listing["city_source"] = city, city_source
             results.append(td.screen(listing, cad, checks, cfg, today, sale_date))
 
         if skipped:

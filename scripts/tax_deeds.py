@@ -135,9 +135,10 @@ DEFAULT_THRESHOLDS: dict[str, Any] = {
     "PACKET_TIERS": "A,B,C",
     "PACKET_DOCKETS": "on_docket,over_the_counter,other_sale",
     "SHEET_DOCKETS": "on_docket,over_the_counter,other_sale,date_unknown",
+    "REJECT_COMMERCIAL_USE": True,
 }
 
-BOOL_THRESHOLDS = {"REJECT_FLOOD_ZONE"}
+BOOL_THRESHOLDS = {"REJECT_FLOOD_ZONE", "REJECT_COMMERCIAL_USE"}
 STRING_THRESHOLDS = {"PACKET_TIERS", "PACKET_DOCKETS", "SHEET_DOCKETS"}
 
 
@@ -358,6 +359,101 @@ def is_mineral_only(listing: dict, cad: dict | None) -> str | None:
     return None
 
 
+# Texas State Property Tax Board category codes, which every CAD reports and
+# which are the only non-guess answer to "what is this". F1/F2 are real
+# commercial and industrial property, L1/L2 the personal-property equivalents,
+# and J anything is a utility. Everything else — A single-family, B multifamily,
+# C vacant lots, D acreage, E farm improvements, M mobile homes, O residential
+# inventory — is either residential or land, and stays.
+COMMERCIAL_SPTB = re.compile(r"^\s*(?:F[12]|L[12]|J\d?)\b", re.I)
+
+# Wording on the use fields, for districts and feeds that publish a description
+# rather than a code. Deliberately NOT applied to `legal_description`: platted
+# subdivisions are called things like "INDUSTRIAL ADDITION" and "BUSINESS PARK
+# ESTATES", and a house on a lot inside one is a house. Only a field whose job
+# is to say what the property is used for gets to answer that question.
+COMMERCIAL_USE_WORDS = re.compile(
+    r"\bCOMMERCIAL\b|\bINDUSTRIAL\b|\bWAREHOUSE\b|\bRETAIL\b|\bOFFICE\b|"
+    r"\bRESTAURANT\b|\bSHOPPING\b|\bSTRIP CENTER\b|\bMANUFACTUR|\bFACTORY\b|"
+    r"\bPLANT\b|\bHOTEL\b|\bMOTEL\b|\bSERVICE STATION\b|\bCAR WASH\b|"
+    r"\bSELF[- ]?STORAGE\b|\bUTILITY\b|\bUTILITIES\b|\bPIPELINE\b", re.I)
+
+
+def property_use(listing: dict, cad: dict | None) -> tuple[str | None, str | None]:
+    """What this property is used for: `(kind, the field that said so)`.
+
+    `kind` is "commercial" or "residential", or **None when nothing readable
+    said** — and that third case is the common one today, which is why this
+    returns it rather than defaulting to residential. Guessing residential
+    would be the worse error of the two: it is the answer that lets a row
+    through.
+
+    Only fields whose job is to describe the use are consulted — the SPTB
+    category code first, because it is a controlled vocabulary, then the
+    district's and the feed's use descriptions. The street address is not
+    consulted at all: "11970 N CENTRAL EXPY" reads commercial to a person and
+    is not evidence, and this module does not infer.
+    """
+    cad = cad or {}
+    code = str(cad.get("land_use_code") or "").strip()
+    if code:
+        if COMMERCIAL_SPTB.match(code):
+            return "commercial", f"SPTB category {code!r} on the CAD record"
+        # A code that is present and not a commercial category is a real
+        # determination that this is not one.
+        return "residential", f"SPTB category {code!r} on the CAD record"
+
+    for value, where in ((cad.get("land_use_description"), "CAD land use"),
+                         (cad.get("property_type"), "CAD property type"),
+                         (listing.get("property_type"), "the county list's property type")):
+        text = str(value or "").strip()
+        if not text:
+            continue
+        if COMMERCIAL_USE_WORDS.search(text):
+            return "commercial", f"{where} says {text!r}"
+        return "residential", f"{where} says {text!r}"
+    return None, None
+
+
+def is_commercial_or_industrial(listing: dict, cad: dict | None) -> str | None:
+    """The reason this is commercial or industrial property, or None."""
+    kind, why = property_use(listing, cad)
+    return why if kind == "commercial" else None
+
+
+def city_of(listing: dict, cad: dict | None,
+            place: dict | None = None) -> tuple[str, str]:
+    """The city this parcel sits in, and where that came from.
+
+    Three sources, best first, and the source is returned because they are not
+    equally good. The county's own list is authoritative and free. The CAD's
+    situs is next, and is parsed rather than published — a situs reads
+    "1234 MAIN ST, DALLAS, TX 75201", so the city is the second-to-last comma
+    field. The geocoder is last: it is the Census matching an address string,
+    which is a very good guess and still a guess.
+
+    An empty string means **not determined**, never "no city". Half this
+    inventory is unincorporated county land where the answer is legitimately
+    not a city name, and the two must not be conflated — so nothing here
+    invents "Dallas" from the fact that the row is in Dallas County.
+    """
+    direct = str(listing.get("city") or "").strip()
+    if direct:
+        return direct.title() if direct.isupper() else direct, "county list"
+
+    situs = str((cad or {}).get("situs") or "").strip()
+    parts = [p.strip() for p in situs.split(",") if p.strip()]
+    if len(parts) >= 3:
+        city = parts[-2]
+        if city and not re.fullmatch(r"[\d\s-]+", city):
+            return city.title() if city.isupper() else city, "CAD situs"
+
+    geocoded = str((place or {}).get("city") or "").strip()
+    if geocoded:
+        return geocoded.title() if geocoded.isupper() else geocoded, "geocoder"
+    return "", ""
+
+
 def is_mobile_home_without_land(listing: dict, cad: dict | None) -> str | None:
     haystack = " ".join(str(x or "") for x in (
         listing.get("property_type"), listing.get("legal_description"),
@@ -534,6 +630,30 @@ def gate1_hard_disqualifiers(listing: dict, cad: dict | None, cfg: dict,
     status = str(listing.get("status") or "").strip().lower()
     if status and re.search(r"withdraw|pulled|cancel|struck from|removed|paid|bankrupt", status):
         out.append(rejection(1, "withdrawn", f"county list status is {listing['status']!r}"))
+
+    # Before the `if not cad` block below, which returns in both of its
+    # branches. Placed after it this never ran at all: no row in the
+    # 2026-09-11 run has a CAD record, so the filter read as working and
+    # rejected nothing. The check does not need a CAD anyway — the county
+    # list's own property type answers it when the feed publishes one.
+    #
+    # The gate's own rule, applied to one more field. A use that was *read* and
+    # is commercial disqualifies; a use nothing published is an unknown, and an
+    # unknown has never rejected anything here.
+    kind, why = property_use(listing, cad)
+    if kind == "commercial":
+        if threshold(cfg, "REJECT_COMMERCIAL_USE"):
+            out.append(rejection(1, "commercial_or_industrial", why))
+        else:
+            flags.append(flag("commercial_or_industrial", MATERIAL,
+                              f"{why} — kept because REJECT_COMMERCIAL_USE is off"))
+    elif kind is None:
+        flags.append(flag("property_use_unknown", MATERIAL,
+                          "nothing published says what this property is used for, so it "
+                          "cannot be told apart from a warehouse or a shopfront — the SPTB "
+                          "category and the use descriptions all live on the CAD record, "
+                          "and the county lists publish neither. Confirm the use before "
+                          "bidding."))
 
     if not cad:
         value, source = valuation(listing, cad)
@@ -1267,7 +1387,8 @@ def annotate_history(result: dict, history: dict[str, dict], cfg: dict) -> None:
 # --------------------------------------------------------------------------
 
 HEADERS = [
-    "County", "Sale Date", "On This Docket", "Sale Type", "Cause No", "Account No", "Address",
+    "County", "City", "Sale Date", "On This Docket", "Sale Type", "Cause No", "Account No",
+    "Address",
     "Legal Description", "Property Type", "Opening Bid", "Value", "Value Source", "Bid/Value",
     "Redemption Period", "Redemption Payout", "Walk-Away Bid", "Tier",
     "Flags", "Checks Run", "Checks Unavailable", "CAD Link", "County Listing Link",
@@ -1391,6 +1512,10 @@ def _sheet_row(result: dict) -> list[Any]:
     ratio = econ.get("bid_to_value")
     return [
         listing.get("county", ""),
+        # Blank means not determined, never "no city" — plenty of this inventory
+        # is unincorporated county land. `city_of` never fills it in from the
+        # county name.
+        listing.get("city", ""),
         listing.get("sale_date", ""),
         (result.get("docket") or {}).get("label", ""),
         listing.get("sale_type", ""),
@@ -1568,6 +1693,12 @@ def packet_markdown(result: dict, cfg: dict, statement: dict) -> str:
         "| Field | Value |",
         "| --- | --- |",
         line("County", county),
+        # With its provenance, because the geocoder's answer and the county's
+        # own are not equally good and the drive-by depends on getting there.
+        line("City", (f"{listing['city']} (per the {listing.get('city_source')})"
+                      if listing.get("city") and listing.get("city_source")
+                      else listing.get("city")
+                      or "not determined — this may be unincorporated county land")),
         line("Sale date", listing.get("sale_date") or docket["detail"]),
         line("On this docket", docket["label"]),
         line("Sale type", listing.get("sale_type")),
