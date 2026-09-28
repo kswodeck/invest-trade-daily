@@ -1,0 +1,256 @@
+{
+  "disclaimer": "NOT A TITLE SEARCH — EVERY ROW IS A CANDIDATE ONLY. This tool reads public county sale lists and appraisal district records. It cannot and does not certify title. County clerk lien records are not reliably machine-readable, so liens that survive a tax sale — federal tax liens (IRC §7425(d) gives the IRS 120 days to redeem after the sale), some HOA assessments, environmental liens, and super-priority PACE liens — may exist on any row here and go undetected. A blank in the Flags column means nothing was found by the checks that ran, never that the property is clear. Order a professional title search before you bid. Tex. Tax Code §34.015 separately requires an unexpired written statement from the county assessor-collector before a deed can be delivered.",
+  "screened_at": "2026-09-28T16:10:52-04:00",
+  "screened_on": "2026-09-28",
+  "sale_date": "2026-10-06",
+  "counties": [
+    "Dallas",
+    "Tarrant",
+    "Johnson",
+    "Ellis"
+  ],
+  "thresholds": {
+    "MAX_OPENING_BID": 12000,
+    "MAX_BID_TO_VALUE": 0.75,
+    "TIER_A_BID_TO_VALUE": 0.35,
+    "QUIET_TITLE_BUDGET": 3500,
+    "HOLDING_MONTHS": 7,
+    "REJECT_FLOOD_ZONE": false,
+    "EFFECTIVE_TAX_RATE": 0.023,
+    "MONTHLY_CARRY": 75,
+    "POST_JUDGMENT_YEARS": 1.0,
+    "TEARDOWN_IMPROVEMENT_VALUE": 5000,
+    "STATEMENT_WARN_DAYS": 30,
+    "STATEMENT_LEAD_WORKING_DAYS": 21,
+    "MAX_ENRICHMENTS": 250,
+    "TIER_A_MAX_MINOR_FLAGS": 1,
+    "TIER_B_MAX_MINOR_FLAGS": 2,
+    "PACKET_TIERS": "A,B,C",
+    "PACKET_DOCKETS": "on_docket,over_the_counter,other_sale",
+    "SHEET_DOCKETS": "on_docket,over_the_counter,other_sale,date_unknown",
+    "REJECT_COMMERCIAL_USE": true
+  },
+  "bidder_statement": [
+    {
+      "county": "Dallas",
+      "expires": null,
+      "days_left": null,
+      "state": "too_late",
+      "message": "No usable §34.015 statement for Dallas, and the 2026-10-06 sale is 6 working days away — under the 21 a county may take to issue one. You cannot bid at this sale in Dallas. Apply now for the following one; the next first Tuesday is 2026-11-03.",
+      "sale_date": "2026-10-06",
+      "working_days_to_sale": 6
+    },
+    {
+      "county": "Tarrant",
+      "expires": null,
+      "days_left": null,
+      "state": "too_late",
+      "message": "No usable §34.015 statement for Tarrant, and the 2026-10-06 sale is 6 working days away — under the 21 a county may take to issue one. You cannot bid at this sale in Tarrant. Apply now for the following one; the next first Tuesday is 2026-11-03.",
+      "sale_date": "2026-10-06",
+      "working_days_to_sale": 6
+    },
+    {
+      "county": "Johnson",
+      "expires": null,
+      "days_left": null,
+      "state": "too_late",
+      "message": "No usable §34.015 statement for Johnson, and the 2026-10-06 sale is 6 working days away — under the 21 a county may take to issue one. You cannot bid at this sale in Johnson. Apply now for the following one; the next first Tuesday is 2026-11-03.",
+      "sale_date": "2026-10-06",
+      "working_days_to_sale": 6
+    },
+    {
+      "county": "Ellis",
+      "expires": null,
+      "days_left": null,
+      "state": "too_late",
+      "message": "No usable §34.015 statement for Ellis, and the 2026-10-06 sale is 6 working days away — under the 21 a county may take to issue one. You cannot bid at this sale in Ellis. Apply now for the following one; the next first Tuesday is 2026-11-03.",
+      "sale_date": "2026-10-06",
+      "working_days_to_sale": 6
+    }
+  ],
+  "sources": [
+    {
+      "kind": "county list",
+      "id": "dallas_auction",
+      "url": "https://dallas.texas.sheriffsaleauctions.com/",
+      "ok": false,
+      "detail": "all 3 configured locations failed:\n      https://dallas.texas.sheriffsaleauctions.com/ — could not read a sale list from this page: tables are present but none has a header row and a data row. Headers seen: None. Automatic JSON discovery also found nothing (no embedded JSON array looked like a sale list). Update `column_map` for source 'dallas_auction' in config/tax_deeds.json, or export the list to data/tax_deeds/manual/dallas_auction.csv.\n      https://www.dallasact.com/act_webdev/dallas/index.jsp — could not read a sale list from this page: the best-matching table is missing minimum_opening_bid, account or cause_number. Headers seen: [[''], [\"Owner Search Address Search Account Search Fiduciary Search Find Your Property Tax Balance You can search for any account whose property taxes are collected by the Dallas County Tax Office. function checkInput() { var criteria = document.FrmSearchQuery.criteria.value; var search_type = 0; // Default input to the criteria field. If there are problems then we'll // already be there for the user. document.FrmSearchQuery.criteria.focus(); // Identify what type of search the user wants to do for ( var i=0; i < document.FrmSearchQuery.searchby.length; i++ ) { if ( document.FrmSearchQuery.searchby[i].checked ) { search_type = document.FrmSearchQuery.searchby[i].value; } } // Verify that the user has specified something if ( criteria.length == 0 ) { var search_message = 'Please enter something to search on. '; if ( search_type != 6 ) { search_message = search_message + '\\\\n\\\\nYou need to enter at least 3 characters to search on. '; } alert(search_message); return false; } // Make sure that the criteria the user specified is appropriate for the search type if ( search_type == 6 ) { if ( criteria != parseInt(criteria) ) { alert ('Fiduciary number searches must be numeric. \\\\n\\\\n' + 'Please reenter the Fiduciary number to wish to search. '); return false; } } else if ( search_type == 7 ) { if ( criteria != parseFloat(criteria) ) { alert ('Base Levy searches must be numeric. \\\\n\\\\n' + 'Please reenter the Base Levy amount you wish to search. \\\\n' + 'Do not include any formatting characters such as $ or commas. '); return false; } } else { if ( criteria.length < 3 ) { alert ('You need to enter at least 3 characters to search on. \\\\n\\\\n' + 'Please reenter what you want to search on.'); return false; } } return true; } document.FrmSearchQuery.criteria.focus(); Go to Your Portfolio Tax Office Home Page\"], ['']]. Automatic JSON discovery also found nothing (no embedded JSON array looked like a sale list). Update `column_map` for source 'dallas_auction' in config/tax_deeds.json, or export the list to data/tax_deeds/manual/dallas_auction.csv.\n      https://taxsales.lgbs.com/ — this page contains no HTML table at all, so there is nothing for a table parser to read and no `column_map` edit can fix it — the list is rendered by JavaScript. Automatic discovery of the JSON the page ships with itself was tried and found nothing (no embedded JSON array looked like a sale list). Two ways forward: open the page with the network tab, find the endpoint it calls, and add it as a `\"format\": \"json\"` source (or as a `fallback_urls` entry) for 'dallas_auction'; or export the list by hand to data/tax_deeds/manual/dallas_auction.csv."
+    },
+    {
+      "kind": "county list",
+      "id": "dallas_struck_off",
+      "url": "https://taxsales.lgbs.com/",
+      "ok": false,
+      "detail": "all 2 configured locations failed:\n      https://taxsales.lgbs.com/ — this page contains no HTML table at all, so there is nothing for a table parser to read and no `column_map` edit can fix it — the list is rendered by JavaScript. Automatic discovery of the JSON the page ships with itself was tried and found nothing (no embedded JSON array looked like a sale list). Two ways forward: open the page with the network tab, find the endpoint it calls, and add it as a `\"format\": \"json\"` source (or as a `fallback_urls` entry) for 'dallas_struck_off'; or export the list by hand to data/tax_deeds/manual/dallas_struck_off.csv.\n      https://www.dallascounty.org/departments/tax/tax-sales.php — HTTP 404: this URL does not exist. It moved or was never right — find the current one and update it in config/tax_deeds.json."
+    },
+    {
+      "kind": "county list",
+      "id": "tarrant_auction",
+      "url": "https://taxsales.lgbs.com/",
+      "ok": false,
+      "detail": "all 2 configured locations failed:\n      https://taxsales.lgbs.com/ — this page contains no HTML table at all, so there is nothing for a table parser to read and no `column_map` edit can fix it — the list is rendered by JavaScript. Automatic discovery of the JSON the page ships with itself was tried and found nothing (no embedded JSON array looked like a sale list). Two ways forward: open the page with the network tab, find the endpoint it calls, and add it as a `\"format\": \"json\"` source (or as a `fallback_urls` entry) for 'tarrant_auction'; or export the list by hand to data/tax_deeds/manual/tarrant_auction.csv.\n      https://www.tarrantcountytx.gov/en/constables.html — could not read a sale list from this page: tables are present but none has a header row and a data row. Headers seen: [['']]. Automatic JSON discovery also found nothing (no embedded JSON array looked like a sale list). Update `column_map` for source 'tarrant_auction' in config/tax_deeds.json, or export the list to data/tax_deeds/manual/tarrant_auction.csv."
+    },
+    {
+      "kind": "county list",
+      "id": "johnson_auction",
+      "url": "https://www.johnsoncountytx.org/public-safety/constables/constable-sale",
+      "ok": false,
+      "detail": "all 3 configured locations failed:\n      https://www.johnsoncountytx.org/public-safety/constables/constable-sale — HTTP 403: the host refused this User-Agent. Not a format change — the page may be fine in a browser. Some county vendors block non-browser clients outright; check whether the list is published somewhere else, or export it by hand. Do not spoof a browser to get around this. All 2 configured User-Agents were refused, so this is the host's filter and not a format change.\n      https://www.johnsoncountytx.org/departments/constables — HTTP 403: the host refused this User-Agent. Not a format change — the page may be fine in a browser. Some county vendors block non-browser clients outright; check whether the list is published somewhere else, or export it by hand. Do not spoof a browser to get around this. All 2 configured User-Agents were refused, so this is the host's filter and not a format change.\n      https://taxsales.lgbs.com/ — this page contains no HTML table at all, so there is nothing for a table parser to read and no `column_map` edit can fix it — the list is rendered by JavaScript. Automatic discovery of the JSON the page ships with itself was tried and found nothing (no embedded JSON array looked like a sale list). Two ways forward: open the page with the network tab, find the endpoint it calls, and add it as a `\"format\": \"json\"` source (or as a `fallback_urls` entry) for 'johnson_auction'; or export the list by hand to data/tax_deeds/manual/johnson_auction.csv."
+    },
+    {
+      "kind": "county list",
+      "id": "ellis_auction",
+      "url": "https://taxsales.lgbs.com/",
+      "ok": false,
+      "detail": "all 2 configured locations failed:\n      https://taxsales.lgbs.com/ — this page contains no HTML table at all, so there is nothing for a table parser to read and no `column_map` edit can fix it — the list is rendered by JavaScript. Automatic discovery of the JSON the page ships with itself was tried and found nothing (no embedded JSON array looked like a sale list). Two ways forward: open the page with the network tab, find the endpoint it calls, and add it as a `\"format\": \"json\"` source (or as a `fallback_urls` entry) for 'ellis_auction'; or export the list by hand to data/tax_deeds/manual/ellis_auction.csv.\n      https://www.co.ellis.tx.us/166/Tax-Assessor-Collector — this page contains no HTML table at all, so there is nothing for a table parser to read and no `column_map` edit can fix it — the list is rendered by JavaScript. Automatic discovery of the JSON the page ships with itself was tried and found nothing (no embedded JSON array looked like a sale list). Two ways forward: open the page with the network tab, find the endpoint it calls, and add it as a `\"format\": \"json\"` source (or as a `fallback_urls` entry) for 'ellis_auction'; or export the list by hand to data/tax_deeds/manual/ellis_auction.csv."
+    },
+    {
+      "kind": "appraisal district",
+      "id": "DCAD",
+      "url": "https://www.dallascad.org/SearchAddr.aspx",
+      "ok": true,
+      "detail": "reachable, markers present"
+    },
+    {
+      "kind": "appraisal district",
+      "id": "TAD",
+      "url": "https://www.tad.org/property-search/",
+      "ok": false,
+      "detail": "HTTP 403: the host refused this User-Agent. Not a format change — the page may be fine in a browser. Some county vendors block non-browser clients outright; check whether the list is published somewhere else, or export it by hand. Do not spoof a browser to get around this. All 2 configured User-Agents were refused, so this is the host's filter and not a format change."
+    },
+    {
+      "kind": "appraisal district",
+      "id": "JohnsonCAD",
+      "url": "https://esearch.johnsoncad.com/",
+      "ok": true,
+      "detail": "reachable, markers present"
+    },
+    {
+      "kind": "appraisal district",
+      "id": "EllisCAD",
+      "url": "https://esearch.elliscad.com/",
+      "ok": false,
+      "detail": "after 3 attempt(s): ReadTimeout <- TimeoutError: _ssl.c:993: The handshake operation timed out"
+    },
+    {
+      "kind": "lien: federal_tax_lien",
+      "id": "federal_tax_lien/Dallas",
+      "url": "https://dallas.tx.publicsearch.us/",
+      "ok": true,
+      "policy": true,
+      "detail": "not permitted by robots.txt on all 1 host(s) — this check reports unavailable, which is a flag, on every row. Permanent and not a config error. https://dallas.tx.publicsearch.us/: https://dallas.tx.publicsearch.us/robots.txt disallows this path for invest-trade-daily-taxdeeds"
+    },
+    {
+      "kind": "lien: federal_tax_lien",
+      "id": "federal_tax_lien/Tarrant",
+      "url": "https://tarrant.tx.publicsearch.us/",
+      "ok": true,
+      "policy": true,
+      "detail": "not permitted by robots.txt on all 1 host(s) — this check reports unavailable, which is a flag, on every row. Permanent and not a config error. https://tarrant.tx.publicsearch.us/: https://tarrant.tx.publicsearch.us/robots.txt disallows this path for invest-trade-daily-taxdeeds"
+    },
+    {
+      "kind": "lien: federal_tax_lien",
+      "id": "federal_tax_lien/Johnson",
+      "url": "https://johnson.tx.publicsearch.us/",
+      "ok": false,
+      "detail": "https://www.johnsoncountytx.org/departments/county-clerk: HTTP 403: the host refused this User-Agent. Not a format change — the page may be fine in a browser. Some county vendors block non-browser c\n    https://johnson.tx.publicsearch.us/: https://johnson.tx.publicsearch.us/robots.txt disallows this path for invest-trade-daily-taxdeeds"
+    },
+    {
+      "kind": "lien: federal_tax_lien",
+      "id": "federal_tax_lien/Ellis",
+      "url": "https://www.co.ellis.tx.us/158/County-Clerk",
+      "ok": true,
+      "detail": "1 of 1 host(s) reachable — but no query_url configured, so this check reports unavailable"
+    },
+    {
+      "kind": "lien: pace_lien",
+      "id": "pace_lien/_all",
+      "url": "https://www.texaspaceauthority.org/",
+      "ok": true,
+      "detail": "1 of 3 host(s) reachable — but no query_url configured, so this check reports unavailable\n    (unused) https://www.texaspaceauthority.org/projects/: HTTP 404: this URL does not exist. It moved or was never right — find the current one and update it in config/tax_deeds.json.\n    (unused) https://texaspace.org/: after 3 attempt(s): ConnectionError <- ConnectionRefusedError: [Errno 111] Connection refused"
+    },
+    {
+      "kind": "lien: hoa_assessment",
+      "id": "hoa_assessment/Dallas",
+      "url": "https://dallas.tx.publicsearch.us/",
+      "ok": true,
+      "policy": true,
+      "detail": "not permitted by robots.txt on all 1 host(s) — this check reports unavailable, which is a flag, on every row. Permanent and not a config error. https://dallas.tx.publicsearch.us/: https://dallas.tx.publicsearch.us/robots.txt disallows this path for invest-trade-daily-taxdeeds"
+    },
+    {
+      "kind": "lien: hoa_assessment",
+      "id": "hoa_assessment/Tarrant",
+      "url": "https://tarrant.tx.publicsearch.us/",
+      "ok": true,
+      "policy": true,
+      "detail": "not permitted by robots.txt on all 1 host(s) — this check reports unavailable, which is a flag, on every row. Permanent and not a config error. https://tarrant.tx.publicsearch.us/: https://tarrant.tx.publicsearch.us/robots.txt disallows this path for invest-trade-daily-taxdeeds"
+    },
+    {
+      "kind": "lien: hoa_assessment",
+      "id": "hoa_assessment/Johnson",
+      "url": "https://johnson.tx.publicsearch.us/",
+      "ok": false,
+      "detail": "https://www.johnsoncountytx.org/departments/county-clerk: HTTP 403: the host refused this User-Agent. Not a format change — the page may be fine in a browser. Some county vendors block non-browser c\n    https://johnson.tx.publicsearch.us/: https://johnson.tx.publicsearch.us/robots.txt disallows this path for invest-trade-daily-taxdeeds"
+    },
+    {
+      "kind": "lien: hoa_assessment",
+      "id": "hoa_assessment/Ellis",
+      "url": "https://www.co.ellis.tx.us/158/County-Clerk",
+      "ok": true,
+      "detail": "1 of 1 host(s) reachable — but no query_url configured, so this check reports unavailable"
+    },
+    {
+      "kind": "lien: municipal_lien",
+      "id": "municipal_lien/Dallas",
+      "url": "https://dallas.tx.publicsearch.us/",
+      "ok": true,
+      "policy": true,
+      "detail": "not permitted by robots.txt on all 1 host(s) — this check reports unavailable, which is a flag, on every row. Permanent and not a config error. https://dallas.tx.publicsearch.us/: https://dallas.tx.publicsearch.us/robots.txt disallows this path for invest-trade-daily-taxdeeds"
+    },
+    {
+      "kind": "lien: municipal_lien",
+      "id": "municipal_lien/Tarrant",
+      "url": "https://tarrant.tx.publicsearch.us/",
+      "ok": true,
+      "policy": true,
+      "detail": "not permitted by robots.txt on all 1 host(s) — this check reports unavailable, which is a flag, on every row. Permanent and not a config error. https://tarrant.tx.publicsearch.us/: https://tarrant.tx.publicsearch.us/robots.txt disallows this path for invest-trade-daily-taxdeeds"
+    },
+    {
+      "kind": "lien: municipal_lien",
+      "id": "municipal_lien/Johnson",
+      "url": "https://johnson.tx.publicsearch.us/",
+      "ok": false,
+      "detail": "https://www.johnsoncountytx.org/departments/county-clerk: HTTP 403: the host refused this User-Agent. Not a format change — the page may be fine in a browser. Some county vendors block non-browser c\n    https://johnson.tx.publicsearch.us/: https://johnson.tx.publicsearch.us/robots.txt disallows this path for invest-trade-daily-taxdeeds"
+    },
+    {
+      "kind": "lien: municipal_lien",
+      "id": "municipal_lien/Ellis",
+      "url": "https://www.co.ellis.tx.us/158/County-Clerk",
+      "ok": true,
+      "detail": "1 of 1 host(s) reachable — but no query_url configured, so this check reports unavailable"
+    },
+    {
+      "kind": "geocoder",
+      "id": "geocoder",
+      "url": "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress",
+      "ok": true,
+      "detail": "geocoded the probe address to {'x': -96.80801280837, 'y': 32.779501490686}"
+    },
+    {
+      "kind": "environmental",
+      "id": "environmental",
+      "url": "https://data.epa.gov/efservice/frs_program_facility/postal_code/75202/JSON",
+      "ok": true,
+      "detail": "reachable, 89 facility record(s) for the probe ZIP"
+    }
+  ],
+  "totals": {
+    "listings": 0,
+    "candidates": 0,
+    "rejected": 0,
+    "tier_a": 0,
+    "tier_b": 0,
+    "tier_c": 0
+  },
+  "results": []
+}
