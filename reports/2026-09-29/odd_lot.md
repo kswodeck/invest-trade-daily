@@ -1,6 +1,6 @@
 # Odd-lot tender screener — 2026-09-29
 
-Run 2026-09-29 05:31 ET (premarket slot). 6 offers tracked, 0 clear every gate: 0 Tier A, 0 Tier B, 0 Tier C.
+Run 2026-09-29 18:31 ET (evening slot). 6 offers tracked, 0 clear every gate: 0 Tier A, 0 Tier B, 0 Tier C.
 
 **No Tier A opportunities today.** That is the ordinary result — an odd-lot tender with a 3%+ spread and a clean condition set is rare, and the thresholds below are not moved to produce one.
 
@@ -27,13 +27,17 @@ _None._
 | — | EX-99.(B) | 2026-09-01 | no ticker for CIK 0001876006 in the filing or the SEC company list — cannot price the trade |
 | — | EX-99 | 2026-09-01 | odd lots mentioned but no acceptance-before-proration language; no cash consideration stated in the document; subject security is not common equity (unidentified security); no expiration date could be read from the document |
 
+## Expired today
+
+- UTMD UTAH MEDICAL PRODUCTS INC — expired 2026-09-21, never cleared the gates
+
 ## Where the universe went
 
 A screener that finds nothing reads exactly like one that is broken. This is the difference.
 
-- **96** full-text queries over `2026-07-16..2026-09-29` returned **128** document hit(s) across **17** filing(s) (**49** exhibits kept as candidates)
+- **96** full-text queries over `2026-07-16..2026-09-29` returned **144** document hit(s) across **18** filing(s) (**54** exhibits kept as candidates)
 - searched as **4** date slice(s), **96** result page(s) read
-- **6** offers open, **19** archived
+- **6** offers open, **20** archived
 
 | Turned away for | Count |
 | --- | --- |
