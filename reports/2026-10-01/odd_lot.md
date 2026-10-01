@@ -1,6 +1,6 @@
 # Odd-lot tender screener — 2026-10-01
 
-Run 2026-10-01 05:31 ET (premarket slot). 5 offers tracked, 0 clear every gate: 0 Tier A, 0 Tier B, 0 Tier C.
+Run 2026-10-01 18:31 ET (evening slot). 5 offers tracked, 0 clear every gate: 0 Tier A, 0 Tier B, 0 Tier C.
 
 **No Tier A opportunities today.** That is the ordinary result — an odd-lot tender with a 3%+ spread and a clean condition set is rare, and the thresholds below are not moved to produce one.
 
@@ -26,13 +26,18 @@ _None._
 | NFJ | EX-99.(A)(1)(III) | 2026-09-01 | odd lots mentioned but no acceptance-before-proration language |
 | — | EX-99 | 2026-09-01 | odd lots mentioned but no acceptance-before-proration language; no cash consideration stated in the document; subject security is not common equity (unidentified security); no expiration date could be read from the document |
 
+## Expired today
+
+- — Highlands REIT, Inc. — expired 2026-09-29, never cleared the gates
+- ABUS Arbutus Biopharma Corp — expired 2026-09-29, never cleared the gates
+
 ## Where the universe went
 
 A screener that finds nothing reads exactly like one that is broken. This is the difference.
 
-- **96** full-text queries over `2026-07-18..2026-10-01` returned **148** document hit(s) across **19** filing(s) (**55** exhibits kept as candidates)
+- **96** full-text queries over `2026-07-18..2026-10-01` returned **152** document hit(s) across **21** filing(s) (**57** exhibits kept as candidates)
 - searched as **4** date slice(s), **96** result page(s) read
-- **5** offers open, **22** archived
+- **5** offers open, **24** archived
 
 | Turned away for | Count |
 | --- | --- |
