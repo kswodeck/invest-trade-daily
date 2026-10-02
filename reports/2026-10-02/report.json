@@ -1,0 +1,366 @@
+{
+  "date": "2026-10-02",
+  "generated_at_et": "2026-10-02T06:34:56-04:00",
+  "research_minutes": 32,
+  "truncated": false,
+  "data_quality_notes": "ONLY ONE OF THESE TEN ROWS IS NEW RISK. HII (rank 1) is the single genuinely new idea. Everything else is position management: two holds with levels unchanged (XLE long, XLU short) and seven exit orders to close open longs at today's open (NKE, DINO, SNX, GDX, LCII, LULU, BCC). Do not read ten rows as ten opportunities.\n\nResearch completed \u2014 the notes carry a RESEARCH COMPLETE block, so truncated is false. Research ran 06:03-06:33 ET, roughly 32 minutes, well inside the cap, and captured 15 rows covering 10 distinct symbols (XLU, NKE, GDX, LCII and LULU were each re-captured once to correct evidence or conviction; the later row is published). Conviction scores were re-checked here against distinct evidence kinds and all ten match the count required (2 kinds for a 3, 3 for a 4, 4 for a 5) \u2014 four had been corrected downward during research (NKE 4 to 5 upward, GDX 4 to 3, LCII 4 to 3, LULU 4 to 3).\n\nWHY ONE NEW IDEA AND NOT FIVE. Both of the day's live drivers were already at the three-per-driver correlation cap before research began: Iran escalation (XLE held, OXY awaiting entry, and now HII) and the long end at a 24-year high (XLU short open, plus IYR, TLT and ITB orders awaiting). DAL short \u2014 a complete, floor-clearing setup at 84.50 entry / 89.50 stop / 74.50 target, R:R 2.00, earnings 2026-10-09 bmo \u2014 was rejected on the cap rather than on merit, as were XLP short, a TLT re-level, and GD as a second defense name. Their levels are on the watchlist so a later run can lift them if a slot frees up. The third driver found, AI and IT-services demand verified through Accenture's record print, failed on its own expressions: SNX's catalyst is spent with $15.7M of insider selling and zero buys, EPAM is mechanically contradicted (headcount-based engineering is what GenAI disintermediates), and MU has tripled in six months on a now-spent print.\n\nSEVEN EXITS IN ONE MORNING IS THE UNUSUAL NUMBER HERE, and the reason is one rule applied consistently rather than seven separate thesis failures. Five of the seven (NKE, BCC, LCII, LULU, plus the structure problem on DINO and SNX) are positions carrying no stop at all or no stop that can be set compliantly from a filled entry that cannot be amended. NKE is the only one closed on fresh fundamental news \u2014 its Q1 FY27 release guided FY27 revenue down high-single-digits. DINO and SNX are closed in profit (+4.8% and +4.5%) precisely because their arithmetic no longer closes from the filled entry: DINO needs a 129.50 target above its two-year high to clear 2.0 R:R on a compliant 2.0-ATR stop, and SNX yields only 1.30 R:R from 260.00 with a 2.0-ATR stop. Taking the profit beats keeping a stop walked in to 1.83 ATR, which is the failure mode that produced all ten of this report's first stop-outs.\n\nRATIOS SITTING JUST ABOVE THE FLOOR \u2014 read this honestly. Both holds clear the 2.0 swing floor narrowly: XLE at 2.13 and XLU at 2.07. That clustering is normally the signature of targets fitted to pass, and it is called out rather than hidden. The mitigating fact is that neither level was set today: both are the entry, target and stop as first published (XLE 2026-08-15, XLU 2026-09-24) and neither stop has been walked in \u2014 XLE's is 2.37 ATR from entry on a fetched ATR14 of 1.3062 and XLU's is 2.35 ATR on 0.5736, both above the 1.8 ATR ETF floor. HII is the only freshly set ratio and it is 2.79 on a 2.78-ATR stop. All three recomputed here from entry, target and stop rather than carried from the notes.\n\nPRICES. Every price in this report is the 2026-10-01 regular-session close, fetched from finnhub at 20:00Z and re-fetched at synthesis; the market session at synthesis is pre-market, so a previous close is the freshest honest equity mark, not stale data. Index, VIX, futures, dollar, crude, Brent and gold levels in market_context could NOT be fetched from a market-data call \u2014 Yahoo's chart API returned HTTP 429 for every index, futures, FX and commodity symbol tried and finnhub refuses indices \u2014 so those numbers come from fetched news articles (investrade.com market review and CNBC oil coverage, both cited) rather than from a quote. VIX and DXY could not be obtained from any source and are null. Bitcoin at $86,344 is a fetched CoinGecko price.\n\nOTHER GAPS THAT COST SOMETHING. (1) Event contracts: none publishable. Kalshi's unauthenticated endpoint returns markets as active with null bid, ask, last and volume, and market_data.py events returns count 0 for every macro topic tried, so no implied probability could be fetched and a probability-disagreement thesis is impossible this run. (2) Earnings calendar hole 2026-10-17 to 2026-11-02: --days 12 covers Oct 2-16 and --days 40 returns only Nov 3-11, so there is no fetched earnings date for HII, GD, LMT, NOC, RTX, PFE, CCJ or KHC. The HII idea is deliberately NOT keyed to its Q3 print, because that date was not verified. (3) No options-implied move for any idea \u2014 yahoo-options returns HTTP 401 \u2014 so the check on whether a target sits inside what the market prices was not run on HII or XLE. (4) Short interest unavailable: api.nasdaq.com timed out on every symbol. (5) No crude futures idea (/MCL) despite the universe file preferring futures for a commodity view, because no futures price or contract-month data could be fetched. (6) No long_term idea published. The lane was worked deliberately \u2014 P&C insurers (TRV, CB, WRB, ACGL) as beneficiaries of a permanently higher long end \u2014 and rejected for two reasons, one of them a gap in the work: the group's de-rating has a real cause the thesis did not address (TRV's sell-side is cutting through an 83% beat, pricing the underwriting cycle softening), and no bear-case price could be built without book value per share and normalised ROE, neither of which was available from any source here. A long_term idea requires a stated bear-case price, and estimating one from memory is forbidden.\n\nSTALE ORDERS NEEDING ACTION, surfaced on the watchlist: BTC sell @ 63,400 and /MBTU6 short @ 64,340 both sit ~26-27% below a fetched spot of $86,344, and /MBTU6 is a September 2026 contract that has already expired. MU buy @ 960 is 12.5% below the market with its catalyst spent. Two September FOMC Kalshi contracts are still carried as awaiting entry after the meeting happened. LULU also carries a second, stale sell order at 100.61 unfilled for 24 days above the market, which today's market exit supersedes.\n\nUNRESOLVED, FLAGGED RATHER THAN GUESSED AT: yesterday's report carries CEG as an open position while today's prior context shows it awaiting entry after a 2026-09-30 stop-out; and MKC is listed as reporting 2026-10-05 but reported as having already released Q3.\n\nSOURCES THAT FAILED: Yahoo chart API (HTTP 429, all index/VIX/futures/FX/commodity symbols); yahoo-options (HTTP 401); api.nasdaq.com short interest (read timeout, every symbol); Kalshi unauthenticated market prices (null on all price fields); market_data.py events (count 0); CoinGecko on the first macro pass (recovered on a direct crypto call).\n\nRED TEAM (phase 2c). Ten recommendations in, two out. Cut HII, the day's single new idea and its only conviction 5: the catalyst it is keyed to \u2014 a carrier strike group deploying \u2014 is an operations decision that adds no revenue to a shipbuilder with a 4.2x-revenue backlog, and the idea's own CR evidence freezes the procurement channel until 2026-12-11, past the horizon. Its conviction 5 also double-counts the Q2 8-K under two evidence kinds at one URL, and its 2.79:1 blends to about 1.9R under the stated plan of trimming half at the declining SMA50. Downgraded XLU to conviction 3 on its own key_risk, which calls the expression crowded and late with all four rate shorts within 3% of their 120-day lows \u2014 that is an edge already priced. XLE held at conviction 4, unchanged and correctly argued.\n\nTHE SEVEN EXITS ARE ENDORSED ON SUBSTANCE AND MOVED TO THE WATCHLIST ON MECHANICS, and the distinction matters: closing NKE, DINO, SNX, GDX, LCII, LULU and BCC is right \u2014 five of the seven carry no stop at all and three sit within 1% of a 120-day low. But this report has no way to say 'close a position'. publish_sheets.positions_from_report turns every recommendation into a new PENDING row keyed on (symbol, direction), so a direction=sell exit order does not close the long; it opens a phantom short. This has already shipped twice: the 2026-09-08 NKE and LULU 'sell' rows are both carried today as open, filled shorts being marked to market at +7.81% and +4.39%, while the NKE and LULU longs they were meant to close remain open at -11.5% and -16.4%. The GLD 406.77 row is the third, and yesterday's watchlist misread it as a stale order rather than an artifact; that entry is corrected here. Publishing seven more would have added five phantom shorts and amended two, and all seven would have been demoted by --enforce regardless (no entry, no target, no stop), under a generated note that loses the instruction. On the watchlist the instruction survives in full and the tracker stays clean. Two caveats the reader must not miss: the tab heads these rows 'WATCHLIST \u2014 not yet actionable', which is the opposite of what they say, so read the notes; and nothing in the pipeline closes a position, so each long must be marked closed in state/open_positions.json by hand. The real fix is a close/exit direction the publisher understands, which is a code change and outside this phase.\n\nEXPECT XLE TO BE DEMOTED AT 2d. Its catalyst is stamped 2026-10-01, so check_catalyst_date fails it as already passed. That is the right rule for a new entry and the wrong reading of a hold on a position filled 2026-09-16, whose dated support is the carrier arrival at end of November. The date was left alone rather than nudged forward to clear the check \u2014 moving it would be exactly the fitting these phases exist to catch. If XLE lands in the watchlist, the position is unaffected: it stays open and graded in the Performance tab either way.\n\nWHAT SURVIVES IS TWO HOLDS AND NO NEW RISK. Both say hold at unchanged levels and explicitly say do not add, so the actionable content of this morning is seven closes and nothing bought. That is the honest read of the day, not a thin one. Validation demoted 1 idea(s) whose numbers did not check out. 1 more carry warnings \u2014 see the validation block on each.",
+  "market_context": {
+    "summary": "Bear steepener plus an oil shock, and that combination is what sorts today's book. The 10-year closed 5.248% on 2026-10-01 after spiking to roughly 5.34% intraday, a new 24-year high, with effective fed funds at 3.88% and the 2-year at 4.88% \u2014 funds well below the 2-year says this is a term-premium problem and a market pricing the path up rather than a tightening cycle. Equities clawed back to close slightly green (S&P 500 7,666 +0.20%, Nasdaq 26,871 +0.04%, Russell 2000 2,806 +0.35%) with tech, semis, software, industrials and energy leading while homebuilders, mortgage lenders, banks and REITs lagged \u2014 REITs are down about 9% since late August on this one axis. Separately, Brent broke $100 to $102.31 (+4.4%) and WTI to $92.87 after the WSJ reported a third US carrier strike group ordered to the Middle East, the USS Theodore Roosevelt arriving end of November; this is a war premium, not a demand story, and oil already touched $108 on 2026-09-10, so $102 is mid-range in an active conflict rather than a top. Gold set a fresh high at $4,203.30. The actionable asymmetry today is a cross-asset divergence: the oil market repriced Iran escalation and defense equities, de-rated all year on an interim US-Iran peace agreement, did not \u2014 which is the one new idea on the page. The day's dated event is the September Employment Situation at 08:30 ET, consensus +84k with unemployment held at 4.1%.",
+    "regime": "mixed",
+    "levels": {
+      "spx": 7666,
+      "ndx": 26871,
+      "dji": 50927,
+      "rut": 2806,
+      "us10y": 5.248,
+      "us2y": 4.88,
+      "fed_funds_effective": 3.88,
+      "vix": null,
+      "dxy": null,
+      "wti": 92.87,
+      "brent": 102.31,
+      "gold": 4203.3,
+      "btc": 86344,
+      "levels_note": "Index, yield, crude, Brent and gold levels are from fetched news articles and FRED, not from a market-data quote call \u2014 Yahoo's chart API returned HTTP 429 for every index, futures and commodity symbol and finnhub refuses indices. us2y and fed_funds_effective are FRED values as of 2026-09-30. VIX and DXY could not be fetched from any source. BTC is a fetched CoinGecko price."
+    },
+    "econ_calendar": [
+      {
+        "event": "September Employment Situation (BLS)",
+        "datetime_et": "2026-10-02T08:30",
+        "importance": "high",
+        "consensus": "+84k payrolls, unemployment 4.1%"
+      },
+      {
+        "event": "STZ Q2 earnings (amc)",
+        "datetime_et": "2026-10-06T16:30",
+        "importance": "low",
+        "consensus": "EPS 3.6021 on $2.568B"
+      },
+      {
+        "event": "APLD earnings (amc)",
+        "datetime_et": "2026-10-07T16:30",
+        "importance": "low",
+        "consensus": "EPS -0.3098 on $137.6M"
+      },
+      {
+        "event": "PEP Q3 earnings (bmo)",
+        "datetime_et": "2026-10-08T07:00",
+        "importance": "medium",
+        "consensus": "EPS 2.319 on $25.23B"
+      },
+      {
+        "event": "DAL Q3 earnings (bmo)",
+        "datetime_et": "2026-10-09T07:00",
+        "importance": "medium",
+        "consensus": "EPS 1.9868 on $17.78B"
+      },
+      {
+        "event": "Q3 bank season opens \u2014 C, GS, JNJ, JPM, UNH, WFC",
+        "datetime_et": "2026-10-13T07:00",
+        "importance": "high",
+        "consensus": null
+      },
+      {
+        "event": "TRV Q3 earnings (bmo)",
+        "datetime_et": "2026-10-16T07:00",
+        "importance": "medium",
+        "consensus": "EPS 6.8423 on $11.49B"
+      },
+      {
+        "event": "FOMC decision",
+        "datetime_et": "2026-10-28T14:00",
+        "importance": "high",
+        "consensus": null
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "symbol": "XLU",
+      "instrument": "Utilities Select Sector SPDR Fund",
+      "asset_class": "etf",
+      "venue": "Robinhood Stocks",
+      "direction": "sell_short",
+      "requires_margin": true,
+      "horizon": "swing",
+      "conviction": 3,
+      "entry": {
+        "ideal": 39.6,
+        "zone_low": 39.3,
+        "zone_high": 40.1
+      },
+      "exit": {
+        "target": 36.8
+      },
+      "stop": 40.95,
+      "position_size_pct": 2,
+      "avg_dollar_volume": 1012110102,
+      "win_probability": 0.45,
+      "catalyst": {
+        "event": "September Employment Situation (BLS) \u2014 a hot print pushes the 10y further through its 24-year high, and utilities are the most duration-sensitive equity sector",
+        "datetime_et": "2026-10-02T08:30",
+        "action": "the position is already open at 39.60 \u2014 hold through the print, do not add before it",
+        "wait": false
+      },
+      "thesis": "UPDATE to the open short from 2026-09-24 at 39.60, not a new idea \u2014 holding, levels unchanged. The 10-year closed 5.248% on 2026-10-01 after spiking to roughly 5.34% intraday, a new 24-year high, and utilities are a bond proxy whose dividend yield competes directly with that. XLU is 16.1% off its 120-day high at 39.68 with a declining SMA20 of 41.13, SMA50 of 42.81 and SMA200 of 44.40 overhead. It is the one rate-sensitive short kept today, and the reason is specific: on a 600-day range of 33.7975 to 47.80 the last price sits 17.41% above the two-year low, so the 36.80 target is inside territory XLU has actually traded. TLT at 77.71 and IYR at 94.47 are within 1.3% of two-year lows, where any floor-compliant target would be pure extrapolation.",
+      "key_risk": "XLU closed at 39.68 against a 120-day low of 39.03, so it is sitting on near-term support, and a weak payroll print at 08:30 ET that pulls the 10-year back toward 5.0% would bounce the whole duration complex off that shelf and into the 40.95 stop, which is only 1.27 away. This is also one of four shorts placed on a single driver, all four now within 3% of 120-day lows, so the expression is crowded and late even where the thesis has been right. Short equity requires margin and the short pays the dividend, which on utilities is the highest carry cost of any sector.",
+      "counter_argument": "The strongest case against is that utilities are no longer purely a rate trade: datacenter power demand has re-rated regulated names on an earnings-growth argument rather than a yield one, which is what the open CEG and VST ideas in this same report assert. If that is the dominant driver then 16% of de-rating is the opportunity rather than the trend. Against it, the de-rating has run six weeks in step with the long end rather than with any change in load-growth news, and REITs are down about 9% on the same axis over the same window.",
+      "evidence": [
+        {
+          "kind": "dated_catalyst",
+          "detail": "September Employment Situation confirmed for 2026-10-02 08:30 ET on the BLS release calendar; consensus +84k payrolls, unemployment 4.1%",
+          "source": "https://www.bls.gov/news.release/empsit.nr0.htm"
+        },
+        {
+          "kind": "technical_level",
+          "detail": "Fetched history: last close 39.68, ATR14 0.5736 or 1.45% of price, SMA20 41.1275, SMA50 42.8078, SMA200 44.3987; 120-day range 39.03 to 47.296; 600-day range 33.7975 to 47.80. The 36.80 target lies between the 120-day low and the 600-day low, so it sits inside two years of traded range rather than beyond it. The 40.95 stop is 2.35 ATR off entry, above the 1.8 ATR ETF floor, and has not been walked in from where it was first published",
+          "source": "https://www.nasdaq.com/market-activity/funds-and-etfs/xlu/historical"
+        },
+        {
+          "kind": "counter_argument_answered",
+          "detail": "The power-demand re-rating case is answered on timing: the six-week de-rating tracks the long end rather than any change in load-growth news, and REITs fell about 9% since late August on the same axis",
+          "source": "https://investrade.com/market-review-october-01-2026/"
+        }
+      ],
+      "sources": [
+        "https://www.bls.gov/news.release/empsit.nr0.htm",
+        "https://investrade.com/market-review-october-01-2026/",
+        "https://www.nasdaq.com/market-activity/funds-and-etfs/xlu/historical"
+      ],
+      "rank": 1,
+      "last_price": 39.68,
+      "last_price_asof": "2026-10-01T16:00:00-04:00",
+      "price_source": "finnhub via scripts/market_data.py quote (2026-10-01 close; pre-market at synthesis)",
+      "risk_reward": 2.07,
+      "risk_tier": "standard",
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.07,
+        "claimed_risk_reward": 2.07,
+        "breakeven_probability": 0.326,
+        "stated_win_probability": 0.45,
+        "expectancy_r": 0.381,
+        "claimed_edge": 0.124,
+        "stop_atr_multiple": 2.35,
+        "live_price": 39.68,
+        "live_price_asof": "2026-10-01T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 882.5,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": 0.5736,
+        "checked_at_et": "2026-10-02T06:42:45-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.07:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 39.6 is -0.2% from live 39.68"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-10-02 is ahead of us"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 4.88 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "stop_distance",
+            "status": "pass",
+            "detail": "stop is 2.35 ATR from entry, clear of the 2.25 ATR guide for a swing etf"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "45% claimed vs 33% break-even at 2.07:1 \u2014 expectancy +0.38R"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-10-01T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "no bid/ask available (normal outside regular hours)"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "2% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 3 rests on 3 independent kinds: counter_argument_answered, dated_catalyst, technical_level"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "1 of 3 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    }
+  ],
+  "watchlist": [
+    {
+      "symbol": "DAL",
+      "instrument": "Delta Air Lines, Inc.",
+      "note": "Rejected on the correlation cap, not on merit \u2014 it was the best remaining setup on the board. A short airline is a long-oil bet, and the Iran-escalation driver already holds three slots (XLE, the OXY order, and the new HII long). Jet fuel is a distillate and the distillate crack is the blown-out part of this oil move. Levels are done: 84.13 last, ATR14 2.4347, SMA50 84.04 sitting right at the price, 120-day range 65.76-95.68. Earnings 2026-10-09 bmo confirmed, est 1.9868 on $17.78B.",
+      "trigger": "Short at ~84.50 with an 89.50 stop (2.05 ATR) targeting 74.50, R:R 2.00 \u2014 publishable the moment XLE or the OXY order comes off and frees an oil slot."
+    },
+    {
+      "symbol": "DINO",
+      "instrument": "HF Sinclair Corp",
+      "note": "Closed today in profit only because the filled 107.50 entry cannot carry a compliant stop \u2014 the thesis is intact and is the strongest fundamental story in the book. Real insider conviction: 3 open-market buys by 2 distinct buyers worth $2.42M, including director Franklin Myers taking 15,000 shares at 85.30 on 2026-08-11 and 15,000 at 69.11 on 2026-05-18. Refining margins expanding into a distillate squeeze.",
+      "trigger": "A pullback to the 108.79 SMA20, re-entered as a fresh long with its own stop \u2014 a separate trade, not a re-pitch of the closed one."
+    },
+    {
+      "symbol": "XLP",
+      "instrument": "Consumer Staples Select Sector SPDR Fund",
+      "note": "Carried over from yesterday's watchlist with the same cap problem: still the cleanest expression of a 5.248% ten-year, but it would be a fifth short on the long-end driver and all four already placed sit within 3% of their 120-day lows. PEP at 125.60, 0.06% off its 120-day low, is the same trade in single-name form and was rejected for the same reason.",
+      "trigger": "A freed slot on the rates driver \u2014 ideally by the IYR, TLT or ITB orders being cancelled rather than filled."
+    },
+    {
+      "symbol": "INSW",
+      "instrument": "International Seaways, Inc.",
+      "note": "The Hormuz re-routing play and the strongest relative strength on the screen: 114.60 at a 2-year high, +14.88% over 1m against XLE -3.2%, +42.06% vs SPY over 6m. Not a rejection on merit. Two blockers: it would be a fourth Iran bet, and at a 2-year high there is no prior resistance to anchor a target on \u2014 the 2.0 floor off a 2.12-ATR stop at 105.50 needs 135.50+, which is reachable only by extrapolation. Insiders unhelpful: 0 buys, 13 sales, -$4.6M.",
+      "trigger": "A defensible target above all-time highs \u2014 a sell-side price objective or a valuation anchor \u2014 plus a free slot on the oil driver."
+    },
+    {
+      "symbol": "TRV",
+      "instrument": "The Travelers Companies, Inc.",
+      "note": "The long_term lane's best candidate and the reason that lane published nothing. The thesis \u2014 P&C float reinvested at yields not seen in 25 years, a claim that only needs rates to STAY high rather than keep rising, genuinely different from the four short-duration trades here \u2014 ran into two problems. TRV has beaten by 83.4%, 7.9%, 24.6% and 27.0% over four quarters and the sell-side has been cutting into it: bullish share down to 25.7%, sell ratings going 1 to 2 to 5 across the 2026-06-01 to 2026-09-01 snapshots, which is analysts pricing the underwriting cycle rolling from hard to soft. And no bear-case price could be built without book value per share and normalised ROE.",
+      "trigger": "Earnings 2026-10-16 bmo (est 6.8423 on $11.49B) \u2014 the question that settles it is whether written premium rate is decelerating. Also needs a fetched source for book value per share before a long_term downside can be stated."
+    },
+    {
+      "symbol": "GLD",
+      "instrument": "SPDR Gold Shares",
+      "note": "NOT a stale order \u2014 a phantom. The 406.77 'sell' from 2026-09-08 was an exit instruction for a GLD long; published as direction=sell it opened a short row of its own and never closed anything. Same artifact as the 2026-09-08 NKE and LULU sell rows. Stale sell order at 406.77 from 2026-09-08, left live and not re-levelled this run, while gold printed a fresh high of $4,203.30 on 2026-10-01. The order needs re-levelling against the new high rather than being carried as-is.",
+      "trigger": "Cancel the phantom row in state/open_positions.json. Any new gold view needs fresh levels."
+    },
+    {
+      "symbol": "BTC",
+      "instrument": "Bitcoin",
+      "note": "CANCEL, not a watch. The sell order at 63,400 published 2026-08-16 sits about 27% below a fetched spot of $86,344 (+3.18% over 24h, CoinGecko). That is a dead order, not an entry.",
+      "trigger": "Cancel the order. Any new bitcoin view needs fresh levels."
+    },
+    {
+      "symbol": "/MBTU6",
+      "instrument": "Micro Bitcoin futures, September 2026",
+      "note": "CANCEL. The short at 64,340 published 2026-08-18 is ~26% below spot, and the contract itself is a U6 (September 2026) that has already expired regardless of price.",
+      "trigger": "Cancel the order. A futures bitcoin view needs a live contract month."
+    },
+    {
+      "symbol": "MU",
+      "instrument": "Micron Technology, Inc.",
+      "note": "CANCEL the buy order at 960 from 2026-09-18 \u2014 MU last 1097.39, so the order is 12.5% below the market and fills only on a 12% break. Chasing it is worse than cancelling it: the FQ4 beat is out (adjusted EPS $33.42 vs $31.61 estimate), analyst revisions are deteriorating (-1.3pp, a hold added), and the catalyst is spent on a cyclical that has tripled in six months.",
+      "trigger": "Cancel. Nothing to re-level \u2014 the catalyst has passed."
+    },
+    {
+      "symbol": "KXFEDDECISION-26SEP-H25",
+      "instrument": "Kalshi \u2014 September FOMC decision contracts (also -26SEP-H0)",
+      "note": "The September FOMC has happened; both contracts should be expired by the tracker rather than carried as awaiting entry, and neither may be re-pitched. The October contract closes 2026-10-28 (fetched) but is unpriceable today \u2014 Kalshi's unauthenticated endpoint returns null bid, ask, last and volume.",
+      "trigger": "Tracker expiry. An October FOMC idea needs a fetchable implied probability, which no available source provides."
+    },
+    {
+      "symbol": "NKE",
+      "instrument": "NIKE, Inc. Class B",
+      "note": "ACTION TODAY \u2014 SELL TO CLOSE the open long at the open, no limit price. Q1 FY27 guided FY27 revenue down high-single-digits, Greater China -26% cc, EPS $1.15-1.35; the 62.00 target was ~50x that on shrinking revenue. Position ~-21% with no stop. Red team moved this off the recommendation list, not out of the book: the report format has no 'close' direction, so a direction=sell row does not close the long \u2014 positions_from_report opens a NEW phantom short in state/open_positions.json (see the 2026-09-08 NKE and LULU sell rows, still carried as open filled shorts at +7.81% and +4.39% while the longs they meant to close stay open at -11.5% and -16.4%). It would also be demoted by --enforce anyway, under a machine note that loses the instruction. The instruction itself is unchanged and endorsed.",
+      "trigger": "Execute the close; then mark the long closed in the tracker by hand, because nothing in the pipeline closes a position from a report.",
+      "demoted_from_rank": 2,
+      "demotion_reason": "Exit instruction preserved; cannot ride as a recommendation without opening a phantom short."
+    },
+    {
+      "symbol": "DINO",
+      "instrument": "HF Sinclair Corp",
+      "note": "ACTION TODAY \u2014 SELL TO CLOSE the open long at the open, no limit price. Take the +4.8%. From the unamendable 107.50 fill a 2.0-ATR stop forces a target above the two-year high; the only compliant-looking alternative is a 1.83 ATR stop. Red team moved this off the recommendation list, not out of the book: the report format has no 'close' direction, so a direction=sell row does not close the long \u2014 positions_from_report opens a NEW phantom short in state/open_positions.json (see the 2026-09-08 NKE and LULU sell rows, still carried as open filled shorts at +7.81% and +4.39% while the longs they meant to close stay open at -11.5% and -16.4%). It would also be demoted by --enforce anyway, under a machine note that loses the instruction. The instruction itself is unchanged and endorsed.",
+      "trigger": "Execute the close; then mark the long closed in the tracker by hand, because nothing in the pipeline closes a position from a report.",
+      "demoted_from_rank": 5,
+      "demotion_reason": "Exit instruction preserved; cannot ride as a recommendation without opening a phantom short."
+    },
+    {
+      "symbol": "SNX",
+      "instrument": "TD Synnex Corp",
+      "note": "ACTION TODAY \u2014 SELL TO CLOSE the open long at the open, no limit price. Take the +4.5%. Catalyst spent (Q3 beat 09-30, 10-Q 10-01, nothing dated until December) and from the 260.00 fill a 2.0-ATR stop yields only 1.30 R:R. Red team moved this off the recommendation list, not out of the book: the report format has no 'close' direction, so a direction=sell row does not close the long \u2014 positions_from_report opens a NEW phantom short in state/open_positions.json (see the 2026-09-08 NKE and LULU sell rows, still carried as open filled shorts at +7.81% and +4.39% while the longs they meant to close stay open at -11.5% and -16.4%). It would also be demoted by --enforce anyway, under a machine note that loses the instruction. The instruction itself is unchanged and endorsed.",
+      "trigger": "Execute the close; then mark the long closed in the tracker by hand, because nothing in the pipeline closes a position from a report.",
+      "demoted_from_rank": 6,
+      "demotion_reason": "Exit instruction preserved; cannot ride as a recommendation without opening a phantom short."
+    },
+    {
+      "symbol": "GDX",
+      "instrument": "VanEck Gold Miners ETF",
+      "note": "ACTION TODAY \u2014 SELL TO CLOSE the open long at the open, no limit price. Gold printed a record $4,203.30 and GDX fell 1.21% \u2014 the thesis got its catalyst and the instrument refused it. Stop is 0.44 ATR away, so this exits on the next ordinary down day regardless. Red team moved this off the recommendation list, not out of the book: the report format has no 'close' direction, so a direction=sell row does not close the long \u2014 positions_from_report opens a NEW phantom short in state/open_positions.json (see the 2026-09-08 NKE and LULU sell rows, still carried as open filled shorts at +7.81% and +4.39% while the longs they meant to close stay open at -11.5% and -16.4%). It would also be demoted by --enforce anyway, under a machine note that loses the instruction. The instruction itself is unchanged and endorsed.",
+      "trigger": "Execute the close; then mark the long closed in the tracker by hand, because nothing in the pipeline closes a position from a report.",
+      "demoted_from_rank": 7,
+      "demotion_reason": "Exit instruction preserved; cannot ride as a recommendation without opening a phantom short."
+    },
+    {
+      "symbol": "LCII",
+      "instrument": "LCI Industries",
+      "note": "ACTION TODAY \u2014 SELL TO CLOSE the open long at the open, no limit price. -12.6%, no stop ever set, 0.54% off the 120-day low with a target 68% above the market, into a 24-year-high long end and the most rate-elastic discretionary end market there is. Red team moved this off the recommendation list, not out of the book: the report format has no 'close' direction, so a direction=sell row does not close the long \u2014 positions_from_report opens a NEW phantom short in state/open_positions.json (see the 2026-09-08 NKE and LULU sell rows, still carried as open filled shorts at +7.81% and +4.39% while the longs they meant to close stay open at -11.5% and -16.4%). It would also be demoted by --enforce anyway, under a machine note that loses the instruction. The instruction itself is unchanged and endorsed.",
+      "trigger": "Execute the close; then mark the long closed in the tracker by hand, because nothing in the pipeline closes a position from a report.",
+      "demoted_from_rank": 8,
+      "demotion_reason": "Exit instruction preserved; cannot ride as a recommendation without opening a phantom short."
+    },
+    {
+      "symbol": "LULU",
+      "instrument": "Lululemon Athletica Inc.",
+      "note": "ACTION TODAY \u2014 SELL TO CLOSE the open long at the open, no limit price. -16.6%, no stop ever set, 0.53% off the 120-day low; NIKE's FY27 guide is the category read-across the 180.00 target depended on reversing. Supersedes the stale 100.61 sell order. Red team moved this off the recommendation list, not out of the book: the report format has no 'close' direction, so a direction=sell row does not close the long \u2014 positions_from_report opens a NEW phantom short in state/open_positions.json (see the 2026-09-08 NKE and LULU sell rows, still carried as open filled shorts at +7.81% and +4.39% while the longs they meant to close stay open at -11.5% and -16.4%). It would also be demoted by --enforce anyway, under a machine note that loses the instruction. The instruction itself is unchanged and endorsed.",
+      "trigger": "Execute the close; then mark the long closed in the tracker by hand, because nothing in the pipeline closes a position from a report.",
+      "demoted_from_rank": 9,
+      "demotion_reason": "Exit instruction preserved; cannot ride as a recommendation without opening a phantom short."
+    },
+    {
+      "symbol": "BCC",
+      "instrument": "Boise Cascade Company",
+      "note": "ACTION TODAY \u2014 SELL TO CLOSE the open long at the open, no limit price. -2.4% and the cheapest of the exits, but the thesis inverted: engineered wood into residential construction held long alongside the ITB homebuilder short is a contradiction, not a hedge, and there is no stop. Work the exit \u2014 ADV is only $24.7M. Red team moved this off the recommendation list, not out of the book: the report format has no 'close' direction, so a direction=sell row does not close the long \u2014 positions_from_report opens a NEW phantom short in state/open_positions.json (see the 2026-09-08 NKE and LULU sell rows, still carried as open filled shorts at +7.81% and +4.39% while the longs they meant to close stay open at -11.5% and -16.4%). It would also be demoted by --enforce anyway, under a machine note that loses the instruction. The instruction itself is unchanged and endorsed.",
+      "trigger": "Execute the close; then mark the long closed in the tracker by hand, because nothing in the pipeline closes a position from a report.",
+      "demoted_from_rank": 10,
+      "demotion_reason": "Exit instruction preserved; cannot ride as a recommendation without opening a phantom short."
+    },
+    {
+      "symbol": "HII",
+      "instrument": "Huntington Ingalls Industries, Inc.",
+      "note": "CUT by the red team \u2014 the only new risk on the page, and the catalyst does not touch the business. (1) Deploying the already-commissioned Theodore Roosevelt is a Navy operations-tempo decision funded from O&M; it adds no hull and no revenue to a sole-source shipbuilder whose $57.3B backlog is 4.2x annual revenue. The thesis' load-bearing sentence \u2014 'carrier force-generation demand reads straight into its book' \u2014 is the one claim with no source behind it, and the idea's own counter_argument_answered evidence shuts the only channel that could: the CR freezes new-start awards until 2026-12-11, past this swing horizon. (2) Conviction 5 rests on 4 distinct confirmations, not 5 \u2014 primary_document and valuation_anchor are the same 2026-07-30 Q2 8-K at the same URL, with the valuation anchor derived from the guidance the primary document reports. (3) The 2.79:1 is a full-position number the stated plan does not take: trimming half at 294-296, where the declining SMA50 sits, is +1.00R, blending the plan to roughly 1.9R \u2014 under the 2.0 floor, and invisible to the mechanical ratio check. Target 330 is also 7.76 ATR out against a 6.0 ATR swing guide. The value case (4.6-5.6% guided FCF yield, raised FY26 guidance, 40% off the high) is real and survives; the trade as written does not. Note too that HII and the held XLE share one identical catalyst \u2014 same WSJ carrier story, same 2026-10-01T16:00 stamp, same CNBC oil source \u2014 so it was never the diversifier its sector label suggests.",
+      "trigger": "A dated, HII-specific procurement or earnings event inside the horizon (the Q3 date could not be fetched this run), plus a single target the scale plan actually holds for.",
+      "demoted_from_rank": 1,
+      "demotion_reason": "Catalyst does not reach the revenue line; conviction double-counts one 8-K; plan r:r blends below the 2.0 floor."
+    },
+    {
+      "symbol": "XLE",
+      "instrument": "Energy Select Sector SPDR Fund",
+      "note": "Demoted by validation: catalyst dated 2026-10-01 already passed \u2014 positioning around it is wrong",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 1,
+      "demotion_reason": "catalyst dated 2026-10-01 already passed \u2014 positioning around it is wrong"
+    }
+  ],
+  "validation_summary": {
+    "checked": 2,
+    "passed": 0,
+    "warned": 1,
+    "failed": 1,
+    "enforced": true,
+    "demoted": 1
+  }
+}
