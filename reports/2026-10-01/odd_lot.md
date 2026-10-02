@@ -1,6 +1,6 @@
 # Odd-lot tender screener — 2026-10-01
 
-Run 2026-10-01 18:31 ET (evening slot). 5 offers tracked, 0 clear every gate: 0 Tier A, 0 Tier B, 0 Tier C.
+Run 2026-10-01 21:47 ET (evening slot). 5 offers tracked, 0 clear every gate: 0 Tier A, 0 Tier B, 0 Tier C.
 
 **No Tier A opportunities today.** That is the ordinary result — an odd-lot tender with a 3%+ spread and a clean condition set is rare, and the thresholds below are not moved to produce one.
 
@@ -35,7 +35,7 @@ _None._
 
 A screener that finds nothing reads exactly like one that is broken. This is the difference.
 
-- **96** full-text queries over `2026-07-18..2026-10-01` returned **152** document hit(s) across **21** filing(s) (**57** exhibits kept as candidates)
+- **96** full-text queries over `2026-07-18..2026-10-01` returned **156** document hit(s) across **21** filing(s) (**57** exhibits kept as candidates)
 - searched as **4** date slice(s), **96** result page(s) read
 - **5** offers open, **24** archived
 
