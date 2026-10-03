@@ -174,15 +174,26 @@ def collect(cfg: dict, today: date, sale_date: str, only: list[str] | None = Non
                 except Exception as exc:  # noqa: BLE001
                     print(f"  CAD lookup failed for {listing.get('account')}: {exc}",
                           file=sys.stderr)
-                # Only when the cheaper sources did not already answer. The
-                # county list and the CAD situs are both free and both better
-                # than a match on an address string.
-                if not listing.get("city") and not (cad or {}).get("situs"):
+                # Only when the free sources could not answer: no city for the
+                # column, or a city the place table cannot put on a map — a
+                # town under 1,000 people, or none at all. One request, never
+                # for a row the city already placed.
+                unplaced = td.locate(listing, cfg, cad)
+                if (not td.city_of(listing, cad)[0]
+                        or (unplaced.get("enabled") and unplaced["miles"] is None)):
+                    query = sources.geocode_query(listing, cad)
                     try:
-                        place = sources.geocode_place(listing.get("address") or "", cfg)
+                        place = sources.geocode_place(query, cfg) if query else None
                     except Exception as exc:  # noqa: BLE001
-                        print(f"  geocode failed for {listing.get('address')!r}: {exc}",
-                              file=sys.stderr)
+                        print(f"  geocode failed for {query!r}: {exc}", file=sys.stderr)
+                    # A point outside Texas is a wrong match, and `locate`
+                    # separately refuses one too far from the county's own seat,
+                    # so a bad geocode can cost a row its measurement and never
+                    # its place on the list.
+                    if (place and place.get("lat") is not None
+                            and str(place.get("state") or "TX").upper() in ("TX", "TEXAS")):
+                        listing["lat"], listing["lon"] = place["lat"], place["lon"]
+                        listing["point_source"] = "Census geocoder"
                 try:
                     checks = sources.run_checks(listing, cad, cfg)
                 except Exception as exc:  # noqa: BLE001 - an exception is not a clean check
@@ -406,6 +417,52 @@ STATEMENT_MARKS = {
 }
 
 
+# How near the line a kept city has to be before the summary names it.
+NEAR_LINE_MILES = 5
+
+
+def distance_summary(cfg: dict, results: list[dict]) -> list[str]:
+    """Which cities the radius cut, which it only just kept, and what it could not measure."""
+    base = td.home_base(cfg)
+    if base is None:
+        return []
+    radius = float(td.threshold(cfg, "MAX_MILES_FROM_BASE"))
+    out_of_range: dict[str, list] = {}
+    near: dict[str, list] = {}
+    unknown = 0
+    for result in results:
+        where = result.get("location") or {}
+        miles = where.get("miles")
+        if miles is None:
+            if where.get("enabled") and result["status"] == "candidate":
+                unknown += 1
+            continue
+        name = where.get("place") or result["listing"].get("city") or "?"
+        if any(r["code"] == "outside_radius" for r in result["rejections"]):
+            out_of_range.setdefault(name, [miles, 0])[1] += 1
+        elif result["status"] == "candidate" and miles > radius - NEAR_LINE_MILES:
+            near.setdefault(name, [miles, 0])[1] += 1
+    lines = ["", f"### Within {radius:g} miles of {base[0]}", "",
+             f"Straight-line miles from the center of {base[0]} to the property's city "
+             "center, or to the parcel itself where the geocoder placed it. Road miles run "
+             "roughly a fifth to a third longer. `MAX_MILES_FROM_BASE` moves the line.", ""]
+    if out_of_range:
+        lines.append("Rejected as outside the radius: " + ", ".join(
+            f"**{name}** {miles:.1f} mi ×{n}"
+            for name, (miles, n) in sorted(out_of_range.items(), key=lambda kv: kv[1][0])))
+    else:
+        lines.append("Nothing this run was outside the radius.")
+    if near:
+        lines.append(f"Kept, within {NEAR_LINE_MILES} miles of the line: " + ", ".join(
+            f"{name} {miles:.1f} mi ×{n}"
+            for name, (miles, n) in sorted(near.items(), key=lambda kv: -kv[1][0])))
+    if unknown:
+        lines.append(f"{unknown} candidate(s) could not be measured — no city, or a town too "
+                     f"small for the place table that the geocoder could not place either. "
+                     f"They are flagged `distance_unknown`, not rejected.")
+    return lines + [""]
+
+
 def summarize(cfg: dict, results: list[dict], statements: list[dict],
               source_report: list[dict], sale_date: str,
               today: date | None = None) -> list[str]:
@@ -436,6 +493,11 @@ def summarize(cfg: dict, results: list[dict], statements: list[dict],
                 f"has not docketed has nothing to register for and no date to be late for. "
                 f"Nothing is rejected: they are screened, tiered and in the snapshot in "
                 f"full, and `SHEET_DOCKETS` puts them back.", ""]
+
+    # The radius, by city, with the cities that only just made it — a filter
+    # is easier to trust, and to move, when the near misses on both sides of
+    # the line are named rather than implied.
+    out += distance_summary(cfg, results)
 
     # Candidates and rows-you-can-bid-on-that-morning are different numbers.
     # The first live run published 328 of the first and 18 of the second
@@ -563,6 +625,9 @@ def main(argv: list[str] | None = None, sources: Any = None) -> int:
     started = time.monotonic()
 
     cfg = td.load_config(args.config)
+    # Before a single request. A radius that cannot be measured is a config
+    # error, and finding out forty minutes in is how a run leaves nothing.
+    td.home_base(cfg)
     today = datetime.now(ET).date()
     sale_date = args.sale_date or td.next_sale_date(today).isoformat()
     names = [c["name"] for c in td.counties(cfg)

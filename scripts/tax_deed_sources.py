@@ -1922,6 +1922,25 @@ def geocode_place(address: str, cfg: dict) -> dict | None:
     return place
 
 
+def geocode_query(listing: dict, cad: dict | None = None) -> str:
+    """The one-line address to geocode: street, city when known, and Texas.
+
+    Every listing here is in Texas, and the county lists mostly publish a bare
+    street — "614 WAYNE ST" — which the Census geocoder will happily match to a
+    Wayne Street in another state. Naming the state, and the city wherever any
+    source has one, is the cheapest way to make the match mean something. The
+    flood check and the screener both build their query here, so the per-run
+    cache serves them one lookup between them.
+    """
+    street = str(listing.get("address") or (cad or {}).get("situs") or "").strip()
+    if not street:
+        return ""
+    if street.count(",") >= 2:
+        return street          # already "street, city, state zip"
+    city = str(listing.get("city") or "").strip()
+    return ", ".join(part for part in (street, city, "TX") if part)
+
+
 def geocode(address: str, cfg: dict) -> tuple[float, float] | None:
     place = geocode_place(address, cfg)
     if not place or place.get("lon") is None or place.get("lat") is None:
@@ -1980,7 +1999,7 @@ def flood_check(listing: dict, cad: dict | None, cfg: dict) -> dict:
     """FEMA National Flood Hazard Layer at the parcel's geocoded point."""
     spec = cfg.get("flood") or {}
     url, layer_note = resolve_flood_url(spec, cfg)
-    address = listing.get("address") or (cad or {}).get("situs") or ""
+    address = geocode_query(listing, cad)
     if not url:
         return td.check_record("flood_zone", td.UNAVAILABLE, "not configured",
                                "no FEMA NFHL endpoint configured")

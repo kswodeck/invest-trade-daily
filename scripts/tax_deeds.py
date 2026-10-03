@@ -18,7 +18,9 @@ or rendered in a way that suggests otherwise.
 from __future__ import annotations
 
 import argparse
+import functools
 import json
+import math
 import os
 import re
 import sys
@@ -29,6 +31,7 @@ from zoneinfo import ZoneInfo
 
 REPO = Path(__file__).resolve().parent.parent
 CONFIG_PATH = REPO / "config" / "tax_deeds.json"
+PLACES_PATH = REPO / "config" / "tax_deed_places.json"
 SNAPSHOT_DIR = REPO / "data" / "tax_deeds"
 PACKET_DIR = REPO / "reports" / "tax_deeds"
 
@@ -136,6 +139,7 @@ DEFAULT_THRESHOLDS: dict[str, Any] = {
     "PACKET_DOCKETS": "on_docket,over_the_counter,other_sale",
     "SHEET_DOCKETS": "on_docket,over_the_counter,other_sale,date_unknown",
     "REJECT_COMMERCIAL_USE": True,
+    "MAX_MILES_FROM_BASE": 40,
 }
 
 BOOL_THRESHOLDS = {"REJECT_FLOOD_ZONE", "REJECT_COMMERCIAL_USE"}
@@ -421,6 +425,190 @@ def is_commercial_or_industrial(listing: dict, cad: dict | None) -> str | None:
     return why if kind == "commercial" else None
 
 
+# --------------------------------------------------------------------------
+# distance from the home base
+# --------------------------------------------------------------------------
+
+EARTH_RADIUS_MILES = 3958.8
+
+# A feed that truncates names at a fixed width — Tarrant's cuts every city at
+# 16 characters, so "North Richland Hills" arrives as "North Richland H" — still
+# names its place unambiguously at that length. Below it a prefix is a guess:
+# "Lake" begins five places in this table.
+PLACE_PREFIX_MIN = 10
+
+# How far a city may sit from its own county's seat before the city, not the
+# property, is what is wrong. Every point in Dallas, Tarrant and Johnson
+# counties lies within about 26 miles of its seat and Ellis within about 35,
+# and towns straddling a county line — Grand Prairie, Burleson, Newark — sit
+# well inside this. What it catches is the failure that would otherwise reject
+# a good property: a mailing city in the city column, or a geocoder match on
+# the same street name in another Texas city, which would measure a Dallas
+# County lot as 230 miles away. That is a wrong location, not a far property,
+# and it is reported as unknown rather than acted on.
+COUNTY_SANITY_MILES = 50
+
+
+def haversine_miles(a: tuple[float, float], b: tuple[float, float]) -> float:
+    """Great-circle miles between two (lat, lon) points.
+
+    Straight-line distance, the conventional meaning of a radius. Road miles in
+    this metro run roughly a fifth to a third longer, and nothing here pretends
+    otherwise.
+    """
+    lat1, lon1, lat2, lon2 = map(math.radians, (a[0], a[1], b[0], b[1]))
+    h = (math.sin((lat2 - lat1) / 2) ** 2
+         + math.cos(lat1) * math.cos(lat2) * math.sin((lon2 - lon1) / 2) ** 2)
+    return 2 * EARTH_RADIUS_MILES * math.asin(min(1.0, math.sqrt(h)))
+
+
+def _place_key(name: str) -> str:
+    text = str(name or "").casefold().replace("&", " and ")
+    text = re.sub(r"[.'’]", "", text)
+    return re.sub(r"[^a-z0-9]+", " ", text).strip()
+
+
+@functools.lru_cache(maxsize=4)
+def place_table(path: str | None = None) -> dict[str, list[tuple[str, float, float, str]]]:
+    """Every place in config/tax_deed_places.json, indexed by normalized name.
+
+    A name can map to more than one place — Texas has several towns sharing a
+    name — so each key holds a list and the caller picks by proximity.
+    """
+    target = Path(path) if path else PLACES_PATH
+    if not target.exists():
+        raise SystemExit(f"{target} is missing. It is the table every distance is "
+                         f"measured against; rebuild it with scripts/tax_deed_places.py.")
+    index: dict[str, list[tuple[str, float, float, str]]] = {}
+    for name, lat, lon, county in json.loads(target.read_text())["places"]:
+        index.setdefault(_place_key(name), []).append((name, float(lat), float(lon), county))
+    return index
+
+
+def find_place(name: str, near: tuple[float, float] | None = None,
+               path: str | None = None) -> tuple[str, float, float, str] | None:
+    """The place this name refers to, nearest `near` when the name is shared.
+
+    Exact match first, then a prefix match for names long enough to have been
+    truncated rather than abbreviated. No fuzzy matching beyond that: a near
+    miss on a town name is a different town.
+    """
+    key = _place_key(name)
+    if not key:
+        return None
+    table = place_table(path)
+    hits = table.get(key)
+    if not hits and len(key) >= PLACE_PREFIX_MIN:
+        hits = [place for k, places in table.items() if k.startswith(key) for place in places]
+    if not hits:
+        return None
+    if len(hits) == 1 or near is None:
+        return hits[0] if len(hits) == 1 else None
+    return min(hits, key=lambda p: haversine_miles(near, (p[1], p[2])))
+
+
+def home_base(cfg: dict) -> tuple[str, float, float] | None:
+    """`(label, lat, lon)` the radius is measured from, or None if no radius.
+
+    Resolved from the same place table as every listing, so the base and the
+    cities are measured from the same kind of point — a city's own center, not
+    one city's center against another's city hall. Explicit `lat`/`lon` in
+    config override it, for a base that is an address rather than a town.
+
+    A base that is configured and cannot be resolved raises: silently skipping
+    a filter someone asked for is worse than refusing to run.
+    """
+    radius = threshold(cfg, "MAX_MILES_FROM_BASE")
+    if not radius or float(radius) <= 0:
+        return None
+    base = cfg.get("home_base") or {}
+    label = base.get("name") or base.get("place") or ""
+    if base.get("lat") is not None and base.get("lon") is not None:
+        return label, float(base["lat"]), float(base["lon"])
+    found = find_place(base.get("place") or "")
+    if not found:
+        raise SystemExit(
+            f"home_base {base.get('place')!r} is not in {PLACES_PATH.name}, so "
+            f"MAX_MILES_FROM_BASE cannot be measured. Give it explicit lat/lon in "
+            f"config/tax_deeds.json, or set MAX_MILES_FROM_BASE=0 to turn the radius off.")
+    return label or found[0], found[1], found[2]
+
+
+def county_seat(county: str, cfg: dict) -> tuple[float, float] | None:
+    """The point a listing's location is sanity-checked against."""
+    entry = next((c for c in cfg.get("counties") or [] if c.get("name") == county), {})
+    found = find_place(entry.get("seat") or "")
+    return (found[1], found[2]) if found else None
+
+
+def locate(listing: dict, cfg: dict, cad: dict | None = None) -> dict:
+    """Where this property is measured from, and how far that is from base.
+
+    Best evidence first. A geocoded point for the parcel itself, when the run
+    has one; otherwise the center of the city the county's own list names. A
+    city is an area, so for a big one this is an estimate of the property and
+    not a measurement of it — Dallas's center is 24.7 miles from Mansfield and
+    its far north-east corner is past 40 — and the basis says which it was.
+
+    Either point must sit within COUNTY_SANITY_MILES of the listing county's
+    seat. One that does not is a wrong location rather than a distant property,
+    and comes back as unknown: rejecting on it would be a finding the run never
+    made.
+
+    Returns `miles` None whenever the answer is not known, with `detail` saying
+    why, so the gate can flag rather than guess.
+    """
+    base = home_base(cfg)
+    if base is None:
+        return {"miles": None, "enabled": False, "detail": "no radius configured"}
+    label, base_lat, base_lon = base
+    seat = county_seat(listing.get("county") or "", cfg)
+    county = listing.get("county") or "this"
+
+    def sane(point: tuple[float, float]) -> float | None:
+        """Miles from the county seat when that is too far to be in the county."""
+        if seat is None:
+            return None
+        gap = haversine_miles(seat, point)
+        return gap if gap > COUNTY_SANITY_MILES else None
+
+    rejected: list[str] = []
+    if listing.get("lat") is not None and listing.get("lon") is not None:
+        point = (float(listing["lat"]), float(listing["lon"]))
+        gap = sane(point)
+        if gap is None:
+            return {"miles": round(haversine_miles((base_lat, base_lon), point), 1),
+                    "enabled": True, "base": label, "point": point,
+                    "place": listing.get("city") or "",
+                    "basis": "the parcel's own geocoded point",
+                    "detail": f"geocoded parcel, {listing.get('point_source') or 'geocoder'}"}
+        rejected.append(f"the geocoded point is {gap:.0f} mi from {county} County's seat, "
+                        f"so it matched the wrong address")
+
+    # The same resolution the City column uses, so the row never shows one
+    # city and measures another.
+    city, _ = city_of(listing, cad)
+    if city:
+        found = find_place(city, near=seat)
+        if found:
+            name, lat, lon, _ = found
+            gap = sane((lat, lon))
+            if gap is None:
+                return {"miles": round(haversine_miles((base_lat, base_lon), (lat, lon)), 1),
+                        "enabled": True, "base": label, "point": (lat, lon), "place": name,
+                        "basis": f"{name}'s city center",
+                        "detail": f"{name} city center (GeoNames)"}
+            rejected.append(f"{name} is {gap:.0f} mi from {county} County's seat, so the "
+                            f"city column cannot be where this property is")
+        else:
+            rejected.append(f"{city!r} is not in the place table")
+    else:
+        rejected.append("no city in the county list, its address, or a CAD record")
+
+    return {"miles": None, "enabled": True, "base": label, "place": city,
+            "detail": "; ".join(rejected) or "nothing to measure from"}
+
+
 def city_of(listing: dict, cad: dict | None,
             place: dict | None = None) -> tuple[str, str]:
     """The city this parcel sits in, and where that came from.
@@ -441,17 +629,37 @@ def city_of(listing: dict, cad: dict | None,
     if direct:
         return direct.title() if direct.isupper() else direct, "county list"
 
-    situs = str((cad or {}).get("situs") or "").strip()
-    parts = [p.strip() for p in situs.split(",") if p.strip()]
-    if len(parts) >= 3:
-        city = parts[-2]
-        if city and not re.fullmatch(r"[\d\s-]+", city):
-            return city.title() if city.isupper() else city, "CAD situs"
+    # The county's own address field, when it carries the city — two rows of
+    # the 2026-09-11 run read "752 E 3RD STREET, DALLAS, TX". That is reading
+    # what the county wrote, the same parse a CAD situs gets, not inference.
+    for text, source in ((listing.get("address"), "county list address"),
+                         ((cad or {}).get("situs"), "CAD situs")):
+        city = _city_in_address(text)
+        if city:
+            return city, source
 
+    # A geocoder match outside Texas is a wrong match — every property here is
+    # in Texas — and its city would put a wrong name in the column.
+    state = str((place or {}).get("state") or "TX").strip().upper()
     geocoded = str((place or {}).get("city") or "").strip()
-    if geocoded:
+    if geocoded and state in ("TX", "TEXAS"):
         return geocoded.title() if geocoded.isupper() else geocoded, "geocoder"
     return "", ""
+
+
+def _city_in_address(text: Any) -> str:
+    """The city in "1417 S HARWOOD ST, DALLAS, TX 75215", or "".
+
+    The second-to-last comma field, and only when there are at least three — a
+    bare street, or "123 MAIN ST, APT 4", carries no city to find.
+    """
+    parts = [p.strip() for p in str(text or "").split(",") if p.strip()]
+    if len(parts) < 3:
+        return ""
+    city = parts[-2]
+    if not city or re.fullmatch(r"[\d\s-]+", city):
+        return ""
+    return city.title() if city.isupper() else city
 
 
 def is_mobile_home_without_land(listing: dict, cad: dict | None) -> str | None:
@@ -630,6 +838,25 @@ def gate1_hard_disqualifiers(listing: dict, cad: dict | None, cfg: dict,
     status = str(listing.get("status") or "").strip().lower()
     if status and re.search(r"withdraw|pulled|cancel|struck from|removed|paid|bankrupt", status):
         out.append(rejection(1, "withdrawn", f"county list status is {listing['status']!r}"))
+
+    # Distance from the home base. A distance that was measured and is past the
+    # radius rejects, like a bid over the cap: it is a determination about where
+    # the property is. One that could not be measured flags, because an unknown
+    # has never rejected anything here — and `locate` reports a city it cannot
+    # believe as unknown rather than as far away.
+    radius = threshold(cfg, "MAX_MILES_FROM_BASE")
+    if radius and float(radius) > 0:
+        where = locate(listing, cfg, cad)
+        if where["miles"] is None:
+            flags.append(flag("distance_unknown", MATERIAL,
+                              f"could not measure how far this is from {where.get('base')}: "
+                              f"{where['detail']}. It may be outside the {float(radius):g}-mile "
+                              f"radius; confirm the location before bidding."))
+        elif where["miles"] > float(radius):
+            out.append(rejection(1, "outside_radius",
+                                 f"{where['place'] or 'the property'} is {where['miles']:.1f} mi "
+                                 f"from {where['base']} ({where['basis']}, straight line) — "
+                                 f"beyond the {float(radius):g}-mile radius (MAX_MILES_FROM_BASE)"))
 
     # Before the `if not cad` block below, which returns in both of its
     # branches. Placed after it this never ran at all: no row in the
@@ -1114,6 +1341,7 @@ def screen(listing: dict, cad: dict | None, checks: list[dict], cfg: dict,
         "economics": econ,
         "redemption": terms,
         "docket": docket,
+        "location": locate(listing, cfg, cad),
         "tier": tier,
         "status": "rejected" if rejections else "candidate",
         "material_flags": material,
@@ -1387,7 +1615,8 @@ def annotate_history(result: dict, history: dict[str, dict], cfg: dict) -> None:
 # --------------------------------------------------------------------------
 
 HEADERS = [
-    "County", "City", "Sale Date", "On This Docket", "Sale Type", "Cause No", "Account No",
+    "County", "City", "Miles", "Sale Date", "On This Docket", "Sale Type", "Cause No",
+    "Account No",
     "Address",
     "Legal Description", "Property Type", "Opening Bid", "Value", "Value Source", "Bid/Value",
     "Redemption Period", "Redemption Payout", "Walk-Away Bid", "Tier",
@@ -1447,6 +1676,12 @@ def sheet_rows(results: list[dict], cfg: dict, today: date,
     # A tab that quietly shows fewer rows than the run found is the same kind of
     # lie as one that shows stale rows. The count that was held back is on the
     # banner, with the reason and the knob that changes it.
+    base = home_base(cfg)
+    cut = sum(1 for r in results
+              if any(x["code"] == "outside_radius" for x in r["rejections"]))
+    radius_note = (f" · within {float(threshold(cfg, 'MAX_MILES_FROM_BASE')):g} mi of {base[0]} "
+                   f"(straight line; {cut} listing(s) beyond it rejected — 'Miles' says how far)"
+                   if base else "")
     holding = (f" · {held_back} not-yet-scheduled candidate(s) held off this tab "
                f"(SHEET_DOCKETS) — screened and in the snapshot, not on a docket"
                if held_back else "")
@@ -1454,7 +1689,7 @@ def sheet_rows(results: list[dict], cfg: dict, today: date,
               f"{on_docket} on this docket of {len(candidates)} shown "
               f"from {len(results)} listings "
               f"(A {tier_counts['A']} / B {tier_counts['B']} / C {tier_counts['C']}) · "
-              f"'On This Docket' says which rows are biddable at this sale{holding}")
+              f"'On This Docket' says which rows are biddable at this sale{holding}{radius_note}")
     statement_line = (
         "§34.015 BIDDER STATEMENT: " +
         (" | ".join(f"{s['county']}: {s['state'].upper()}" for s in statements) or "none configured") +
@@ -1508,14 +1743,21 @@ def sheet_rows(results: list[dict], cfg: dict, today: date,
 
 def _sheet_row(result: dict) -> list[Any]:
     listing, cad = result["listing"], result.get("cad") or {}
+    where = result.get("location") or {}
     econ = result.get("economics") or {}
     ratio = econ.get("bid_to_value")
     return [
         listing.get("county", ""),
         # Blank means not determined, never "no city" — plenty of this inventory
         # is unincorporated county land. `city_of` never fills it in from the
-        # county name.
-        listing.get("city", ""),
+        # county name. Where the place table recognized the city, its own name
+        # is shown: Tarrant's list cuts every city at 16 characters, and
+        # "North Richland H" is not a name anyone would search for.
+        (where.get("place") if where.get("miles") is not None and where.get("place")
+         else listing.get("city", "")),
+        # A number, so the column sorts. Blank when it could not be measured,
+        # which the Flags column then says as distance_unknown.
+        where["miles"] if where.get("miles") is not None else "",
         listing.get("sale_date", ""),
         (result.get("docket") or {}).get("label", ""),
         listing.get("sale_type", ""),
@@ -1676,6 +1918,7 @@ def packet_markdown(result: dict, cfg: dict, statement: dict) -> str:
     county = listing.get("county", "")
     county_cfg = next((c for c in cfg.get("counties", []) if c["name"] == county), {})
     docket = result.get("docket") or docket_status(listing, None)
+    where = result.get("location") or {}
 
     def line(label: str, value: Any) -> str:
         return f"| {label} | {value if value not in (None, '') else '—'} |"
@@ -1699,6 +1942,11 @@ def packet_markdown(result: dict, cfg: dict, statement: dict) -> str:
                       if listing.get("city") and listing.get("city_source")
                       else listing.get("city")
                       or "not determined — this may be unincorporated county land")),
+        line("Distance", (f"{where['miles']:.1f} mi from {where['base']}, straight line, "
+                          f"measured to {where['basis']}"
+                          if where.get("miles") is not None
+                          else f"not measured — {where.get('detail')}"
+                          if where.get("enabled") else "no radius configured")),
         line("Sale date", listing.get("sale_date") or docket["detail"]),
         line("On this docket", docket["label"]),
         line("Sale type", listing.get("sale_type")),

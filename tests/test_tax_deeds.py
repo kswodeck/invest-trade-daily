@@ -1127,6 +1127,150 @@ class CommercialAndIndustrialAreRejectedWhenTheUseWasRead(unittest.TestCase):
         self.assertEqual(entry["severity"], td.MATERIAL)
 
 
+class TheRadiusRejectsWhatWasMeasuredAndFlagsWhatWasNot(unittest.TestCase):
+    """MAX_MILES_FROM_BASE: 40 straight-line miles from Mansfield.
+
+    A distance that was measured and is past the line rejects, like a bid over
+    the cap. One that could not be measured flags, because an unknown has never
+    rejected anything here — and a city that cannot be where the property is
+    (a mailing city, a geocoder match in another Texas town) is reported as
+    unknown rather than as far away, because rejecting on it would be a finding
+    the run never made.
+    """
+
+    def screened(self, **over):
+        return td.screen(listing(**over), cad(), checks(), cfg(), TODAY)
+
+    def test_the_base_is_mansfields_own_center(self):
+        label, lat, lon = td.home_base(cfg())
+        self.assertEqual(label, "Mansfield, TX")
+        self.assertAlmostEqual(lat, 32.563, places=2)
+        self.assertAlmostEqual(lon, -97.142, places=2)
+
+    def test_the_great_circle_is_right_on_a_known_pair(self):
+        """Dallas to Fort Worth city centers: about 30 miles, by any atlas."""
+        dallas = td.find_place("Dallas")
+        fort_worth = td.find_place("Fort Worth")
+        miles = td.haversine_miles(dallas[1:3], fort_worth[1:3])
+        self.assertGreater(miles, 28)
+        self.assertLess(miles, 32)
+
+    def test_a_city_past_the_line_is_rejected_with_its_distance(self):
+        result = self.screened(city="Rowlett", county="Dallas")
+        rejection = next(r for r in result["rejections"] if r["code"] == "outside_radius")
+        self.assertIn("Rowlett", rejection["detail"])
+        self.assertIn("41.0", rejection["detail"])
+        self.assertIn("MAX_MILES_FROM_BASE", rejection["detail"])
+
+    def test_a_city_inside_it_is_kept(self):
+        for city in ("Garland", "Dallas", "Fort Worth", "Mansfield", "Seagoville"):
+            with self.subTest(city=city):
+                result = self.screened(city=city, county="Dallas" if city != "Fort Worth"
+                                       and city != "Mansfield" else "Tarrant")
+                self.assertNotIn("outside_radius", codes(result["rejections"]))
+                self.assertNotIn("distance_unknown", codes(result["flags"]))
+
+    def test_the_line_is_inclusive_at_exactly_the_radius(self):
+        config = cfg()
+        rowlett = td.locate({"city": "Rowlett", "county": "Dallas"}, config)["miles"]
+        at_line = dict(config, thresholds=dict(config["thresholds"],
+                                               MAX_MILES_FROM_BASE=rowlett))
+        result = td.screen(listing(city="Rowlett", county="Dallas"), cad(), checks(),
+                           at_line, TODAY)
+        self.assertNotIn("outside_radius", codes(result["rejections"]))
+
+    def test_moving_the_line_moves_the_answer(self):
+        config = cfg()
+        wider = dict(config, thresholds=dict(config["thresholds"], MAX_MILES_FROM_BASE=45))
+        result = td.screen(listing(city="Rowlett", county="Dallas"), cad(), checks(),
+                           wider, TODAY)
+        self.assertNotIn("outside_radius", codes(result["rejections"]))
+
+    def test_zero_turns_the_radius_off_entirely(self):
+        config = cfg()
+        off = dict(config, thresholds=dict(config["thresholds"], MAX_MILES_FROM_BASE=0))
+        result = td.screen(listing(city="Rowlett", county="Dallas"), cad(), checks(),
+                           off, TODAY)
+        self.assertNotIn("outside_radius", codes(result["rejections"]))
+        self.assertNotIn("distance_unknown", codes(result["flags"]))
+        self.assertIsNone(td.home_base(off))
+
+    def test_a_feed_truncated_at_16_characters_still_resolves(self):
+        """Tarrant's list cuts every city at 16 characters."""
+        where = td.locate({"city": "North Richland H", "county": "Tarrant"}, cfg())
+        self.assertEqual(where["place"], "North Richland Hills")
+        self.assertIsNotNone(where["miles"])
+
+    def test_but_a_short_prefix_is_a_guess_and_is_not_taken(self):
+        self.assertIsNone(td.find_place("Lake"))
+        self.assertIsNone(td.find_place("North"))
+
+    def test_spelling_differences_of_case_resolve(self):
+        self.assertEqual(td.find_place("Desoto")[0], "DeSoto")
+
+    def test_no_city_flags_and_never_rejects(self):
+        result = self.screened(city="", address="1 NOWHERE RD", county="Dallas")
+        self.assertNotIn("outside_radius", codes(result["rejections"]))
+        entry = next(f for f in result["flags"] if f["code"] == "distance_unknown")
+        self.assertEqual(entry["severity"], td.MATERIAL)
+
+    def test_a_town_too_small_for_the_table_flags_and_never_rejects(self):
+        result = self.screened(city="Westworth Villag", address="1 X ST", county="Tarrant")
+        self.assertEqual(result["status"], "candidate")
+        self.assertIn("distance_unknown", codes(result["flags"]))
+
+    def test_a_city_that_cannot_be_in_this_county_is_unknown_not_far(self):
+        """Houston on a Dallas County listing is a wrong city, not a far lot.
+
+        Rejecting it at 225 miles would turn a data error into a finding.
+        """
+        result = self.screened(city="Houston", address="1 X ST", county="Dallas")
+        self.assertNotIn("outside_radius", codes(result["rejections"]))
+        detail = next(f for f in result["flags"] if f["code"] == "distance_unknown")["detail"]
+        self.assertIn("seat", detail)
+
+    def test_a_city_straddling_the_county_line_is_believed(self):
+        """Grand Prairie is listed by Tarrant though GeoNames files it in Dallas."""
+        where = td.locate({"city": "Grand Prairie", "county": "Tarrant"}, cfg())
+        self.assertIsNotNone(where["miles"])
+
+    def test_a_geocoded_parcel_point_beats_its_citys_center(self):
+        """Dallas's center is inside; its far north-east corner is not."""
+        far_ne_dallas = (32.95, -96.55)
+        where = td.locate({"city": "Dallas", "county": "Dallas",
+                           "lat": far_ne_dallas[0], "lon": far_ne_dallas[1]}, cfg())
+        self.assertGreater(where["miles"], 40)
+        self.assertIn("parcel", where["basis"])
+
+    def test_but_a_geocoded_point_in_the_wrong_place_is_not_used(self):
+        """A Wayne Street matched in Houston must not measure a Dallas lot."""
+        houston = td.find_place("Houston")
+        where = td.locate({"city": "Dallas", "county": "Dallas",
+                           "lat": houston[1], "lon": houston[2]}, cfg())
+        self.assertEqual(where["place"], "Dallas")
+        self.assertLess(where["miles"], 40)
+
+    def test_the_check_runs_with_no_appraisal_district_record(self):
+        """The commercial filter shipped after an early return once. Not twice."""
+        result = td.screen(listing(city="Rowlett", county="Dallas"), None, checks(),
+                           cfg(), TODAY)
+        self.assertIn("outside_radius", codes(result["rejections"]))
+
+    def test_the_sheet_shows_the_miles_and_the_full_city_name(self):
+        statements = td.statement_report(cfg(), ["Tarrant"], TODAY, SALE)
+        row = td.screen(listing(city="North Richland H", county="Tarrant"), cad(),
+                        checks(), cfg(), TODAY, SALE)
+        values, spec = td.sheet_rows([row], cfg(), TODAY, SALE, statements)
+        index, _ = spec["data_rows"][0]
+        self.assertEqual(values[index][td.HEADERS.index("City")], "North Richland Hills")
+        self.assertIsInstance(values[index][td.HEADERS.index("Miles")], float)
+
+    def test_an_unresolvable_base_refuses_to_run_rather_than_skip_the_filter(self):
+        config = dict(cfg(), home_base={"place": "Nowhereville", "lat": None, "lon": None})
+        with self.assertRaises(SystemExit):
+            td.home_base(config)
+
+
 class TheCityComesFromTheBestSourceThatHasIt(unittest.TestCase):
     """Three sources, not equally good, so the row records which answered.
 
