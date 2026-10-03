@@ -4,6 +4,13 @@
   "user_agent": "invest-trade-daily-taxdeeds/1.0 (+https://github.com/kswodeck/invest-trade-daily; {contact})",
   "request_interval_seconds": 1.0,
   "respect_robots_txt": true,
+  "home_base": {
+    "_": "The point MAX_MILES_FROM_BASE is measured from. `place` is looked up in config/tax_deed_places.json, so the base and every listing are measured from the same kind of point — a town's own center. Set lat and lon to measure from an address instead.",
+    "name": "Mansfield, TX",
+    "place": "Mansfield",
+    "lat": null,
+    "lon": null
+  },
   "thresholds": {
     "MAX_OPENING_BID": 12000,
     "_MAX_OPENING_BID": "Gate 1 rejects a published minimum bid above this. It bites only on rows that HAVE a published bid: 183 of the 2026-09-11 run's 252 tab rows had none, and a missing bid flags no_opening_bid rather than rejecting, because an unknown is not a finding. Of the 69 priced rows on that tab, 28 were over $12,000. Raising it does not surface un-priced inventory and lowering it does not hide any.",
@@ -13,6 +20,8 @@
     "HOLDING_MONTHS": 7,
     "REJECT_FLOOD_ZONE": false,
     "REJECT_COMMERCIAL_USE": true,
+    "MAX_MILES_FROM_BASE": 40,
+    "_MAX_MILES_FROM_BASE": "Gate 1 rejects a property measured farther than this from home_base, in straight-line miles. Measured from the parcel's own geocoded point when the run has one, otherwise from the center of the city the county's own list names — GeoNames points in config/tax_deed_places.json. A city is an area, so for a big one this estimates the property rather than measuring it: Dallas's center is 24.7 mi from Mansfield and its far north-east corner is past 40. Road miles run roughly a fifth to a third longer. A location that cannot be measured — no city, a city not in the table, or one more than 50 mi from its own county seat, which means the city is wrong rather than the property far — flags distance_unknown and never rejects. 0 turns the radius off. Replayed over the 2026-10-01 run it rejects 22 listings — Rowlett at 41.0 mi (18) and Sachse at 42.7 (4) — and takes 5 rows off the tab, 209 to 204. The nearest city kept is Garland at 37.9.",
     "_REJECT_COMMERCIAL_USE": "Gate 1 rejects property whose use was READ and is commercial or industrial — SPTB category F1, F2, L1, L2 or J on the CAD record, or a use description saying so. Set false to keep those rows with a material flag instead. Either way an unreadable use never rejects: it flags property_use_unknown, because an unknown is not a finding. That flag is on every row of the 2026-09-11 run, since the county lists publish no property type and the CAD lookup matched nothing — so this gate rejects nothing today and starts working the moment a CAD record arrives. The street address is deliberately not consulted: '11970 N CENTRAL EXPY' reads commercial to a person and is not evidence. Nor is legal_description, because subdivisions are platted as 'INDUSTRIAL ADDITION' and a house inside one is a house.",
     "EFFECTIVE_TAX_RATE": 0.023,
     "MONTHLY_CARRY": 75,
@@ -61,6 +70,7 @@
   "counties": [
     {
       "name": "Dallas",
+      "seat": "Dallas",
       "order": 1,
       "sale_venue": "online",
       "sale_location": "RealAuction online portal, linked from the Dallas County Tax Office site",
@@ -263,6 +273,7 @@
     },
     {
       "name": "Tarrant",
+      "seat": "Fort Worth",
       "order": 2,
       "sale_venue": "in_person",
       "sale_location": "Courthouse steps, approximately 10:00 am, first Tuesday. Sales run by Linebarger Goggan Blair & Sampson.",
@@ -374,6 +385,7 @@
     },
     {
       "name": "Johnson",
+      "seat": "Cleburne",
       "order": 3,
       "sale_venue": "in_person",
       "sale_location": "Courthouse steps, first Tuesday. Constable sale.",
@@ -485,6 +497,7 @@
     },
     {
       "name": "Ellis",
+      "seat": "Waxahachie",
       "order": 4,
       "sale_venue": "in_person",
       "sale_location": "Courthouse steps, first Tuesday. Constable sale.",

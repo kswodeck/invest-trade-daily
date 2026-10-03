@@ -306,15 +306,34 @@ Four rules are load-bearing:
   rejecting and flagging nothing.
 
 - **The City column is three sources deep, and blank means not determined.**
-  `city_of` resolves the county list's own city, else the CAD situs parsed at its
-  second-to-last comma field, else the Census geocoder, and records which in
-  `city_source` because they are not equally good. Blank is **never** "no city":
+  `city_of` resolves the county list's own city column, else a city the county
+  wrote into its own address field, else the CAD situs — both parsed at the
+  second-to-last comma field — else the Census geocoder (discarded when the match
+  is outside Texas), and records which in `city_source` because they are not
+  equally good. Since 2026-10-01 the feeds' own column answers 687 of 694
+  candidates. Blank is **never** "no city":
   much of this inventory is unincorporated county land, and nothing fills the
   cell in from the county name. 250 of the 2026-09-11 run's 252 rows published a
   street address carrying no city at all. The geocoder is the only source that
   costs a request, so it is asked only when the other two came up empty, and
   `geocode_place` caches per address so the flood check and the city share one
   lookup.
+
+- **The 40-mile radius rejects a measured distance and flags an unmeasured
+  one.** `MAX_MILES_FROM_BASE` from `home_base` (Mansfield), straight line, a
+  Gate 1 rule like the bid cap. Measured to the parcel's own geocoded point when
+  the run has one, else to the center of the property's city looked up in
+  `config/tax_deed_places.json` — GeoNames `cities1000`, vendored so a distance is
+  the same every run, rebuilt only by `scripts/tax_deed_places.py`. A city is an
+  area: Dallas's center is 24.7 mi out and its far north-east corner past 40, and
+  every Dallas row is kept on the center. A city more than 50 mi from its own
+  county's seat is **unknown, not far** — that is a mailing city or a geocoder
+  match in another town, and rejecting on it would turn a data error into a
+  finding. Tarrant truncates cities at 16 characters, so a name of 10+ that
+  begins exactly one place resolves to it. Towns under 1,000 people (mostly in
+  Johnson and Ellis) are not in the table and are geocoded instead. Like the
+  commercial check, this sits **above** the `if not cad` early return. On the
+  2026-10-01 run: 22 listings rejected (Rowlett 41.0, Sachse 42.7), tab 209 → 204.
 
 - **Repeat offerings come from the snapshots, not the network.** A property
   matched across `data/tax_deeds/<date>.json` by account, else cause number, else

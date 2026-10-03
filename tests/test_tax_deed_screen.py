@@ -89,6 +89,16 @@ class FixtureSources:
             record.pop("homestead", None)
         return record
 
+    def geocode_query(self, listing, cad=None):
+        return tds.geocode_query(listing, cad)
+
+    def geocode_place(self, address, cfg):
+        # No network here, so a row the place table cannot measure stays
+        # unmeasured — which is exactly what such a row does in a run whose
+        # geocoder is down, and it must still screen, flag and publish.
+        self.geocoded = getattr(self, "geocoded", []) + [address]
+        return None
+
     def run_checks(self, listing, cad, cfg):
         out = []
         for name in list(td.LIEN_CHECKS) + ["flood_zone", "road_frontage", "lot_size"]:
@@ -154,12 +164,23 @@ class DryRun(unittest.TestCase):
         self.assertEqual(set(payload["thresholds"]), set(td.DEFAULT_THRESHOLDS),
                          "every threshold the run can read has to be in the record")
 
-    def test_packets_are_written_for_tier_a_and_b_only(self):
+    def test_packets_are_written_for_exactly_the_configured_tiers_and_dockets(self):
+        """Against PACKET_TIERS and PACKET_DOCKETS, not a hardcoded "A and B".
+
+        This used to count Tier A and B rows and passed only because no row on
+        the docket had ever graded Tier C. PACKET_TIERS has defaulted to A,B,C
+        since A,B wrote no packets at all, so the first Tier C row on the docket
+        — the Johnson fixtures, whose list publishes no city to measure — made
+        the old count wrong while the code was right.
+        """
         self.run_screen()
         packets = sorted((self.tmp / "reports" / SALE).glob("*.md"))
         self.assertTrue(packets)
         payload = json.loads(next((self.tmp / "data").glob("*.json")).read_text())
-        expected = sum(1 for r in payload["results"] if r["tier"] in ("A", "B"))
+        cfg = td.load_config()
+        expected = sum(1 for r in payload["results"]
+                       if r["tier"] in td.packet_tiers(cfg)
+                       and r["docket"]["state"] in td.packet_dockets(cfg))
         self.assertEqual(len(packets), expected)
         for packet in packets:
             text = packet.read_text()

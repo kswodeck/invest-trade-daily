@@ -22,6 +22,7 @@ actually ran is a column of its own, next to the ones that did not.
 | Path | What it is |
 | --- | --- |
 | `config/tax_deeds.json` | every URL, threshold and the §34.015 statement |
+| `config/tax_deed_places.json` | the Texas place table every distance is measured against — GeoNames, rebuilt by `scripts/tax_deed_places.py` |
 | `scripts/tax_deeds.py` | gates, redemption law, economics, tiering, rendering |
 | `scripts/tax_deed_sources.py` | fetching, robots, rate limit, parsers, verification |
 | `scripts/tax_deed_screen.py` | the run: ingest → enrich → screen → publish |
@@ -58,6 +59,7 @@ widen a gate for one run without a commit.
 | `HOLDING_MONTHS` | 7 | 180-day redemption plus a month |
 | `REJECT_FLOOD_ZONE` | false | a flood hit is a material flag; true makes it a reject |
 | `REJECT_COMMERCIAL_USE` | true | a use *read* as commercial or industrial rejects; false keeps it with a material flag. An unreadable use never rejects |
+| `MAX_MILES_FROM_BASE` | 40 | Gate 1 rejects a property measured farther than this, straight line, from `home_base` (Mansfield). An unmeasurable location flags; 0 turns it off |
 | `EFFECTIVE_TAX_RATE` | 0.023 | DFW ad valorem, for holding and post-judgment taxes |
 | `MONTHLY_CARRY` | 75 | insurance and utilities on a vacant parcel |
 | `POST_JUDGMENT_YEARS` | 1.0 | years of taxes assumed accrued since judgment |
@@ -256,6 +258,74 @@ never ran at all: no row in that run has a CAD record, so it read as working
 while rejecting and flagging nothing. It does not need a CAD — the county list's
 own property type answers it wherever a feed publishes one.
 
+## Within 40 miles of Mansfield
+
+`MAX_MILES_FROM_BASE` (40) is measured from `home_base` (Mansfield, TX) and it is
+a Gate 1 rule like the bid cap: a distance that was **measured** and is past the
+line rejects; one that could not be measured flags `distance_unknown`. Rejected
+rows keep their reason in the snapshot, so nothing leaves the record.
+
+**What gets measured, best evidence first:**
+
+1. **The parcel's own point**, when the run has geocoded it. Only rows the city
+   path below cannot place are geocoded, so this is rare and costs nothing extra.
+2. **The center of the property's city** — the county list's own city column,
+   else a city written into its address, else a CAD situs — looked up in
+   `config/tax_deed_places.json`.
+
+A city is an area, so (2) estimates the property rather than measuring it, and
+the estimate is worst for the biggest city: Dallas's center is 24.7 miles from
+Mansfield while its far north-east corner is past 40. Every Dallas row is kept on
+that basis. Both points are straight-line ("as the crow flies") miles, the
+conventional meaning of a radius — road miles in this metro run roughly a fifth
+to a third longer, so 40 here is often 50 by car.
+
+**The place table** is every Texas row of GeoNames `cities1000` — each populated
+place of 1,000 people or more — as bundled in the `reverse_geocoder` 1.5.1
+package on PyPI. GeoNames is CC BY 4.0. It is vendored, not fetched, so a
+distance is the same number every run and the radius tests offline; rebuild it
+with `scripts/tax_deed_places.py build`. Mansfield comes from the same table, so
+the base and every city are measured from the same kind of point.
+
+`python scripts/tax_deed_places.py distance Rowlett --county Dallas` answers the
+question for one city.
+
+**Three things the lookup does, each because the data needed it:**
+
+- **Truncated names resolve.** Tarrant's list cuts every city at 16 characters,
+  so `North Richland H` arrives for North Richland Hills. A name of 10 or more
+  characters that begins exactly one place resolves to it; a shorter prefix is a
+  guess (`Lake` begins five places) and does not. The sheet shows the full name.
+- **A shared name resolves to the one nearest the listing's county seat.**
+  Texas has several towns sharing a name; each county carries its `seat` in
+  config for exactly this.
+- **A city more than 50 miles from its own county's seat is unknown, not far.**
+  Every point in these counties lies within about 35 miles of its seat, and
+  towns straddling a line — Grand Prairie, Burleson, Newark — well inside 50.
+  What lies outside it is a wrong city: an owner's mailing city in the city
+  column, or a geocoder match on the same street name in another town. Rejecting
+  on it would measure a Dallas County lot as 225 miles away and turn a data
+  error into a finding. The same check applies to a geocoded parcel point, and
+  a geocoder match outside Texas is discarded before it gets that far.
+
+**Small towns are the gap, and the geocoder covers it.** `cities1000` omits
+Westworth Village, Westover Hills, Rio Vista, Cross Timber, Briaroaks, Coyote
+Flats, Lillian, Maypearl, Milford, Bardwell, Alma, Garrett and Pecan Hill —
+mostly Johnson and Ellis towns, the counties nearest Mansfield. A row in one of
+them, or with no city at all, is geocoded as `street, city, TX` (one request,
+inside `MAX_ENRICHMENTS` and the deadline) and measured from its own point. A
+row neither can place is flagged `distance_unknown`, material, and never
+rejected — it may be inside the line.
+
+A base that is configured and cannot be resolved stops the run **before the
+first request**: silently skipping a filter someone asked for is worse than
+refusing to start.
+
+Replayed over the 2026-10-01 run, the radius rejects 22 listings — Rowlett at
+41.0 miles (18) and Sachse at 42.7 (4) — and takes 5 rows off the tab, 209 to
+204. The closest city kept is Garland at 37.9; the step summary names every city
+within 5 miles of the line on either side, so moving it is an informed decision.
+
 ## The city column
 
 `City` sits beside `County`, because the two are read together and the drive-by
@@ -264,9 +334,10 @@ answered because they are not equally good:
 
 | Source | `city_source` | Why it ranks there |
 | --- | --- | --- |
-| the county's own list | `county list` | authoritative and free |
+| the county's own list | `county list` | authoritative and free — 687 of 694 candidates on 2026-10-01 |
+| the county's own address field, parsed | `county list address` | the county wrote it, when the address reads `STREET, CITY, TX ZIP` |
 | the CAD situs, parsed | `CAD situs` | published, but the city is the second-to-last comma field rather than a field of its own |
-| the Census geocoder | `geocoder` | the Census matching an address string — a very good guess, and still a guess |
+| the Census geocoder | `geocoder` | the Census matching an address string — a very good guess, and still a guess; a match outside Texas is discarded |
 
 **A blank means not determined, never "no city".** Plenty of this inventory is
 unincorporated county land where the answer is legitimately not a city name, and
@@ -678,6 +749,7 @@ A **rejection** is a determination — something was read and it disqualifies:
 | published opening bid over `MAX_OPENING_BID` | more capital than this is meant to deploy. A *missing* bid is an unknown and flags `no_opening_bid` instead — the cap is a finding about a number, and no number is not a finding |
 | homestead or agricultural exemption | §34.21(a) gives it 2 years to redeem |
 | use read as commercial or industrial | SPTB category F1, F2, L1, L2 or J, or a use description saying so. An *unreadable* use flags `property_use_unknown` instead |
+| measured more than `MAX_MILES_FROM_BASE` from `home_base` | outside where you operate. An *unmeasurable* location flags `distance_unknown` instead |
 | mineral-only interest | same 2-year period, and no surface to sell |
 | mobile home without the land | it is not real property |
 | sale date already passed | the sale happened |
