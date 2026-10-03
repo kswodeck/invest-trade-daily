@@ -1,6 +1,6 @@
 # Odd-lot tender screener — 2026-10-03
 
-Run 2026-10-03 05:30 ET (premarket slot). 5 offers tracked, 0 clear every gate: 0 Tier A, 0 Tier B, 0 Tier C.
+Run 2026-10-03 10:26 ET (premarket slot). 5 offers tracked, 0 clear every gate: 0 Tier A, 0 Tier B, 0 Tier C.
 
 **No Tier A opportunities today.** That is the ordinary result — an odd-lot tender with a 3%+ spread and a clean condition set is rare, and the thresholds below are not moved to produce one.
 
@@ -30,8 +30,8 @@ _None._
 
 A screener that finds nothing reads exactly like one that is broken. This is the difference.
 
-- **96** full-text queries over `2026-07-20..2026-10-03` returned **156** document hit(s) across **21** filing(s) (**57** exhibits kept as candidates)
-- searched as **4** date slice(s), **96** result page(s) read
+- **96** full-text queries over `2026-07-20..2026-10-03` returned **147** document hit(s) across **21** filing(s) (**57** exhibits kept as candidates)
+- searched as **4** date slice(s), **94** result page(s) read
 - **5** offers open, **24** archived
 
 | Turned away for | Count |
@@ -43,6 +43,11 @@ A screener that finds nothing reads exactly like one that is broken. This is the
 | no price | 1 |
 | an exchange offer, not cash | 1 |
 | no ticker | 1 |
+
+> ⚠ **2 of 96 queries failed**, so this sweep is thinner than it looks. EFTS returns 500s; a failed slice is retried on the next run rather than losing the pass.
+
+> - `SC TO-I/A "odd lot" 2026-09-08..2026-10-02: ReadTimeout: HTTPSConnectionPool(host='efts.sec.gov', port=443): Read timed out. (read timeout=20)`
+> - `SC 13E3 "odd lots" 2026-10-03..2026-10-03: ReadTimeout: HTTPSConnectionPool(host='efts.sec.gov', port=443): Read timed out. (read timeout=20)`
 
 ## Thresholds in force
 

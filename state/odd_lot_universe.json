@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-10-03T05:30:51-04:00",
-  "last_run_at": "2026-10-03T05:30:51-04:00",
+  "updated_at": "2026-10-03T10:26:07-04:00",
+  "last_run_at": "2026-10-03T10:26:07-04:00",
   "discovery_error": null,
   "open": [
     {
@@ -1917,14 +1917,17 @@
   ],
   "funnel": {
     "queries": 96,
-    "pages": 96,
-    "raw_hits": 156,
+    "pages": 94,
+    "raw_hits": 147,
     "filings": 21,
     "documents": 57,
     "window": "2026-07-20..2026-10-03",
     "slices": 4,
-    "failed_queries": 0,
-    "failures": [],
+    "failed_queries": 2,
+    "failures": [
+      "SC TO-I/A \"odd lot\" 2026-09-08..2026-10-02: ReadTimeout: HTTPSConnectionPool(host='efts.sec.gov', port=443): Read timed out. (read timeout=20)",
+      "SC 13E3 \"odd lots\" 2026-10-03..2026-10-03: ReadTimeout: HTTPSConnectionPool(host='efts.sec.gov', port=443): Read timed out. (read timeout=20)"
+    ],
     "rejected_by": {
       "no odd-lot language": 4,
       "expired or terminated": 2,
