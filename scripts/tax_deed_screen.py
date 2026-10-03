@@ -375,9 +375,31 @@ def style_tab(ws, values: list[list[Any]], spec: dict, n_cols: int) -> None:
     # Tier tinting, as rules on the Tier column so they survive the rows moving.
     body = {"sheetId": sid, "startRowIndex": td.HEADER_ROW, "endRowIndex": max(n_rows, first_data),
             "startColumnIndex": 0, "endColumnIndex": n_cols}
+
+    # Preferred cities first, at index 0. The tier rules tint every column of
+    # every row — and every row is Tier C — so a painted background would sit
+    # underneath them and never show; a rule only wins by being ranked above.
+    # Keyed on the City column's text rather than on row numbers, so it follows
+    # the rows when someone sorts the tab by Miles, and `sheet_rows` writes the
+    # configured name into that cell on every preferred row, so the rule and
+    # the screener cannot disagree about which rows they are.
+    preferred = spec.get("preferred") or {}
+    offset = 0
+    if preferred.get("cities"):
+        city_col = col_letter(preferred["column"])
+        names = [str(c).replace('"', '""') for c in preferred["cities"]]
+        formula = "=OR(" + ",".join(f'${city_col}{first_data}="{n}"' for n in names) + ")"
+        reqs.append({"addConditionalFormatRule": {
+            "index": 0,
+            "rule": {"ranges": [body], "booleanRule": {
+                "condition": {"type": "CUSTOM_FORMULA",
+                              "values": [{"userEnteredValue": formula}]},
+                "format": {"backgroundColor": preferred["color"]}}}}})
+        offset = 1
+
     for index, tier in enumerate(("A", "B", "C")):
         reqs.append({"addConditionalFormatRule": {
-            "index": index,
+            "index": index + offset,
             "rule": {"ranges": [body], "booleanRule": {
                 "condition": {"type": "CUSTOM_FORMULA", "values": [
                     {"userEnteredValue": f'=${tier_col}{first_data}="{tier}"'}]},
@@ -460,6 +482,27 @@ def distance_summary(cfg: dict, results: list[dict]) -> list[str]:
         lines.append(f"{unknown} candidate(s) could not be measured — no city, or a town too "
                      f"small for the place table that the geocoder could not place either. "
                      f"They are flagged `distance_unknown`, not rejected.")
+    # Said whenever the override actually changed an answer, so a kept row
+    # past the line is never mistaken for the radius failing.
+    favoured = [r for r in results if r.get("preferred_city") and r["status"] == "candidate"]
+    beyond = [r for r in favoured
+              if (r.get("location") or {}).get("miles") is not None
+              and r["location"]["miles"] > radius]
+    if favoured:
+        # Only rows on the tab can be green. Preferred-city inventory held off it
+        # as not yet scheduled is counted separately, so the number in the
+        # summary is the number of green rows a reader will actually find.
+        shown = td.sheet_dockets(cfg)
+        on_tab = [r for r in favoured if r["docket"]["state"] in shown]
+        off_tab = len(favoured) - len(on_tab)
+        lines.append(f"{len(on_tab)} row(s) on the tab are in a preferred city and highlighted "
+                     f"light green; preferred cities are never rejected by the radius"
+                     + (f" — {len(beyond)} measured past it and were kept: "
+                        + ", ".join(sorted({f"{r['preferred_city']} {r['location']['miles']:.1f} mi"
+                                            for r in beyond}))
+                        if beyond else "") + "."
+                     + (f" {off_tab} more preferred-city candidate(s) are held off the tab "
+                        f"as not yet scheduled (`SHEET_DOCKETS`)." if off_tab else ""))
     return lines + [""]
 
 

@@ -1294,6 +1294,109 @@ class TheRadiusRejectsWhatWasMeasuredAndFlagsWhatWasNot(unittest.TestCase):
             td.home_base(config)
 
 
+class PreferredCitiesAreHighlightedAndTrumpTheRadius(unittest.TestCase):
+    """Nineteen named cities, highlighted light green and never cut by distance.
+
+    They trump the radius and nothing else. Every other gate — the bid cap,
+    the commercial filter, homestead — still applies, because the request was
+    about distance and a preference for a town is not a reason to buy a
+    warehouse in it.
+    """
+
+    def with_radius(self, miles, extra=None):
+        config = cfg()
+        config = dict(config, thresholds=dict(config["thresholds"], MAX_MILES_FROM_BASE=miles))
+        if extra is not None:
+            config = dict(config, preferred_cities=dict(config["preferred_cities"],
+                                                        cities=extra))
+        return config
+
+    def test_the_configured_list_is_the_one_asked_for(self):
+        names = td.preferred_cities(cfg())
+        self.assertEqual(len(names), 19)
+        for city in ("Mansfield", "Irving", "Carrollton", "Rendon", "Venus"):
+            self.assertIn(city, names)
+
+    def test_waxahachie_is_spelled_so_it_can_match(self):
+        """The request read "Waxahatchie", which no row would ever say."""
+        self.assertIn("Waxahachie", td.preferred_cities(cfg()))
+        self.assertNotIn("Waxahatchie", td.preferred_cities(cfg()))
+        self.assertIsNotNone(td.find_place("Waxahachie"))
+
+    def test_every_configured_city_is_one_the_place_table_knows(self):
+        """A typo here would silently highlight nothing, forever."""
+        for city in td.preferred_cities(cfg()):
+            with self.subTest(city=city):
+                self.assertIsNotNone(td.find_place(city), city)
+
+    def test_a_row_in_a_preferred_city_is_recognised(self):
+        self.assertEqual(td.preferred_city({"city": "Arlington", "county": "Tarrant"}, cfg()),
+                         "Arlington")
+
+    def test_case_does_not_matter(self):
+        self.assertEqual(td.preferred_city({"city": "GRAND PRAIRIE", "county": "Dallas"},
+                                           cfg()), "Grand Prairie")
+
+    def test_a_name_truncated_by_the_feed_still_counts(self):
+        self.assertEqual(td.preferred_city({"city": "North Richland H", "county": "Tarrant"},
+                                           cfg()), "North Richland Hills")
+
+    def test_matching_is_exact_never_a_substring(self):
+        only_richland = self.with_radius(35, extra=["Richland Hills"])
+        self.assertIsNone(td.preferred_city({"city": "North Richland Hills",
+                                             "county": "Tarrant"}, only_richland))
+        self.assertIsNone(td.preferred_city({"city": "Dallas", "county": "Dallas"}, cfg()))
+
+    def test_a_preferred_city_past_the_line_is_kept(self):
+        tight = self.with_radius(5)
+        irving = td.screen(listing(city="Irving", county="Dallas"), cad(), checks(),
+                           tight, TODAY)
+        dallas = td.screen(listing(city="Dallas", county="Dallas"), cad(), checks(),
+                           tight, TODAY)
+        self.assertNotIn("outside_radius", codes(irving["rejections"]))
+        self.assertIn("outside_radius", codes(dallas["rejections"]),
+                      "the same radius still cuts a city that is not preferred")
+
+    def test_and_is_never_flagged_as_unmeasured(self):
+        """The question the radius asks has been answered by the user."""
+        config = self.with_radius(35, extra=["Westworth Village"])
+        result = td.screen(listing(city="Westworth Village", county="Tarrant"), cad(),
+                           checks(), config, TODAY)
+        self.assertNotIn("distance_unknown", codes(result["flags"]))
+
+    def test_it_trumps_the_radius_and_nothing_else(self):
+        result = td.screen(listing(city="Mansfield", county="Tarrant",
+                                   minimum_opening_bid=50000.0),
+                           cad(), checks(), cfg(), TODAY)
+        self.assertIn("opening_bid_over_cap", codes(result["rejections"]))
+        result = td.screen(listing(city="Mansfield", county="Tarrant"),
+                           cad(land_use_code="F1"), checks(), cfg(), TODAY)
+        self.assertIn("commercial_or_industrial", codes(result["rejections"]))
+
+    def test_the_sheet_writes_the_configured_name_the_highlight_rule_matches(self):
+        statements = td.statement_report(cfg(), ["Tarrant"], TODAY, SALE)
+        row = td.screen(listing(city="North Richland H", county="Tarrant"), cad(),
+                        checks(), cfg(), TODAY, SALE)
+        values, spec = td.sheet_rows([row], cfg(), TODAY, SALE, statements)
+        index, _ = spec["data_rows"][0]
+        self.assertEqual(values[index][td.HEADERS.index("City")], "North Richland Hills")
+        self.assertIn("North Richland Hills", spec["preferred"]["cities"])
+        self.assertEqual(spec["preferred"]["column"], td.HEADERS.index("City"))
+        self.assertIn("light green", values[1][0], "the banner says what the green means")
+
+    def test_the_highlight_is_light_green_and_not_tier_as_green(self):
+        color = td.highlight_color(cfg())
+        self.assertEqual(color, {"red": 0.714, "green": 0.843, "blue": 0.659})
+        tier_a = {"red": 0.85, "green": 0.94, "blue": 0.86}
+        self.assertGreater(sum(abs(color[k] - tier_a[k]) for k in color), 0.25,
+                           "close enough to Tier A's tint to be mistaken for it")
+
+    def test_a_malformed_color_refuses_rather_than_painting_garbage(self):
+        bad = dict(cfg(), preferred_cities={"cities": ["Mansfield"], "highlight": "green"})
+        with self.assertRaises(SystemExit):
+            td.highlight_color(bad)
+
+
 class TheCityComesFromTheBestSourceThatHasIt(unittest.TestCase):
     """Three sources, not equally good, so the row records which answered.
 

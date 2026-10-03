@@ -562,6 +562,70 @@ class ARunThatRunsOutOfTimeStillLeavesARecord(unittest.TestCase):
         self.assertLessEqual(screen.DEFAULT_DEADLINE_MINUTES, 35)
 
 
+class TheHighlightOutranksTheTierTints(unittest.TestCase):
+    """The tier rules tint every column of every row, and every row is Tier C.
+
+    So a preferred-city highlight only shows if it is a conditional-format
+    rule ranked above them. A painted background would sit under the tier
+    tint and the request would look ignored. Nothing here talks to Google:
+    the worksheet is a stand-in that records what would have been sent.
+    """
+
+    class Sheet:
+        def __init__(self):
+            self.id = 7
+            self.sent = []
+            self.spreadsheet = self
+
+        def fetch_sheet_metadata(self):
+            return {"sheets": [{"properties": {"sheetId": 7}, "conditionalFormats": [{}, {}]}]}
+
+        def batch_update(self, body):
+            self.sent.append(body)
+
+    def rules(self, cfg):
+        from test_tax_deeds import TODAY, cad, checks, listing
+        rows = [td.screen(listing(city="Mansfield", county="Tarrant", account="1"), cad(),
+                          checks(), cfg, TODAY, SALE),
+                td.screen(listing(city="Dallas", county="Dallas", account="2"), cad(),
+                          checks(), cfg, TODAY, SALE)]
+        statements = td.statement_report(cfg, ["Dallas", "Tarrant"], TODAY, SALE)
+        values, spec = td.sheet_rows(rows, cfg, TODAY, SALE, statements)
+        sheet = self.Sheet()
+        screen.style_tab(sheet, values, spec, len(td.HEADERS))
+        reqs = sheet.sent[0]["requests"]
+        return ([r["addConditionalFormatRule"] for r in reqs if "addConditionalFormatRule" in r],
+                [r for r in reqs if "deleteConditionalFormatRule" in r])
+
+    def test_the_preferred_rule_is_first_and_the_tiers_follow(self):
+        added, _ = self.rules(td.load_config())
+        self.assertEqual([r["index"] for r in added], [0, 1, 2, 3])
+        first = added[0]["rule"]["booleanRule"]
+        self.assertEqual(first["format"]["backgroundColor"], td.highlight_color(td.load_config()))
+        formula = first["condition"]["values"][0]["userEnteredValue"]
+        city_col = screen.col_letter(td.HEADERS.index("City"))
+        self.assertIn(f'${city_col}{td.HEADER_ROW + 1}="Mansfield"', formula)
+        self.assertIn('"North Richland Hills"', formula)
+        self.assertNotIn('"Dallas"', formula)
+
+    def test_the_rule_is_keyed_on_the_city_column_so_it_survives_a_sort(self):
+        added, _ = self.rules(td.load_config())
+        formula = added[0]["rule"]["booleanRule"]["condition"]["values"][0]["userEnteredValue"]
+        self.assertTrue(formula.startswith("=OR("))
+        self.assertNotIn("ROW(", formula, "a row-number rule would stay put while rows move")
+
+    def test_last_runs_rules_are_cleared_first_so_highlights_never_go_stale(self):
+        """The tab is rewritten every run; a stale green would mark the wrong row."""
+        _, deleted = self.rules(td.load_config())
+        self.assertEqual(len(deleted), 2)
+
+    def test_with_no_preferred_cities_the_tiers_keep_their_old_places(self):
+        config = td.load_config()
+        config = dict(config, preferred_cities={"cities": [], "highlight": "#B6D7A8"})
+        added, _ = self.rules(config)
+        self.assertEqual([r["index"] for r in added], [0, 1, 2])
+
+
 class APacketGateWithholdsAFileNotAProperty(unittest.TestCase):
     """One run wrote 572 packets, 541 for properties with no auction assigned.
 
