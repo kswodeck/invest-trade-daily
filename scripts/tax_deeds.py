@@ -541,6 +541,53 @@ def county_seat(county: str, cfg: dict) -> tuple[float, float] | None:
     return (found[1], found[2]) if found else None
 
 
+def preferred_cities(cfg: dict) -> list[str]:
+    """The configured preferred cities, as written in config."""
+    return [str(c).strip() for c in (cfg.get("preferred_cities") or {}).get("cities") or []
+            if str(c).strip()]
+
+
+def highlight_color(cfg: dict) -> dict[str, float]:
+    """The preferred-city highlight as a Sheets color, from a #RRGGBB in config.
+
+    Defaults to Google Sheets' own "light green 2". Not the paler light green 3:
+    Tier A's tint is already that shade, and a highlight that can be mistaken
+    for a tier is worse than none.
+    """
+    raw = str((cfg.get("preferred_cities") or {}).get("highlight") or "#B6D7A8").strip()
+    match = re.fullmatch(r"#?([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})", raw)
+    if not match:
+        raise SystemExit(f"preferred_cities.highlight {raw!r} is not a #RRGGBB color")
+    red, green, blue = (round(int(part, 16) / 255, 3) for part in match.groups())
+    return {"red": red, "green": green, "blue": blue}
+
+
+def preferred_city(listing: dict, cfg: dict, cad: dict | None = None) -> str | None:
+    """The configured preferred city this row is in, or None.
+
+    The row's city is resolved exactly as the City column resolves it, then put
+    through the place table — so a feed that truncates at 16 characters still
+    counts ("North Richland H" is North Richland Hills) and case does not
+    matter. The comparison itself is exact on the normalized name, never a
+    substring: Richland Hills and North Richland Hills are different cities,
+    and both are on the list only because both were asked for.
+    """
+    wanted = {_place_key(name): name for name in preferred_cities(cfg)}
+    if not wanted:
+        return None
+    city, _ = city_of(listing, cad)
+    if not city:
+        return None
+    candidates = [city]
+    found = find_place(city, near=county_seat(listing.get("county") or "", cfg))
+    if found:
+        candidates.insert(0, found[0])
+    for name in candidates:
+        if _place_key(name) in wanted:
+            return wanted[_place_key(name)]
+    return None
+
+
 def locate(listing: dict, cfg: dict, cad: dict | None = None) -> dict:
     """Where this property is measured from, and how far that is from base.
 
@@ -845,7 +892,11 @@ def gate1_hard_disqualifiers(listing: dict, cad: dict | None, cfg: dict,
     # has never rejected anything here — and `locate` reports a city it cannot
     # believe as unknown rather than as far away.
     radius = threshold(cfg, "MAX_MILES_FROM_BASE")
-    if radius and float(radius) > 0:
+    # A preferred city trumps the radius, and only the radius: the user named
+    # these places as where they want to buy, so the distance question is
+    # already answered — neither a rejection nor an unknown applies. Every
+    # other gate below still does.
+    if radius and float(radius) > 0 and not preferred_city(listing, cfg, cad):
         where = locate(listing, cfg, cad)
         if where["miles"] is None:
             flags.append(flag("distance_unknown", MATERIAL,
@@ -1342,6 +1393,7 @@ def screen(listing: dict, cad: dict | None, checks: list[dict], cfg: dict,
         "redemption": terms,
         "docket": docket,
         "location": locate(listing, cfg, cad),
+        "preferred_city": preferred_city(listing, cfg, cad),
         "tier": tier,
         "status": "rejected" if rejections else "candidate",
         "material_flags": material,
@@ -1682,6 +1734,12 @@ def sheet_rows(results: list[dict], cfg: dict, today: date,
     radius_note = (f" · within {float(threshold(cfg, 'MAX_MILES_FROM_BASE')):g} mi of {base[0]} "
                    f"(straight line; {cut} listing(s) beyond it rejected — 'Miles' says how far)"
                    if base else "")
+    # What the green means, on the sheet itself — a highlight nobody can decode
+    # from the tab is decoration.
+    favoured = sum(1 for r in candidates if r.get("preferred_city"))
+    if preferred_cities(cfg):
+        radius_note += (f" · light green = one of your preferred cities ({favoured} row(s)), "
+                        f"kept whatever the distance")
     holding = (f" · {held_back} not-yet-scheduled candidate(s) held off this tab "
                f"(SHEET_DOCKETS) — screened and in the snapshot, not on a docket"
                if held_back else "")
@@ -1698,7 +1756,10 @@ def sheet_rows(results: list[dict], cfg: dict, today: date,
     )
 
     rows: list[list[Any]] = [[DISCLAIMER], [banner], [statement_line], list(HEADERS)]
-    spec: dict[str, Any] = {"county_rows": [], "data_rows": [], "note_rows": []}
+    spec: dict[str, Any] = {"county_rows": [], "data_rows": [], "note_rows": [],
+                            "preferred": {"cities": preferred_cities(cfg),
+                                          "color": highlight_color(cfg),
+                                          "column": HEADERS.index("City")}}
 
     for name in [c["name"] for c in counties(cfg)]:
         block = [r for r in candidates if r["listing"].get("county") == name]
@@ -1753,8 +1814,9 @@ def _sheet_row(result: dict) -> list[Any]:
         # county name. Where the place table recognized the city, its own name
         # is shown: Tarrant's list cuts every city at 16 characters, and
         # "North Richland H" is not a name anyone would search for.
-        (where.get("place") if where.get("miles") is not None and where.get("place")
-         else listing.get("city", "")),
+        (result.get("preferred_city")
+         or (where.get("place") if where.get("miles") is not None and where.get("place")
+             else listing.get("city", ""))),
         # A number, so the column sorts. Blank when it could not be measured,
         # which the Flags column then says as distance_unknown.
         where["miles"] if where.get("miles") is not None else "",

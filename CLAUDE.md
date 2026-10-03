@@ -340,6 +340,20 @@ Four rules are load-bearing:
   first version listed Garland and Seagoville as "inside" and broke the day the
   line moved.
 
+- **Preferred cities are highlighted and trump the radius — and only the radius.**
+  `preferred_cities` (19 names) are never rejected by `MAX_MILES_FROM_BASE` nor
+  flagged `distance_unknown`; every other gate still applies. Matched exactly on
+  the city as the City column resolves it, truncation included, never by
+  substring. The highlight is a conditional-format rule at index 0, **above** the
+  tier tints: those cover every column of every row, so a painted background
+  would never show. It is keyed on the City column's text so it survives a sort,
+  and the City cell carries the configured name on every preferred row so rule
+  and screener cannot disagree. Light green 2 (`#B6D7A8`), not Tier A's paler
+  green. The request said "Waxahatchie"; config says Waxahachie, and a test
+  fails if any configured city is unknown to the place table. On 2026-10-02: 17
+  green rows of 167, with 83 more preferred-city candidates held off the tab as
+  not yet scheduled.
+
 - **Repeat offerings come from the snapshots, not the network.** A property
   matched across `data/tax_deeds/<date>.json` by account, else cause number, else
   county and address, and offered at two or more prior sales, is flagged

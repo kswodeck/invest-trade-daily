@@ -11,6 +11,11 @@
     "lat": null,
     "lon": null
   },
+  "preferred_cities": {
+    "_": "Cities whose rows are highlighted on the Tax Deeds tab and are never rejected by MAX_MILES_FROM_BASE — they trump the radius, and nothing else: the bid cap, the commercial filter, homestead and every other gate still apply. Matched against the row's own city the way the City column resolves it, so a truncated feed name such as North Richland H counts, and exactly, so Richland Hills is not North Richland Hills. A preferred city is also never flagged distance_unknown: the question the radius asks is already answered. The highlight is Google Sheets' light green 2, chosen to stay distinct from Tier A's paler green, and is a conditional-format rule ranked above the tier tints — a painted background would sit under them and never show.",
+    "cities": ["Mansfield", "Midlothian", "Grand Prairie", "Arlington", "Venus", "Rendon", "Hurst", "Bedford", "Euless", "Irving", "Cedar Hill", "Red Oak", "Waxahachie", "Grapevine", "Richland Hills", "North Richland Hills", "Colleyville", "Coppell", "Carrollton"],
+    "highlight": "#B6D7A8"
+  },
   "thresholds": {
     "MAX_OPENING_BID": 12000,
     "_MAX_OPENING_BID": "Gate 1 rejects a published minimum bid above this. It bites only on rows that HAVE a published bid: 183 of the 2026-09-11 run's 252 tab rows had none, and a missing bid flags no_opening_bid rather than rejecting, because an unknown is not a finding. Of the 69 priced rows on that tab, 28 were over $12,000. Raising it does not surface un-priced inventory and lowering it does not hide any.",

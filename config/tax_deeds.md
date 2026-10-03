@@ -335,6 +335,47 @@ the line. 36 keeps it; the farthest city kept at 35 is Mesquite at 34.6. The
 step summary names every city within 5 miles of the line on either side, so
 moving it is an informed decision rather than a surprise.
 
+## Preferred cities: highlighted, and never cut by distance
+
+`preferred_cities` names 19 cities — Mansfield, Midlothian, Grand Prairie,
+Arlington, Venus, Rendon, Hurst, Bedford, Euless, Irving, Cedar Hill, Red Oak,
+Waxahachie, Grapevine, Richland Hills, North Richland Hills, Colleyville,
+Coppell and Carrollton. A row in one of them is highlighted light green on the
+tab and is **never rejected by `MAX_MILES_FROM_BASE`**, nor flagged
+`distance_unknown` — the question the radius asks has been answered by the
+user. It trumps the radius **and nothing else**: the bid cap, the commercial
+filter, homestead and every other gate still apply, because a preference for a
+town is not a reason to buy a warehouse in it.
+
+All nineteen sit inside 35 miles on their centers (Carrollton is the farthest at
+30.7), so today the override changes no rejection. It matters for a geocoded
+parcel past the line in a big preferred city, and the day the radius moves.
+
+**Matching** resolves the row's city exactly as the City column does, then puts
+it through the place table: a feed name truncated at 16 characters counts
+(`North Richland H`), case does not matter, and the comparison is exact rather
+than a substring — Richland Hills is not North Richland Hills. The request
+spelled one city `Waxahatchie`; it is configured as `Waxahachie`, the spelling a
+row would actually carry, and a test fails if any configured city is unknown to
+the place table, since a typo there would highlight nothing, forever.
+
+**The highlight is a conditional-format rule, ranked first.** The tier tints are
+rules over every column of every row, and every row is Tier C, so a painted
+background would sit underneath them and never show. The rule is keyed on the
+City column's text, so it follows the rows when the tab is sorted by Miles, and
+`sheet_rows` writes the configured name into that cell on every preferred row,
+so the rule and the screener cannot disagree. Like the tier rules it is deleted
+and rebuilt every run — a stale green would mark the wrong property.
+
+The color is Google Sheets' **light green 2** (`#B6D7A8`), not the paler light
+green 3: Tier A's tint is already that shade, and a highlight that can be read
+as a tier is worse than none. `preferred_cities.highlight` changes it.
+
+On the 2026-10-02 run, 17 of the tab's 167 rows are green — Irving 12,
+Carrollton 2, Grand Prairie 2, Midlothian 1. Another 83 preferred-city
+candidates exist (Arlington 34, Mansfield 13 and more) but are held off the tab
+as not yet scheduled; this override does not touch `SHEET_DOCKETS`.
+
 ## The city column
 
 `City` sits beside `County`, because the two are read together and the drive-by
