@@ -1128,7 +1128,7 @@ class CommercialAndIndustrialAreRejectedWhenTheUseWasRead(unittest.TestCase):
 
 
 class TheRadiusRejectsWhatWasMeasuredAndFlagsWhatWasNot(unittest.TestCase):
-    """MAX_MILES_FROM_BASE: 40 straight-line miles from Mansfield.
+    """MAX_MILES_FROM_BASE: 35 straight-line miles from Mansfield (40 until 2026-10-03).
 
     A distance that was measured and is past the line rejects, like a bid over
     the cap. One that could not be measured flags, because an unknown has never
@@ -1162,13 +1162,36 @@ class TheRadiusRejectsWhatWasMeasuredAndFlagsWhatWasNot(unittest.TestCase):
         self.assertIn("41.0", rejection["detail"])
         self.assertIn("MAX_MILES_FROM_BASE", rejection["detail"])
 
-    def test_a_city_inside_it_is_kept(self):
-        for city in ("Garland", "Dallas", "Fort Worth", "Mansfield", "Seagoville"):
+    def test_each_city_lands_on_the_side_of_the_line_its_distance_says(self):
+        """Judged against the configured radius, never a remembered one.
+
+        This used to list Garland and Seagoville as "inside", which was true at
+        40 miles and false the day the line moved to 35 — a test of the old
+        setting rather than of the gate. Now every city is measured and must be
+        kept exactly when it is within the line and rejected exactly when not.
+        """
+        radius = float(td.threshold(cfg(), "MAX_MILES_FROM_BASE"))
+        cities = [("Mansfield", "Tarrant"), ("Fort Worth", "Tarrant"), ("Dallas", "Dallas"),
+                  ("Mesquite", "Dallas"), ("Seagoville", "Dallas"), ("Richardson", "Dallas"),
+                  ("Garland", "Dallas"), ("Rowlett", "Dallas"), ("Sachse", "Dallas")]
+        sides = set()
+        for city, county in cities:
             with self.subTest(city=city):
-                result = self.screened(city=city, county="Dallas" if city != "Fort Worth"
-                                       and city != "Mansfield" else "Tarrant")
-                self.assertNotIn("outside_radius", codes(result["rejections"]))
+                miles = td.locate({"city": city, "county": county}, cfg())["miles"]
+                result = self.screened(city=city, county=county)
+                rejected = "outside_radius" in codes(result["rejections"])
+                self.assertEqual(rejected, miles > radius,
+                                 f"{city} at {miles} mi against a {radius:g}-mile line")
                 self.assertNotIn("distance_unknown", codes(result["flags"]))
+                sides.add(rejected)
+        self.assertEqual(sides, {True, False},
+                         "the sample no longer straddles the line, so it tests one side only")
+
+    def test_the_configured_radius_is_35_miles(self):
+        """The requested setting, pinned once, in one place, on purpose."""
+        self.assertEqual(float(td.threshold(cfg(), "MAX_MILES_FROM_BASE")), 35.0)
+        self.assertEqual(float(td.DEFAULT_THRESHOLDS["MAX_MILES_FROM_BASE"]), 35.0,
+                         "the built-in default and the config should not disagree")
 
     def test_the_line_is_inclusive_at_exactly_the_radius(self):
         config = cfg()

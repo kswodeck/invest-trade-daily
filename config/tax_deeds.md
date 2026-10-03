@@ -59,7 +59,7 @@ widen a gate for one run without a commit.
 | `HOLDING_MONTHS` | 7 | 180-day redemption plus a month |
 | `REJECT_FLOOD_ZONE` | false | a flood hit is a material flag; true makes it a reject |
 | `REJECT_COMMERCIAL_USE` | true | a use *read* as commercial or industrial rejects; false keeps it with a material flag. An unreadable use never rejects |
-| `MAX_MILES_FROM_BASE` | 40 | Gate 1 rejects a property measured farther than this, straight line, from `home_base` (Mansfield). An unmeasurable location flags; 0 turns it off |
+| `MAX_MILES_FROM_BASE` | 35 | Gate 1 rejects a property measured farther than this, straight line, from `home_base` (Mansfield). An unmeasurable location flags; 0 turns it off |
 | `EFFECTIVE_TAX_RATE` | 0.023 | DFW ad valorem, for holding and post-judgment taxes |
 | `MONTHLY_CARRY` | 75 | insurance and utilities on a vacant parcel |
 | `POST_JUDGMENT_YEARS` | 1.0 | years of taxes assumed accrued since judgment |
@@ -258,9 +258,9 @@ never ran at all: no row in that run has a CAD record, so it read as working
 while rejecting and flagging nothing. It does not need a CAD — the county list's
 own property type answers it wherever a feed publishes one.
 
-## Within 40 miles of Mansfield
+## Within 35 miles of Mansfield
 
-`MAX_MILES_FROM_BASE` (40) is measured from `home_base` (Mansfield, TX) and it is
+`MAX_MILES_FROM_BASE` (35; it was 40 until 2026-10-03) is measured from `home_base` (Mansfield, TX) and it is
 a Gate 1 rule like the bid cap: a distance that was **measured** and is past the
 line rejects; one that could not be measured flags `distance_unknown`. Rejected
 rows keep their reason in the snapshot, so nothing leaves the record.
@@ -278,7 +278,7 @@ the estimate is worst for the biggest city: Dallas's center is 24.7 miles from
 Mansfield while its far north-east corner is past 40. Every Dallas row is kept on
 that basis. Both points are straight-line ("as the crow flies") miles, the
 conventional meaning of a radius — road miles in this metro run roughly a fifth
-to a third longer, so 40 here is often 50 by car.
+to a third longer, so 35 here is often 45 by car.
 
 **The place table** is every Texas row of GeoNames `cities1000` — each populated
 place of 1,000 people or more — as bundled in the `reverse_geocoder` 1.5.1
@@ -321,10 +321,19 @@ A base that is configured and cannot be resolved stops the run **before the
 first request**: silently skipping a filter someone asked for is worse than
 refusing to start.
 
-Replayed over the 2026-10-01 run, the radius rejects 22 listings — Rowlett at
-41.0 miles (18) and Sachse at 42.7 (4) — and takes 5 rows off the tab, 209 to
-204. The closest city kept is Garland at 37.9; the step summary names every city
-within 5 miles of the line on either side, so moving it is an informed decision.
+Replayed over the 2026-10-01 run:
+
+| Radius | Listings rejected | Tab rows | Cities cut |
+| --- | --- | --- | --- |
+| 40 mi | 22 | 209 → 204 | Rowlett 41.0, Sachse 42.7 |
+| **35 mi** (current) | **125** | **209 → 166** | + Seagoville 35.5, Richardson 35.8, Newark 36.2, Garland 37.9 |
+
+**Seagoville is the one to know about.** Its center is 35.5 miles out — half a
+mile past the line — so all 70 of its listings and 32 tab rows go, although its
+nearer half lies inside 35. That is what measuring a city by its center does at
+the line. 36 keeps it; the farthest city kept at 35 is Mesquite at 34.6. The
+step summary names every city within 5 miles of the line on either side, so
+moving it is an informed decision rather than a surprise.
 
 ## The city column
 

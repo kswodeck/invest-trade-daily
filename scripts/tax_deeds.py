@@ -139,7 +139,7 @@ DEFAULT_THRESHOLDS: dict[str, Any] = {
     "PACKET_DOCKETS": "on_docket,over_the_counter,other_sale",
     "SHEET_DOCKETS": "on_docket,over_the_counter,other_sale,date_unknown",
     "REJECT_COMMERCIAL_USE": True,
-    "MAX_MILES_FROM_BASE": 40,
+    "MAX_MILES_FROM_BASE": 35,
 }
 
 BOOL_THRESHOLDS = {"REJECT_FLOOD_ZONE", "REJECT_COMMERCIAL_USE"}

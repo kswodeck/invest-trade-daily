@@ -319,7 +319,7 @@ Four rules are load-bearing:
   `geocode_place` caches per address so the flood check and the city share one
   lookup.
 
-- **The 40-mile radius rejects a measured distance and flags an unmeasured
+- **The 35-mile radius rejects a measured distance and flags an unmeasured
   one.** `MAX_MILES_FROM_BASE` from `home_base` (Mansfield), straight line, a
   Gate 1 rule like the bid cap. Measured to the parcel's own geocoded point when
   the run has one, else to the center of the property's city looked up in
@@ -333,7 +333,12 @@ Four rules are load-bearing:
   begins exactly one place resolves to it. Towns under 1,000 people (mostly in
   Johnson and Ellis) are not in the table and are geocoded instead. Like the
   commercial check, this sits **above** the `if not cad` early return. On the
-  2026-10-01 run: 22 listings rejected (Rowlett 41.0, Sachse 42.7), tab 209 → 204.
+  2026-10-01 run at 35: 125 listings rejected and the tab 209 → 166, against 22
+  and 204 at the original 40. Most of the difference is **Seagoville, 35.5 mi** —
+  half a mile past the line on its center, 32 tab rows; 36 would keep it. Tests
+  judge each city against the configured radius, never a remembered one: the
+  first version listed Garland and Seagoville as "inside" and broke the day the
+  line moved.
 
 - **Repeat offerings come from the snapshots, not the network.** A property
   matched across `data/tax_deeds/<date>.json` by account, else cause number, else
