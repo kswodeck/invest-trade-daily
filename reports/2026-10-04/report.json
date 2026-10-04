@@ -1,0 +1,314 @@
+{
+  "date": "2026-10-04",
+  "generated_at_et": "2026-10-04T06:33:58-04:00",
+  "research_minutes": 30,
+  "truncated": false,
+  "data_quality_notes": "RESEARCH WAS NOT TRUNCATED. The research phase ran 06:00-06:30 ET, well inside its cap, and closed with a final RESEARCH COMPLETE block. It captured 8 rows across 7 distinct symbols; XLE was captured twice and the later conviction-2 revision supersedes the earlier conviction-3 version, which is the only row dropped here. Nothing was reconstructed and nothing was filtered out. All 7 surviving candidates are published.\n\nREAD THE SHAPE OF THIS REPORT BEFORE SIZING ANYTHING: it is risk reduction, not opportunity. Only 2 of 7 rows are new risk (FCX, BTC). Four are exit orders on open positions (GDX, LCII, CCJ, SVRA) and one is a hold with the conviction cut (XLE). Do not read 7 rows as 7 fresh opportunities.\n\nWHY THE COUNT IS LOW, and it is a finding rather than a gap. The cross-sectional screen found one of the narrowest tapes available: SPY at 769.64 is 1.25% off its record high while the median name outside AI and copper sits at a 52-week low -- defense (NOC -38.2%, LHX -37.6%, HII -41.6%), staples (MKC -36.9%, STZ -33.0%, PEP -25.8%), discretionary (LULU -47.3%, NKE -45.0%, LCII -40.1%) and materials ex-copper (AA -50.3%, MOS -34.7%) all below both their 20- and 50-day means. Research read the open book against that and concluded every losing position is the same trade -- a de-rated name bought on a value thesis, the stock line being 0 for 7 at -5.4% -- so it raised the bar on new de-rated-value longs for the rest of the run and nothing cleared it. Defense was rejected as a category despite an active US-Iran war (appropriations frozen on a stopgap CR, de-escalation being priced, LMT FCF -$291M), and staples into earnings were rejected as a category. The caveat research kept, and it is kept here: 12 closed trades is under the ~15 the instructions call noise, so this rests on the cross-sectional screen as evidence with the track record only as corroboration.\n\nTHREE RATIOS CLUSTER JUST ABOVE THEIR FLOORS and you should treat that as the warning sign the instructions say it is -- FCX 2.124, BTC 2.143, XLE 2.129 against a 2.0 swing floor. Every one was recomputed here from the final entry, target and stop rather than trusted from the notes, and all three reproduced the research phase's own figures exactly. The stops were then checked the other way, which is where the real thinness is: FCX sits at 2.001 ATR against a 2.0 stock floor and BTC at 2.534 against a 2.5 crypto floor -- both a hair above, on ATRs of 2.4235 (FCX, re-fetched from nasdaq this phase and confirmed) and 2,210 (BTC, aggregated from CoinGecko 4-hour candles because no daily crypto OHLC source was reachable). IF VALIDATION'S OWN ATR COMES IN HIGHER, BOTH SHOULD FAIL. Research stated explicitly that it did not widen the stops or lift the targets to buy margin and that the alternatives were checked (FCX entry 67.80 gives 1.84 ATR, entry 69.50 gives a 1.46 R:R, so 68.20/63.35 is the only geometry that clears both), and asked that they be failed rather than nudged. That request is carried forward here.\n\nA SIZING CONFLICT LEFT UNRESOLVED FOR THE RED TEAM. XLE carries position_size_pct 3 at conviction 2, which exceeds the 1% lottery-ticket cap config/strategy.md puts on conviction 2. It is published at 3 because that is the size the position is actually filled at since 2026-08-15 and the recommendation is to hold without adding, not to open at 3%; research reasoned this deliberately. Whether the correct action is instead to trim to 1% is a judgment this editor did not make on its own.\n\nTHE EXITS SHARE ONE MECHANICAL CAUSE, which is worth knowing because it means they are not four independent sector calls. Three of the four (GDX 0.81 ATR, SVRA 0.84 ATR, CCJ 0.88 ATR) are triggered by a standing stop sitting inside a single ATR of the market, where the stop decides before the thesis does and a deliberate exit prices better than the stop will. LCII is the one invalidated on thesis rather than geometry, and it has no stop at all, so nothing was forcing that decision today. The correlation cap was checked and does not bind: the three long expressions rest on genuinely different drivers (XLE energy/Iran, FCX copper/AI capex, BTC crypto flows), and exits are not new risk. Research also logged refusing a fourth 'long rates rise' expression -- the tempting long-regional-banks steepener -- because XLU short, TLT short and IYR short already fill the cap of 3.\n\nZERO EVENT CONTRACTS, on a Sunday, with the lane explicitly wanted -- and research argues the absence is a finding rather than a gap. The Fed, CPI MoM, CPI YoY, U-3 and recession ladders were all fetched and priced. The best idea of the run (KXFEDDECISION-26DEC-H25 NO at 30) was killed in falsification after research discovered it had the Fed backwards: its own 06:01 macro block read FRED's flat 3.88% fed funds as a pause after cuts, when in fact the Fed HIKED in September 2026 and 16 of 19 FOMC members project at least one more, under a Chair (Warsh) saying inflation is too high. Three of the four arguments for that trade rested on the false premise, so the market's 70% is the dot plot priced correctly rather than a crowd error. The one survivor, KXU3-26OCT-T4.2 YES at 30, was rejected on a 14% bid-ask spread that eats a 5-point edge, not on thesis. Note the regime correction propagated: it is the stated reason LCII is being closed and GDX exited.\n\nSOURCES THAT FAILED. Yahoo Finance returned HTTP 429 on everything -- every index, VIX, DXY and futures quote, all history fallbacks, and BTC-USD history entirely -- so THERE IS NO VIX, DXY, SPOT GOLD OR SPOT WTI PRINT ANYWHERE IN THIS RUN; USO and GLD were used as proxies and are labelled as such. Yahoo options returned HTTP 401, so NO OPTIONS-IMPLIED MOVE WAS OBTAINED FOR ANY CANDIDATE and the is-my-target-inside-what-the-market-prices check in config/strategy.md was NOT PERFORMED ON ANY IDEA TODAY. api.nasdaq.com timed out on short interest, so no short-interest or days-to-cover read on FCX either. FRED's fredgraph.csv endpoint timed out at 30s (its series path worked); the BLS public API v1 was used instead and is the better source. Finnhub refuses indices but its earnings calendar and insider/analyst endpoints worked. stooq 404s on all '^' index symbols; EIA returned API_KEY_MISSING so energy was inferred from USO; no twelvedata or alphavantage key is present.\n\nA TOOL BUG WORTH FIXING BEFORE THE NEXT RUN: market_data.py events is silently blind, on two independent faults. Kalshi renamed its price fields (yes_bid_dollars, yes_ask_dollars, last_price_dollars, volume_fp, open_interest_fp, as decimal dollar strings) while events() at scripts/market_data.py:770 still reads the old names, so every contract returns null prices; and there is no server-side search, so it pulls up to 200 unfiltered open markets and greps titles client-side, where the first 200 are all NFL and every topic search returns count 0 -- Fed, CPI, inflation, Bitcoin, recession, unemployment, shutdown and GDP were all tested and all returned zero. The source is healthy; the client is wrong. Every event figure in the notes came from direct calls to api.elections.kalshi.com with series_ticker, which is also the fix. The old host trading-api.kalshi.com now 401s with a migration notice.\n\nCOVERAGE GAPS. Nothing intraday, correctly -- this is a Sunday, US equities and futures are shut and a Sunday cannot produce an intraday equity setup. Nothing new long_term, and research names this the real gap of the run: the lane got less than its ~15% allocation because the position review and the defense/staples investigations consumed it, and it holds 9 open positions against 0 closed. A long_term FCX framing was considered and dropped because clearing the 2.5 floor needs a defended target near 110 and the only honest method -- copper-price leverage on annual pounds produced -- needed a production figure that was not fetched; it was not published rather than estimated. NVDA was considered as a swing and rejected despite workable geometry (2.0 ATR stop under the 20-day, 2.0:1) because there is no dated catalyst inside the horizon -- earnings are late November -- and a technical breakout is a trigger, not a catalyst. SCCO was rejected because a 2 ATR stop makes the 2:1 floor unreachable without demanding a new high. Nothing in futures beyond flagging the stale /MBTU6 short for cancellation.\n\nPRICES. Every equity and ETF price here is the 2026-10-02 close, re-quoted this phase and matching the notes to the cent; at a Sunday 06:00 ET that closed-market print is the freshest honest price, not stale data. BTC is live at 85,400 as of this phase, up from the 85,086 captured during research. One tracker item research flagged for whoever owns it: HII was ranked #1 on the 2026-10-02 report and is now 41.6% off its high, but appears in neither the open-position nor the awaiting-entry table.\n\nRED TEAM (phase 2c). Cut 3 of 7, downgraded 3, killed nothing on arithmetic because the arithmetic held.\n\nCUT: BTC (the 99,500 target has no level behind it \u2014 risk is fixed at 5,600 by the 2.5 ATR crypto floor, so 2:1 demands 98,700 and 99,500 is the round number just past it, against a re-fetched 180-day range of 57,779-87,330; and the catalyst is an undated technical breakout, which is the exact test this same run used to reject NVDA). XLE (the 2.13:1 rests on a 70.50 target 6.5% above the 150-day high of 66.17 from a mid-range filled entry; pull the target to the one defensible resistance under 66.17 and the ratio is 0.68:1, so it never cleared the floor \u2014 the same objection that rejected SCCO in this run and the reason FCX's target was set below its range high). SVRA (the 4.4% gap the exit protects is narrower than the 7.55% bid/ask spread validation measured on this symbol on 2026-10-01, and both the voluntary exit and the stop cross it, so acting early captures nothing on a 1% position).\n\nDOWNGRADED: GDX 4 to 3 and CCJ 3 to 2, both because their evidence lists the same confirmation twice under different kinds \u2014 in each case the technical_level item and the counter_argument_answered item are the identical stop-distance fact cited to the identical URL \u2014 and GDX additionally because this book has made four directional calls on it in nine days, two of them opposite. FCX 4 to 3 for the flow its own key_risk names and then scores past: zero insider buys against five sales worth $8.39M, a flat analyst trend for four months, and no short-interest read at all.\n\nNOT CUT, AND THE REASONS MATTER. Every price, ATR, mean and range in this report was re-fetched independently this phase and reproduces to the digit \u2014 FCX ATR14 2.4235 with the stop at 2.0012 ATR, GDX 2.9293, CCJ 3.0407, SVRA 0.252, LCII 2.5585, XLE 1.2505, and BTC's 2,210 reproduced from 4-hour CoinGecko candles by the same aggregation, putting its stop at 2.534 ATR. No ratio was found to have been nudged. FCX's shelf is better tested than it claims: lows of 68.35, 68.85, 69.4615, 69.56 and 69.96 sit alongside the three the idea cites, so 67.00-69.50 has been traded through five times in eighteen sessions and the entry is a real level, not a reflex discount. And FCX's validation earnings_date warning is a FALSE NEGATIVE \u2014 I re-fetched the Finnhub calendar and FCX is on it at 2026-10-15 with the exact consensus cited, EPS 0.7266 on $7.42B; no conviction was taken off for it. The two warnings worth keeping on FCX are that its 2.0 ATR stop fails at the 2.5 ATR level where this report's stop-outs cluster (at 2.5 ATR the ratio is 1.70:1, below the floor, which is why size stays at 2.5%), and that it is a pullback limit that may never fill.\n\nREAD THE SHAPE AGAIN, BECAUSE THE CUTS CHANGED IT. Four ideas remain and three are exit orders on open positions. There is exactly ONE piece of new risk in this report \u2014 FCX at 2.5%, and only if the 67.00-69.50 shelf is offered before 2026-10-15. The correlation test passes trivially as a result: copper/AI capex against gold, uranium and RV discretionary exits. Two further actions survive the cuts and must not be lost with the ideas that carried them: CANCEL the stale /MBTU6 short resting at 64,340 from 2026-08-18, an expired contract month 25% below an 85,319 spot; and TRIM the filled XLE long from 3% to the 1% conviction-2 ceiling, keeping its 60.80 stop. The sizing conflict synthesis explicitly left to this phase is resolved toward trim: a position its own key_risk says 'would not be opened today' should not be held at triple the size its conviction allows.\n\nWARNING ABOUT WHAT PHASE 2D WILL DO TO THE THREE EXITS, because it is a structural artefact and not a judgement on them. GDX, CCJ and LCII carry validation verdict 'fail' for one reason only \u2014 an exit order has no target and no stop, so direction_consistency, risk_reward and stop_distance are all undefined. That is the correct shape for 'close this position', and validate_report.py --enforce will nonetheless demote all three to the watchlist as 'entry or target is missing'. I did NOT invent targets to rescue them; fabricating a profit target on an order whose instruction is 'exit only, do not establish a short' would be the exact move this phase exists to catch. So: a demoted exit in today's watchlist is an instruction that passed red team, not an idea that was rejected, and the close-the-position text must be read from the recommendation rather than from the demotion note. This has happened silently before \u2014 NKE, LULU, LCII, BCC, SNX and DINO exits were all demoted this way on 2026-10-01, and LCII's exit specifically has now been published and swallowed on 09-21, 09-22, 09-26, 09-27, 09-30 and 10-01. Second, related pipeline defect, outside this phase's remit to fix: merge_report keys one live position per (symbol, direction), so a direction:'sell' exit does not close the matching direction:'buy' long \u2014 it opens a phantom 'sell' row. state/open_positions.json already carries three of them (LULU, NKE, GLD, all opened 2026-09-08) sitting open beside the longs they were meant to close. Both of these need a test in tests/ and neither should be fixed by editing a report. Validation demoted 3 idea(s) whose numbers did not check out. 1 more carry warnings \u2014 see the validation block on each.",
+  "market_context": {
+    "summary": "An openly hawkish Fed in a live hiking cycle, into a war-driven oil shock, with the narrowest tape available. The Fed hiked in September 2026 and 16 of 19 FOMC members project at least one more; Chair Warsh calls inflation too high and the price-stability mandate predominant, while Jefferson and Williams argue for December over October. Kalshi prices zero probability of a cut at any meeting out to March 2027 (Oct 28 hold 82/83, Dec 9 hike 70/71). The 10y touched 5.33% and the 30y 5.67%, multi-decade highs, before easing on a soft Friday jobs report; the 10y sits at 5.24% against 3.88% fed funds. Crude is the engine: USO is +77.1% off its 150-day low on the US-Iran conflict, pushing headline CPI from 3.40% YoY toward a market-implied 3.7%, with core running ~0.25%/mo and gently accelerating. Unemployment is nonetheless drifting up, 4.1 to 4.2. The cross-section is the thing to see: SPY is 1.25% off a record and NVDA 1.6% off its high while the median stock outside AI and copper is at a 52-week low -- and it is not even 'AI', it is NVDA specifically, with AVGO -28.2% and VRT -33.6%. A 5.3% long end plus a hiking Fed plus 3.7% headline inflation destroys bond proxies and margin-squeezed price-takers and leaves self-funded secular capex untouched. Copper (FCX -10.2%, SCCO -7.2%) and refining (DINO -4.2%) are the exceptions near highs.",
+    "regime": "mixed",
+    "levels": {
+      "spx_spy_proxy": 769.64,
+      "nvda": 233.95,
+      "us10y": 5.24,
+      "us2y": 4.78,
+      "fed_funds_effective": 3.88,
+      "t10y2y": 0.45,
+      "unemployment": 4.2,
+      "cpi_yoy_nsa_aug": 3.4,
+      "cpi_mom_sa_aug": 0.4,
+      "btc": 85400,
+      "eth": 2705.58,
+      "uso_crude_proxy": 147.37,
+      "gld_gold_proxy": 380.14,
+      "tlt_bonds20y_proxy": 77.48,
+      "vix": null,
+      "dxy": null,
+      "wti_spot": null,
+      "gold_spot": null
+    },
+    "econ_calendar": [
+      {
+        "event": "September CPI release (market-implied modal 0.6% MoM / 3.7% YoY, resolves on the rounded single-decimal print)",
+        "datetime_et": "2026-10-14T08:30",
+        "importance": "high",
+        "consensus": "0.6% MoM"
+      },
+      {
+        "event": "FOMC decision (Kalshi: hold 82/83, hike 25bp 17/18)",
+        "datetime_et": "2026-10-28T14:00",
+        "importance": "high",
+        "consensus": "hold"
+      },
+      {
+        "event": "FCX Q3 2026 earnings (Finnhub calendar: consensus EPS 0.7266, revenue $7.42B)",
+        "datetime_et": "2026-10-15T00:00",
+        "importance": "medium",
+        "consensus": "EPS 0.7266"
+      },
+      {
+        "event": "October U-3 employment release (resolves KXU3-26OCT markets)",
+        "datetime_et": "2026-11-06T08:30",
+        "importance": "high",
+        "consensus": null
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "symbol": "FCX",
+      "instrument": "Freeport-McMoRan Inc",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 3,
+      "risk_tier": "standard",
+      "entry": {
+        "ideal": 68.2,
+        "zone_low": 67.0,
+        "zone_high": 69.5,
+        "order_type": "limit",
+        "condition": "NEW IDEA. Limit buy into the 67.00-69.50 shelf only. Do NOT buy at the 72.04 market \u2014 the whole structure of this trade is the 2.00 ATR stop sitting under a shelf that has held three times, and paying 72 destroys it. If the shelf is not offered before the 2026-10-15 print, the trade does not happen; that is an acceptable outcome, not a reason to chase."
+      },
+      "exit": {
+        "target": 78.5,
+        "scale_plan": "Trim half at 75.00 (the 2026-09-22 swing high at 74.90) and trail the balance; 78.50 sits under the 80.24 range high deliberately so the target does not require a new 150-day high."
+      },
+      "stop": 63.35,
+      "position_size_pct": 2.5,
+      "last_price": 72.04,
+      "last_price_asof": "2026-10-02T16:00:00-04:00",
+      "price_source": "nasdaq",
+      "avg_dollar_volume": 947000000,
+      "win_probability": 0.42,
+      "catalyst": {
+        "event": "Q3 2026 earnings",
+        "datetime_et": "2026-10-15T00:00",
+        "action": "Work the limit in the shelf ahead of the print. If filled, hold through earnings at 2.5% \u2014 the beat record justifies the event risk but not a larger size. If unfilled by 2026-10-14, cancel rather than chase into the print.",
+        "wait": false
+      },
+      "thesis": "Copper is the one commodity complex that is actually working, and FCX is the liquid US-listed way to own it. Copper was 6.53/lb on 2026-10-02, up 29.8% year over year, against an ICSG forecast of a 150,000-tonne deficit for 2026 \u2014 the market first structural shortage since 2009, driven by hyperscale AI datacentre buildout against cascading mine closures. The relative-strength read separates this from a generic commodity bet: FCX (-10.2% off its high) and SCCO (-7.2%) sit near highs and above both means, while every energy-intensive processor collapses \u2014 AA -50.3%, MOS -34.7%, CF -19.0%, CLF -24.8%, NUE -14.2%. The dividing line is the power bill, and copper mining sits on the right side of it.",
+      "key_risk": "Insiders are selling, not buying: zero open-market purchases against five sales worth $8.39M over six months, and the analyst recommendation trend is dead flat at 80% bullish across four consecutive months, so there is no confirming flow behind this. Copper is also the most cyclical major metal \u2014 the same AI capex that is the thesis is a single capital-allocation decision at a handful of hyperscalers, and a demand-led copper reset would take FCX back toward the 50.79 it traded at inside the last 150 days, well through the stop. Indonesian operations carry a permitting and export-licence overhang that no chart shows.",
+      "counter_argument": "The strongest case against is that FCX at 72 with a 2 ATR stop simply does not fit a 2:1 swing, which is why the entry is 5.3% below the market \u2014 and a pullback entry that only exists to make the arithmetic work is the reflex discount this report has been punished for, 31 pullbacks to 1 breakout with a 42% fill rate. The answer is that 67.00-69.50 is not a discount invented for the ratio: the lows of 67.01 (2026-09-14), 67.80 (2026-09-16) and 68.20 (2026-10-01) are three separate tests of the same shelf, the 50-day mean sits at 70.54 just above it, and 2026-10-02 opened at 69.56, traded down to 69.56 and closed at 72.04 \u2014 a 3.6% reversal off that shelf on 11.9M shares. If it were not real support the trade would not be offered at all, and the instruction is then to cancel. RED TEAM: kept, with conviction cut 4 to 3, and the levels left exactly as published. What survived checking: I re-fetched 170 daily bars and every number reproduces \u2014 ATR14 2.4235, the 63.35 stop exactly 2.0012 ATR below a 68.20 entry, the 78.50 target below the 80.24 range high, 2.124:1. The shelf is better tested than the idea claims, not worse: alongside 67.01 (09-14), 67.80 (09-16) and 68.20 (10-01) sit lows of 68.35, 68.85, 69.4615, 69.56 and 69.96, so the 67.00-69.50 zone has been traded through five times in eighteen sessions and the entry is a real level rather than the reflex discount this report has been punished for. The validation earnings_date warning is a FALSE NEGATIVE and no conviction was taken off for it: I re-fetched the Finnhub calendar this phase and FCX is on it at 2026-10-15 carrying the exact consensus the evidence cites, EPS 0.7266 on $7.42B revenue; that phase's own calendar fetch came back short. What the downgrade is for is the flow, which the idea names in its own key_risk and then scores past: zero open-market insider purchases against five sales worth $8.39M over six months, an analyst recommendation trend dead flat at 80% bullish for four consecutive months, and no short-interest read at all because api.nasdaq.com timed out. Conviction 4 claims four confirmations; what is actually confirmed is three \u2014 a five-times-tested shelf, a verified dated catalyst, and measured relative strength within materials \u2014 with the only flow evidence available pointing the other way. Finally, the stop_distance warning is real and is why size stays at 2.5%: at the 2.5 ATR level where this report's stop-outs cluster the stop would be 62.14 and the ratio 1.70:1, below the floor. FCX does not survive a 2.5 ATR stop. It is kept at 2.0 because that is the swing-stock floor and because 63.35 sits almost five points below a shelf tested five times, so it is placed on structure rather than on arithmetic \u2014 but there is no margin in it.",
+      "evidence": [
+        {
+          "kind": "technical_level",
+          "detail": "Shelf tested three times from fetched daily bars: lows 67.01 (2026-09-14), 67.80 (2026-09-16), 68.20 (2026-10-01); 50-day mean 70.54, 20-day 71.79, 150-day range 50.79-80.24. ATR14 2.4235, so the 63.35 stop is exactly 2.00 ATR below the 68.20 entry and the 78.50 target sits below the 80.24 high.",
+          "source": "https://www.nasdaq.com/market-activity/stocks/fcx/historical"
+        },
+        {
+          "kind": "dated_catalyst",
+          "detail": "Q3 2026 earnings 2026-10-15, taken from the fetched Finnhub earnings calendar on 2026-10-04 (consensus EPS 0.7266, revenue $7.42B), not from memory.",
+          "source": "https://finnhub.io/api/v1/calendar/earnings"
+        },
+        {
+          "kind": "positioning",
+          "detail": "Measured relative strength within materials on one fetched run: FCX -10.2% and SCCO -7.2% off their highs and above both means, against AA -50.3%, MOS -34.7%, CLF -24.8%, CF -19.0%, NUE -14.2%. Earnings surprise record +24.2%, +23.1% and +62.0% in the last three quarters.",
+          "source": "https://www.nasdaq.com/market-activity/stocks/fcx/historical"
+        }
+      ],
+      "sources": [
+        "https://www.nasdaq.com/market-activity/stocks/fcx/historical",
+        "https://tradingeconomics.com/commodity/copper",
+        "https://www.miningvisuals.com/post/copper-market-balance-a-look-at-2026-deficit-forecasts",
+        "https://finnhub.io/api/v1/calendar/earnings"
+      ],
+      "rank": 1,
+      "risk_reward": 2.124,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.12,
+        "claimed_risk_reward": 2.124,
+        "breakeven_probability": 0.321,
+        "stated_win_probability": 0.42,
+        "expectancy_r": 0.31,
+        "claimed_edge": 0.099,
+        "stop_atr_multiple": 2.0,
+        "live_price": 72.04,
+        "live_price_asof": "2026-10-02T20:00:00+00:00",
+        "market_session": "closed",
+        "price_age_minutes": 2323.3,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": 2.4235,
+        "checked_at_et": "2026-10-04T06:43:30-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.12:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 68.2 is -5.3% from live 72.04"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-10-15 is ahead of us"
+          },
+          {
+            "check": "earnings_date",
+            "status": "warn",
+            "detail": "claims an earnings catalyst but FCX is not on the fetched calendar"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 4.25 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "stop_distance",
+            "status": "warn",
+            "detail": "stop is 2.0 ATR from entry \u2014 clears the 2.0 ATR floor for a swing stock but sits under the 2.5 ATR level where stop-outs have clustered"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "42% claimed vs 32% break-even at 2.12:1 \u2014 expectancy +0.31R"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is closed; last price 2026-10-02T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "no bid/ask available (normal outside regular hours)"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "2.5% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 3 rests on 3 independent kinds: dated_catalyst, positioning, technical_level"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "1 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    }
+  ],
+  "watchlist": [
+    {
+      "symbol": "BTC",
+      "instrument": "Bitcoin",
+      "note": "CUT BY RED TEAM. The 99,500 target has no level behind it. Risk is fixed at 5,600 by the 2.5 ATR crypto floor, so a 2:1 ratio demands a target at or above 98,700 \u2014 and 99,500 is the round number just past it. I re-fetched 180 days of CoinGecko OHLC: the entire range is 57,779-87,330, so nothing in six months prices resistance anywhere near 99,500 and the number is derived from the ratio rather than from the tape. Second, the catalyst is 'resolution of a 10-day coil under the 87,330 30-day high' with no date \u2014 a technical breakout, which is the exact test this same run used to reject NVDA ('a technical breakout is a trigger, not a catalyst'). Third, the single named driver is contradicted inside its own idea: the evidence cites $3.55B of weekly fund inflows while key_risk says 'reporting already flags slowing ETF inflows'. The arithmetic is honest \u2014 I reproduced ATR14 2,210 from 4-hour candles and the stop at 2.534 ATR \u2014 but it clears the crypto floor by 0.034 ATR, which is $75, and validation could fetch neither a live price nor an ATR for BTC, so no mechanical check ever touched that stop. SEPARATELY AND STILL ACTIONABLE: cancel the stale /MBTU6 SHORT resting at 64,340 from 2026-08-18 \u2014 an expired contract month 25% below an 85,319 spot. That order should go regardless of whether this idea is ever republished.",
+      "trigger": "A daily close above 87,330 AND a target defended by something other than the reward-to-risk floor. Not before 2026-10-28 FOMC in any case: a zero-yield asset into a Fed that hiked in September with 16 of 19 members projecting another is a position taken after the decision, not into it.",
+      "demoted_from_rank": 5,
+      "demotion_reason": "Target 99,500 sits 14% above the entire 180-day high of 87,330 with no resistance behind it and exists to clear the 2:1 floor; catalyst is an undated technical trigger, the test NVDA was rejected on in this same run; stop clears the 2.5 ATR crypto floor by $75 and was never machine-checked."
+    },
+    {
+      "symbol": "XLE",
+      "instrument": "Energy Select Sector SPDR Fund",
+      "note": "CUT BY RED TEAM, and the sizing conflict synthesis left open is resolved toward TRIM. The 2.13:1 is manufactured by a target outside the range. XLE's 150-day range is 52.62-66.17 (re-fetched this phase) and the target is 70.50 \u2014 6.5% above the 150-day high \u2014 from a filled entry of 63.90 sitting mid-range on the 50-day mean at 62.12, with the last close 62.82 below the 20-day at 63.47. This is not a breakout entry, so the whole reward leg is blue sky. Pull the target in to the one defensible resistance, just under the 66.17 range high, and the ratio is 0.68:1: the idea never cleared the 2:1 floor on any target the tape supports. That is decisive on its own, and it is the same objection this run used to reject SCCO ('a 2 ATR stop makes the 2:1 floor unreachable without demanding a new high') and the reason FCX's target was deliberately set below its range high \u2014 XLE got the exemption. Everything else points the same way: conviction 2 on a single evidence kind (technical_level, the minimum the schema permits), +0.13R expectancy on a claimed edge of 4.1 points over a 31.9% break-even, and a driver the idea itself calls bimodal and headline-driven. The idea's own counter_argument concedes the rest: the book already carries DINO (open) and OXY (pending), so this is the third long-energy expression and 'the one to cut for concentration alone'. ACTION ON THE FILLED POSITION: the long from 63.90 on 2026-08-15 is real and is sized 3%. Trim it to the 1% conviction-2 ceiling in config/strategy.md. Synthesis published 3% on the grounds that it is the size already filled; but a position that 'would not be opened today' at conviction 2, per its own key_risk, should not be held at triple the size its conviction allows. Keep the standing 60.80 stop on the 1% that remains \u2014 at 2.48 ATR it is outside noise and can resolve on its own terms. This is the third consecutive run XLE has been demoted (2026-10-02 a stale catalyst, 2026-10-03 the same 3%-vs-1% breach), which is itself the signal.",
+      "trigger": "Re-open only on a daily close above the 66.17 range high, which would give the 70.50 target an actual reference \u2014 and then at a size its conviction supports.",
+      "demoted_from_rank": 7,
+      "demotion_reason": "Target 70.50 sits 6.5% above the 150-day high of 66.17 from a mid-range filled entry, so the 2.13:1 rests on blue sky; at a defensible sub-66.17 target the ratio is 0.68:1 and the idea never cleared the floor. Also 3% against the 1% conviction-2 ceiling, +0.13R expectancy, one evidence kind, and the third long-energy expression in the book."
+    },
+    {
+      "symbol": "SVRA",
+      "instrument": "Savara Inc",
+      "note": "CUT BY RED TEAM \u2014 the edge is smaller than the spread it costs to capture, so this exit destroys value rather than saving any. The idea's whole case is the gap between selling at 4.81 and stopping at 4.60: 4.4% of a position sized about 1%, which its own counter_argument already concedes is noise. Against that, validation measured SVRA's bid/ask spread at 7.55% on 2026-10-01 \u2014 that is this exact symbol, eight sessions ago, and it was the stated reason SVRA was demoted that morning ('the round trip costs 15% of the target move \u2014 too wide to trade this thesis'). On $9.25M of average daily dollar volume a deliberate sell fills through a spread wider than the entire 4.4% it is trying to protect. Both exits \u2014 the voluntary one and the stop \u2014 cross the same spread, so paying it early buys nothing. ACTION: HOLD the 1% position and leave the standing 4.60 stop in force. The stop-geometry observation is correct on its own terms \u2014 0.25 ATR14 puts 4.60 only 0.84 ATR below the market, inside one session of noise on a 5.24%-ATR micro cap \u2014 but the right response to a bad stop on a lottery ticket this small is to let it resolve, not to pay 7.55% to pre-empt it.",
+      "trigger": "Exit on a measured spread under 2%, or on a clinical or financing event that changes the thesis rather than the geometry.",
+      "demoted_from_rank": 6,
+      "demotion_reason": "The 4.4% gap this exit protects is narrower than the 7.55% bid/ask spread measured on 2026-10-01; on a ~1% position both the voluntary exit and the stop cross the same spread, so acting early captures nothing."
+    },
+    {
+      "symbol": "CEG",
+      "instrument": "Constellation Energy",
+      "note": "Resting BUY @ 272.00 published 2026-10-01 should not stay a live buy. CEG stopped out 2026-09-30 and was re-pitched the next morning at 272, which is 5.6% ABOVE the current 257.49, in a name below both means and 22.9% off its high. Buying back a stop-out at a higher price than it trades, one day later, is the anchoring error CLAUDE.md and prior_context.md both warn about.",
+      "trigger": "A daily close back above the 50-day mean with the rate backdrop no longer hostile \u2014 not a limit resting above the market.",
+      "demotion_reason": "Re-pitched above the market one day after stopping out; anchoring, and the 2026-10-04 cross-sectional screen argues directly against it."
+    },
+    {
+      "symbol": "VST",
+      "instrument": "Vistra Corp",
+      "note": "Resting BUY @ 132.00 published 2026-08-24 should not stay a live buy. VST is 140.02, below both means and only 5.5% off its 150-day low of 132.66, so the resting 132 entry sits just above that low and fills precisely if the downtrend continues.",
+      "trigger": "Reclaim of the 20-day mean from below, rather than a limit that selects for the thesis failing.",
+      "demotion_reason": "The pullback-entry pattern config/strategy.md names explicitly \u2014 42% of 31 such entries filled and the fills were the fallers."
+    },
+    {
+      "symbol": "/MBTU6",
+      "instrument": "Micro Bitcoin futures (U6 contract)",
+      "note": "CANCEL THIS ORDER. A SHORT has rested unfilled at 64,340 since 2026-08-18 with BTC now 85,400 \u2014 a resting short 25% below spot is not a live order, and the U6 contract month is long past its window. Red team cut the BTC breakout long that this order contradicted, so nothing now depends on the cancellation \u2014 but it stands on its own and should go regardless. Spot re-fetched at 85,319 this phase.",
+      "trigger": "None \u2014 withdraw it."
+    },
+    {
+      "symbol": "KXU3-26OCT-T4.2",
+      "instrument": "Kalshi: October U-3 above 4.2%",
+      "note": "The only event contract that survived screening on thesis and the only one rejected purely on transaction cost. Trend supports it \u2014 4.1 to 4.2 with a soft 2026-10-02 print and a hiking Fed \u2014 and P(4.3%+) looks near 35% against a 30% break-even.",
+      "trigger": "A tighter quote. It is 26/30 on a 28-cent contract \u2014 a 14% spread against 7,354 contracts of volume, which eats the whole 5-point edge. Revisit if the spread narrows."
+    },
+    {
+      "symbol": "AAL",
+      "instrument": "American Airlines Group",
+      "note": "KEEP the resting SELL_SHORT @ 13.35 published 2026-10-03, but know its core driver is one headline from reversing. The short's driver is jet fuel, and the Reuters Hormuz-reopening report plus a US-Iran interim deal cut directly against it \u2014 de-escalation means lower fuel and an airline rally. AAL is already 12.94, 31.1% off its high and +28.2% off its low, so this is a short entry in a name already down a third, and the order sits above the market so it only fills on a bounce.",
+      "trigger": "Not overridden. Reassess if an Iran de-escalation is confirmed before the 2026-10-15 print."
+    },
+    {
+      "symbol": "KHC",
+      "instrument": "Kraft Heinz",
+      "note": "Open long at -3.5%, 22.19, below both means. Today's staples argument says close it \u2014 oil +77% inflating inputs, no pricing power left after three years of elasticity damage, and a bond-proxy multiple against a 5.3% 10y, the same trade CAG already stopped out of on 2026-09-28. It is left open because it is only 14 days old and the loss is small, and deliberately not acted on to avoid a fifth exit on one same-day sector call.",
+      "trigger": "EXPLICIT INVALIDATION: a daily close below the 150-day low of 21.04 closes the position."
+    },
+    {
+      "symbol": "BCC",
+      "instrument": "Boise Cascade",
+      "note": "Open long at -7.4%, 74.99, below both means but still +15.4% off its low \u2014 rate-exposed building products, the same regime problem as the LCII exit but not yet at lows, which is why it is watched rather than closed.",
+      "trigger": "EXPLICIT INVALIDATION: a daily close below 65.00."
+    },
+    {
+      "symbol": "GDX",
+      "instrument": "VanEck Gold Miners ETF",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 1,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined"
+    },
+    {
+      "symbol": "CCJ",
+      "instrument": "Cameco Corp",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 2,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined"
+    },
+    {
+      "symbol": "LCII",
+      "instrument": "LCI Industries",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 3,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined"
+    }
+  ],
+  "validation_summary": {
+    "checked": 4,
+    "passed": 0,
+    "warned": 1,
+    "failed": 3,
+    "enforced": true,
+    "demoted": 3
+  }
+}
