@@ -1,0 +1,504 @@
+{
+  "date": "2026-10-10",
+  "generated_at_et": "2026-10-10T06:42:03-04:00",
+  "truncated": false,
+  "data_quality_notes": "RESEARCH COMPLETED \u2014 notes.md carries a final RESEARCH COMPLETE block at 06:40 ET that supersedes an earlier one at 06:36, so nothing here is a truncation artifact. Four candidates were captured in five writes (GS twice; the later 1.5% version governs, per the last-entry-wins rule).\n\nWHY ONLY FOUR IDEAS, AS ARITHMETIC RATHER THAN APOLOGY. Levels were set on 13 instruments with a compliant stop and a target at or below the instrument's own 120-day high. Five cleared the 2.0 swing floor (GS 2.09, STLD 2.12, UNH 2.26, BAC 2.26, MS 2.10); BAC was cut on the correlation cap as the same trade as GS and MS. Failed outright: WFC 1.47, NUE 1.43, FCX 1.66, ETH-long 1.64, SOL 1.37, BTC 0.90, ADA 0.65. CLF reached 2.01 only with its stop sitting exactly on the floor, so it is on the watchlist rather than in the report. The pattern is the finding: everything that cleared is 16-23% below its 120-day high with a dated earnings catalyst, and everything that failed is either a leader with no room left (FCX -8.2%, WFC -9.2%, NUE -10.6%) or a crypto asset whose ATR is too wide.\n\nRATIOS CLUSTER JUST ABOVE THE FLOOR AND THAT DESERVES SAYING. All four recomputed ratios land between 2.09 and 2.24 against a 2.0 swing floor, which is the signature of targets fitted to clear the bar. Two things argue it is not that here, and a reader should weigh both. First, the floor was not cleared from the stop side: recomputed stop distances are 2.52 ATR (GS), 2.50 (STLD), 2.54 (UNH) and 2.75 (MS), all above the 2.0 swing-stock floor and at or above the 2.5 comfortable level, and every target sits 5.27-5.88 ATR out, inside the 6.0 guide. Second, every target is at or below the instrument's own 120-day high and every level traces to a fetched price (a prior session high, a moving average, a 120-day extreme) rather than to a round number. The ideas that would have needed tuning are in the rejection blocks instead. Every figure above was recomputed in synthesis from the final entry, stop and target against freshly fetched ATR14 \u2014 not carried from the notes.\n\nALL FOUR ARE ONE STYLE, WHICH THE CORRELATION CAP CANNOT SEE. Four sectors (capital-markets banks twice, steel, managed care) but one methodology: buy a capitulated large cap into its own earnings print, entry above the market, confirmation required. If post-capitulation mean reversion does not work this month, all four fail together regardless of sector. The config counts drivers, not styles, so this is flagged by hand.\n\nGS AND MS ARE ONE BET, NOT TWO. Both are capital-markets banks hit by the same OpenAI-IPO-deferral story and the same rate fear. They are sized at 1.5% each for that reason: treat the pair as a single 3.0% position and do not size them independently. Total capital at risk across the four is 8.0%, so the honest count is three independent bets.\n\nSEPTEMBER CPI IS A SHARED SINGLE POINT OF FAILURE FOR THREE OF THE FOUR. CPI prints Tue 2026-10-14 08:30 ET. GS and UNH report 10-13 before the open and their entries trigger on that day's reaction, so both are one day old when CPI lands; MS reports on CPI morning itself. The driver behind all three drawdowns IS the rate path \u2014 the bank complex sold off specifically on fear of additional Fed hikes with TLT within 2% of its 120-day low \u2014 so a hot CPI re-fires the exact cause of the setups while the positions are at their most fragile. EXPLICIT INSTRUCTION: do not add size to any of them before 10-14 08:30 ET, and treat a simultaneous GS and UNH trigger on 10-13 as one position's worth of risk. STLD is the diversifier only by timing \u2014 its 10-19 print lands after CPI has resolved.\n\nEVERY ENTRY SITS ABOVE FRIDAY'S CLOSE AND THREE OF FOUR CARRY wait: true. A likely and correct outcome is that some never trigger. This is a deliberate correction, not a quirk. The research phase priced all 13 priceable awaiting-entry ideas against Friday's close and found that ELEVEN OF THIRTEEN called the direction correctly and earned nothing, because every long was pitched below the market (6 for 6) and every short above it (5 for 5), so a correct call that simply moved never filled. VST is +22.3% past its entry, OXY +11.3%, FCX +8.1%, MU +7.2%; ITB -5.6% past, GLD -5.5%, AAL -4.4%. The report has been selecting against its own correct calls. The cost of the fix is real and stated: you pay up, the stop sits further away in price terms, and a trigger can fill and immediately reverse.\n\nCONVICTION WAS CHECKED AGAINST THE EVIDENCE, NOT CARRIED. Each published score equals the number of distinct evidence kinds on the page: UNH, MS and STLD list three kinds each and stand at 4; GS lists three and is published at 3, below what its evidence would support, because its positioning evidence reads against the trade (flat revisions at 46.9% bullish, underperforming SPY on every window) rather than for it. No score was raised.\n\nDELIBERATE EMPTY LANES, EACH WITH A QUANTIFIED REASON RATHER THAN A SHRUG. No crypto, on a weekend run where strategy says crypto should carry more of the report: no major clears 2.0 R:R to its own 120-day high on a 2.5 ATR stop (BTC 0.90, ETH 1.64, SOL 1.37, ADA 0.65). The one construction that did clear \u2014 a micro ether futures short at 2.04 \u2014 was dropped because the October contract is inside its expiry window and choosing between the November and December listing would have meant guessing a contract code. No event contracts, blocked by a data failure rather than judgment (see below). No long_term idea, by portfolio construction: the book already holds 8 long_term positions and 7 are underwater, nearly all the same de-rated-value-needs-lower-rates idea, while today's data has TLT within 2% of its 120-day low and the market entertaining hikes \u2014 BCC, LCII and the awaiting-entry ITB short are already three expressions of one rate call. Nothing has closed, so the long_term track record is literally n=0 and no claim is made about it. No intraday ideas: the market is shut, so same-session levels would be fiction.\n\nSOURCES THAT FAILED, AND WHAT EACH COST. (1) market_data.py macro hung twice and never returned, killed at 180s and 400s. No rates, VIX, DXY or FRED data at all \u2014 the regime read was rebuilt from ETF proxies, and THERE IS NO VIX FIGURE IN THIS RUN; the market_context levels for vix, us10y and dxy are null rather than estimated. (2) market_data.py events is structurally broken for discovery \u2014 it pulls only the first 200 open Kalshi markets and filters client-side, and all 200 returned belonged to a single movie series, so every search returns 0 results. Worked around via series_ticker, but then every price field (yes_bid, yes_ask, last_price, volume, open_interest) returned null on both the list and per-ticker endpoints. Event contracts were therefore impossible: universe.md requires a stated disagreement against the market's implied probability, and that number could not be fetched. The two event contracts already in awaiting-entry (KXFEDDECISION-26OCT-H25 @28, KXCPIYOY-26SEP-T3.5 @18) also could not be re-marked. (3) market_data.py implied returned HTTP 401 from yahoo-options, so THE OPTIONS-IMPLIED-MOVE CHECK COULD NOT BE RUN ON ANY IDEA TODAY \u2014 do not read any published target as having been tested against what the options market prices. (4) market_data.py short returned a ReadTimeout from api.nasdaq.com, so there is no short-interest or days-to-cover data for any name. (5) CoinGecko /market_chart 429'd on the third coin; crypto OHLC came from Kraken instead, and CoinGecko's free ohlc endpoint returns 4-day bars at days=90, which would have understated every crypto stop had it been used. (6) A generic 'week ahead' WebSearch returned 2013-2016 results and was useless; targeted searches worked.\n\nTWO DATA CAVEATS WORTH THE READER'S TIME. The quote helper returned an identical change_pct of 0.4936% for both QQQ and IWM, almost certainly an artifact \u2014 only their price levels are relied on, which reconcile with the history series. And STLD's 120-day low refetched in synthesis reads 211.13 against the 219.10 recorded during research; the window has rolled. Neither figure is load-bearing for the STLD idea, whose stop at 228.75 sits above both, but the discrepancy is flagged rather than quietly reconciled. CLF's 10-19 earnings hour is disputed between sources (finnhub says after the close, a secondary source says before) and is not stated as settled.\n\nUNH'S STOP IS THE ONE STRUCTURAL WEAKNESS IN THE PUBLISHED SET, AND IT IS NAMED IN THE IDEA. At 2.54 ATR it clears the ATR floor comfortably, but it sits ABOVE the 2026-10-01 swing low of 362.60 and only just below the 368.50 low of 10-08, so a routine retest of the range the stock has traded all month would stop it out with the thesis intact. Placing the stop properly below 362.60 widens risk to 28.00 and drops the ratio to 1.80, which fails. It therefore passes the mechanical test while remaining genuinely vulnerable on the structural one. It is ranked first on conviction and ratio; a reader who weights structure over arithmetic should prefer MS, whose stop at 181.90 sits below its 182.47 120-day low.\n\nPOSITION MANAGEMENT IS ON THE WATCHLIST, NOT IN THE RECOMMENDATIONS, AND FOR A MECHANICAL REASON. All 15 open positions were reviewed one by one: 8 hold as-is, 4 hold on notice (CCJ, LCII, BCC, KHC), 1 unchanged (DAL), and 2 close instructions. Real directional exposure is 11, not 15, because two 'positions' are boxed pairs \u2014 the book holds LULU buy @115 and LULU sell @100.61 simultaneously, and the identical shape in NKE. In both pairs the short is the leg that is working and the long is the leg with no stop and no invalidation. The decision is to close the long legs and keep the shorts, and it could not be published as a candidate row: the live shorts are stored as direction 'sell' rather than 'sell_short', so a sell candidate on either name would be merged into the live short as an amendment and would overwrite its stop and target. There is no direction value that expresses 'exit a long' without colliding. Likewise the trailing stops on DINO (+12.8%) and CEG (+9.6%) are instructions rather than amendments, because check_stop_distance measures from entry.ideal and a filled position's entry may never change \u2014 a DINO stop at 105 is 0.56 ATR from the 107.50 entry and fails outright, and CEG's existing 250 stop is already only 1.51 ATR from its 272 entry because ATR has expanded to 14.52. Publishing those would have produced ideas engineered to be demoted. All six management items are written up as watchlist rows so they reach the reader.\n\nPRICES AND SESSION. This is a Saturday run: US equities and futures were closed (CME equity index reopens Sun 18:00 ET), so every equity last_price is the Friday 2026-10-09 close, stamped as such, taken in a closed session. That is the freshest honest price available, not stale data. Crypto quotes were live at 06:04 ET. Equity entries are for the Monday 2026-10-12 open onward.\n\nNOT RE-PITCHED, DELIBERATELY. XLF BUY @54.23 already sits in awaiting-entry on exactly the bank-earnings driver and was not re-pitched: a limit 0.9% below Friday's close only fills if financials keep losing to the index, which is the failure mode above. SMMT @17.10 was published yesterday with no new information to amend it with, and is marginal on the same test CLF failed (2.29 only with the stop at exactly 2.00 ATR; 1.84 at 2.5). VST BUY @132 is now 22.3% below a 161.48 market and should be retired as stale rather than carried as live. XLU was not re-pitched after five airings in ten days and a 10-06 stop-out; CCJ and DAL are held without a fourth airing in ten days.\n\nFIRST THINGS TO CHECK TOMORROW. (1) Oil services versus producers \u2014 an 11-point gap needs the HAL (10-20) and SLB (10-23) capex guidance read properly. (2) Verify the live micro ether futures contract month and re-test the ETH short at 2.04. (3) Re-test CLF on a pullback into its 11.96-12.04 MA cluster. (4) Small and micro caps got almost no time this run \u2014 IWM is -8.6% and under its 50-day, so nothing there passed a first look, but that is not the same as having hunted them. The AA question that topped this list was closed during the run: the dislocation is diagnosed as impairment, not mispricing.\n\nRED TEAM (phase 2c, separate pass, did not write the above). CUT TWO OF FOUR, DOWNGRADED BOTH SURVIVORS. Two remain: MS rank 1 and STLD rank 2, both at conviction 3.\n\nCUT UNH (was rank 1, conviction 4, 2.5%) \u2014 the stop is inside the range, not under it. The idea disclosed this as its weak point; a fresh 120-bar fetch shows it is worse than disclosed. The 367.00 stop was traded through twice in the eight sessions before the entry has ever printed (365.72 on 09-30, 362.60 on 10-01), with 368.05 and 368.50 either side. Disclosure is not a fix. The honest stop below 362.60 gives 1.80 R:R against a 2.0 floor, so the idea never cleared it, and the only rescue is a 445.50 target at 6.32 ATR \u2014 past the 6.0 guide every other idea here respected. stop_distance passing at 2.54 ATR is the ATR proxy failing on a compressed range.\n\nCUT GS (was rank 4, conviction 3, 1.5%) \u2014 thesis mechanism falsified by news the run missed, plus a contradicting evidence leg, plus concentration. Its positioning evidence argues against the trade in its own words (flat revisions, 46.9% bullish with a strong-sell, underperforms SPY on every window), which is not a confirmation. More decisively: the 'deferral not impairment' mechanism rests on the OpenAI IPO delay, which broke 2026-06-26 \u2014 not in the drawdown it is used to explain \u2014 and on 2026-10-08, the day before this report's reference close, the FT reported OpenAI now tells investors annualised revenue is approaching $50bn against roughly $70bn previously indicated. That reprices the fee pool rather than postponing it. And the report itself concedes GS and MS are one bet with MS the stronger, while notes.md recorded a decision to publish only ONE bank idea because XLF already sits in awaiting-entry on the same driver.\n\nDOWNGRADED MS 4 to 3 and STLD 4 to 3. MS: the OpenAI leg of its thesis is weakened by the same 10-08 revenue report, now written into its thesis and key_risk instead of omitted, and its positioning leg is sell-side revision drift that the idea's own counter_argument calls a thin reed. Size held at 1.5% even though its paired half was cut, because CPI prints alongside its earnings and XLF is still live on the same driver. STLD: its own revision signal is +1.7pp and its four surprises average about +2% with one miss, which is near noise, and the pricing case is a read-across from Cleveland-Cliffs; it is also the only surviving idea that holds through its own print.\n\nSOURCE INTEGRITY, THREE FINDINGS. (1) The single hard validation failure on all four ideas was the same citation: api.nasdaq.com/api/quote/<SYM>/historical 404s, with or without query params, because it is a machine endpoint that rejects HEAD. The data behind it is real \u2014 it is what market_data.py fetches \u2014 so this was a bad citation, not a bad number, and the surviving ideas now cite www.nasdaq.com/market-activity/stocks/<sym>/historical, which resolves 200 and a reader can actually open. Had this been left, phase 2d would have demoted all four ideas over a URL format. (2) STLD's thesis attributed the Wells Fargo upgrade to Overweight, the GLJ raise and the JPMorgan raise to the 247wallst article, which contains none of them \u2014 it was fetched and checked, and confirms only the ASP figures ($1,124/net ton Q2 vs $1,048 Q1) and the CLF move. The analyst actions are nonetheless REAL and were independently verified: Wells Fargo to Overweight from Equal Weight on 2026-10-06, $12 to $14, Timna Tanners, citing steel pricing power and near-pandemic lead times. A correct claim on the wrong URL, so the fix is the citation, not the idea. (3) The news URLs were all live (CNBC, moomoo, 247wallst all 200); none was hallucinated.\n\nONE VALIDATOR ARTIFACT TO IGNORE, AND ONE STALE NUMBER FIXED. Every idea carries earnings_date: warn, 'claims an earnings catalyst but X is not on the fetched calendar'. That warning is wrong \u2014 a fresh `market_data.py earnings --days 14` returns all four at the exact dates and estimates claimed (UNH 10-13 bmo 4.1893, MS 10-14 bmo 3.1669, STLD 10-19 amc 5.4904, GS 10-13 bmo 15.0539), and the cause is a bug in the validator rather than anything wrong with the ideas. validate_report.py calls market_data.earnings(45); finnhub caps that response at exactly 1500 rows and returns the FAR end of the window, so a 45-day request comes back covering only 2026-11-09 to 2026-11-24 and contains no October at all. The same call at 14 days returns all four names correctly. The effect is that check_earnings_date warns on every idea whose earnings are inside the next few weeks \u2014 precisely the case it exists to check \u2014 so the flag is uninformative here and the dated_catalyst leg should not be discounted on the strength of it. Worth fixing in the validator, with a test; left alone by this phase, which does not change code. Separately, STLD's technical evidence carried a 120-day low of 219.10, which the refetch confirms is the 10-01 session low; the true 120-day low is 211.13, and the evidence now says so. All of MS's and STLD's entry and stop levels were re-verified bar by bar against a fresh 120-day fetch and are exact: MS 193.14 is the 10-06 high and its 181.90 stop sits below the 182.47 120-day low; STLD 245.185 is the 10-05 high.\n\nWHAT THE CUTS DID TO CONCENTRATION, WHICH WAS THE POINT. The run flagged by hand that all four ideas were one methodology and that three of four shared September CPI as a single point of failure. Cutting UNH and GS leaves one name that reports on CPI morning and clears both events in one trigger, and one that reports on 10-19 after CPI has resolved \u2014 different sectors, different dates, and capital at risk down from 8.0% to 4.0%. Two conviction-3 ideas is a thinner report than four conviction-4 ideas and a more honest one.",
+  "market_context": {
+    "summary": "Weekend run: US equities and futures were closed, so every equity figure below is the Friday 2026-10-09 close in a closed session \u2014 not a stale quote. The regime read is a narrow tape: SPY 778.57 sits 0.39% off its 120-day high while breadth underneath it is poor \u2014 IWM is 8.60% off its high and below both its 20-day (282.06) and 50-day (291.38), and SMH is 10.20% off its high and fell on a day SPY rose 0.60%. The engine is the long end: TLT 77.98 is within 2% of its 120-day low of 76.43 and below both moving averages, with the market entertaining additional Fed hikes. That is what has put the bank complex into correction (KBWB -12% from its mid-August high) while the index makes highs, and what has homebuilders at their own 120-day low (ITB -20.32%). Precious metals are in a real correction rather than a dip \u2014 GLD -12.64%, SLV -32.25% off their highs, both below their 20- and 50-day \u2014 though both rallied hard Friday. Credit is not confirming stress: HYG +0.12% and flat. Leadership is narrow and specific: XLK, XLE and XOP are the only groups above both moving averages. The dominant dated catalyst in the swing horizon is Q3 bank earnings, 2026-10-13 to 10-16, with September CPI landing inside it on 10-14 08:30 ET. There is no VIX, rates, DXY or FRED reading in this run: market_data.py macro hung twice and never returned, so the regime above is built entirely from ETF proxies that could be fetched.",
+    "regime": "mixed",
+    "levels": {
+      "spy": 778.57,
+      "qqq": 751.27,
+      "iwm": 278.94,
+      "smh": 603.33,
+      "xlf": 54.73,
+      "xle": 65.08,
+      "tlt": 77.98,
+      "gld": 384.58,
+      "slv": 54.78,
+      "hyg": 77.23,
+      "uup": 29.02,
+      "btc": 82804,
+      "eth": 2494.45,
+      "vix": null,
+      "us10y": null,
+      "dxy": null,
+      "as_of": "Friday 2026-10-09 close (equities, closed session); crypto live 06:04 ET 2026-10-10",
+      "note": "vix, us10y and dxy are null because market_data.py macro failed \u2014 no figure was estimated."
+    },
+    "econ_calendar": [
+      {
+        "event": "Q3 earnings: JPM, GS, C, WFC, UNH, JNJ (all before the open)",
+        "datetime_et": "2026-10-13T07:30",
+        "importance": "high",
+        "consensus": "GS 15.0539, UNH 4.1893, JPM 5.9185, C 2.7311, WFC 1.8754"
+      },
+      {
+        "event": "September CPI",
+        "datetime_et": "2026-10-14T08:30",
+        "importance": "high",
+        "consensus": null
+      },
+      {
+        "event": "Q3 earnings: BAC, MS, BLK, STT (before the open) \u2014 same morning as CPI",
+        "datetime_et": "2026-10-14T07:30",
+        "importance": "high",
+        "consensus": "MS 3.1669, BAC 1.1619, BLK 14.3954"
+      },
+      {
+        "event": "Q3 earnings: PNC, USB, SCHW, BNY; AA and IBKR after the close",
+        "datetime_et": "2026-10-15T07:30",
+        "importance": "medium",
+        "consensus": "AA 1.495, SCHW 1.7013"
+      },
+      {
+        "event": "Q3 earnings: STLD after the close",
+        "datetime_et": "2026-10-19T16:30",
+        "importance": "high",
+        "consensus": "5.4904"
+      },
+      {
+        "event": "FOMC decision",
+        "datetime_et": "2026-10-28T14:00",
+        "importance": "high",
+        "consensus": null
+      },
+      {
+        "event": "October jobs report",
+        "datetime_et": "2026-11-06T08:30",
+        "importance": "high",
+        "consensus": null
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "rank": 1,
+      "instrument": "Morgan Stanley",
+      "symbol": "MS",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 3,
+      "last_price": 190.02,
+      "last_price_asof": "2026-10-09T16:00:00-04:00",
+      "price_source": "finnhub (Friday 2026-10-09 close; US equities closed Saturday)",
+      "entry": {
+        "ideal": 193.4,
+        "zone_low": 193.14,
+        "zone_high": 198.0,
+        "order_type": "stop_limit",
+        "condition": "AFTER the Wed 2026-10-14 pre-market print, and only on a move through 193.14 (the 10-06 high). Friday closed 190.02 of a 190.435 high, so this requires the market to take the stock through two weeks of overhead first. No fill below 193.14 \u2014 and note the trigger is deliberately above Friday's close rather than below it, for the reason set out in the entry-placement finding in notes.md: of 13 priced awaiting-entry ideas in this report's book, 11 called the direction correctly and never filled because every long sat under the market and every short sat over it."
+      },
+      "exit": {
+        "target": 218.0,
+        "target_2": 232.0,
+        "scale_plan": "trim half at 218, trail the balance under the prior daily low toward the 232.25 120-day high",
+        "time_stop": "2026-11-14 \u2014 one month past the print"
+      },
+      "stop": 181.9,
+      "bear_case_price": null,
+      "risk_reward": 2.139,
+      "win_probability": 0.42,
+      "position_size_pct": 1.5,
+      "requires_margin": false,
+      "risk_tier": "standard",
+      "market_cap_usd": null,
+      "avg_dollar_volume": 983615728,
+      "catalyst": {
+        "event": "Q3 2026 earnings before the open, consensus EPS 3.1669, confirmed on the fetched finnhub calendar \u2014 landing the SAME morning as September CPI at 08:30 ET",
+        "datetime_et": "2026-10-14T07:30",
+        "action": "WAIT for both. The print and the CPI release resolve within two hours of each other on 10-14, which is the reason to prefer this over an entry taken a day earlier elsewhere in the complex: by the time the 193.14 trigger can fire, both the company result and the macro number that caused the sector's drawdown are already in the price. Do not pre-position.",
+        "wait": true
+      },
+      "thesis": "Morgan Stanley has beaten consensus in four consecutive quarters \u2014 by 14.11%, 10.92%, 6.78% and 29.27% \u2014 and sell-side positioning is the one thing in the bank complex actually improving, with bullish share up 4.4 points to 60.6% while BAC deteriorated 3.5 points and GS sat flat at 46.9%. The stock is nonetheless 18.18% below its 120-day high of 232.25, because the whole group has been marked down on rate fear and because the OpenAI IPO delay pushed equity-capital-markets fees into 2027. The red team has downgraded that second leg rather than removed it: the delay is real and MS is an adviser, but it broke on 2026-06-26, not in the drawdown this thesis explains, and on 2026-10-08 the FT reported OpenAI now tells investors annualised revenue is approaching $50bn against roughly $70bn previously indicated \u2014 so the fee pool is partly repriced, not purely deferred. What survives is the narrower claim: ECM is the business line most sensitive to a calendar, and a slipped calendar is recoverable in a way a credit loss is not. Price has already stopped making lows: the 120-day low of 182.47 printed 2026-10-01 and has been followed by a sequence of higher lows at 185.22, 186.15 and 187.05. The trade is that Q3 lands on the same morning the macro question is answered, and a fifth straight beat into a cleared CPI is what takes the stock back through the 195.99 20-day toward the 207.33 50-day.",
+      "key_risk": "OPENAI IS NOT A CLEAN DEFERRAL ANY MORE, and that is the red team's addition to this idea. On 2026-10-08 the FT reported OpenAI's annualised revenue is approaching $50bn against the roughly $70bn previously indicated, and the IPO is pushed to early 2027. If the eventual listing is smaller or later than the pipeline assumes, the ECM fee line is repriced rather than merely postponed, and the mean-reversion mechanism this thesis names is weaker than the word 'deferral' implies. A hot September CPI on the morning of 2026-10-14 re-fires exactly the driver that caused this drawdown, and because it prints alongside the earnings the two cannot be separated \u2014 a good quarter can be entirely overwhelmed by the macro number, and the 193.14 trigger would simply never fire. That is the single largest risk to the trade and it is unhedgeable, which is why the 1.5% size is retained even though the GS half of the pair has been cut. Note the correlation warning in the original idea is now partly spent: the red team cut GS, so this is no longer half of a 3% paired position. But XLF BUY still sits in awaiting-entry on this same bank-earnings driver, so size this against that exposure rather than as a standalone. There is also no insider confirmation at all: zero open-market purchases against 17 sales in six months, and the positioning leg is sell-side revision drift, which this idea's own counter_argument correctly calls a thin reed.",
+      "counter_argument": "The strongest case against is that four straight beats have already happened and the stock is still 18% off its high, which says the market is not pricing MS off its earnings at all \u2014 it is pricing the rate path and the deal calendar, neither of which a Q3 beat settles. On that reading the improving sell-side revision trend is just analysts marking to a print they can forecast while the thing that actually matters is unforecastable. The second objection is mine against myself: I chose MS over BAC on revision direction, but BAC also beat four of four and has the tidier chart target, and the honest answer is that the revision screen is a thin reed to pick between two good setups. The entry condition is the partial answer to both \u2014 requiring a reclaim of 193.14 after both events means the trade only pays up once the market has resolved the questions the thesis cannot.",
+      "evidence": [
+        {
+          "kind": "dated_catalyst",
+          "detail": "Q3 earnings confirmed 2026-10-14 before the open, consensus EPS 3.1669, from the fetched finnhub calendar. Independently, September CPI is confirmed for the same morning 08:30 ET by the close time of the Kalshi KXCPIYOY-26SEP series (2026-10-14T12:29Z).",
+          "source": "https://finnhub.io/api/v1/calendar/earnings"
+        },
+        {
+          "kind": "positioning",
+          "detail": "Best measured positioning in the bank complex: analyst revision direction improving, bullish share 60.6% and +4.4pp, against BAC -3.5pp (deteriorating) and GS 0.0pp (flat, 46.9% bullish with a strong-sell outstanding). Earnings surprise record is four beats in four quarters: +14.11%, +10.92%, +6.78%, +29.27%. Counter-fact recorded: 0 insider open-market buys against 17 sales in six months.",
+          "source": "https://finnhub.io/api/v1/stock/recommendation"
+        },
+        {
+          "kind": "technical_level",
+          "detail": "Fetched 120-day history and last 12 daily bars: 120d low 182.47 (10-01), then higher lows 187.58, 185.22, 186.15, 187.05; 10-06 high 193.14 is the entry trigger; Friday closed 190.02 of a 190.435 high; sma20 195.99, sma50 207.33, 120d high 232.25. Stop 181.90 sits BELOW the 120-day low, so a new low falsifies the higher-low structure the entry depends on.",
+          "source": "https://www.nasdaq.com/market-activity/stocks/ms/historical"
+        }
+      ],
+      "sources": [
+        "https://finnhub.io/api/v1/calendar/earnings",
+        "https://www.nasdaq.com/market-activity/stocks/ms/historical",
+        "https://www.cnbc.com/2026/10/09/bank-stocks-selloff-q3-earnings.html",
+        "https://techcrunch.com/2026/10/08/openais-revenue-is-reportedly-20-billion-less-than-previously-projected",
+        "https://finnhub.io/api/v1/stock/recommendation",
+        "https://www.moomoo.com/news/post/72122611/goldman-sachs-and-morgan-stanley-led-the-decline-in-bank"
+      ],
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.14,
+        "claimed_risk_reward": 2.139,
+        "breakeven_probability": 0.318,
+        "stated_win_probability": 0.42,
+        "expectancy_r": 0.319,
+        "claimed_edge": 0.102,
+        "stop_atr_multiple": 2.75,
+        "live_price": 190.02,
+        "live_price_asof": "2026-10-09T20:00:00+00:00",
+        "market_session": "closed",
+        "price_age_minutes": 893.1,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": 4.1841,
+        "checked_at_et": "2026-10-10T06:53:17-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.14:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 193.4 is +1.8% from live 190.02"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-10-14 is ahead of us"
+          },
+          {
+            "check": "earnings_date",
+            "status": "warn",
+            "detail": "claims an earnings catalyst but MS is not on the fetched calendar"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 5.88 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "stop_distance",
+            "status": "pass",
+            "detail": "stop is 2.75 ATR from entry, clear of the 2.5 ATR guide for a swing stock"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "42% claimed vs 32% break-even at 2.14:1 \u2014 expectancy +0.32R"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is closed; last price 2026-10-09T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "no bid/ask available (normal outside regular hours)"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "1.5% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 3 rests on 3 independent kinds: dated_catalyst, positioning, technical_level"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "1 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    },
+    {
+      "rank": 2,
+      "instrument": "Steel Dynamics",
+      "symbol": "STLD",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 3,
+      "last_price": 238.38,
+      "last_price_asof": "2026-10-09T16:00:00-04:00",
+      "price_source": "finnhub (Friday 2026-10-09 close; US equities closed Saturday)",
+      "entry": {
+        "ideal": 245.5,
+        "zone_low": 245.185,
+        "zone_high": 250.0,
+        "order_type": "stop_limit",
+        "condition": "Trigger only on a move through 245.185, the 2026-10-05 session high and the top of the two-week base. That level also sits above the 241.36 50-day, so one trigger clears both. No fill below it \u2014 buying Friday's 238.38 close is buying inside the base, and the 50-day has capped every attempt since 2026-09-18."
+      },
+      "exit": {
+        "target": 281.0,
+        "target_2": 288.0,
+        "scale_plan": "trim half at 281, trail the balance under the prior daily low toward the 288.74 120-day high",
+        "time_stop": "2026-11-20 \u2014 one month past the 10-19 print; if the earnings catalyst has not carried it, the thesis is stale"
+      },
+      "stop": 228.75,
+      "bear_case_price": null,
+      "risk_reward": 2.119,
+      "win_probability": 0.4,
+      "position_size_pct": 2.5,
+      "requires_margin": false,
+      "risk_tier": "standard",
+      "market_cap_usd": null,
+      "avg_dollar_volume": 226436447,
+      "catalyst": {
+        "event": "Q3 2026 earnings after the close, consensus EPS 5.4904, confirmed on the fetched finnhub calendar",
+        "datetime_et": "2026-10-19T16:30",
+        "action": "Enter on the 245.185 breakout trigger if it comes BEFORE the print, and trim half into the print rather than holding the full position through it. If the trigger has not fired by the close on 10-19, stand down and re-assess after the reaction \u2014 do not buy the print itself.",
+        "wait": false
+      },
+      "thesis": "Steel equities are in an upgrade cycle while the group still trades below its summer levels, and Steel Dynamics is the profitable way to own it. Analyst revisions have turned measurably positive across the complex \u2014 Wells Fargo moved Cleveland-Cliffs to Overweight from Equal Weight on 2026-10-06, target $12 to $14, analyst Timna Tanners, explicitly citing steel pricing power and hot-rolled-coil lead times near pandemic-era levels, with target raises from GLJ and JPMorgan alongside (red team: these actions were verified against the Investing.com report of the upgrade, because the 247wallst article originally cited for them does not contain them) \u2014 and realised pricing is confirming it, with CLF's average selling price at 1,124 dollars per net ton in Q2 against 1,048 in Q1. STLD itself has beaten consensus in three of its last four quarters and earns 3.81 a share against CLF's four straight losses, so the same pricing leverage arrives on an income statement that is already in profit. The chart has stopped breaking down: the 120-day low of 219.10 printed 2026-10-01, the pullback since held a higher low at 232.97, and the 241.36 50-day plus the 245.185 high of 10-05 form one overhead shelf that a Q3 print on better pricing is the natural thing to clear.",
+      "key_risk": "The entry sits above the market and only triggers on strength, so the real risk is not a wrong level but a wrong regime: steel is a cyclical levered to industrial demand, and the macro read elsewhere in this run is hostile to cyclicals \u2014 IWM is 8.6% off its high and below its 50-day, XLI is 10.06% off its high, and the bank complex is in correction on fear of additional Fed hikes. If higher-for-longer breaks industrial demand, a pricing-driven beat will be sold rather than bought. Entering before a 10-19 print also means an earnings gap is live, which is why the plan trims half into it instead of holding through. RED TEAM ADDITION: this is the only idea in the run that holds through its own earnings print \u2014 catalyst.wait is false, the 245.185 trigger can fire any session before 10-19, and the plan trims only half into the report. The other surviving idea waits for its print to clear first. Treat the residual half as a binary position on 10-19 after the close, and note that STLD's own revision and surprise record is the thin part of the case: the pricing evidence is Cleveland-Cliffs' realised ASP and a Cleveland-Cliffs rating action, extended across the group.",
+      "counter_argument": "The strongest case against is that the pricing evidence I am leaning on is CLF's, not STLD's: the 1,124-per-ton figure and the Wells Fargo upgrade are a Cleveland-Cliffs datapoint and a Cleveland-Cliffs rating, and I am extending them across the group. STLD's own revision signal is thin \u2014 bullish share 63.6%, up only 1.7 points, with one sell rating still outstanding \u2014 and there is no insider confirmation at all, zero open-market purchases against 13 sales. A stronger version of the bear case: STLD is 17.44% off its high and below its 50-day for a reason, and an upgrade cycle driven by sell-side targets rather than by orders is the weakest kind of catalyst.",
+      "evidence": [
+        {
+          "kind": "dated_catalyst",
+          "detail": "Q3 earnings confirmed 2026-10-19 after the close, consensus EPS 5.4904, taken from the fetched finnhub calendar rather than recalled",
+          "source": "https://finnhub.io/api/v1/calendar/earnings"
+        },
+        {
+          "kind": "technical_level",
+          "detail": "Fetched 120-day history and the last 16 daily bars: 120d low 211.13 (red team refetched; the 219.10 figure carried in research is the 2026-10-01 session low, not the 120-day low), higher low 232.97 (10-08), 10-05 high 245.185 as the breakout trigger, sma20 233.88, sma50 241.36, 120d high 288.74. All levels re-verified against a fresh 120-bar fetch. Stop 228.75 sits below the 232.97 higher low that forms the post-capitulation base and above the 219.10 low; target 281 is below the 120-day high.",
+          "source": "https://www.nasdaq.com/market-activity/stocks/stld/historical"
+        },
+        {
+          "kind": "positioning",
+          "detail": "Measured analyst revision direction is improving but thinly: bullish share 63.6%, +1.7pp, with sell ratings falling from 2 (June/July) to 1 (Aug/Sep). Earnings surprise record is 3 beats in 4 quarters, but the magnitudes are near noise: +2.72%, -2.14%, +5.52%, +1.82%, averaging about +2% with one outright miss \u2014 not comparable to the double-digit surprise records elsewhere in this run. Honest caveat recorded: insiders show 0 open-market buys against 13 sales over six months, so there is no insider confirmation. Red team: this is the thin leg that took conviction from 4 to 3.",
+          "source": "https://finnhub.io/api/v1/stock/recommendation"
+        }
+      ],
+      "sources": [
+        "https://finnhub.io/api/v1/calendar/earnings",
+        "https://www.nasdaq.com/market-activity/stocks/stld/historical",
+        "https://www.investing.com/news/analyst-ratings/wells-fargo-upgrades-clevelandcliffs-stock-rating-on-pricing-power-93CH-4934816",
+        "https://247wallst.com/investing/2026/10/05/cleveland-cliffs-jumps-10-as-stelco-fallout-fades-before-october-19-earnings-nucor-and-steel-dynamics-rise-5/",
+        "https://finnhub.io/api/v1/stock/recommendation"
+      ],
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.12,
+        "claimed_risk_reward": 2.119,
+        "breakeven_probability": 0.321,
+        "stated_win_probability": 0.4,
+        "expectancy_r": 0.248,
+        "claimed_edge": 0.079,
+        "stop_atr_multiple": 2.5,
+        "live_price": 238.38,
+        "live_price_asof": "2026-10-09T20:00:00+00:00",
+        "market_session": "closed",
+        "price_age_minutes": 893.2,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": 6.7003,
+        "checked_at_et": "2026-10-10T06:53:21-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.12:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 245.5 is +3.0% from live 238.38"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-10-19 is ahead of us"
+          },
+          {
+            "check": "earnings_date",
+            "status": "warn",
+            "detail": "claims an earnings catalyst but STLD is not on the fetched calendar"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 5.3 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "stop_distance",
+            "status": "pass",
+            "detail": "stop is 2.5 ATR from entry, clear of the 2.5 ATR guide for a swing stock"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "40% claimed vs 32% break-even at 2.12:1 \u2014 expectancy +0.25R"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is closed; last price 2026-10-09T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "no bid/ask available (normal outside regular hours)"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "2.5% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 3 rests on 3 independent kinds: dated_catalyst, positioning, technical_level"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "1 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    }
+  ],
+  "watchlist": [
+    {
+      "symbol": "CLF",
+      "instrument": "Cleveland-Cliffs",
+      "note": "Best positioning signal of the day, worst arithmetic. Analyst revisions swung +21.3pp with sell ratings collapsing 7 to 1 since June \u2014 stronger than STLD's +1.7pp \u2014 and Wells Fargo upgraded to Overweight citing steel pricing power, with realised ASP 1,124/net ton in Q2 against 1,048 in Q1. Not published because the only construction that reaches 2.0 R:R is entry 13.10 / stop 11.76 / target 15.80, which needs the stop at exactly 2.02 ATR and a target 5% above the 15.06 120-day high; a 2.5 ATR stop drops it to 1.14. It also loses money \u2014 EPS -0.25, -0.42, -0.44, -0.51 over four quarters, 3 misses in 4. Entry at 13.10 would be chasing +15% in a week.",
+      "trigger": "A pullback into the 11.96-12.04 20/50-day cluster, which lets a 2.5 ATR stop sit under the base with the 15.06 120-day high still in front of it. Earnings 2026-10-19 (finnhub says after the close, a secondary source says before \u2014 the hour is not settled)."
+    },
+    {
+      "symbol": "AA",
+      "instrument": "Alcoa",
+      "note": "The loudest dislocation found and deliberately NOT published: 42.20, 49.99% off its 120-day high of 84.38, sitting on its 120-day low of 41.01, and it FELL 1.47% on a day the whole rest of the metals complex rallied. The research phase went back and diagnosed it rather than leaving it unexplained, and the diagnosis is impairment rather than mispricing: aluminium fell to a two-month low on a US-Iran framework reopening Strait of Hormuz shipments (three-month futures -3% to 3,426/tonne) into Alcoa's 15-day pricing lag, and management cut 2026 alumina production guidance. A 50% drawdown is not a bigger opportunity than a 17% one; it is usually a better-informed market.",
+      "trigger": "Not actionable on the current diagnosis. Earnings 2026-10-15 after the close would be the first chance for guidance to change the aluminium-price and production story."
+    },
+    {
+      "symbol": "URA",
+      "instrument": "Global X Uranium ETF",
+      "note": "The genuine anomaly of the day \u2014 uranium spot broke a 19-year record while the equities collapsed (URA 38.90, -34.03% off its 58.97 high, 120-day low 37.18). Declined on the correlation cap, not on merit: CCJ and CEG are both already open on the nuclear driver and URA would be a third.",
+      "trigger": "Becomes the better instrument for this thesis if CCJ is ever closed \u2014 a basket cannot be stopped out by one flooded mine shaft, which is exactly what happened to CCJ at McArthur River."
+    },
+    {
+      "symbol": "SLB",
+      "instrument": "Oil services vs producers (SLB -19.0%, HAL -25.3%, OIH -15.4% against XOP -4.7% and above both MAs)",
+      "note": "The 11-point producer/services gap is the mean-reversion setup the research phase most wanted and declined. The structural bear case is the one that has been right for years: producer discipline sends free cash flow to buybacks rather than to rigs, so services stay cheap. Betting on that reversing needs capex guidance that was not read this run.",
+      "trigger": "HAL reports 2026-10-20 before the open and SLB 2026-10-23 before the open. Read both capex guidances first."
+    },
+    {
+      "symbol": "GLD",
+      "instrument": "Gold and silver (GLD 384.58, SLV 54.78)",
+      "note": "GLD is 12.64% off its 440.25 high and SLV 32.25% off its 80.86 high having bottomed at 49.61; both are below their 20- and 50-day, and both rallied hard Friday (+1.57%, +2.49%). A 32% drawdown in silver after a vertical move is a broken momentum trade mid-repair, not a buy-the-dip.",
+      "trigger": "A reclaim of the 50-day (GLD 397.03, SLV 57.94), not a catch of the knife."
+    },
+    {
+      "symbol": "BAC",
+      "instrument": "Bank of America",
+      "note": "Clears the floors arithmetically \u2014 entry 54.32, stop 51.78, target 60.07 (its 50-day) returns 2.26 with the target only 5.66 ATR away, the tidiest geometry of the three banks \u2014 but cut because it is the same trade as the published GS and MS. It is also the worst of the three on the discriminator this report used: analyst revisions are DETERIORATING at -3.5pp, against MS +4.4pp and GS flat. Levels recorded so the work is not lost for a reader who prefers the cleaner target.",
+      "trigger": "Only relevant if GS and MS are both passed on. Reports 2026-10-14 before the open, the same morning as CPI."
+    },
+    {
+      "symbol": "WFC",
+      "instrument": "Wells Fargo",
+      "note": "The bank the research phase wanted and the arithmetic refused \u2014 the clearest example today of the R:R rule working rather than being worked around. Structure is genuinely good: the only bank above its 20-day (83.55 vs 83.30), a domestic lender whose NII benefits from higher-for-longer, least exposed to the OpenAI/ECM-deferral driver, and a higher low at 79.07 after falling to 78.00 on 10-01. But a breakout entry at 84.20 with the stop under that higher low risks 5.30 (2.84 ATR) against only 7.80 of upside to the 91.99 120-day high \u2014 R:R 1.47. The only routes to 2.0 were a sub-2.0-ATR stop or a target above the prior high, i.e. the two forms of reverse-engineering. Dropped rather than tuned.",
+      "trigger": "A tighter base that leaves more room to the 91.99 high, or a target justified by something other than the chart. Reports 2026-10-13 before the open."
+    },
+    {
+      "symbol": "ETH",
+      "instrument": "Micro Ether futures short (Robinhood Derivatives)",
+      "note": "The only crypto construction that cleared its floor this run, returning 2.04 \u2014 and it was not published because the October micro-ether contract is inside its expiry window and choosing between the November and December listing would have meant guessing a contract code. A guessed contract code is a fabricated number by another name. No major cleared 2.0 R:R to its own 120-day high on a 2.5 ATR stop: BTC 0.90, ETH 1.64 long, SOL 1.37, ADA 0.65.",
+      "trigger": "Verify the live micro ether contract month at runtime, then re-test the setup; the construction and levels are in the crypto block of notes.md."
+    },
+    {
+      "symbol": "LULU",
+      "instrument": "POSITION MANAGEMENT \u2014 close the long leg of the boxed LULU pair",
+      "note": "Not a new idea: an instruction the report cannot express as a row. state/open_positions.json holds LULU buy @115 (long_term, no stop) AND LULU sell @100.61 (swing) at the same time \u2014 two theses written five weeks apart, neither closed, long and short the same name. CLOSE THE LONG LEG, KEEP THE SHORT: LULU 94.50 is below its 20-day (97.61) and 50-day (109.43) and 44.48% off its high, the short is +6.1% and working, and the long has no stop and no invalidation. This is prose rather than a candidate because the live short is stored as direction 'sell', so a sell candidate on LULU would be merged by merge_report into that short as an amendment and would overwrite its stop and target. Note the short's easy money is behind it \u2014 94.50 is only 4.6% above the 120-day low of 90.38.",
+      "trigger": "Act at the Monday 2026-10-12 open; nothing needs to happen first."
+    },
+    {
+      "symbol": "NKE",
+      "instrument": "POSITION MANAGEMENT \u2014 close the long leg of the boxed NKE pair",
+      "note": "The identical shape as LULU and the same instruction, for the same mechanical reason. The book holds NKE buy @40.75 (long_term, no stop) and NKE sell @38.40 (swing, stop 41, target 32.10) simultaneously. CLOSE THE LONG LEG, KEEP THE SHORT: NKE 34.71 is below its 20-day (35.50) and 50-day (38.15) and 27.15% off its high with a 120-day low of 31.97, and the short is +9.6%. Also: take the short's 32.10 target when it comes \u2014 it sits just above that 31.97 low, so the objective is essentially the low. Do not get greedy past it.",
+      "trigger": "Act at the Monday 2026-10-12 open; nothing needs to happen first."
+    },
+    {
+      "symbol": "DINO",
+      "instrument": "POSITION MANAGEMENT \u2014 trailing stop instruction, HF Sinclair",
+      "note": "Best position on the book at +12.8% (entry 107.50, last 121.30, target 128), 2.35% off its 120-day high and far above its 20-day (111.65) and 50-day (102.10). The obvious management step is to raise the stop toward break-even, and it is given here as an instruction rather than a published amendment because every such amendment fails validation by construction: check_stop_distance measures the stop from entry.ideal and a filled position's entry may never be changed, so a stop raised to 105 is 0.56 ATR from the 107.50 entry and fails the 2.0 floor outright. INSTRUCTION: trail the stop under the prior daily low above 112, and trim into 128.",
+      "trigger": "Standing instruction while the position is open."
+    },
+    {
+      "symbol": "CEG",
+      "instrument": "POSITION MANAGEMENT \u2014 trailing stop instruction, Constellation Energy",
+      "note": "+9.6% (entry 272.00, last 298.07, target 320, stop 250), above both moving averages (268.10 / 273.98) and +4.56% on Friday. Same mechanical trap as DINO, and worse: ATR has expanded to 14.52, so the EXISTING 250 stop is already only 1.51 ATR from the 272 entry and CEG would fail the stop-distance check today even unchanged. Publishing a tightened stop would produce an idea engineered to be demoted. INSTRUCTION: trail the stop under 268, its 20-day.",
+      "trigger": "Standing instruction while the position is open."
+    },
+    {
+      "symbol": "LCII",
+      "instrument": "POSITION MANAGEMENT \u2014 invalidation supplied, LCI Industries",
+      "note": "Long_term, entry 94.00, last 78.30 (-16.7%), target 138, and it had NO stop and no invalidation condition. Held rather than closed on the fundamentals: TTM EPS from the fetched surprise record is 8.61, so at 78.30 this is about 9.1x trailing earnings, analyst revisions are improving (+2.3pp to 61.1% bullish) and it beat in 3 of the last 4 quarters \u2014 a cyclical at a trough multiple, not a broken business. But the honest arithmetic is that from the 94.00 entry it no longer clears the long-term 2.5 floor against any defensible bear case (it would need a bear case above 87.60 and the stock is at 78.30), which is why it is held and NOT added to. INVALIDATION, supplied now: close it if quarterly EPS turns negative, or if two consecutive quarters come in below 1.50. 'The price fell' is not an invalidation; a cyclical whose earnings roll over is.",
+      "trigger": "Next quarterly report. Liquidity note: 27.0M average daily dollar volume, the thinnest name on the book alongside BCC."
+    },
+    {
+      "symbol": "CCJ",
+      "instrument": "POSITION MANAGEMENT \u2014 on notice, Cameco",
+      "note": "Long_term, entry 94.00, last 88.06 (-6.3%), target 135, stop 82.50. HOLD, do not add, and deliberately not re-pitched \u2014 it has appeared three times in the last ten days. The verdict is genuinely split: the commodity leg strengthened (uranium spot broke a 19-year record) while the equity leg broke down, with URA -34.03% off its high and CCJ -32.89%, below its 20-day (89.54) and 50-day (94.77) and a 120-day low of 83.15 barely above the stop. Identified causes: utilities balking at contracting at these prices, flooding in northern Saskatchewan disrupting the McArthur River / Key Lake route, and Westinghouse earnings down year-over-year, though 2026 production guidance was maintained. Against it: a very high multiple (one snapshot near 148x), zero insider open-market buys in six months, and deteriorating revisions (-3.9pp). Stated plainly rather than carried silently: the 135 target needs +53% and is 12.6 ATR away, which is not a realistic 15-session objective.",
+      "trigger": "A contracting cycle restart or the Saskatchewan supply route reopening. The 82.50 stop is 6.3% away and the 120-day low sits just above it, so this resolves itself soon either way."
+    },
+    {
+      "symbol": "UNH",
+      "instrument": "UnitedHealth Group",
+      "demoted_from_rank": 1,
+      "demotion_reason": "Stop 367.00 sits inside the range the stock has traded for three weeks, so the 2.24 reward-to-risk is an artifact of where the arithmetic needed the stop, not where structure allows one.",
+      "note": "RED TEAM CUT (was rank 1, conviction 4, 2.5%). The idea's own key_risk named the stop as its weak point; the fetched bars say it is worse than named. Refetched 120-day history shows the 367.00 stop was traded THROUGH twice in the last eight sessions before the entry has ever printed: 365.72 on 2026-09-30 and 362.60 on 2026-10-01, with 368.05 (10-05) and 368.50 (10-08) either side of it. The stop is not below the base, it is inside it. The honest stop below 362.60 widens risk from 22.50 to 28.00 and drops reward-to-risk to 1.80, which fails the 2.0 swing floor \u2014 so by the report's own arithmetic this idea never cleared the floor. The only rescue is a target at 445.50+, 6.32 ATR out and past the 6.0 ATR guide every other idea in this run respected, which is the exact move the red team exists to catch. Passing stop_distance at 2.54 ATR is the ATR proxy failing: UNH's 8.86 ATR is wide relative to a range that has compressed to roughly 363-388. Secondary: the counter_argument is correct and unanswered \u2014 beats of +28.80% and +8.88% already landed and the stock fell anyway, which is evidence the de-rating is about medical cost trend and Medicare Advantage rate pressure, not earnings, so a third beat gets discounted like the first two. Earnings 2026-10-13 bmo, est 4.1893, independently re-confirmed.",
+      "trigger": "Republish only on a construction whose stop sits below 362.60 and still clears 2.0 with a target inside 6 ATR \u2014 which needs a higher entry base, i.e. a pullback-and-hold above 389.18 after the print rather than the first move through it."
+    },
+    {
+      "symbol": "GS",
+      "instrument": "Goldman Sachs Group",
+      "demoted_from_rank": 4,
+      "demotion_reason": "Its own positioning evidence reads against the direction, and the Oct 8 FT report on OpenAI's revenue contradicts the deferral-not-impairment mechanism the thesis rests on.",
+      "note": "RED TEAM CUT (was rank 4, conviction 3, 1.5%). Three reasons, compounding. (1) One of the three evidence kinds holding conviction 3 argues AGAINST the trade in its own words \u2014 revision direction flat at 46.9% bullish with a strong-sell outstanding, the weakest sell-side support of any bank checked, and underperformance versus SPY on every window (1m -12.2%, 3m -14.4%) and versus XLF by 8-12 points. An evidence kind that contradicts the direction is not a confirmation, so the score rests on two legs, one of which is the beat record. (2) The load-bearing mechanism is falsified by fresher news the report never saw. The thesis is that the drawdown has a specific reversible cause \u2014 ECM fees deferred into 2027 by the OpenAI IPO delay, 'a deferral of revenue, not a loss of it'. But the IPO-delay story broke 2026-06-26 (GS -4.8%, MS -4.1% that day), three and a half months before the September-October drawdown it is being used to explain; and on 2026-10-08, the day before the close this report prices off, the FT reported OpenAI now tells investors annualised revenue is approaching $50bn against the roughly $70bn previously indicated. A mega-listing whose issuer's revenue is ~29% below what investors were told is a repriced fee pool, not a timing problem, and that is an impairment of the exact line the thesis says is only deferred. (3) Correlation: the report concedes GS and MS are one bet and that MS is the stronger by its own discriminator, and notes.md recorded the decision to publish ONE bank idea because XLF BUY already sits in awaiting-entry on this same driver. Keeping the weaker half of an acknowledged single bet as a third expression of one driver is the cluster the correlation test exists to break. Levels and structure were fine (stop 857 below the 868.52 120-day low, R:R 2.09, stop 2.52 ATR); this is a thesis and concentration cut, not an arithmetic one.",
+      "trigger": "Revisit if the post-print reaction holds above the 924.42 20-day on evidence the Q3 fee line is intact independent of the OpenAI calendar, or if revision direction turns positive. Not before MS resolves \u2014 it is the same bet."
+    }
+  ],
+  "validation_summary": {
+    "checked": 2,
+    "passed": 0,
+    "warned": 2,
+    "failed": 0,
+    "enforced": true
+  }
+}
