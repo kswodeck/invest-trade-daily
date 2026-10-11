@@ -1,0 +1,702 @@
+{
+  "date": "2026-10-11",
+  "generated_at_et": "2026-10-11T06:43:37-04:00",
+  "research_minutes": 41,
+  "truncated": false,
+  "market_context": {
+    "regime": "mixed",
+    "summary": "The single most important frame today inverts the usual read: the Fed is HIKING, not cutting. September's FOMC raised the target range to 3.75-4.00%, the first hike since 2023 and unanimous, and the minutes released around Oct 7 record 16 of 18 officials expecting at least one more 25bp increase in 2026. Expectations have migrated from October to December \u2014 Kalshi prices the Oct 28 hike at 16c and the Dec 9 hike at 74c \u2014 which backs out to roughly an 82% chance of a December hike conditional on an October hold, near-certainty about a specific action four major data releases away from a committee with two named members publicly asking to wait. Fed projections put 2026 PCE at 3.7% headline / 3.4% core with no return to 2% until 2029. The long end sits 134bp above the funds rate at 5.22% with CPI re-accelerating (+0.40% MoM in August, ~4.9% annualized) and unemployment drifting up 4.1% to 4.2%: a term-premium, stagflation-lean tape rather than a soft-landing one. Note the tension the event market is pricing \u2014 a hike WITHOUT an inflation re-acceleration (Above 0.4% MoM at 16c, Above 4.0% YoY at 25c), so the hike case rests on the level of inflation rather than its momentum. Consequences traded off today: duration is the wrong side, every rate-cut-dependent and long-duration equity thesis carries a higher bar than it did last week, real assets and energy are favoured, and crypto is a liquidity asset into tightening. Refining is the tape's confirmed leadership (3-2-1 crack spread ~$69.72/bbl, August's NY Harbor average the highest monthly value since 2006) and power is the second, but both are already owned. The week ahead is dense: Q3 earnings season opens Oct 13 with JPM/GS/C/WFC, September CPI lands Oct 14 08:30, PPI and retail sales Oct 15. Equity markets were closed all day Sunday, so every equity entry here is an order for the Monday Oct 12 open \u2014 on which the bond market is closed for Columbus Day.",
+    "levels": {
+      "us10y": 5.22,
+      "us2y": 4.75,
+      "fed_funds_effective": 3.88,
+      "curve_10y_2y": 0.44,
+      "unemployment_rate": 4.2,
+      "cpi_mom_aug": 0.4,
+      "spy": 778.57,
+      "qqq": 751.27,
+      "iwm": 278.94,
+      "gld": 384.58,
+      "bonds_20y_proxy": 77.98,
+      "btc": 82961,
+      "eth": 2500.28,
+      "sol": 109.4,
+      "kalshi_fed_hike_oct28_cents": 16,
+      "kalshi_fed_hike_dec9_cents": 74,
+      "spx": null,
+      "ndx": null,
+      "vix": null,
+      "dxy": null,
+      "wti": null,
+      "gold_futures": null,
+      "levels_note": "Equity and ETF prices are the Friday 2026-10-09 close, taken in a closed session on a Sunday run \u2014 that is the freshest honest price, not stale data. Crypto is live. spx/ndx/vix/dxy/wti/gold_futures are null because Yahoo returned HTTP 429 on both hosts all run and finnhub refuses indices; GLD is the ETF, not the gold future."
+    },
+    "econ_calendar": [
+      {
+        "event": "US equity markets open; bond market closed for Columbus Day. Nothing material on the earnings tape.",
+        "datetime_et": "2026-10-12T09:30",
+        "importance": "low",
+        "consensus": null
+      },
+      {
+        "event": "Q3 earnings season opens: JPM, GS, C, WFC, JNJ, UNH bmo",
+        "datetime_et": "2026-10-13T07:00",
+        "importance": "high",
+        "consensus": null
+      },
+      {
+        "event": "September CPI. Also BAC, MS, BLK, STT bmo",
+        "datetime_et": "2026-10-14T08:30",
+        "importance": "high",
+        "consensus": "Kalshi prices Above 0.4% MoM at 16c and Above 0.5% at 8c; date from calendar aggregators, bls.gov unreachable"
+      },
+      {
+        "event": "September PPI and advance retail sales. PNC, USB, SCHW bmo; IBKR, AA amc",
+        "datetime_et": "2026-10-15T08:30",
+        "importance": "high",
+        "consensus": null
+      },
+      {
+        "event": "Import/export prices. TFC, RF, CFG, MTB, TRV bmo",
+        "datetime_et": "2026-10-16T08:30",
+        "importance": "medium",
+        "consensus": "TRV consensus EPS 6.8423"
+      },
+      {
+        "event": "FOMC decision",
+        "datetime_et": "2026-10-28T14:00",
+        "importance": "high",
+        "consensus": "Kalshi: 16c on a 25bp hike, 85c on hold"
+      },
+      {
+        "event": "FOMC decision",
+        "datetime_et": "2026-12-09T14:00",
+        "importance": "high",
+        "consensus": "Kalshi: 74c on a 25bp hike, 25c on hold"
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "rank": 1,
+      "instrument": "Financial Select Sector SPDR Fund",
+      "symbol": "XLF",
+      "asset_class": "etf",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 3,
+      "risk_tier": "standard",
+      "last_price": 54.73,
+      "last_price_asof": "2026-10-09T16:00:00-04:00",
+      "price_source": "finnhub",
+      "entry": {
+        "ideal": 54.23,
+        "zone_low": 53.6,
+        "zone_high": 55.0,
+        "order_type": "limit",
+        "condition": "already filled 2026-10-09 at 54.23 \u2014 this is a hold, not a new entry. Do not add before Oct 13."
+      },
+      "exit": {
+        "target": 57.6,
+        "scale_plan": "hold to 57.60; no partial trim into the prints, because the prints are the thesis",
+        "time_stop": "2026-11-13"
+      },
+      "stop": 52.8,
+      "risk_reward": 2.36,
+      "win_probability": 0.4,
+      "position_size_pct": 2,
+      "catalyst": {
+        "event": "Q3 bank earnings cluster: JPM/GS/C/WFC Oct 13 bmo, BAC/MS/BLK/STT Oct 14 bmo, PNC/USB/SCHW Oct 15, TFC/RF/CFG/MTB Oct 16 bmo.",
+        "datetime_et": "2026-10-13T07:00",
+        "action": "Hold the existing position through the prints. Do not add before Oct 13 \u2014 the credit question the prints answer is the whole reason the sector de-rated, and adding ahead of it doubles the one risk that is not yet priced either way.",
+        "wait": false
+      },
+      "thesis": "Update to the long opened 2026-10-09 at 54.23: thesis intact, entry and both exits unchanged, and the decision today is hold. The Q3 print is the first hard read on the credit fear that de-rated the group. A hiking Fed with the funds range at 3.75-4.00% and the long end at 5.22% supports net interest margin, and a volatile quarter supports capital-markets revenue at the money-centre banks that dominate the index.",
+      "key_risk": "The de-rating is about credit, not rates: GS sits 22.4% and MS 18.2% below their 120-day highs and the whole group is under its 50-day, so the tape is already positioned for bad news. A provision build or a private-credit mark at JPM on Oct 13 would take the sector through the 52.8 stop in one session. Two risks this row did not price. September CPI lands Oct 14 08:30, in between the Oct 13 and the Oct 14-16 prints, so a hot number re-rates a rate-sensitive basket independently of anything the banks report \u2014 and the report's own macro frame is a hiking Fed with the long end at 5.22%. And the bond market is closed Monday Oct 12 for Columbus Day, thinning the rates market this position keys off for a session.",
+      "counter_argument": "European banks entered a technical correction in the two weeks to Oct 10 \u2014 Euro Stoxx banks roughly -8%, with SocGen, Credit Agricole and Deutsche all more than 15% off their highs \u2014 on French sovereign risk and the yield surge. If that is a leading indicator rather than a separate story, US financials follow it down and this position is early. Red team note on correlation: synthesis flagged that ranks 1 and 2 were not independent, because XLF holds TRV. The TRV cut resolves that by removing the other leg rather than by sizing around it \u2014 financials exposure is now XLF alone at 2%.",
+      "evidence": [
+        {
+          "kind": "dated_catalyst",
+          "detail": "Earnings dates confirmed on the fetched finnhub calendar: JPM, GS, C, WFC all 2026-10-13 bmo; BAC, MS, BLK, STT 2026-10-14 bmo; PNC, USB, SCHW, IBKR 2026-10-15; TFC, RF, CFG, MTB, TRV 2026-10-16.",
+          "source": "https://finnhub.io/api/v1/calendar/earnings"
+        },
+        {
+          "kind": "technical_level",
+          "detail": "XLF closed 54.73 on 2026-10-09 sitting on its 20-day SMA at 54.77, with the 50-day at 56.53 overhead and the 120-day range low at 50.52. Stop 52.8 is 1.43 below the 54.23 entry = 2.05x the 0.6972 ATR14, clearing the 1.8 ATR floor for a swing ETF. Target 57.6 is just above the 50-day \u2014 a reclaim rather than a new high.",
+          "source": "https://www.nasdaq.com/market-activity/etf/xlf/historical"
+        },
+        {
+          "kind": "counter_argument_answered",
+          "detail": "The European bank drawdown is sourced to French sovereign debt risk and the long-end yield surge, not to US loan books, and Bloomberg framed it on 2026-10-10 as a reset rather than a crash. The US regional-bank fraud and charge-off stories that search surfaces alongside it (Zions, Western Alliance) date from 2025, not this month.",
+          "source": "https://www.bloomberg.com/news/articles/2026-10-10/banking-stock-swoon-in-europe-is-a-sign-of-caution-not-panic"
+        }
+      ],
+      "sources": [
+        "https://www.nasdaq.com/market-activity/etf/xlf/historical",
+        "https://www.federalreserve.gov/monetarypolicy/fomcminutes20260916.htm",
+        "https://www.bloomberg.com/news/articles/2026-10-10/banking-stock-swoon-in-europe-is-a-sign-of-caution-not-panic"
+      ],
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.36,
+        "claimed_risk_reward": 2.36,
+        "breakeven_probability": 0.298,
+        "stated_win_probability": 0.4,
+        "expectancy_r": 0.344,
+        "claimed_edge": 0.102,
+        "stop_atr_multiple": 2.05,
+        "live_price": 54.73,
+        "live_price_asof": "2026-10-09T20:00:00+00:00",
+        "market_session": "closed",
+        "price_age_minutes": 2338.5,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": 0.6972,
+        "checked_at_et": "2026-10-11T06:58:48-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.36:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 54.23 is -0.9% from live 54.73"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-10-13 is ahead of us"
+          },
+          {
+            "check": "earnings_date",
+            "status": "warn",
+            "detail": "claims an earnings catalyst but XLF is not on the fetched calendar"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 4.83 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "stop_distance",
+            "status": "warn",
+            "detail": "stop is 2.05 ATR from entry \u2014 clears the 1.8 ATR floor for a swing etf but sits under the 2.25 ATR level where stop-outs have clustered"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "40% claimed vs 30% break-even at 2.36:1 \u2014 expectancy +0.34R"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is closed; last price 2026-10-09T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "no bid/ask available (normal outside regular hours)"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "2% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 3 rests on 3 independent kinds: counter_argument_answered, dated_catalyst, technical_level"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "1 of 3 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    },
+    {
+      "rank": 2,
+      "instrument": "LCI Industries",
+      "symbol": "LCII",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "long_term",
+      "conviction": 3,
+      "risk_tier": "standard",
+      "last_price": 78.3,
+      "last_price_asof": "2026-10-09T16:00:00-04:00",
+      "price_source": "finnhub",
+      "avg_dollar_volume": 27000000,
+      "entry": {
+        "ideal": 94.0,
+        "condition": "Historical fill, 2026-09-10 (idea opened 2026-08-18; the two dates differ and the row had the opened date here). Not an entry to place \u2014 this row exists to close the position."
+      },
+      "exit": {
+        "target": 138.0,
+        "scale_plan": "Close the whole position at the Monday Oct 12 open. The 138.00 target shown is the historical published level, carried unchanged because a filled position's record is not rewritten; it is not a level anyone is playing for and it requires +76% from here.",
+        "time_stop": "2026-10-12"
+      },
+      "stop": 78.3,
+      "bear_case_price": null,
+      "risk_reward": null,
+      "win_probability": null,
+      "position_size_pct": null,
+      "catalyst": {
+        "event": "No catalyst. This is an exit for the long opened 2026-08-18 at 94.00, now -16.7%.",
+        "datetime_et": null,
+        "action": "CLOSE the existing long at the Monday Oct 12 open. Do not re-enter without a dated catalyst and a stated stop. The stop is set to 78.30, Friday's close, so the position closes against the price actually last traded rather than against an invented exit. Mechanism, stated so it is not mistaken for a guarantee: what reaches the tracker is a stop at this level, because a filled position can have its exits amended but never its entry. If Monday opens above the stop the position stays open with the stop in force; closing at the open is a discretionary instruction the tracker cannot enforce. Either way the position finally has a stop, which is the defect being fixed.",
+        "wait": false
+      },
+      "thesis": "Direction is recorded as `buy` because this amends the live LONG position of that name; the recommended action is to CLOSE it. Close the long opened 2026-08-18 at 94.00, now -16.7% at 78.30. This is the worst position in the book on every measure and it has had no stop to end it. LCII closed at 78.30 against a 120-day low of 78.075 \u2014 it is sitting ON the low, not near it \u2014 and trades below its 20-day (84.39) and 50-day (95.65), 36.9% below its 120-day high of 123.99. A position with no stop, no dated catalyst, a target above its entire 120-day range and price at its own low is not a thesis being given time, it is an unmanaged loss.",
+      "key_risk": "Exiting at the low is how a bottom gets sold, and that is the real risk here: an RV and towables supplier is a rate-sensitive cyclical, so the same Fed that broke it would re-rate it hard on any dovish turn. The counter is that the Fed is hiking, not cutting \u2014 Kalshi prices a 74% chance of a 25bp hike on Dec 9 \u2014 so the macro driver is still pointed against a position with nothing underneath it.",
+      "counter_argument": "The strongest case for holding is that this was underwritten as a long-horizon recovery where a 2026 drawdown is tolerable, and the stock is cheap against a normalised RV cycle. That argument fails on process rather than on valuation: the position carries no stated invalidation condition, which the long-term rules make mandatory precisely so a thesis can be falsified instead of simply held. Without one there is no level or event at which it would ever be admitted to be wrong.",
+      "evidence": [
+        {
+          "kind": "technical_level",
+          "detail": "Fetched 120-day history: last close 78.30 against a range low of 78.075 and a range high of 123.99 (-36.9%); sma20 84.39, sma50 95.64; ATR14 2.3369 (2.98%). Average daily dollar volume only $27M, so the position is exitable but thin.",
+          "source": "https://www.nasdaq.com/market-activity/stocks/lcii/historical"
+        },
+        {
+          "kind": "positioning",
+          "detail": "The rate path is against it and is priced, not assumed: Kalshi KXFEDDECISION-26DEC-H25 trades 72/74 cents for a 25bp hike on Dec 9, and the Sept FOMC minutes record several participants viewing policy as not restrictive. A rate-sensitive consumer-durables cyclical has no macro tailwind on that path.",
+          "source": "https://www.federalreserve.gov/monetarypolicy/fomcminutes20260916.htm"
+        }
+      ],
+      "sources": [
+        "https://www.nasdaq.com/market-activity/stocks/lcii/historical",
+        "https://www.federalreserve.gov/monetarypolicy/fomcminutes20260916.htm"
+      ],
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.8,
+        "claimed_risk_reward": null,
+        "breakeven_probability": 0.263,
+        "stop_atr_multiple": 6.72,
+        "live_price": 78.3,
+        "live_price_asof": "2026-10-09T20:00:00+00:00",
+        "market_session": "closed",
+        "price_age_minutes": 2338.6,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": 2.3369,
+        "checked_at_et": "2026-10-11T06:58:51-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.8:1 clears the 2.5:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "warn",
+            "detail": "entry 94.0 is +20.1% from live 78.3 \u2014 far from the market"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "long-term idea, no dated event expected"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "long-term target is valuation-anchored, not ATR-bound"
+          },
+          {
+            "check": "stop_distance",
+            "status": "pass",
+            "detail": "long-term downside is a bear case, not a stop \u2014 no ATR floor applies"
+          },
+          {
+            "check": "expectancy",
+            "status": "warn",
+            "detail": "no win_probability stated; this idea needs better than 26% to break even at 2.8:1"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is closed; last price 2026-10-09T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "no bid/ask available (normal outside regular hours)"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "warn",
+            "detail": "no position size given"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 3 rests on 2 independent kinds: positioning, technical_level"
+          },
+          {
+            "check": "sources",
+            "status": "pass",
+            "detail": "all 2 checked source(s) resolve"
+          }
+        ]
+      }
+    },
+    {
+      "rank": 3,
+      "instrument": "Lululemon Athletica Inc",
+      "symbol": "LULU",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "long_term",
+      "conviction": 3,
+      "risk_tier": "standard",
+      "last_price": 94.5,
+      "last_price_asof": "2026-10-09T16:00:00-04:00",
+      "price_source": "finnhub",
+      "entry": {
+        "ideal": 115.0,
+        "condition": "Historical fill, 2026-08-27. Not an entry to place \u2014 this row exists to close the long leg."
+      },
+      "exit": {
+        "target": 180.0,
+        "scale_plan": "Close the entire LONG leg at the Monday Oct 12 open and leave the 2026-09-08 SHORT leg (entry 100.61, target 77.00, stop 112.00) untouched. The 180.00 target shown is the historical published level, above the full 120-day range; it is not being played for.",
+        "time_stop": "2026-10-12"
+      },
+      "stop": 94.5,
+      "bear_case_price": null,
+      "risk_reward": null,
+      "win_probability": null,
+      "position_size_pct": null,
+      "catalyst": {
+        "event": "No catalyst. This closes the long opened 2026-08-22 at 115.00 and resolves a position the book holds in both directions at once.",
+        "datetime_et": null,
+        "action": "CLOSE the LONG leg only, at the Monday Oct 12 open. KEEP the 2026-09-08 short (entry 100.61, target 77.00, stop 112.00), which is in profit and has a defined stop \u2014 nothing in this row amends it. Mechanism, stated so it is not mistaken for a guarantee: what reaches the tracker is a stop at this level, because a filled position can have its exits amended but never its entry. If Monday opens above the stop the position stays open with the stop in force; closing at the open is a discretionary instruction the tracker cannot enforce. Either way the position finally has a stop, which is the defect being fixed.",
+        "wait": false
+      },
+      "thesis": "Direction is recorded as `buy` because this amends the live LONG position of that name; the recommended action is to CLOSE it. Close the long leg only. The book is simultaneously long LULU from 115.00 (-17.8%) and short it from 100.61 (+6.1%), so it holds roughly zero net exposure while paying to be wrong on one side \u2014 and the two legs cannot both be right. The market has already arbitrated: the short is up and the long is down 17.8%, with the stock at 94.50, below its 20-day (97.61) and 50-day (109.43) and 44.5% below its 120-day high of 170.20. The long carries no stop and a target above its entire 120-day range; the short carries a 112.00 stop. Keep the leg with defined risk and close the one without.",
+      "key_risk": "Closing the long leaves a naked short in a name already 44.5% off its high and only 4.6% above its 120-day low of 90.38, which is where short squeezes start \u2014 and an apparel short is exposed to a single strong holiday-quarter datapoint. That risk is bounded by the short leg's own 112.00 stop, 18.5% above the current price, which would cost the gain but not more.",
+      "counter_argument": "The strongest case against is that holding both legs is a deliberate hedge rather than an error, letting a long-term recovery thesis survive while the short pays for the wait. The reason to reject that reading is that neither leg was sized or stopped as a hedge: the long has no stop at all and a target above its 120-day range, so it is not a position being managed around \u2014 and a hedge whose two halves carry incompatible targets, 180.00 against 77.00, is two opposite convictions held at once.",
+      "evidence": [
+        {
+          "kind": "technical_level",
+          "detail": "Fetched 120-day history: last close 94.50, sma20 97.606, sma50 109.432, range high 170.1999 (-44.5%), range low 90.38, ATR14 3.1249 (3.31%). Price sits below both moving averages and 4.6% above its 120-day low; the long leg's 180.00 target is above the full 120-day range.",
+          "source": "https://www.nasdaq.com/market-activity/stocks/lulu/historical"
+        },
+        {
+          "kind": "counter_argument_answered",
+          "detail": "The hedge reading is testable and fails on the recorded levels: the long leg has stop = None against the short leg's stop of 112.00, and the two legs carry targets of 180.00 and 77.00. Opposite targets with risk defined on only one side is two convictions, not a hedge. The same pattern exists in NKE (long 40.75 no stop, short 38.40 stop 41.00).",
+          "source": "https://www.nasdaq.com/market-activity/stocks/lulu/historical"
+        }
+      ],
+      "sources": [
+        "https://www.nasdaq.com/market-activity/stocks/lulu/historical"
+      ],
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 3.17,
+        "claimed_risk_reward": null,
+        "breakeven_probability": 0.24,
+        "stop_atr_multiple": 6.56,
+        "live_price": 94.5,
+        "live_price_asof": "2026-10-09T20:00:00+00:00",
+        "market_session": "closed",
+        "price_age_minutes": 2338.7,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": 3.1249,
+        "checked_at_et": "2026-10-11T06:58:52-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 3.17:1 clears the 2.5:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "warn",
+            "detail": "entry 115.0 is +21.7% from live 94.5 \u2014 far from the market"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "long-term idea, no dated event expected"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "long-term target is valuation-anchored, not ATR-bound"
+          },
+          {
+            "check": "stop_distance",
+            "status": "pass",
+            "detail": "long-term downside is a bear case, not a stop \u2014 no ATR floor applies"
+          },
+          {
+            "check": "expectancy",
+            "status": "warn",
+            "detail": "no win_probability stated; this idea needs better than 24% to break even at 3.17:1"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is closed; last price 2026-10-09T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "no bid/ask available (normal outside regular hours)"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "warn",
+            "detail": "no position size given"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 3 rests on 2 independent kinds: counter_argument_answered, technical_level"
+          },
+          {
+            "check": "sources",
+            "status": "pass",
+            "detail": "all 1 checked source(s) resolve"
+          }
+        ]
+      }
+    },
+    {
+      "rank": 4,
+      "instrument": "NIKE Inc Class B",
+      "symbol": "NKE",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "long_term",
+      "conviction": 3,
+      "risk_tier": "standard",
+      "last_price": 34.71,
+      "last_price_asof": "2026-10-09T16:00:00-04:00",
+      "price_source": "finnhub",
+      "entry": {
+        "ideal": 40.75,
+        "condition": "Historical fill, 2026-08-17. Not an entry to place \u2014 this row exists to close the long leg."
+      },
+      "exit": {
+        "target": 62.0,
+        "scale_plan": "Close the entire LONG leg at the Monday Oct 12 open and leave the 2026-09-08 SHORT leg (entry 38.40, target 32.10, stop 41.00) untouched. The 62.00 target shown is the historical published level, above the full 120-day range; it is not being played for.",
+        "time_stop": "2026-10-12"
+      },
+      "stop": 34.71,
+      "bear_case_price": null,
+      "risk_reward": null,
+      "win_probability": null,
+      "position_size_pct": null,
+      "catalyst": {
+        "event": "No catalyst. This closes the long opened 2026-08-17 at 40.75 and resolves the second of the book's two self-cancelling pairs.",
+        "datetime_et": null,
+        "action": "CLOSE the LONG leg only, at the Monday Oct 12 open. KEEP the 2026-09-08 short (entry 38.40, target 32.10, stop 41.00), which is in profit and has a defined stop \u2014 nothing in this row amends it. Mechanism, stated so it is not mistaken for a guarantee: what reaches the tracker is a stop at this level, because a filled position can have its exits amended but never its entry. If Monday opens above the stop the position stays open with the stop in force; closing at the open is a discretionary instruction the tracker cannot enforce. Either way the position finally has a stop, which is the defect being fixed.",
+        "wait": false
+      },
+      "thesis": "Direction is recorded as `buy` because this amends the live LONG position of that name; the recommended action is to CLOSE it. Close the long leg only, on the same reasoning applied to LULU. The book is long NKE from 40.75 (-13.2%, no stop, target 62.00) and short it from 38.40 (+9.6%, stop 41.00) at the same time, which is near-zero net exposure with risk defined on only one side. NKE closed at 34.71, below its 20-day (35.50) and 50-day (38.15) and 27.2% below its 120-day high of 47.645, having been held 54 days. The 62.00 target needs +79% and sits above the entire 120-day range.",
+      "key_risk": "The remaining short sits only 8.6% above the 120-day low of 31.97 with a 3.34% ATR, so roughly two and a half ordinary days of range separate it from that low and from its 32.10 target \u2014 most of the move is already banked, and a turnaround datapoint from a brand this widely followed can gap it. The 41.00 stop caps that at a loss of the current gain rather than of capital.",
+      "counter_argument": "The strongest case for keeping the long is that Nike is a durable franchise mid-turnaround and the long leg was the long-horizon expression while the short monetises the interim weakness. That fails the same test as LULU: a long-term leg is required to carry an explicit invalidation condition and this one carries neither a stop nor a stated condition, so there is no state of the world in which it gets closed. Holding both legs also made the position invisible in the performance record \u2014 the two legs net out while both consume a slot.",
+      "evidence": [
+        {
+          "kind": "technical_level",
+          "detail": "Fetched 120-day history: last close 34.71, sma20 35.497, sma50 38.1472, range high 47.645 (-27.2%), range low 31.97, ATR14 1.1606 (3.34%). Below both moving averages; the long leg's 62.00 target sits above the full 120-day range.",
+          "source": "https://www.nasdaq.com/market-activity/stocks/nke/historical"
+        },
+        {
+          "kind": "counter_argument_answered",
+          "detail": "Same structural test as LULU and it fails identically: long leg stop = None with a 62.00 target, short leg stop 41.00 with a 32.10 target. Opposite targets and risk defined on one side only is two convictions held at once rather than a hedge.",
+          "source": "https://www.nasdaq.com/market-activity/stocks/nke/historical"
+        }
+      ],
+      "sources": [
+        "https://www.nasdaq.com/market-activity/stocks/nke/historical"
+      ],
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 3.52,
+        "claimed_risk_reward": null,
+        "breakeven_probability": 0.221,
+        "stop_atr_multiple": 5.2,
+        "live_price": 34.71,
+        "live_price_asof": "2026-10-09T20:00:00+00:00",
+        "market_session": "closed",
+        "price_age_minutes": 2338.7,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": 1.1606,
+        "checked_at_et": "2026-10-11T06:58:55-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 3.52:1 clears the 2.5:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "warn",
+            "detail": "entry 40.75 is +17.4% from live 34.71 \u2014 far from the market"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "long-term idea, no dated event expected"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "long-term target is valuation-anchored, not ATR-bound"
+          },
+          {
+            "check": "stop_distance",
+            "status": "pass",
+            "detail": "long-term downside is a bear case, not a stop \u2014 no ATR floor applies"
+          },
+          {
+            "check": "expectancy",
+            "status": "warn",
+            "detail": "no win_probability stated; this idea needs better than 22% to break even at 3.52:1"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is closed; last price 2026-10-09T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "no bid/ask available (normal outside regular hours)"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "warn",
+            "detail": "no position size given"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 3 rests on 2 independent kinds: counter_argument_answered, technical_level"
+          },
+          {
+            "check": "sources",
+            "status": "pass",
+            "detail": "all 1 checked source(s) resolve"
+          }
+        ]
+      }
+    }
+  ],
+  "watchlist": [
+    {
+      "symbol": "TRV",
+      "instrument": "The Travelers Companies Inc",
+      "note": "CUT from rank 1 (conviction 4, 3% \u2014 the only new risk in the report). The thesis rested on a premise that was already false when it was written. It claimed the season produced \"no hurricanes ... with no US landfall for the first time in ten years\": Hurricane Isaias, the season's first and the latest first Atlantic hurricane on record, formed Oct 7-8, reached Category 3 on Oct 9 and made US Gulf Coast landfall between Mobile AL and Pensacola FL in the early hours of Sat Oct 10, with a storm-surge warning from the mouth of the Mississippi to Steinhatchee FL. NHC public advisory 19, 04:00 CDT Oct 11, has it post-tropical over Tennessee. Research sourced the no-hurricane claim to a Verisk blog explicitly dated \"as of 2026-10-06\" and never consulted the NHC primary, so the single fact the idea turned on was three days stale at publication. The cat-light Q3 mechanic does survive \u2014 Q3 closed Sept 30 and no later storm changes that print. What does not survive is the catalyst instruction built on it: \"hold through Oct 16 rather than trimming, the catastrophe-loss risk is already resolved, because Q3 closed Sept 30.\" The stock trades the live Q4 event, not the Q3 income statement \u2014 Isaias is an estimated $4-6B industry insured loss (BMS Group, Gallagher Re, both pre-landfall), it is unpriced in the Friday Oct 9 close every level in the row was derived from, and Q4 cat load is now the first question on the Oct 16 call. The levels are what made it unfixable rather than merely wrong: entry 364-369.5 and the 352 stop (2.32 ATR on a 6.4657 ATR) are pre-event numbers, and a limit at or below 369.5 sits above any plausible gap-down open, so it is an unconditional fill into the first session that prices the storm. Repairing it needs a post-event price, which does not exist on a Sunday, and inventing one is the one thing this pipeline forbids.",
+      "trigger": "Re-arm only after Monday Oct 12 trades and the storm is priced, then re-derive entry, stop and target from a post-Oct-12 close and a post-event ATR, and state a Q4 cat-load view explicitly instead of calling the cat risk resolved. The catalyst itself is intact and confirmed: Oct 16 bmo, consensus EPS 6.8423 on revenue ~$11.49B, verified on a 7-day refetch of the earnings calendar. Brokers read Isaias as mid-single-digit billions and not enough to move US property capacity or the soft market, and the Q3 cat line really is clean, so a TRV long may well be a better idea on Tuesday than it was on Friday. It simply cannot be published on Friday's levels and a false landfall claim.",
+      "demoted_from_rank": 1,
+      "demotion_reason": "Thesis premise false at publication: a Category 3 hurricane made US Gulf Coast landfall on Oct 10, so the cat risk the row called \"already resolved\" is a live, unpriced Q4 event \u2014 and every level is derived from a pre-landfall Oct 9 close."
+    },
+    {
+      "symbol": "CB",
+      "instrument": "Chubb Ltd",
+      "note": "PREMISE FALSIFIED \u2014 see the TRV entry. The \"no-hurricane quarter\" driver this rested on ended on Sat Oct 10, when Hurricane Isaias made a major-hurricane US Gulf Coast landfall at Mobile-Pensacola. CB is MORE property-cat geared than WRB, which was the reason to prefer it as the second read and is now the reason it is the more exposed of the two. Its Oct 20 amc print does report a quarter that closed Sept 30, so CB's Q3 cat line is clean too \u2014 but it guides into a Q4 absorbing an estimated $4-6B industry event.",
+      "trigger": "Do not use the 341 / 329 / 366 levels previously shown here: they are derived from the Oct 9 pre-event close. Re-derive after Oct 12 trades, and only once a Q4 cat-load estimate for CB exists. CB prints Oct 20 amc."
+    },
+    {
+      "symbol": "WRB",
+      "instrument": "W. R. Berkley Corp",
+      "note": "PREMISE FALSIFIED \u2014 see the TRV entry; the no-hurricane thesis is void as of the Oct 10 Isaias landfall. Being specialty/commercial and less property-cat geared now cuts the other way and makes WRB the less exposed of the two, but that is an absence of harm rather than a reason to own it, and the reason to own it is gone. Clears the technical screen but is specialty/commercial and so less property-cat geared \u2014 the no-hurricane thesis fits CB better. Do not chase it at 71.91.",
+      "trigger": "The 69.60 sma50/sma200 confluence, 66.80 stop and 78.00 target are pre-event levels from the Oct 9 close and should be re-derived before use. Earnings Oct 19 amc."
+    },
+    {
+      "symbol": "GS",
+      "instrument": "Goldman Sachs Group Inc",
+      "note": "The laggard of a lagging sector, 22.4% below its 120-day high. The private-credit question is the whole reason it de-rated and it is unanswerable before the print, so there is no idea here today.",
+      "trigger": "Reconsider only after the Oct 13 bmo print. A credit-clean result with the stock near its 868.52 low would be a real idea."
+    },
+    {
+      "symbol": "ITA",
+      "instrument": "iShares U.S. Aerospace & Defense ETF",
+      "note": "The run's biggest unexplained signal, researched twice and still not a trade. The FY2027 budget direction is sharply UP \u2014 ~$1.1T DOD discretionary requested plus $350B mandatory, framed at $1.5T and a 44% increase \u2014 against a sector-wide 18-42% drawdown. A gap that large is not explained by appropriations timing alone, sources conflict on whether FY2027 defense appropriations or a CR is actually enacted, and nothing has based: every name is below all three moving averages. ITA is the right instrument if it becomes a trade, because the drawdown is spread across execution problems at different companies and the basket avoids picking which management team is the broken one.",
+      "trigger": "Wait for the primes to report in late October (LMT, NOC, GD, RTX), which prices the execution half, and for any base at all. Appropriations resolve around early December."
+    },
+    {
+      "symbol": "STLD",
+      "instrument": "Steel Dynamics Inc",
+      "note": "Published 2026-10-10 at a 245.50 buy and still unfilled with price at 238.38. Level unchanged, nothing to amend, nothing to re-pitch.",
+      "trigger": "Fills on its own at 245.50 or expires unfilled."
+    },
+    {
+      "symbol": "BTC",
+      "instrument": "Bitcoin / micro bitcoin futures",
+      "note": "Examined properly on a weekend run and rejected, which is a considered no rather than an omission. BTC 82,948 with a true daily ATR14 of 1,859.86 (2.24%) rallied to 85,711 by Oct 5, broke down Oct 7-8 to an 80,427 low and has consolidated 82-83k for three sessions just under the break. ETH broke harder, -10.5% in two days, and alts led down on the 24h tape with majors flat, so there is no weekend squeeze underway. The bear case is real but no qualifying setup exists at these levels.",
+      "trigger": "A failed retest of the 85-87k breakdown shelf with a stop above it, giving a 2.5 ATR crypto stop that still clears the reward-to-risk floor."
+    },
+    {
+      "symbol": "CCJ",
+      "instrument": "Cameco Corp",
+      "note": "CUT from rank 6 (conviction 2, lottery tier, 1%). Validation returned a hard fail on two counts and both are correct: measured from the fixed 94.00 fill, the revised 108.00 target against the 82.50 stop is 1.22:1, below the 2.5:1 floor for a long-term idea, and at the stated 30% hit rate against a 45% break-even that is -0.33R \u2014 the idea loses money on its own numbers. There is no honest fix, and that is the finding rather than an obstacle to one: the ratio passes only by restoring the 135.00 target that sits above the 120-day high of 131.21, or by walking the 82.50 stop in, and both are exactly the gaming this phase exists to catch. Synthesis published it at the failing number deliberately and said so, which is the right way to lose this argument. The consequence the reader needs: demotion means the target amendment does NOT reach the position tracker, so the stale and unreachable 135.00 target persists there. The 82.50 stop is correct, is already in force, and is what governs the position \u2014 6.3% below the 88.06 last price against a 3.7% ATR, so roughly two ordinary days of range. Do not add.",
+      "trigger": "No re-pitch without a dated catalyst. CCJ was recommended three times in ten days with nothing concrete changing, which the prior-context rule names as anchoring rather than conviction. The position runs to its 82.50 stop or the 108.00 shelf; the uranium and nuclear theme is already working elsewhere in the book (CEG +9.6%) and does not need a second expression.",
+      "demoted_from_rank": 6,
+      "demotion_reason": "1.22:1 against the 2.5:1 long-term floor from a fixed 94.00 fill, and -0.33R expectancy at its own stated 30% hit rate \u2014 it loses money on its own numbers and cannot be fixed without stretching the target or walking the stop in."
+    }
+  ],
+  "data_quality_notes": "RESEARCH COMPLETED \u2014 the research phase wrote a RESEARCH COMPLETE block plus an addendum at 06:45 ET, so nothing here is reconstructed from a truncated log and `truncated` is false. \n\nWHY ONLY ONE NEW IDEA. This is a management day, not an idea day, and the count is not being padded. Of six recommendations, ONE is new risk (TRV), one is a hold on a position opened Oct 9 (XLF), three are exits, and one is a target amendment. Research rejected GS, AA, EQT, NRG, TLN, CB, WRB, VLO/MPC/PSX, a short /MBT and two Fed/CPI event-contract complexes rather than writing them up thin. The reasons were specific: the tape's leadership is refining and power and the book already owns both (XLE, DINO, CEG); the cheap cyclicals are cheap at their lows with no base to lean a stop on; and the macro event contracts are priced to the cent. The track record was applied rather than noted \u2014 2/15 overall, 0/8 on closed stock ideas and 0/4 on conviction 2 \u2014 so the one new stock idea carries four distinct kinds of evidence and CCJ was cut to conviction 2 at 1% rather than defended. \n\nEDITORIAL CORRECTION, DISCLOSED. Research captured the three exits (LCII, LULU, NKE) with `direction: sell`, meaning \"the action is to sell\". Published that way they would have done the opposite of what research decided, and this was verified against state/open_positions.json rather than assumed: merge_report keys one live position per (symbol, direction), and the book holds LIVE SHORT positions in LULU (entry 100.61, target 77.00, stop 112.00, +6.1%) and NKE (entry 38.40, target 32.10, stop 41.00, +9.6%). A published LULU/NKE `sell` would have amended those two profitable, properly-stopped shorts \u2014 overwriting their targets to the current price and their stops to null \u2014 while leaving the losing longs open and unstopped, and an LCII `sell` would have opened a fabricated new short. All three are therefore published as `direction: buy` with `horizon: long_term`, matching the live long each one closes, with the stop moved to Friday's close (78.30 / 94.50 / 34.71) \u2014 the level at which research says the thesis is already invalid, and the fix for the actual defect, which is that these three positions never had a stop at all. No thesis, conviction or level was changed; only the encoding. The horizon is set to long_term to match the positions being closed, because relabelling three long-term losses as swings on the way out would misattribute them in the by-horizon table. \n\nTHE TARGETS ON THE THREE EXIT ROWS ARE NOT LEVELS ANYONE IS PLAYING FOR. LCII 138.00, LULU 180.00 and NKE 62.00 are the historical published targets, carried unchanged because a filled position's record is not rewritten. Each sits above its name's entire 120-day range and requires +76%, +90% and +79% respectively. Any reward-to-risk that validation computes for those three rows (2.80, 3.17, 3.52) is an artefact of those targets and should be read as meaningless, which is why no `risk_reward` and no `win_probability` is claimed on any of them. The operative level on each is the stop. \n\nCCJ WILL AND SHOULD BE DEMOTED. From its fixed 94.00 fill, the revised 108.00 target against the 82.50 stop is 1.22:1, which fails both the 2.0 swing and 2.5 long-term floors. It is published at the failing number deliberately: the ratio could only be made to pass by restoring the unreachable 135.00 target or by walking the stop in, and both are the gaming this pipeline exists to catch. Expect validation to move it to the watchlist. The consequence worth knowing is that demotion drops it from `recommendations`, so the target amendment will NOT reach the position tracker and the stale 135.00 target persists there. That is visible honesty rather than a hidden failure, and the position is at the 82.50 stop's mercy either way. \n\nRATIOS, CHECKED FOR FITTING. The two live-risk ideas land at 2.07 (TRV, 2.0 swing floor) and 2.36 (XLF, same floor). Two ratios just over a floor is the signature this repo distrusts, so both were checked from the other side. TRV's 398.00 target is the measured 250-day high, a structural level rather than a nudged number, and its stop at 352 sits below the Oct 1 swing low at 2.32x the 6.4657 ATR \u2014 clearing the 2.0 ATR stock floor but under the 2.5 ATR level where this book's stop-outs have clustered, which is a real warning and is why it is sized at 3%. XLF's levels are unchanged from the Oct 9 publication, not refitted today, and its stop at 52.80 is 2.05x the 0.6972 ATR against a 1.8 ATR floor for a swing ETF \u2014 again clear of the floor but under the 2.25 safe guide. Neither target was moved to clear anything. \n\nRANKS 1 AND 2 ARE NOT INDEPENDENT. XLF is a financials basket that holds TRV, so the top two ideas overlap at the sector level even though their drivers differ (bank credit quality versus P&C catastrophe losses). Two correlated ideas is inside the 3-per-driver cap, but the overlap should be sized for. \n\nSOURCES THAT FAILED THIS RUN. Yahoo Finance returned HTTP 429 on both hosts for the entire run, which cost every index level (SPX/NDX/DJI/RUT), VIX, DXY, ES/NQ futures and live gold and WTI futures prices. No vol-regime or index-level claim is made anywhere in this report as a result, and no futures idea was written because no futures contract could be priced honestly. yahoo-options returned 401 and nasdaq short interest timed out, so NO short-interest and NO options-implied-move check was possible on any name including TRV \u2014 the TRV target rests on price structure alone and has not been tested against what options price, which is a genuine gap on the one new idea. finnhub refuses indices (subscription required) and stooq 404s on `^` symbols. bls.gov was unreachable, so the Oct 14 08:30 CPI time is from calendar aggregators and is high-confidence but not primary-sourced; all earnings dates are from the fetched finnhub calendar. \n\nTWO CODE DEFECTS FOUND, BOTH WORKED AROUND. `market_data.py events` cannot find any macro market: it requests only the first 200 open Kalshi markets and filters client-side, so against tens of thousands of open markets the result is arbitrary \u2014 \"Fed\" returned a single football market and \"CPI\", \"inflation\" and \"bitcoin\" returned zero. Every event price in this report came from querying api.elections.kalshi.com per series and per event ticker instead; note that prices live in the `*_dollars` fields on the single-market endpoint and are null on the list endpoint. It needs a `series_ticker` parameter and a test. Separately, `market_data.py history` cannot serve crypto (nasdaq has no coverage, Yahoo was 429); research worked around it by aggregating CoinGecko 4-hourly bars into daily UTC OHLC to get a true daily ATR, and that mattered \u2014 the otherwise-available series give 4-day bars (6.23%) or 4-hourly (0.52%) and both would have mis-set a crypto stop by a factor of 2-3. \n\nPRICES AND SESSION. Every equity and ETF price here is the Friday 2026-10-09 16:00 ET close, fetched from finnhub this morning and reported by market_data as session `closed`, age ~2,319 minutes. On a Sunday that is the freshest honest price available and not stale data. All six equity rows are orders for the Monday Oct 12 open; the bond market is closed that day for Columbus Day. Every ATR quoted was refetched during synthesis and matches the research log exactly (TRV 6.4657, XLF 0.6972, CCJ 3.2562, LCII 2.3369, LULU 3.1249, NKE 1.1606). \n\nCOVERAGE GAPS. No crypto, futures or event-contract idea was captured \u2014 crypto was examined and rejected on the levels (see the BTC watchlist entry) and the Fed and CPI complexes were rejected as efficiently priced, but a weekend run would normally lean here and it produced nothing. The defense-sector cause is half-answered and is the top priority for the next run, with a specific question: confirm from congress.gov or appropriations.house.gov PRIMARY pages whether FY2027 defense appropriations or a CR is actually enacted. PGR and ALL have no earnings date inside 20 days and were not researched. Small and micro caps were scanned only via next-week earnings rather than screened deliberately. Robinhood availability was not re-verified this run and did not need to be: every published idea is a US-listed large-cap stock or a US-listed sector ETF. \n\nBOOK NOTE NOT EXPRESSED AS AN IDEA. Of 17 open positions, DINO (+12.8%, target 128 only 5.5% away) is deliberately NOT having its 97.75 stop walked up, because a stop raised to flatter a ratio is the exact failure mode this repo logs. KHC (-3.2%) is the one to watch: its 120-day low of 21.75 sits against a 21.20 stop, so an ordinary 2.4% ATR day puts it at the stop \u2014 no change, because the stop is correct and letting it work is the point. EEM (+1.8%) and DAL (-1.0%) are flat at their 20-day with no live catalyst and neither is earning its slot.\n\nTWO VALIDATION FLAGS THAT ARE ARTEFACTS, CHECKED SO THE RED TEAM DOES NOT RE-CHASE THEM. First, validation reports that TRV and XLF \"claim an earnings catalyst but are not on the fetched calendar\". That is a truncation artefact, not a bad date: validate_report fetches a 45-day window which comes back capped at 1500 rows and silently drops mid-October. Refetching a 7-day window during synthesis returns TRV 2026-10-16 bmo at an EPS estimate of 6.8423, plus JPM, GS, C and WFC on 2026-10-13 and BAC and MS on 2026-10-14 \u2014 every date in this report independently confirmed. Second, the three exit rows are flagged \"entry is far from the market\" (+20.1% LCII, +21.7% LULU, +17.4% NKE). That is correct and is the point: those entries are historical fills from August, not orders to place, and the gap IS the loss being closed. \n\nSOURCE URLS WERE CORRECTED DURING SYNTHESIS. Research cited price history as api.nasdaq.com/api/quote/<SYM>/historical, the endpoint market_data.py calls internally. That path returns 404 to a HEAD request with or without query parameters, so the source check read all six ideas as carrying a dead URL and would have demoted the entire report to an empty one. The citations now point at www.nasdaq.com/market-activity/<class>/<sym>/historical \u2014 the public page for the same dataset, verified to return 200 for all six symbols. The data itself is unchanged and every ATR and moving average was refetched and matched.\n\nRED TEAM 2026-10-11. Cut two of six and left four, none of which is new risk. The morning's only new idea is gone, and what remains is three position closures and one hold \u2014 that is the honest state of the book rather than a thin report dressed up, and it is a worse-looking report than the one synthesis handed over.\n\nCUT TRV (rank 1, conviction 4, 3%, the only new risk in the report) on a premise that was already false when it was written, found by checking the NHC primary source the research phase never consulted. The thesis claimed the season produced no hurricanes and \"no US landfall for the first time in ten years\". Hurricane Isaias \u2014 the season's first, and the latest first Atlantic hurricane on record \u2014 formed Oct 7-8, reached Category 3 on Oct 9 and made US Gulf Coast landfall between Mobile AL and Pensacola FL in the early hours of Sat Oct 10, one day before this report was written, with a storm-surge warning from the mouth of the Mississippi to Steinhatchee FL; NHC public advisory 19 at 04:00 CDT Oct 11 has it post-tropical over Tennessee. Research sourced the no-hurricane claim to a Verisk blog explicitly dated \"as of 2026-10-06\" and never re-checked it, so the single fact the idea turned on was three days stale at publication \u2014 a runtime-verification failure, not a judgement call. The cat-light Q3 mechanic does survive, because Q3 closed Sept 30 and no later storm changes that print. What does not survive is the catalyst instruction built on it \u2014 \"hold through Oct 16 rather than trimming, the catastrophe-loss risk is already resolved\" \u2014 which is false in the direction that matters, because the stock trades the live Q4 event and not the Q3 income statement: an estimated $4-6B of industry insured loss (BMS Group, Gallagher Re), unpriced in the Friday Oct 9 close that every level in the row is derived from, with Q4 cat load now the first question on the Oct 16 call. The levels are what made it unfixable rather than merely wrong: entry 364-369.5 and the 352 stop are pre-event numbers off a pre-event 6.4657 ATR, and a limit at or below 369.5 sits above any plausible gap-down open, so it would fill unconditionally into the first session that prices the storm. Repairing it needs a post-event price that does not exist on a Sunday, and inventing one is the one thing this pipeline forbids \u2014 so it goes to the watchlist with a trigger to re-derive after Oct 12 trades, not into the bin. The catalyst is intact and the idea may be better on Tuesday than it was on Friday. CB and WRB carried the same premise and both watchlist notes were corrected; CB is the more property-cat geared of the two, which was the reason synthesis preferred it and is now the reason it is the more exposed.\n\nCUT CCJ (rank 6) rather than leaving it for enforcement, which would have demoted it on the same two hard fails: 1.22:1 against the 2.5:1 long-term floor from a fixed 94.00 fill, and -0.33R at its own stated 30% hit rate against a 45% break-even. There is no honest fix and that is the finding \u2014 the ratio passes only by restoring the 135.00 target that sits above the 120-day high of 131.21, or by walking the 82.50 stop in. The stale 135.00 target therefore persists in the tracker, exactly as synthesis predicted; the 82.50 stop is correct, is in force, and is what governs the position.\n\nKEPT all three exit rows and did NOT touch a single level on them. These are the report's most valuable content and killing them would have done active harm: demotion to the watchlist stops the amendment reaching the tracker, which would leave the LCII, LULU and NKE longs with no stop at all \u2014 the exact defect they exist to fix. Synthesis's encoding was verified against state/open_positions.json rather than taken on trust, and it is right: all three longs are live with stop = null, apply_amendment records only target and stop on a filled position so none of these rows can rewrite a fill, and the LULU and NKE shorts are separate (symbol, direction) rows these cannot reach. The 138.00 / 180.00 / 62.00 targets have to stay for the rows to pass direction_consistency, and synthesis is right that they are artefacts \u2014 setting target to the exit price would invert each row and get it demoted, stripping the stop. One clarification added to each action: what reaches the tracker is a stop at Friday's close, so if Monday opens above it the position stays open with that stop in force, and closing at the open is a discretionary instruction the tracker cannot enforce. One date corrected: LCII's entry condition read \"Historical fill, 2026-08-18\", which is the opened date \u2014 the fill was 2026-09-10.\n\nXLF to rank 1 and NOT cut, though it is a hold with nothing to do. Its ratio was attacked from both sides: the 2.05 ATR stop sits under the 2.25 guide where this book's stop-outs cluster, which is a real warning, but the levels are unchanged from the Oct 9 publication rather than refitted today, so the 2.36:1 is not an artefact of today's arithmetic. Demoting a hold would not even close the position \u2014 it would only stop documenting it. Two risks added that the row did not price: September CPI on Oct 14 08:30 lands between the Oct 13 and Oct 14-16 prints and re-rates a rate-sensitive basket independently of what the banks report, and the bond market is closed Monday Oct 12 for Columbus Day. The ranks-1-and-2 financials overlap synthesis flagged is resolved by the TRV cut rather than by sizing: financials exposure is now XLF alone at 2%.\n\nNO CONVICTION DOWNGRADES, and that is the correct outcome rather than a skipped step. Every surviving score is exactly what its evidence count supports under CONVICTION_EVIDENCE: XLF 3 on 3 distinct kinds, and LCII, LULU and NKE 3 on the 2 kinds a 3 requires. TRV's 4 was also properly paid for by 4 kinds \u2014 it was cut on the facts, not on its scoring.\n\nTWO FLAGS NOT RE-CHASED, both confirmed as the artefacts synthesis said they were. The TRV and XLF \"claims an earnings catalyst but is not on the fetched calendar\" warnings are the 1500-row truncation: a 7-day refetch returns TRV 2026-10-16 bmo at EPS 6.8423 and JPM/GS/C/WFC Oct 13, BAC/MS Oct 14. The \"entry far from the market\" warnings on the three exit rows are correct and are the point \u2014 those entries are historical fills and the gap is the loss being closed.\n\nONE PROCESS NOTE FOR THE NEXT RUN. The TRV failure is not a bad-judgement failure, it is a stale-source failure, and it is cheap to prevent: a weather-dependent insurance thesis needs the NHC active-storm page read at runtime, the same way a price does. Research had the right mechanic, the right sector and the right name, and lost all three to a four-day-old blog post.",
+  "validation_summary": {
+    "checked": 4,
+    "passed": 0,
+    "warned": 4,
+    "failed": 0,
+    "enforced": true
+  }
+}
