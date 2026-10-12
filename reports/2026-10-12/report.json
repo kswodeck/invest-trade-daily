@@ -1,0 +1,640 @@
+{
+  "date": "2026-10-12",
+  "generated_at_et": "2026-10-12T06:39:45-04:00",
+  "truncated": false,
+  "data_quality_notes": "RESEARCH COMPLETED. notes.md carries a final RESEARCH COMPLETE block at 07:25 ET that supersedes an earlier one at 07:10, so `truncated` is false and nothing in this report is reconstructed from a cut-off log. Nine captures resolved to six distinct symbols (synthesis takes the last entry per symbol); ITA was re-captured once to correct a wrong LMT earnings date and DAL three times, the last two to stop it gaming its own validator. All six published here; nothing was filtered out at synthesis.\n\nPRICES. Every price in this report is Friday 2026-10-09's close, taken pre-open on Monday 2026-10-12 and re-quoted at synthesis \u2014 a closed market, not stale data. Levels are all set off that close. The cash Treasury market is shut for Columbus Day while equities trade, so the rate prints are Wednesday-to-Friday FRED values (10y 5.22% and 2y 4.75% as of 10-08).\n\nWHAT COULD NOT BE FETCHED, and it is a lot this run. (1) No index or futures context at all: Yahoo's chart API returned HTTP 429 for ^GSPC, ^NDX, ^DJI, ^RUT, ^VIX, ES, NQ, DXY, gold and WTI, and finnhub refuses index CFDs, so SPY and QQQ closes stand in for the tape and the VIX and DXY levels are null rather than guessed. (2) No options-implied-move check on any finalist \u2014 the yahoo-options endpoint returned 401 \u2014 so not one idea here has been tested against what the straddle prices, which matters most for UNH and GE, both of which are underwritten around a print. (3) No short-interest or days-to-cover read on anything (api.nasdaq.com read timeout). (4) Brent-WTI is not stated: sources ranged from $7 to $29 and one printed an obvious outlier, so the spread is recorded as wide and volatile, which is all the sources support. Brent ~$105 and WTI ~$92 are news-reported figures, labelled as such in market_context.levels rather than presented as fetched quotes.\n\nEVENT CONTRACTS: no idea, and the reason is no edge rather than no data. market_data.py events is broken, not down \u2014 it reads Kalshi's retired yes_bid/yes_ask/last_price/volume/open_interest fields instead of the current *_dollars and *_fp names, and it never paginates or filters server-side, so it only ever sees an arbitrary first 200 open markets. Research worked around it by querying Kalshi directly with event_ticker=, which returned the full 21-strike CPI ladder and the Fed path on the first attempt: P(<=3.5) 12%, P(3.6) 36%, P(3.7) 40.5%, P(>=3.8) 11.5%, modal 3.7%. That is the market pricing the same street consensus (3.7%) and Cleveland Fed nowcast (~3.6%) that research was reading, so there is no probability disagreement to publish, and October crude is irrelevant to a September print. Fixing that function is the highest-value code change available to this pipeline \u2014 it is why the event lane keeps coming up empty.\n\nCONCENTRATION, which is this report's main weakness. Three of the six ideas \u2014 ITA, HII, GE \u2014 are aerospace and defense, exactly the correlation cap of 3, and ITA holds both GE and HII, so the basket overlaps the two single names. Their drivers do differ (a sector risk-premium swing, a naval shipbuilding monopoly re-rating, a commercial-aero aftermarket print) but they will sell off together, and a reader sizing all three is making one bet three times. The skew is not manufactured: on Friday's close the only names screening with improving analyst revisions were in aerospace, defense and steel (HII +5.9pp, RTX +3.4pp, STLD +1.7pp, CLF +21.3pp) while everything else screened deteriorated (LRN -11.1, TRV -7.6, IBKR -7.2, CMC -3.9, AA -1.2) and GE was exactly flat. That is where the revision tape points this week.\n\nRATIOS CLUSTERED AT THE FLOOR \u2014 flagged because it is the signature of targets fitted to clear the bar. GE 2.06, UNH 2.06 and DINO 2.10 all sit just above the 2.0 swing floor. Each target is anchored to something other than the floor and that is checkable: GE's 341.00 is just above its 336.70 50-day, UNH's 416.00 sits above the 408 resistance a preview flags and below the 437.47 120-day high, DINO's 128.00 is the level published unchanged on 2026-08-22 and not re-cut today. All three stops clear their ATR floors from the other side (GE 2.08, UNH 2.03, DINO 2.17 against 2.0), so none of the three is cleared by a tight stop. ITA at 2.80 and HII at 2.95 are not near the line. Every ratio here was recomputed at synthesis from the final entry, target and downside rather than carried from the notes, and every stop distance was re-divided by a freshly fetched ATR14.\n\nTWO IDEAS ARE NOT NEW RISK. DAL (rank 6) is an instruction to CLOSE the long opened 2026-10-05 at 83.00 \u2014 its catalyst was delivered on 10-09 and went against it, with FY26 adjusted EPS cut from $6.50-7.50 to $5.10-5.60. Its risk_reward and win_probability are deliberately null and its 78.10 stop is deliberately unchanged: that stop is 1.98 ATR against a 2.00 floor and will warn on validation. The 1.98 is a real defect in the original idea rather than something introduced today, and widening a stop on a position being retired, or relabelling it long_term to exempt it from the check, would both be gaming the validator. Red team: leave the stop and the nulls alone. DINO (rank 5) is an amendment to the long opened 2026-08-22, now +12.8%; entry, target and stop are all unchanged and the actionable change is to trim half at the market. Its stop was explicitly not walked in, for the same reason.\n\nONE IDEA WAITS. UNH is wait: true \u2014 do not enter before Tuesday's 10-13 print. Every pre-print variant failed honestly: a 2.0 ATR stop from a 379 entry forces a 415+ target, and dropping the entry to 370 to shrink risk puts the stop at 352 with nothing structural under it and rests a limit 2.5% below market hours before a binary event, which only fills if the print is bad. The claimed edge over the 0.327 baseline is variance removal, not a forecast of the number.\n\nNOT PUBLISHED, deliberately. Tankers (FRO 1.3% off its high, DHT 1.7%, TNK 1.2%, INSW 2.4%), refiners as new exposure (MPC +113% off its low, PBF +132%, CVI +123%, all within 3-9% of highs), airlines short (AAL already -32% off its high), and LNG shipping \u2014 where the theme was compelling and the freight data falsified it: Atlantic spot at ~$20,000/day, the lowest on record for the time of year, and ~33 cargoes in six months against a normal 90-100 per month. Crypto: BTC at 83,473 is 34% off its record with leverage at its lowest since Aug 2024, but with CPI heading to 3.7%, a 5.22% 10y and a December hike priced at ~73%, there was no probability disagreement to assert. Nothing intraday cleared the bar: the market was shut all weekend, there is no 08:30 print today, and every level here comes off Friday's close.\n\nOPEN BOOK HOUSEKEEPING. 12 of the 17 open positions were reviewed and held unchanged with the reasoning in notes.md rather than re-pitched \u2014 re-publishing an unchanged idea is the anchoring the repetition guard exists to catch. XLE and CCJ were both reviewed and deliberately not captured: XLE holds with every level unchanged and its stop explicitly not tightened (the most it could move and still clear the 1.8 ATR ETF floor is a 0.50 improvement that would lift the published ratio while making the trade worse), and CCJ's existing CLOSE instruction from the 2026-10-08 report stands rather than being issued a third time in ten days. The 2026-10-11 close instructions for LCII, LULU's long leg and NKE's long leg also stand. Three awaiting-entry levels are dead on distance and are on the watchlist (VST +22.3%, OXY +11.3%, FCX +8.0%), as are two event rows that need clearing rather than re-pitching.\n\nRED TEAM (phase 2c). Cut ITA and nothing else, on the correlation test: three of the six ideas were long the same aerospace/defense complex and ITA is the basket holding the other two, so it doubled HII and GE rather than diversifying them, and it was the only one of the three with no idiosyncratic claim \u2014 full reasoning in its watchlist note. Five recommendations remain, re-ranked 1-5 with no gaps.\n\nDOWNGRADED UNH 5 to 4 and GE 4 to 3, both for evidence thinner than the count suggests rather than for a broken thesis. UNH: the load-bearing confirmation is the Q2 medical cost ratio, and this report's own key_risk says the 86.7% was helped by $860M of net favorable prior period development worth about 9% of adjusted EPS, with a 965,000 versus 880,000 membership line the release does not reconcile \u2014 two acknowledged defects in the exact metric Tuesday's print is being traded on. GE: of three evidence kinds the positioning read is not a confirmation at all on the report's own reading \u2014 87.5% bullish but flat across four consecutive monthly snapshots, so no revision tailwind, alongside 8 insider sells and 0 buys \u2014 which leaves two.\n\nFIXED RATHER THAN CUT. UNH's published 379/361/416 triplet is priced off Friday's close and cannot survive an earnings gap, so the entry condition now requires the stop and the ratio to be re-derived at the actual post-print price against the post-print ATR, with the 416 target left where it is; as written it would have allowed a 365 fill against a 361 stop reading 12:1 on a 0.4 ATR stop. GE's entry band is now void from below as well as above, so a break of the 296.61 reversal low waits for the print instead of averaging down. DINO's trim is now a limit after the opening auction rather than a market order.\n\nNOT CUT, SAID EXPLICITLY RATHER THAN DRESSED UP. There is no evidence of target-nudging anywhere in this report, which is the first thing this phase looks for. Every reward-to-risk recomputes to the claimed figure and every level traces to a shown method, checked here: HII's 430 target is 16.5x on ~$26 and its 205 bear case 12.5x on ~$16.5 against 14.6x today, and 168/57 is 2.95. No stop was walked in to manufacture a ratio; the four swing stops sit at 1.98-2.17 ATR, which is marginal but is the honest number in each case rather than a flattering one. HII stays at conviction 5 on four independent fetched confirmations including the Q2 FY2026 8-K. DINO's explicit refusal to raise the stop on a filled position in order to flatter its published ratio is the correct call and was left alone.\n\nRISKS ADDED THAT NOBODY HAD LISTED. UNH is in the market for the 2026-10-14 CPI print the session after entry, behind a stop a little over 2 ATR wide. HII does not report inside 30 sessions while NOC, RTX, LMT and GD all print 19-22 October, so a sector-wide guide-down marks HII down with the primes weeks before it can answer with its own backlog.\n\nTWO VALIDATION FLAGS ARE FALSE POSITIVES, checked here rather than assumed. (1) The earnings_date warnings on UNH and GE are wrong. The finnhub earnings calendar refetched at red team carries UNH 2026-10-13 bmo at $4.1893 on ~$112.5bn and GE 2026-10-19 bmo at 2.0444, the latter matching this report to four decimals; both dated catalysts stand and neither was downgraded for it. DAL's warning is correct and harmless, since that catalyst is spent by design. (2) DINO's fail verdict is a 17.40% spread read off a Nasdaq pre-market indicative book, bid 113.59 against ask 135.24, on an NYSE-listed name turning over $328M a day \u2014 a quote artifact at 06:41, not a tradeable spread, and the reason the trim is specified as a limit after the open.\n\nREAD THIS IF THE SHEET SHOWS ONLY THREE IDEAS. DINO and DAL will both be demoted to the watchlist by the enforce step \u2014 DINO on the spread artifact above, DAL on a 1.98 ATR stop that is a historical published level on a filled position and must not be widened to clear a check. Neither row is a new trade and neither should be read as 'republish only once the numbers check out', which is what the demotion note will say. Both instructions are unchanged and actionable this morning: TRIM HALF of the DINO long with a limit after the open, and CLOSE the DAL long at the open, Delta having cut FY2026 adjusted EPS guidance 25% on 10-09 so that the catalyst the position was opened for has been delivered and refused. If the discretionary DAL close is not taken, the unchanged 78.10 stop governs. Validation demoted 2 idea(s) whose numbers did not check out. 3 more carry warnings \u2014 see the validation block on each.",
+  "market_context": {
+    "summary": "Monday 2026-10-12, pre-open. Columbus Day: US equities trade, the cash Treasury market is closed, so rate-sensitive moves today are futures- and ETF-driven only. The dominant driver is Middle East oil supply risk, now two months old and escalating rather than a one-day headline: Houthi strikes hit Riyadh's King Khalid International Airport again on Sunday after a Saturday strike that killed 12 and injured 300+, the airport is shut, Saudi Arabia flew 120+ sorties in 24 hours and said oil supply continues to flow, Trump said the US is weighing joining operations against the Houthis, and a tanker was attacked near Hormuz. Brent is around $105 and WTI around $92 on news reports. Iran called Washington's reply to its seven-condition Hormuz proposal insufficient, so the 22 September 'Hormuz reopening' trade that de-rated defense has been falsified. Rates are the other half of the regime: the 10y is 5.22% against a 3.88% policy rate, a steep term-premium curve, with headline CPI due Wednesday at a consensus 3.7% and Kalshi pricing an October hold at 84% and a December 25bp hike at 71-74%. That combination is why gold is -12.6% off its high in the middle of a regional war, and why builders, REITs and long duration are all leaning into a headwind. Friday closed risk-on at the index level (SPY +0.60%, QQQ +0.49%) but the single clearest dislocation on the board is backwards from the news: defense primes are de-rating through an escalating war, NOC -26.4% off its high, RTX -18%, GD -17%, LMT -16.8%, all below both their 20- and 50-day averages.",
+    "regime": "mixed",
+    "levels": {
+      "spy_close_2026_10_09": 778.57,
+      "qqq_close_2026_10_09": 751.27,
+      "xlf_close_2026_10_09": 54.73,
+      "xle_close_2026_10_09": 65.08,
+      "gld_close_2026_10_09": 384.58,
+      "tlt": 77.98,
+      "us10y": 5.22,
+      "us2y": 4.75,
+      "fed_funds_effective": 3.88,
+      "curve_10y_2y": 0.44,
+      "unemployment": 4.2,
+      "btc": 83473,
+      "eth": 2557.48,
+      "sol": 111.64,
+      "brent": "~105 \u2014 news-reported, not fetched; the Yahoo commodity feed returned 429 all run",
+      "wti": "~92 \u2014 news-reported, not fetched",
+      "spx": null,
+      "ndx": null,
+      "vix": null,
+      "dxy": null,
+      "gold_spot": null
+    },
+    "econ_calendar": [
+      {
+        "event": "UnitedHealth Q3 2026 earnings, before the open",
+        "datetime_et": "2026-10-13T06:30",
+        "importance": "high",
+        "consensus": "EPS $4.12 on ~$111.4bn revenue"
+      },
+      {
+        "event": "Q3 bank earnings begin \u2014 JPM, GS, C, WFC, JNJ",
+        "datetime_et": "2026-10-13T06:30",
+        "importance": "high",
+        "consensus": "JPM EPS ~$5.90-5.93 on ~$51.2bn; GS $12.87 on $16.83bn"
+      },
+      {
+        "event": "US CPI (September), BLS",
+        "datetime_et": "2026-10-14T08:30",
+        "importance": "high",
+        "consensus": "headline 3.7% YoY vs 3.4% prior, core ~2.4%; Cleveland Fed nowcast ~3.6%. Kalshi's live ladder: P(<=3.5) 12%, P(3.6) 36%, P(3.7) 40.5%, P(>=3.8) 11.5%"
+      },
+      {
+        "event": "GE Aerospace and Steel Dynamics Q3 earnings",
+        "datetime_et": "2026-10-19T06:30",
+        "importance": "high",
+        "consensus": "GE EPS 2.0444 bmo; STLD 5.4904 amc"
+      },
+      {
+        "event": "RTX and Northrop Grumman Q3 earnings",
+        "datetime_et": "2026-10-20T06:30",
+        "importance": "high",
+        "consensus": "RTX 1.7854; NOC 7.2411"
+      },
+      {
+        "event": "Lockheed Martin and General Dynamics Q3 earnings",
+        "datetime_et": "2026-10-22T06:30",
+        "importance": "high",
+        "consensus": "LMT 7.5222; GD 4.2524"
+      },
+      {
+        "event": "FOMC decision",
+        "datetime_et": "2026-10-28T14:00",
+        "importance": "high",
+        "consensus": "Kalshi: hold 84%, 25bp hike 15-16%; December hike priced 71-74%"
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "symbol": "HII",
+      "instrument": "Huntington Ingalls Industries",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "long_term",
+      "conviction": 5,
+      "risk_tier": "high_conviction",
+      "last_price": 264.8,
+      "last_price_asof": "2026-10-09T16:00:00-04:00",
+      "price_source": "nasdaq",
+      "avg_dollar_volume": 131988236,
+      "entry": {
+        "ideal": 262.0,
+        "zone_low": 250.0,
+        "zone_high": 268.0,
+        "order_type": "limit",
+        "condition": "Accumulate in thirds inside 250-268. Add a further third under 240 if the de-rating extends; that is a better price for the same backlog, not a reason to stop."
+      },
+      "exit": {
+        "target": 430.0,
+        "target_2": 480.0,
+        "scale_plan": "No scaling out before the margin recovery shows up in two consecutive quarters of shipbuilding segment margin above 6.5%. Build over the next two quarters; there is nothing to rush."
+      },
+      "stop": null,
+      "bear_case_price": 205.0,
+      "win_probability": null,
+      "position_size_pct": 4,
+      "catalyst": {
+        "event": "Not an event \u2014 the driver is the conversion of a $57.3bn backlog, 4.2x annual revenue, built on a $76.6bn Virginia Block VI and Columbia-class submarine award with ~$25bn at Newport News. HII is the sole builder of US nuclear submarines and aircraft carriers, and naval shipbuilding is the budget line least exposed to the post-FY2027 slowdown the rest of the sector is being marked down for.",
+        "datetime_et": null,
+        "action": "Accumulate in thirds across the 250-268 zone over the next two quarters, adding under 240 on any further de-rating. No dated event is needed and none should be waited for; Q3 falls outside 30 sessions on the fetched calendar.",
+        "wait": false
+      },
+      "thesis": "Huntington Ingalls is the only builder of US nuclear submarines and aircraft carriers, it has a record $57.3bn backlog worth 4.2 years of revenue, and in its Q2 FY2026 release it beat by 37%, lifted segment margin to 6.6% from 5.6%, raised FY26 shipbuilding revenue guidance to $10.2-10.4bn and raised the low end of its margin guidance \u2014 and the stock is down 32% from its high, 3% above a 120-day low, at ~14.6x annualised H1 EPS against GD at 19.5x, LMT 16.9x and NOC 16.6x. The de-rating that hit the primes is a bet on US defense budget growth slowing after FY2027; applying it to the one franchise with a 20-year, single-source order book and no competitor is the mispricing.",
+      "key_risk": "Free cash flow was negative $150M in Q2 against positive $730M a year earlier. HII is a capital-intensive shipbuilder ramping two submarine classes at once, and if the working-capital drain is structural rather than timing, the reaffirmed $500-600M FY26 free cash flow is missed and a 14.6x multiple is not cheap for a business that cannot fund its own ramp. The second risk is execution: Q1 margin fell to 5.6% on pre-COVID-era fixed-price contracts, and that is the same class of problem now costing Northrop ~$2.0bn on B-21. Invalidation, stated as a condition rather than a price: FY26 free cash flow coming in below the reaffirmed $500-600M guide, or shipbuilding segment margin printing below the 6.0% low end of guidance for two consecutive quarters. Either means the $57.3bn backlog is not converting at the margin the thesis is underwritten on, and the thesis is wrong regardless of where the share price sits. Third, added by the red team: HII does not report inside 30 sessions on the fetched calendar, while NOC and RTX print 2026-10-20 and LMT and GD 2026-10-22. A sector-wide guide-down on post-FY2027 budget growth in that week would mark HII down with the primes weeks before it gets to answer with its own backlog conversion, and the accumulation plan has to be able to sit through that rather than be stopped out of it \u2014 which is the reason this row carries a bear case and no stop.",
+      "counter_argument": "The strongest case against is that a shipbuilding monopoly is a monopsony customer in disguise: HII has exactly one buyer, the Navy sets the price, and margin has sat at 5-7% for years against 10%+ at the primes, so a persistent discount to GD and LMT is the correct price for a business with no pricing power rather than an error. The answer is that the discount is not being argued away, it is being sized \u2014 the target is 16.5x, still below GD today, on earnings carried by a backlog that is already contracted rather than forecast. The thesis does not need HII to earn prime-like margins; it needs 6.5-8% on roughly 40% more revenue.",
+      "evidence": [
+        {
+          "kind": "primary_document",
+          "detail": "Read the Q2 FY2026 8-K earnings release: revenue $3,418M (+10.9%), segment operating income $224M at a 6.6% margin vs 5.6%, net earnings $208M, diluted EPS $5.27 vs $3.86, new awards $6.7bn, total backlog $57.3bn at 2026-06-30, FY26 shipbuilding revenue raised to $10.2-10.4bn from $9.7-9.9bn, shipbuilding margin 6.0-6.5% with the low end raised from 5.5%, FY26 FCF $500-600M reaffirmed alongside a negative $150M quarter",
+          "source": "https://www.sec.gov/Archives/edgar/data/0001501585/000150158526000045/hii2026q2earningsrelease.htm"
+        },
+        {
+          "kind": "valuation_anchor",
+          "detail": "Method shown: H1 FY26 diluted EPS is 3.79 + 5.27 = $9.06, so annualising H1 gives ~$18.1 and 264.80 is ~14.6x. Peers at 4x their fetched Q3 consensus: GD 19.5x, LMT 16.9x, NOC 16.6x, RTX 26.0x. The $430 target is ~16.5x on ~$26 of EPS, reached by converting the $57.3bn backlog to roughly $17bn of revenue at an 8% segment margin \u2014 below the 9-10% shipbuilding margins HII ran pre-COVID, and at a multiple still under GD today. The $205 bear case is ~12.5x on ~$16.5 if margin stalls at the Q1 5.6% level and the ramp slips",
+          "source": "https://www.sec.gov/Archives/edgar/data/0001501585/000150158526000045/hii2026q2earningsrelease.htm"
+        },
+        {
+          "kind": "positioning",
+          "detail": "Two measured reads. Analyst revisions are improving: bullish share 58.8%, up 5.9pp across the four monthly snapshots to 2026-09-01, strong_buy 2 to 3, hold 8 to 7, zero sell ratings throughout, against a +37.2% EPS surprise for the quarter ended 2026-06-30. And relative strength says the lag has stopped: HII is -32.86% over six months against SPY +14.59%, but +5.04pp against ITA over three months",
+          "source": "https://finnhub.io/docs/api/recommendation-trends"
+        },
+        {
+          "kind": "technical_level",
+          "detail": "Fetched 120-day history: 264.80 last, sitting 3.1% above the 120-day low of 256.79 and -32.1% below the 390.00 high, under both the 20-day (269.09) and 50-day (291.20). ATR14 7.4239 (2.80%). The 250-268 accumulation zone is anchored on that 256.79 low rather than on a round number, and the 240 add level sits below it",
+          "source": "https://www.nasdaq.com/market-activity/stocks/hii/historical"
+        }
+      ],
+      "sources": [
+        "https://www.sec.gov/Archives/edgar/data/0001501585/000150158526000045/hii2026q2earningsrelease.htm",
+        "https://finance.yahoo.com/markets/stocks/articles/huntington-ingalls-industries-inc-hii-010451663.html",
+        "https://www.nasdaq.com/market-activity/stocks/hii/historical",
+        "https://www.marketscreener.com/news/guidance-raised-shares-down-northrop-grumman-fails-to-win-over-the-market-ce7f51d8db8ff523"
+      ],
+      "rank": 1,
+      "risk_reward": 2.95,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.95,
+        "claimed_risk_reward": 2.95,
+        "breakeven_probability": 0.253,
+        "stop_atr_multiple": null,
+        "live_price": 264.8,
+        "live_price_asof": "2026-10-09T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 3768.6,
+        "bid": 263.5,
+        "ask": 268.0,
+        "spread_pct": 1.693,
+        "atr14": 7.4239,
+        "checked_at_et": "2026-10-12T06:48:58-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.95:1 clears the 2.5:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 262.0 is -1.1% from live 264.8"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "long-term idea, no dated event expected"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "long-term target is valuation-anchored, not ATR-bound"
+          },
+          {
+            "check": "stop_distance",
+            "status": "pass",
+            "detail": "long-term downside is a bear case, not a stop \u2014 no ATR floor applies"
+          },
+          {
+            "check": "expectancy",
+            "status": "warn",
+            "detail": "no win_probability stated; this idea needs better than 25% to break even at 2.95:1"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-10-09T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "bid/ask spread 1.69%; the round trip costs 3% of the target move \u2014 set the entry as a limit, never market"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 5 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "4% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 5 rests on 4 independent kinds: positioning, primary_document, technical_level, valuation_anchor"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "2 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "UNH",
+      "instrument": "UnitedHealth Group",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 4,
+      "risk_tier": "standard",
+      "last_price": 379.3,
+      "last_price_asof": "2026-10-09T16:00:00-04:00",
+      "price_source": "nasdaq",
+      "avg_dollar_volume": 1943136073,
+      "entry": {
+        "ideal": 379.0,
+        "zone_low": 370.0,
+        "zone_high": 388.0,
+        "order_type": "limit",
+        "condition": "DO NOT ENTER BEFORE THE 2026-10-13 PRINT. Enter only after it, and only if two things hold: the reaction low stays above 362.60, the 60-day low printed 2026-10-01, and the stock closes back above its 374.92 20-day. If the print breaks 362.60, there is no entry and the idea is void \u2014 do not average into it. RED TEAM CONDITION: the 379.00/361.00/416.00 triplet is priced off Friday's close and does not survive an earnings gap, so treat it as an illustration and not as the order. At the actual post-print price, re-derive before entering \u2014 the stop goes below the reaction low, it must clear 2.0x the then-current ATR (which will be wider after the print, not Friday's 8.86), and the ratio to the unchanged 416.00 target must still clear 2.0:1. If a stop placed below the reaction low cannot do both, there is no trade: do not tighten back to the published 361.00 to make the arithmetic work, and do not move the target out. As published, a 365 fill against a 361 stop would have read 12:1 on a 0.4 ATR stop, which measures nothing."
+      },
+      "exit": {
+        "target": 416.0,
+        "target_2": 437.0,
+        "scale_plan": "Trim half at 416 and trail the balance under the prior daily low toward the 437.47 120-day high.",
+        "time_stop": "2026-11-13 \u2014 one month past the print; if the reaction has not carried it, the de-rating is structural and the thesis is wrong"
+      },
+      "stop": 361.0,
+      "risk_reward": 2.06,
+      "win_probability": 0.44,
+      "position_size_pct": 3,
+      "catalyst": {
+        "event": "Q3 2026 earnings before the open, consensus EPS $4.12 on ~$111.4bn revenue, date confirmed on the fetched finnhub calendar",
+        "datetime_et": "2026-10-13T06:30",
+        "action": "WAIT for the print. Do not position ahead of it. After the release, buy inside 370-388 only if the reaction holds above 362.60 and the stock reclaims its 20-day; stand down otherwise.",
+        "wait": true
+      },
+      "thesis": "The fear that de-rated managed care is the medical cost ratio, and UnitedHealth has guided it down twice: the FY2026 MCR outlook went from 88.8% plus or minus 50bp in January to 88.1% plus or minus 25bp in the Q2 release, with adjusted EPS guided to $19.50-20.00 and operating cash flow to about $24bn. Q2 delivered an 86.7% MCR, $6.38 adjusted EPS and $11.1bn of operating cash flow at 1.9 times net income, and the company is deliberately shedding Medicare Advantage membership \u2014 down 965,000 since year-end \u2014 to hold MA margins above 3%. Thirty-four analysts cover it with zero sell ratings, the last two quarters beat by 28.8% and 8.9%, and the stock is 17.8% off its high having based between 362.60 and 387.52 for two weeks. The trade is to let Tuesday morning resolve it and buy the confirmation.",
+      "key_risk": "The quality of the Q2 beat is the weak point: the 86.7% MCR was helped by $860M of net favorable prior period development, roughly $0.57 a share after tax or about 9% of adjusted EPS, so reserve releases are flattering the cost-trend story the whole thesis rests on. If Q3 shows cost trend without that cushion, the MCR guide goes the other way and a 19.2x multiple is not cheap. Second, the release reports membership contracting 965,000 while its own people-served table shows the Medicare Advantage line down 880,000, and does not reconcile them \u2014 a disclosure the Q3 report needs to clear up. Third, waiting means forgoing the entire gap if the print is good, which is the explicit price of this structure. Fourth, added by the red team: September CPI lands 2026-10-14 at 08:30, the session after this entry is taken, with consensus 3.7% headline against 3.4% prior and a December hike priced at 71-74%. A trade entered on Tuesday's reaction is therefore in the market for a high-importance macro print on Wednesday behind a stop a little over 2 ATR wide, and that exposure has nothing to do with managed care or with whether the thesis is right.",
+      "counter_argument": "The strongest case against is that 19.2x forward earnings and 14x operating cash flow is not a de-rated price for a business losing a million Medicare Advantage members a year and guiding H2 adjusted EPS of $5.89-6.39 against $13.61 in H1 \u2014 the stock may simply be repricing to slower growth, in which case the 437 high is not a level to recover but one to forget. The answer is that the H2 step-down is Medicare seasonality rather than deterioration, with an implied Q4 near $2.0 against an actual $2.11 in Q4 2025, and that the membership loss is a chosen trade of volume for margin stated as such. The honest concession is that this is a de-rating-reversal idea and not a value idea, and it is written that way rather than dressed up as cheap.",
+      "evidence": [
+        {
+          "kind": "primary_document",
+          "detail": "Read the Q2 2026 8-K earnings release: revenue $112,032M, MCR 86.7% including $860M of net favorable prior period development, adjusted EPS $6.38, GAAP diluted $6.04, operating cash flow $11.1bn at 1.9x net income ($19,964M for H1), Medicare Advantage seniors served down 965,000 since year-end 2025. FY26 guidance MCR 88.1% +/- 25bp against 88.8% +/- 50bp in January, adjusted EPS $19.50-20.00, reported diluted $18.45-18.95, operating cash flow ~$24bn, and no full-year revenue guidance given",
+          "source": "https://www.sec.gov/Archives/edgar/data/0000731766/000073176626000191/earningsrelease2q26_7152.htm"
+        },
+        {
+          "kind": "dated_catalyst",
+          "detail": "Q3 2026 earnings 2026-10-13 before the open, consensus EPS $4.12 on ~$111.4bn, the date taken from the finnhub earnings calendar fetched this morning rather than recalled",
+          "source": "https://site.financialmodelingprep.com/market-news/unitedhealth-q3-earnings-preview-medicare-advantage"
+        },
+        {
+          "kind": "positioning",
+          "detail": "The most supportive analyst book screened today and a corrective relative-strength read. Bullish share 79.4%, +2.9pp improving: 8 strong_buy, 19 buy, 7 hold and zero sell ratings across 34 analysts, with strong_sell going 1 to 0. EPS surprises +28.8% and +8.9% in the last two quarters. Relative strength: +24.63% over six months against XLV +15.95%, i.e. +8.68pp ahead of its own sector, with the damage confined to the last three months at -17.42pp. Insiders: 0 open-market buys, 3 sells",
+          "source": "https://finnhub.io/docs/api/recommendation-trends"
+        },
+        {
+          "kind": "technical_level",
+          "detail": "Fetched 60-day bars: a two-week base between the 362.60 low of 2026-10-01 and the 387.52 high of 10-09, that high printed on 7.47M shares, the heaviest volume in the sample, closing 379.30 above the 374.92 20-day and below the 389.18 50-day. Stop 361.00 sits below the 362.60 base low; target 416.00 sits above the 408 resistance a preview flags and below the 437.47 120-day high. ATR14 8.8649, so the 18.00 stop distance is 2.03 ATR against the 2.0 stock floor",
+          "source": "https://www.nasdaq.com/market-activity/stocks/unh/historical"
+        }
+      ],
+      "sources": [
+        "https://www.sec.gov/Archives/edgar/data/0000731766/000073176626000191/earningsrelease2q26_7152.htm",
+        "https://site.financialmodelingprep.com/market-news/unitedhealth-q3-earnings-preview-medicare-advantage",
+        "https://www.ig.com/en-ch/news-and-trade-ideas/unitedhealth-stock-q3-2026-earnings-preview-261006",
+        "https://www.nasdaq.com/market-activity/stocks/unh/historical"
+      ],
+      "rank": 2,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.06,
+        "claimed_risk_reward": 2.06,
+        "breakeven_probability": 0.327,
+        "stated_win_probability": 0.44,
+        "expectancy_r": 0.346,
+        "claimed_edge": 0.113,
+        "stop_atr_multiple": 2.03,
+        "live_price": 379.3,
+        "live_price_asof": "2026-10-09T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 3768.6,
+        "bid": 380.0,
+        "ask": 380.71,
+        "spread_pct": 0.187,
+        "atr14": 8.8649,
+        "checked_at_et": "2026-10-12T06:49:02-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.06:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 379.0 is -0.1% from live 379.3"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-10-13 is ahead of us"
+          },
+          {
+            "check": "earnings_date",
+            "status": "warn",
+            "detail": "claims an earnings catalyst but UNH is not on the fetched calendar"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 4.17 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "stop_distance",
+            "status": "warn",
+            "detail": "stop is 2.03 ATR from entry \u2014 clears the 2.0 ATR floor for a swing stock but sits under the 2.5 ATR level where stop-outs have clustered"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "44% claimed vs 33% break-even at 2.06:1 \u2014 expectancy +0.35R"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-10-09T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "pass",
+            "detail": "bid/ask spread 0.19%; the round trip costs 2% of the target move"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 4 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "3% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 4 rests on 4 independent kinds: dated_catalyst, positioning, primary_document, technical_level"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "1 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "GE",
+      "instrument": "GE Aerospace",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 3,
+      "risk_tier": "standard",
+      "last_price": 308.2,
+      "last_price_asof": "2026-10-09T16:00:00-04:00",
+      "price_source": "nasdaq",
+      "avg_dollar_volume": 1296209068,
+      "entry": {
+        "ideal": 308.0,
+        "zone_low": 302.0,
+        "zone_high": 312.0,
+        "order_type": "limit",
+        "condition": "Buy inside 302-312, which is the band between the 296.61 reversal low and the 313.68 20-day. Do not pay above 312 before the print \u2014 that is buying into the 20-day with the catalyst still ahead. RED TEAM CONDITION: the band is void from below as well as from above. If GE trades under 302 before 10-19, do not average into it \u2014 a break of the 296.61 reversal low removes the only level this idea is underwritten on, and the 292.00 stop sits ten points under the band. Wait for the print and the reaction instead of catching it."
+      },
+      "exit": {
+        "target": 341.0,
+        "target_2": 365.0,
+        "scale_plan": "Trim half into the 10-19 open rather than holding full size through the print, then trail the balance under the prior daily low toward 365.",
+        "time_stop": "2026-11-19 \u2014 one month past the print; if the catalyst has not carried it, the thesis is stale"
+      },
+      "stop": 292.0,
+      "risk_reward": 2.06,
+      "win_probability": 0.42,
+      "position_size_pct": 3,
+      "catalyst": {
+        "event": "Q3 2026 earnings before the open, consensus EPS 2.0444, read off the fetched finnhub calendar",
+        "datetime_et": "2026-10-19T06:30",
+        "action": "Enter in the 302-312 band before 10-19 and trim half into the print. If the stock is above 312 by the 10-16 close, stand down and wait for the reaction rather than paying up into the report.",
+        "wait": false
+      },
+      "thesis": "GE Aerospace has beaten consensus four quarters running by +5.5%, +13.0%, +6.8% and +10.9%, carries the most positive analyst book of anything screened this morning at 87.5% bullish \u2014 28 of 32 ratings \u2014 and has given back 20.7% from its high to print a 60-day low at 296.61 on 10-08, the heaviest volume in weeks, before reversing to close 308.20. The LEAP and CFM installed base is an aftermarket annuity driven by flight hours rather than by new orders, and the Q3 print lands 10-19 before the open with the stock sitting between that low and its own 20-day.",
+      "key_risk": "The fuel shock is now hitting GE customers directly and it is live this quarter, not next: Delta cut FY2026 EPS guidance 25% on 10-09 absorbing a $6bn fuel increase, Riyadh airport is shut and airlines are cancelling flights. GE aftermarket revenue tracks flight hours, so if carriers respond to $105 Brent by cutting capacity, shop visits fall and the aftermarket annuity thins exactly as the 10-19 print is read. That is the concrete mechanism that breaks this, and it is unhedged here.",
+      "counter_argument": "The strongest case against is that 87.5% bullish with precisely zero revision improvement across four monthly snapshots means the good news is already fully held: there is no upgrade cycle left to fuel a re-rating, and a name where 28 of 32 analysts are positive going into a print has asymmetric downside on any miss. The answer is that the position is not underwritten on an upgrade cycle \u2014 it is underwritten on the 296.61 reversal and a four-quarter beat streak, with the stop at 292.00 below that low, so the invalidation is a price the market has to take out rather than a sentiment shift nobody can measure. The honest correction to my own framing is also recorded: GE is not a mis-grouped defense-budget victim, it is +9.96pp ahead of ITA over six months and only joined the selloff three months ago.",
+      "evidence": [
+        {
+          "kind": "dated_catalyst",
+          "detail": "Q3 2026 earnings 2026-10-19 before the open, consensus EPS 2.0444, taken from the finnhub earnings calendar fetched this morning rather than recalled",
+          "source": "https://finnhub.io/docs/api/earnings-calendar"
+        },
+        {
+          "kind": "technical_level",
+          "detail": "Fetched 60- and 120-day bars: the 10-08 session printed a 60-day low of 296.61 on 6.39M shares, the heaviest in weeks, and 10-09 closed 308.20. Stop 292.00 sits below that low; sma20 313.68 caps the entry band; target 341.00 sits just above the 336.70 50-day and below the 388.84 120-day high. ATR14 7.6783, so the 16.20 stop distance is 2.11 ATR against a 2.0 stock floor",
+          "source": "https://www.nasdaq.com/market-activity/stocks/ge/historical"
+        },
+        {
+          "kind": "positioning",
+          "detail": "Three measured reads, including the one that cuts against. Bullish share 87.5% (9 strong_buy, 19 buy, 3 hold, 1 sell) \u2014 the highest screened today \u2014 but flat at exactly that level for four consecutive monthly snapshots, so there is no revision tailwind. Earnings surprises of +5.5%, +13.0%, +6.8% and +10.9%, four straight beats averaging ~+9%. Relative strength: GE -0.05% over 6m against ITA -10.01%, i.e. +9.96pp ahead of its own sector, with the underperformance confined to the last three months. Insiders: 0 open-market buys, 8 sells",
+          "source": "https://finnhub.io/docs/api/recommendation-trends"
+        }
+      ],
+      "sources": [
+        "https://www.nasdaq.com/market-activity/stocks/ge/historical",
+        "https://finnhub.io/docs/api/earnings-calendar",
+        "https://finance.yahoo.com/markets/stocks/article/delta-reports-q3-earnings-miss-cuts-guidance-as-fuel-costs-surge-62-from-year-ago-103121231.html",
+        "https://www.cbsnews.com/live-updates/iran-war-trump-us-elections-saudi-arabia-yemen-houthis/"
+      ],
+      "rank": 3,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.06,
+        "claimed_risk_reward": 2.06,
+        "breakeven_probability": 0.327,
+        "stated_win_probability": 0.42,
+        "expectancy_r": 0.285,
+        "claimed_edge": 0.093,
+        "stop_atr_multiple": 2.08,
+        "live_price": 308.2,
+        "live_price_asof": "2026-10-09T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 3768.7,
+        "bid": 308.2,
+        "ask": 309.22,
+        "spread_pct": 0.33,
+        "atr14": 7.6783,
+        "checked_at_et": "2026-10-12T06:49:03-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.06:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 308.0 is -0.1% from live 308.2"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-10-19 is ahead of us"
+          },
+          {
+            "check": "earnings_date",
+            "status": "warn",
+            "detail": "claims an earnings catalyst but GE is not on the fetched calendar"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 4.3 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "stop_distance",
+            "status": "warn",
+            "detail": "stop is 2.08 ATR from entry \u2014 clears the 2.0 ATR floor for a swing stock but sits under the 2.5 ATR level where stop-outs have clustered"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "42% claimed vs 33% break-even at 2.06:1 \u2014 expectancy +0.28R"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-10-09T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "pass",
+            "detail": "bid/ask spread 0.33%; the round trip costs 3% of the target move"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "3% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 3 rests on 3 independent kinds: dated_catalyst, positioning, technical_level"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "1 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    }
+  ],
+  "watchlist": [
+    {
+      "symbol": "ITA",
+      "instrument": "iShares U.S. Aerospace & Defense ETF",
+      "note": "Cut by the red team on the correlation test, not on the thesis. It was one of three aerospace/defense longs and it is the basket that holds the other two \u2014 GE Aerospace is among ITA's largest positions and HII is a constituent \u2014 so at 3% alongside GE at 3% and HII at 4% it doubled them rather than diversifying them. It is also the weakest of the cluster on its own terms: the only one of the three with no idiosyncratic claim, its own key_risk concedes a basket does not diversify the post-FY2027 budget growth question that is the named cause of the de-rating, its own counter_argument concedes defense equities fell on escalation twice already this cycle (3 March and 22 September), the 227.00 target is the 50-day moving average 5.77 ATR out rather than a level price has to take out, and the single positioning confirmation is RTX's analyst revisions standing in for the whole basket. HII carries the same discount argument with a primary document behind it.",
+      "trigger": "Republish as the sector expression only if HII and GE are not held, or once the 19-22 October prime prints give FY2027 topline visibility and the de-rating has a cause that is not the budget. A retest of the 201.00 pivot printed 2026-10-08 is the level.",
+      "demoted_from_rank": 3,
+      "demotion_reason": "redundant with HII and GE, both of which ITA holds; weakest of the three on an idiosyncratic claim"
+    },
+    {
+      "symbol": "STLD",
+      "instrument": "Steel Dynamics",
+      "note": "Already live as an awaiting-entry stop-limit from 2026-10-10 at 245.50, 3.0% above Friday's 238.38, with earnings 2026-10-19 amc (est 5.4904) now inside the window. Deliberately not re-pitched: nothing specific to STLD changed, so the standing order carries it.",
+      "trigger": "A trade through 245.50 fills the existing order; the 10-05 high was 245.185 and the shelf is intact (sma20 233.88, sma50 241.36)."
+    },
+    {
+      "symbol": "CMC",
+      "instrument": "Commercial Metals",
+      "note": "The only name screened today with real clustered insider buying \u2014 2 distinct open-market buyers for $604,468 \u2014 but rejected on arithmetic: a 2.0 ATR stop at 60.18 puts risk near 4.70 from a 63.50 entry and needs a 72.90+ target to clear 2.0:1, which is +14.8% and above one buyer's own price. Revisions are deteriorating (-3.9pp).",
+      "trigger": "A pullback that lets a 2.0 ATR stop sit under the 59.96 120-day low without a stretch target, or a beat on 10-15 that turns the revision trend."
+    },
+    {
+      "symbol": "CLF",
+      "instrument": "Cleveland-Cliffs",
+      "note": "The biggest revision swing on the board \u2014 bullish share 30% but +21.3pp, sells collapsing 7 to 1 \u2014 and still rejected: it has lost money in all four reported quarters and missed by 22.2% and 21.4% in the last two, at 5.1% ATR. The steel driver is already represented by the STLD order.",
+      "trigger": "A profitable quarter on 10-19, which is the specific thing that would make the revision swing tradeable."
+    },
+    {
+      "symbol": "AA",
+      "instrument": "Alcoa",
+      "note": "Good mechanism, failing data. Hydro-powered smelters are a relative cost tailwind against gas- and coal-fired European and Asian competitors in an energy shock, and it is -50.0% off its high, 2.9% above a 120-day low. Rejected on deteriorating revisions (-1.2pp), an erratic surprise record (+0.1%, -9.0%, +33.6%, +90.6%) and zero insider buying against 4 sells.",
+      "trigger": "Confirmation from the 10-15 print. A -50% name into earnings needs the number, not the story."
+    },
+    {
+      "symbol": "TRV",
+      "instrument": "Travelers",
+      "note": "A divergence with no trade in it: four enormous beats (+83.4%, +7.9%, +24.6%, +27.0%) while the analyst book deteriorated to 25.7% bullish, -7.6pp, sells 1 to 5. No entry discount exists \u2014 it is only -7.5% off its high and sitting on both averages \u2014 and insiders are 0 buys against 25 sells.",
+      "trigger": "A drawdown that creates an entry, since the earnings case is already proven and the price is not."
+    },
+    {
+      "symbol": "KXCPIYOY-26SEP-T3.5",
+      "instrument": "Kalshi \u2014 September CPI above 3.5%, NO leg",
+      "note": "Housekeeping, not an idea: this NO was published 2026-09-30 at 18 cents, never filled, and now trades 0.12/0.14 with the market putting 88% on the outcome that makes it worthless. It resolves Wednesday. The thesis is contradicted and the level is stale.",
+      "trigger": "None \u2014 retire the row rather than re-pitch it."
+    },
+    {
+      "symbol": "KXFEDDECISION-26SEP-H0",
+      "instrument": "Kalshi \u2014 September FOMC hold",
+      "note": "Housekeeping: the September FOMC has been and gone, so this should not still be listed as awaiting entry.",
+      "trigger": "None \u2014 clear the row."
+    },
+    {
+      "symbol": "VST",
+      "instrument": "Vistra",
+      "note": "Awaiting-entry level is dead on distance: published 2026-08-24 at 132.00 against 161.48 on Friday, +22.3%. A limit 18% under market is not a live idea.",
+      "trigger": "Re-underwrite from current levels or drop it; the published level will not fill."
+    },
+    {
+      "symbol": "OXY",
+      "instrument": "Occidental Petroleum",
+      "note": "Awaiting-entry level is dead on distance: 54.00 published 2026-09-24 against 60.11, +11.3%. Published into a rising crude tape and the pullback never came.",
+      "trigger": "Re-underwrite from current levels; earnings are 2026-11-09, outside any swing horizon."
+    },
+    {
+      "symbol": "FCX",
+      "instrument": "Freeport-McMoRan",
+      "note": "Awaiting-entry level is dead on distance: 68.20 published 2026-10-04 against 73.69, +8.0%.",
+      "trigger": "Re-underwrite from current levels."
+    },
+    {
+      "symbol": "DINO",
+      "instrument": "HF Sinclair Corp",
+      "note": "Demoted by validation: bid/ask spread 9.10%; the round trip costs 48% of the target move \u2014 too wide to trade this thesis",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 4,
+      "demotion_reason": "bid/ask spread 9.10%; the round trip costs 48% of the target move \u2014 too wide to trade this thesis"
+    },
+    {
+      "symbol": "DAL",
+      "instrument": "Delta Air Lines",
+      "note": "Demoted by validation: stop is 1.98 ATR from entry \u2014 inside the noise; a swing stock stop must clear 2.0 ATR",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 5,
+      "demotion_reason": "stop is 1.98 ATR from entry \u2014 inside the noise; a swing stock stop must clear 2.0 ATR"
+    }
+  ],
+  "validation_summary": {
+    "checked": 5,
+    "passed": 0,
+    "warned": 3,
+    "failed": 2,
+    "enforced": true,
+    "demoted": 2
+  }
+}
