@@ -1,6 +1,6 @@
 # Odd-lot tender screener — 2026-10-13
 
-Run 2026-10-13 05:30 ET (premarket slot). 4 offers tracked, 0 clear every gate: 0 Tier A, 0 Tier B, 0 Tier C.
+Run 2026-10-13 18:31 ET (evening slot). 4 offers tracked, 0 clear every gate: 0 Tier A, 0 Tier B, 0 Tier C.
 
 **No Tier A opportunities today.** That is the ordinary result — an odd-lot tender with a 3%+ spread and a clean condition set is rare, and the thresholds below are not moved to produce one.
 
@@ -25,13 +25,17 @@ _None._
 | XFLT | SC TO-I | 2026-09-18 | no 'fewer than 100 shares' odd-lot threshold in the document; odd lots mentioned but no acceptance-before-proration language; an exchange offer for other securities, not cash; no expiration date could be read from the document |
 | — | EX-99 | 2026-09-01 | odd lots mentioned but no acceptance-before-proration language; no cash consideration stated in the document; subject security is not common equity (unidentified security); no expiration date could be read from the document |
 
+## Expired today
+
+- MDT Medtronic plc — expired 2026-10-09, never cleared the gates
+
 ## Where the universe went
 
 A screener that finds nothing reads exactly like one that is broken. This is the difference.
 
-- **96** full-text queries over `2026-07-30..2026-10-13` returned **146** document hit(s) across **19** filing(s) (**54** exhibits kept as candidates)
+- **96** full-text queries over `2026-07-30..2026-10-13` returned **152** document hit(s) across **20** filing(s) (**55** exhibits kept as candidates)
 - searched as **4** date slice(s), **96** result page(s) read
-- **4** offers open, **25** archived
+- **4** offers open, **26** archived
 
 | Turned away for | Count |
 | --- | --- |
