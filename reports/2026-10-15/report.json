@@ -1,0 +1,662 @@
+{
+  "date": "2026-10-15",
+  "generated_at_et": "2026-10-15T06:37:02-04:00",
+  "research_minutes": 57,
+  "truncated": false,
+  "data_quality_notes": "RESEARCH COMPLETE. notes.md carries a final RESEARCH COMPLETE block at 07:00 ET that supersedes earlier ones at 06:51 and 06:42, so `truncated` is false and nothing here is reconstructed from a cut-off log. Research ran 06:03-07:00 ET, inside the pre-open window. All eight candidates in candidates.jsonl are published; none was dropped in synthesis.\n\nPRICES AND SESSION. The US equity market is closed (pre-open, 06:33 ET), so every equity and ETF price here is the 2026-10-14 close, re-quoted in synthesis via finnhub and matching the research figures to the cent on all eight names. That is a closed market, not stale data. Crypto spot is live from coingecko as of ~06:00 ET.\n\nARITHMETIC RECHECKED INDEPENDENTLY. Every reward-to-risk ratio was recomputed in synthesis from the final entry, target and stop rather than carried from the notes, and ATR14 was re-fetched for all six names with forward risk. All eight agree with the research figures. Stop distances in ATRs: UNP 2.80, CME 2.82, EEM 2.55, XLE 2.54, STLD 2.50, GE 2.28 \u2014 every one clears its asset-class floor (2.0 stock, 1.8 ETF) with room, and none was tightened to lift a ratio.\n\nON THE RATIO CLUSTER. Six of the eight ratios land between 2.06 and 2.51, which is the signature CLAUDE.md warns about \u2014 targets fitted to clear a 2.0 floor. Here it is the opposite, and the rejection log is the evidence: every target on the page is a fetched 250-day range high (UNP 315.99, STLD 288.74, CME 329.16) or an unchanged historical level on a position already open, not a number chosen to pass. The clustering is what a 2:1 floor looks like when the tape only offers mid-range setups: 45 named symbols were rejected with levels and ratios recorded, and the failures run 0.45:1 to 1.44:1 (ISRG 0.45, HAL 0.46, RTX 0.76, MMM 0.82, LMT 0.89, DOW 0.97, XOM 1.20, IBIT 1.20, PM 1.26, NDAQ 1.38, GM 1.44) with TXN at 2.05 declined for being inside the rounding margin. Nothing was nudged over the line; the names that cleared it cleared it with the target already on the chart.\n\nTHE SKEW, STATED PLAINLY. Three new longs, three exits, two position updates. Three of the eight rows REDUCE risk rather than add it, and that is the honest shape of today's tape, not a thin research run: the leadership (XOM, PM, XLE, GILD, ELV) is at or within 2% of 52-week highs where a breakout has no overhead level to target and its true invalidation sits 3.5-3.7 ATR below, while the laggards (ITB, PHM, NVR, HAL, DOW, AXP, COF) are at or near 52-week lows with nothing left to sell. A 2:1 floor on a 2.0 ATR stop cannot be satisfied in either group without inventing a target or walking a stop in, so the framework refused both and published the three mid-range setups that exist.\n\nALL THREE NEW LONGS ARE BREAKOUT ENTRIES ABOVE THE MARKET. UNP above 288.01, STLD above 247.10, CME above 286.59. Expect a low fill rate and treat never-filling as the MODAL outcome, not a failure. This is deliberate: prior context records the first month ran 31 pullback entries against 1 breakout at a 42% fill rate, where the fills selected for the ideas that were already failing. STLD additionally carries catalyst.wait=true \u2014 it is conditional on a close above 247.10 and does not exist if that has not happened by the 2026-10-19 close.\n\nTHE THREE EXIT ROWS WILL FAIL check_expectancy, AND THAT IS THE POINT. CCJ, DAL and EEM are instructions to SELL. A close carries negative forward expectancy by definition \u2014 that the trade no longer pays is why it is being closed \u2014 so the low win_probability on each (0.20, 0.20, 0.25) is an honest statement that the historical target will not be reached, not a defect. Computed: CCJ -0.087R, DAL -0.330R, EEM -0.183R. Enforcement must NOT demote these to the watchlist: doing so deletes the instruction to sell three positions, two of which have already breached their stops, and leaves them reading as ideas awaiting a better entry. risk_reward is left null on CCJ and DAL because their stored entry and target are historical records of a trade being abandoned, and a forward ratio computed from them would describe a trade nobody is taking.\n\nDAL's 1.96 ATR STOP IS A FINDING, NOT AN ERROR. The 78.10 stop was published 2026-10-05 against a 2.5022 ATR, so it was set 0.04 ATR INSIDE the 2.0 floor at the time \u2014 one more instance of the pattern CLAUDE.md records, that all ten of the first month's stop-outs had a stop tighter than 1.6 ATR. It is left unchanged because a filled position keeps the entry it was bought at and the stop it was published with. Do not widen it retroactively; the position is being closed.\n\nXLE's 0.60 WIN PROBABILITY WILL TRIP THE >20-POINT EDGE WARNING (+28pp over the 0.319 baseline) and is defensible rather than inflated. The baseline formula assumes entry at the current price; XLE was filled at 63.90 and trades 67.63, so 5.8% of the move to the 70.50 target has already happened. The live question is whether 70.50 (4.24% up) trades before 60.80 (10.1% down). XLE's stop is also deliberately NOT raised despite 6.83 points of open profit: lifting it to 61.50 would clear the 1.8 ATR ETF floor and improve the ratio from 2.13 to 2.75 while making the trade strictly worse, which is the KRE pattern, and doing it to protect a gain rather than to pass a floor does not change the arithmetic.\n\nGE IS PUBLISHED AT CONVICTION 2 BELOW WHAT ITS EVIDENCE COUNT SUPPORTS, ON PURPOSE. It carries two distinct evidence kinds, which the strategy table scores a 3. The 2026-10-14 red team lowered it from 3 to 2 and cut size from 2.5% to 1% to match, and no new evidence arrived today \u2014 GE closed 307.63 then and 307.02 now. Raising it back would quietly reverse a downgrade by arithmetic, so the mismatch is the record of a deliberate downgrade and the 1% lottery-ticket size is tied to it. DO NOT 'correct' GE upward in enforcement. Every other row matches its distinct-kind count exactly (CCJ 3 kinds/4, DAL 3/4, EEM 3/4, XLE 3/4, STLD 4/5, UNP 4/5, CME 4/5), after an audit that removed two bogus dated_catalyst entries \u2014 CCJ's was a price fact and EEM's asserted the ABSENCE of a catalyst as evidence of one.\n\nCORRELATION CAP: no driver carries more than one new row. Rates/exchange volume CME 1, rails UNP 1, steel STLD 1, energy XLE 1, defense/aerospace GE 1; the three exits carry no forward driver exposure. CSX (7.20 ATRs to its high) and NSC (7.09) both qualified on geometry and were declined to keep rails at one, not on merit \u2014 both are named in UNP's catalyst action as live independent reads on that thesis.\n\nLANES THAT PRODUCED NOTHING, with reasons. No long_term idea: HAL got dedicated research time including its only 8-K since August read in full, and failed 0.90:1 against a 2.5 floor because the $21.46 bear case is as large as the $42.66 upside; DOW fails harder with no fetchable valuation anchor at all. Prior context has long_term at 0/3 on target and -15.9% average across 9 ideas \u2014 three closed trades is noise and is not being over-fitted to, but the lane gets no benefit of the doubt. No crypto idea: no fetched BTC OHLCV on any of five sources, so no ATR and no support level, and the IBIT proxy failed at 1.20:1. No event contract: Kalshi returned 0 results for KXFEDDECISION, 'Fed decision', 'interest rate', '10-year', 'CPI' and 'recession', and unrelated tennis markets for 'Fed', so neither pending KXFEDDECISION contract could be repriced (the 26SEP one is past resolution by its own ticker). No small cap: six screened by hand off the earnings calendar and six rejected on stated grounds, with IIIN disqualified on a 0.0% bullish analyst book and consecutive 41% and 59% earnings misses. No intraday idea: the tape offered no gap or dated intraday print worth one.\n\nFAILED SOURCES AND MISSING DATA. No index, VIX, DXY, spot gold or WTI level anywhere in this report \u2014 yahoo's chart API returned HTTP 429 on every index symbol, finnhub refuses indices ('Market data subscription required for CFD indices'), stooq 404s on index symbols and there is no alphavantage key, so market_context.levels carries nulls for those rather than estimates. No options-implied move (yahoo options API 401), so no target on this page is compared against one. No short interest or days-to-cover for any name (api.nasdaq.com read timeouts, 5 of 5 attempts), so no idea cites one. No BTC OHLCV on any of five sources. HON was excluded on data grounds rather than merit: its fetched 250-day range high of 479.88 is a pre-separation price, making every off-high figure for it meaningless this run.\n\nPOSITIONS HELD WITHOUT A ROW. All 17 open positions were checked against the 2026-10-14 closes. Eleven are holds with nothing material changed and were deliberately not published as filler: BCC, PFE, IYR, LULU, NKE, MU, SNX, KHC, CEG, XLF, SMMT, HII. Two are worth naming \u2014 MU (-4.8% from entry, stop 870 now 4.8% below the print) is the next stop-out candidate if the 10-year keeps rising, and XLF's catalyst is TODAY (PNC, USB, SCHW bmo) but it has been published 4x in 10 days, so no fifth row: the position is open and the plan stands.\n\nRED TEAM (phase 2c, 06:43-07:05 ET, separate pass). Cut one idea, downgraded three, fixed four specifics, re-ranked seven. The arithmetic and the levels survived re-verification intact; what did not survive was an exit whose stated trigger the price bars do not show.\n\nCUT EEM. The one discretionary action on the page \u2014 close a position whose stop had NOT been hit \u2014 and all three legs failed on checking. Its stated trigger, \"five consecutive lower closes\", is not what the bars show: 10-07 67.37, 10-08 66.10, 10-09 66.80, 10-12 66.15, 10-13 65.74, 10-14 64.39, so 10-09 closed UP and the run is four lower closes in five sessions. The thesis embeds the contradiction in its own list (\"66.80 aside\") and the technical_level evidence repeats the false streak as fact; it is also the whole basis for \"1.36 ATR is one and a third ordinary sessions in a trend that has produced five of them in a row\". Second, the row contradicts its own number: its counter_argument correctly computes the 16.4% driftless baseline on 1.39 of risk against 7.11 of reward, then states 0.25 \u2014 and 0.25 at 5.1:1 is +0.53R, so by this report's own expectancy framework the hold makes money and the exit gives it up. If the author believed the odds were worse than the geometry, the honest figure was below 0.164 and the expectancy negative. Third, the 63.00 stop sits 0.8% BELOW the 63.51 200-day (re-fetched: sma200 63.5121): it was placed to let a 200-day test happen and trigger only on a failure, so selling at 64.39 forfeits exactly the information the stop was positioned to collect. Honouring a stop that was hit and pre-empting one that was not are opposite behaviours, and this report's rule is the first. The position stands on its unchanged 63.00 stop and there is no EEM trade today; the reasoning is on the watchlist entry in full.\n\nCCJ AND DAL SURVIVE \u2014 the stop breaches are real. Re-verified against nasdaq bars: CCJ 10-14 low 81.22 against an 82.50 stop, close 81.47; DAL 10-14 low 76.12 against a 78.10 stop, close 76.65. Both pre-market prints this morning (CCJ 80.01, DAL 77.08 at 06:43) are still below their stops. Close both at the open.\n\nCONVICTION DOWNGRADES, ALL THREE FOR THE SAME REASON \u2014 an evidence kind the report itself says does not work. CME 5 to 4: its dated_catalyst is the 10-21 print, and its own key_risk calls that print \"a confirmation rather than a reveal\" with monthly ADV already public and a surprise distribution of +1.8/-1.2/0.0/+0.8 described as \"the tightest and least informative distribution screened this morning\". An evidence kind disclosed as uninformative cannot pay for the top score; three working kinds support 4. STLD 5 to 4: its counter_argument_answered is self-declared \"Answered, but only partly\", the rate-sensitivity objection is live with ITB, PHM and NVR all at their lows, and four higher closes is one session's relative strength against a structural objection. The 2% size \u2014 below the 3% given to both other conviction-5 ideas \u2014 already said 4. XLE 4 to 3: its dated_catalyst (HAL 10-20, XOM and SLB 10-23) is named in the same row's key_risk as \"the most likely single trigger for giving back the last 6%\", and its own counter_argument shows the services side diverging with HAL 24.68% off its high and below its 200-day. An event the report expects to go against it is not evidence for it.\n\nFIXED: STLD'S VOID DATE VOIDED THE IDEA THE SESSION BEFORE ITS OWN TRIGGER. The entry read \"if STLD has not cleared 247.10 by the close on 2026-10-19 this idea does not exist\", while the catalyst action read \"enter only on a close above 247.10, which on this calendar means after the 10-19 after-the-close print\". Both cannot be followed: the print is 10-19 at 16:30, confirmed \"amc\" on the fetched calendar, so the 10-19 close cannot contain it and the earliest qualifying close is 10-20. The trade was unexecutable as written. The qualifying close is now 10-20 or later, pre-print breaks explicitly do not count, and the idea voids at the 10-23 close.\n\nFIXED: CCJ AND DAL WERE DATED TO THE TRIGGER, NOT THE ACTION. Both carried catalyst.datetime_et 2026-10-14T16:00, the stop breach, which is a past event you cannot position around \u2014 and which is one of the two hard checks that would have demoted the instruction to sell. The dated event on an exit row is the action: both now read 2026-10-15T09:30, close at the open, with the breach named in the event text and re-verified.\n\nFIXED: DAL'S DOWNSIDE CASE OVERSTATED ITSELF. \"There is no level between here and the 65.82 range low\" is wrong \u2014 the 200-day is 76.2185, 0.56% under the 76.65 close. Corrected in place. It does not change the action, since the stop was breached and this report does not widen a stop after it is hit, but a close should not be argued with a level that is not there.\n\nNOT CUT: THE LEVELS, WHICH RE-VERIFIED TO THE CENT. Every load-bearing level on the page was re-fetched independently from nasdaq daily bars and matches: STLD's 247.10 09-17 swing high, 288.74 range high, 240.31 50-day, 219.44 200-day, 6.5281 ATR; UNP's 284.02 09-17 high, 279.03 base top, 286.59 10-14 high, 288.01 50-day, 315.99 high, 3.9998 ATR; CME's 286.59 10-14 high, the 270.03/270.18/270.27 close shelf of 10-05/06/07, 278.54 200-day, 329.16 high, 6.4536 ATR; XLE 67.63 against a 67.718 range high, 57.39 200-day; GE's 312.97/333.04/323.82 averages and 388.84 high. UNP and CME really do share a 286.59 high on 10-14 \u2014 checked precisely because it reads like a transcription error, and it is a coincidence. Nothing here is a round number dressed up, and the report's claim that the targets are fetched range highs rather than numbers nudged over a floor is true.\n\nNOT CUT: XLE'S REFUSAL TO RAISE ITS STOP. Correct and for the right reason. Raising 60.80 to 61.50 would lift the ratio to 2.75:1 while making the trade worse, which is the KRE pattern, and doing it to bank a gain does not change that. The plan already takes the gain the legitimate way, by trimming half at 70.50. Its 0.60 win probability also survives: measured from the live 67.63 rather than the 63.90 fill, 2.87 of upside against 6.83 of downside is a 70% driftless baseline, so 0.60 is BELOW the coin flip from where the position actually sits, not a +28pp claim. The warning is an artifact of a baseline computed from the entry.\n\nTHE EARNINGS-CALENDAR WARNINGS ARE A FETCH FAILURE, NOT WRONG DATES. All five ideas drew \"claims an earnings catalyst but X is not on the fetched calendar\", which is five of five and therefore a transient empty fetch at 06:38, not five bad dates. Re-fetched at 06:45 and every date and consensus figure matches to the decimal: STLD 2026-10-19 amc 5.508 / $6.5717B, UNP 2026-10-22 bmo 3.5034 / $7.1715B, CME 2026-10-21 bmo 3.0128 / $1.7282B, GE 2026-10-19 bmo 2.0576 / $13.2228B, plus XLE's cluster (HAL 10-20 bmo, XOM and SLB 10-23) and every cross-read the report leans on \u2014 CLF 10-19 bmo, CSX 10-21 amc, NSC 10-22 bmo, UAL 10-20 amc, TRV 10-16 bmo, TXN 10-21 amc. No catalyst on this page is invented or misdated.\n\nTHE STLD AND CME SPREAD FAILURES ARE PRE-MARKET BOOK ARTIFACTS. Re-fetched at 06:43: STLD bid 235.82 / ask exactly 250.00 against a last trade at 06:15, CME bid 279.02 / ask 297.62 against a last trade at 05:49. Both are S&P 500 members turning over $230M and $522M a day and trade pennies wide in regular hours, and both entries are regular-hours limit orders above the market. check_spread has no session gate \u2014 it handles bid/ask being ABSENT (which it calls normal outside regular hours) but not present-and-pre-market \u2014 so if phase 2d demotes STLD or CME on a 5.84% or 6.46% spread, that demotion is a measurement of the 6am book and not of the market either trade would be executed in. Read it alongside this note.\n\nTHE EXIT ROWS WILL STILL FAIL ENFORCEMENT ON EXPECTANCY, AND THAT CANNOT BE FIXED HONESTLY. A close has negative forward expectancy by construction, which is why it is a close; CCJ -0.09R and DAL -0.33R are the correct answers to the wrong question. The catalyst-date leg is fixed above because it was genuinely mis-dated, but win_probability will not be moved to clear a floor. If phase 2d moves CCJ or DAL to the watchlist, the note it writes (\"republish only once the numbers check out\") is a mechanical artifact and the instruction stands: SELL BOTH LINES AT THE OPEN. The pipeline has no row type for an exit, and that is the gap, not the trade.\n\nCORRELATION: THE TWO NEW LONGS ARE CLOSER TO ONE BET THAN THE PER-DRIVER CAP SHOWS. UNP and STLD are both long industrial cyclicals entering on breakouts into Q3 prints three sessions apart, in a tape this same report describes as selling the economically sensitive names; rails haul steel, coal and intermodal, and both need the goods economy not to roll over at a 5.21% 10-year. \"No driver carries more than one new row\" is true only with rails and steel counted as separate drivers. Not cut, because the combined new-money exposure is 5% and STLD is conditional with never-filling as its modal outcome, but it is one factor and not two, and the weaker of the pair is the one downgraded.\n\nWATCHLIST TRIMMED TO MAKE ROOM, DELIBERATELY AND BY NAME. The watchlist arrived at exactly 25 entries, which is the schema cap, and ensure_report.py runs immediately after this phase: a single added entry overflows maxItems and the entire morning's report is replaced by a no-signal stub. Six were removed to make room for EEM and to leave headroom for phase 2d's demotions \u2014 SCHW (its own note calls any level set this morning a pre-print guess, and it reports bmo today), IBIT (a blocked-data note rather than an idea; the crypto lane's problem is recorded above), NDAQ (1.38:1 on the same exchange-volume driver CME is published on), RTX (0.76:1, the weakest of a defense cluster LMT and NOC already cover), ISRG (0.45:1, the worst ratio screened), DOW (0.97:1, and its own note says it is the HAL shape failing harder). Twenty entries stand.\n\nSEVEN IDEAS SURVIVE: UNP 1 (the only conviction 5 left, and the only row where all four evidence kinds are measured and independent), CME 2, STLD 3, CCJ 4 and DAL 5 (both sells, at the open), XLE 6, GE 7. GE was deliberately NOT raised back to the 3 its evidence count supports; that mismatch is the record of the 2026-10-14 downgrade and its 1% size is tied to it. Validation demoted 4 idea(s) whose numbers did not check out. 3 more carry warnings \u2014 see the validation block on each.",
+  "market_context": {
+    "summary": "A duration risk-off, not a growth scare. The US 10-year sits at 5.21% against an effective funds rate of 3.88% \u2014 a ~133bp spread of the long end over policy, which is term premium and fiscal supply rather than growth expectations \u2014 while the 10y-2y curve flattened from +0.42 to +0.37 in a single day. Unemployment has ticked 4.1% to 4.2% and the September CPI index rose 0.65% m/m, which is the stagflationary corner. The 2026-10-14 session was that read confirming itself in one tape: long-duration equity was sold hard (CCJ -5.43%, CEG -5.49%, MU -4.10%, EEM -2.05%, BTC -2.35%, gold -1.49%) while defensives and real-asset cash flows were bought (PFE +2.96%, HII +2.59%, KHC +1.20%, XLE +0.64%). The tell is TLT +0.66% with equities down \u2014 positioning unwinding off an oversold long end, not a flight to safety. The practical consequence for today's page is geometric: the leadership (XOM, PM, XLE, GILD, ELV) is at or within 1% of 52-week highs where a breakout has no overhead level to target and its true invalidation sits 3.5-3.7 ATR below, and the laggards (ITB, PHM, NVR, HAL, DOW, AXP) are at or near 52-week lows with nothing left to sell. A 2:1 floor on a 2.0 ATR stop needs mid-range setups, and three exist: UNP, STLD and CME.",
+    "regime": "risk-off",
+    "levels": {
+      "us10y": 5.21,
+      "us2y": 4.79,
+      "fed_funds_effective": 3.88,
+      "10y2y_spread": 0.37,
+      "unemployment_rate_sep": 4.2,
+      "cpi_index_sep": 336.298,
+      "tlt": 78.89,
+      "btc": 81185,
+      "eth": 2372.79,
+      "sol": 103.04,
+      "spx": null,
+      "ndx": null,
+      "vix": null,
+      "dxy": null,
+      "gold": null,
+      "wti": null
+    }
+  },
+  "recommendations": [
+    {
+      "symbol": "UNP",
+      "instrument": "Union Pacific Corp",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 5,
+      "last_price": 286.43,
+      "last_price_asof": "2026-10-14T16:00 ET (prior close; market closed, pre-open session)",
+      "entry": {
+        "ideal": 288.6,
+        "zone_low": 288.1,
+        "zone_high": 291.0,
+        "order_type": "limit",
+        "condition": "Buy only above 288.01, the 50-day, which is also above the 286.59 high of 2026-10-14 \u2014 so this is a breakout entry above the market, not a discount off the last print. The zone is capped at 291.00: above that the stop is more than 3.4 ATR away and the ratio no longer holds, so do not chase a gap. If UNP opens above 291.00 on the 10-22 print, stand aside and wait for a retest of 288."
+      },
+      "exit": {
+        "target": 315.99,
+        "target_2": null,
+        "scale_plan": "Trim a third at 302.00, roughly half the distance to target and clear of the 288-291 breakout shelf, then trail the balance under the prior weekly low toward 315.99. Hold full size into the 10-22 print \u2014 the print is the thesis.",
+        "time_stop": "2026-12-11 \u2014 seven weeks past the print. UNP moves 1.4% a day, so the 9.6% to target needs time by construction; if it has not cleared 302 by then the re-rating failed."
+      },
+      "stop": 277.4,
+      "risk_reward": 2.45,
+      "win_probability": 0.38,
+      "position_size_pct": 3,
+      "requires_margin": false,
+      "catalyst": {
+        "event": "Q3 2026 earnings, consensus EPS 3.5034 on revenue $7.172B",
+        "datetime_et": "2026-10-22T07:00",
+        "action": "Enter on the 288.01 break, which may come before the print. Norfolk Southern reports the same morning bmo and CSX the evening of 10-21, so two independent reads on rail volumes land before and alongside this one \u2014 a soft CSX print on 10-21 is a reason to pull the resting order rather than to buy a dip.",
+        "wait": false
+      },
+      "thesis": "Union Pacific is a replacement-cost monopoly asset with contractual pricing that reprices above inflation, which is the specific business model a 5.21% 10-year rewards: short-duration real cash flow rather than a terminal-value story. The setup is mid-range rather than extended \u2014 286.43 is 9.35% below the 315.99 52-week high and 7.5% above the 266.55 200-day \u2014 and price has just left a four-week base. UNP built 268.26-279.03 from 09-21 through 10-09, then closed higher five sessions running (278.20, 278.34, 281.57, 282.36, 286.43) and took out the 284.02 high of 09-17. The one level left is the 288.01 50-day, and Q3 lands 2026-10-22 bmo. The record says the number is beatable without drama: beats of +4.1%, +1.3% and +1.9% against one 1.4% miss in the last four quarters, the tightest surprise distribution screened this morning.",
+      "key_risk": "Rail volume is an industrial-production derivative and the macro is pointing the wrong way \u2014 unemployment has ticked 4.1% to 4.2% and a 5.21% 10-year slows the goods economy that fills the cars. A Q3 guide that flags soft intermodal or coal volumes sends this back into the 268-279 base, through the 277.40 stop on the way. Second risk, specific to the structure: the entry is above the market and above the 50-day, so the modal outcome is that it never fills. That is intended and is not a failure.",
+      "counter_argument": "The strongest case against is that this is a low-beta industrial breaking out into a print in a tape where the economically sensitive names are being sold, and that the 1.4% ATR which makes the geometry look clean is the same thing that makes a 9.6% target slow and easy to stall out of. Answered with the relative-strength measurement rather than with a view: UNP has beaten its own sector over every window \u2014 1m +0.86% against XLI -1.07%, 3m -4.34% against XLI -7.28%, 6m +15.48% against XLI -2.42%, so 17.9 points of 6-month outperformance against the sector and 5.5 against SPY. It is the leadership of the group, not a laggard being caught. And on 2026-10-14, the session that took CCJ -5.4%, CEG -5.5%, MU -4.1% and gold -1.5%, UNP closed +1.44% at a 10-week high. It traded as a defensive on the day the rates shock hit, which is what the thesis claims it is.",
+      "evidence": [
+        {
+          "kind": "dated_catalyst",
+          "detail": "Q3 2026 earnings 2026-10-22 bmo, consensus EPS 3.5034 / revenue $7.172B, from the fetched finnhub calendar; NSC the same morning bmo and CSX 10-21 amc give two independent rail reads first",
+          "source": "https://finnhub.io/api/v1/calendar/earnings"
+        },
+        {
+          "kind": "technical_level",
+          "detail": "Entry above the 288.01 50-day and the 286.59 high of 10-14; stop 277.40 below the 278.20/278.28/278.34 close cluster of 10-02/10-08/10-09 that formed the base top; target 315.99 is the fetched 250-day range high; 200-day 266.55; stop distance 11.20 = 2.80 ATR on a 4.00 ATR",
+          "source": "https://www.nasdaq.com/market-activity/stocks/unp/historical"
+        },
+        {
+          "kind": "positioning",
+          "detail": "Relative strength positive against XLI on all three windows (+1.93pp 1m, +2.94pp 3m, +17.90pp 6m); analyst bullish share 67.7% and improving +2.2pp over four months; 30-day average dollar volume $654.5M",
+          "source": "https://finnhub.io/api/v1/stock/recommendation"
+        },
+        {
+          "kind": "counter_argument_answered",
+          "detail": "Tested the cyclical-exposure objection on the 2026-10-14 tape: UNP closed +1.44% (282.36 to 286.43) on the session that took CCJ -5.43%, CEG -5.49%, MU -4.10%, GLD -1.49% and BTC -2.35%, so it behaved as short-duration rather than as a cyclical under the rates shock",
+          "source": "https://www.nasdaq.com/market-activity/stocks/unp/historical"
+        }
+      ],
+      "market_cap_usd": null,
+      "avg_dollar_volume": 654547258,
+      "risk_tier": "standard",
+      "price_source": "nasdaq via scripts/market_data.py",
+      "sources": [
+        "https://www.nasdaq.com/market-activity/stocks/unp/historical",
+        "https://finnhub.io/api/v1/calendar/earnings",
+        "https://finnhub.io/api/v1/stock/recommendation",
+        "https://fred.stlouisfed.org/series/DGS10"
+      ],
+      "rank": 1,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.45,
+        "claimed_risk_reward": 2.45,
+        "breakeven_probability": 0.29,
+        "stated_win_probability": 0.38,
+        "expectancy_r": 0.311,
+        "claimed_edge": 0.09,
+        "stop_atr_multiple": 2.8,
+        "live_price": 286.43,
+        "live_price_asof": "2026-10-14T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 892.0,
+        "bid": 287.42,
+        "ask": 289.89,
+        "spread_pct": 0.856,
+        "atr14": 3.9998,
+        "checked_at_et": "2026-10-15T06:52:42-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.45:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 288.6 is +0.8% from live 286.43"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-10-22 is ahead of us"
+          },
+          {
+            "check": "earnings_date",
+            "status": "warn",
+            "detail": "claims an earnings catalyst but UNP is not on the fetched calendar"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "warn",
+            "detail": "target is 6.85 ATR away, 15 session(s) to get there \u2014 beyond the 6.0 ATR guide for swing, likely optimistic"
+          },
+          {
+            "check": "stop_distance",
+            "status": "pass",
+            "detail": "stop is 2.8 ATR from entry, clear of the 2.5 ATR guide for a swing stock"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "38% claimed vs 29% break-even at 2.45:1 \u2014 expectancy +0.31R"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-10-14T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "pass",
+            "detail": "bid/ask spread 0.86%; the round trip costs 9% of the target move"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 5 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "3% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 5 rests on 4 independent kinds: counter_argument_answered, dated_catalyst, positioning, technical_level"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "3 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "XLE",
+      "instrument": "Energy Select Sector SPDR Fund",
+      "asset_class": "etf",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 3,
+      "last_price": 67.63,
+      "last_price_asof": "2026-10-14T16:00 ET (prior close; market closed, pre-open session)",
+      "entry": {
+        "ideal": 63.9,
+        "zone_low": 63.0,
+        "zone_high": 64.5,
+        "condition": "ALREADY FILLED at 63.90 on 2026-08-15. NOT an entry to place \u2014 the zone is restated for the record. Do NOT add here: price is 5.8% above the fill and 0.13% off a 52-week high, so adding now would raise the average cost into the most extended point of the move."
+      },
+      "exit": {
+        "target": 70.5,
+        "target_2": null,
+        "scale_plan": "Price is 4.24% from target. Trim HALF at 70.50 and let the balance run with a trailing exit under the prior weekly low rather than holding all of it for a number set two months ago. The 60.80 stop is deliberately NOT being raised \u2014 see the thesis.",
+        "time_stop": "2026-11-28"
+      },
+      "stop": 60.8,
+      "risk_reward": 2.13,
+      "win_probability": 0.6,
+      "position_size_pct": 2,
+      "requires_margin": false,
+      "catalyst": {
+        "event": "Sector earnings cluster: HAL 2026-10-20 bmo, XOM and SLB 2026-10-23, which are the dated events that either confirm or end the move that has taken XLE to a 52-week high",
+        "datetime_et": "2026-10-23T07:00",
+        "action": "Hold. Trim half at 70.50. Add nothing before the 10-23 prints.",
+        "wait": false
+      },
+      "thesis": "UPDATE TO AN EXISTING OPEN POSITION opened 2026-08-15 at 63.90, last 67.63, +5.8%. Entry, target and stop are all unchanged. What is new is that XLE closed 2026-10-14 at 67.63 against a 250-day high of 67.718 \u2014 a 52-week high, 0.13% off it, having closed higher in ten of eleven sessions from 61.54 on 09-29, with the 20-day at 63.62 and the 200-day at 57.39. The target at 70.50 is now only 4.24% away, so the live decision is no longer whether to own it but how to exit it, which is why the scale plan replaces a single number with a half-trim and a trail. The regime also now argues for the position rather than merely allowing it: energy was green on 2026-10-14 while the 5.21% 10-year took 5% out of uranium and power, because a short-duration real-asset cash flow is what a high real rate rewards.",
+      "key_risk": "The position is 17.9% above its 200-day and at a 52-week high after an eleven-session run, which is where reversion is most likely and least forgiving. The dated risk is concentrated: HAL on 10-20 and XOM plus SLB on 10-23 are three sector prints inside four sessions, and HAL is already 24.68% off its own high and below its 200-day \u2014 the services side of this sector is not confirming what the majors are doing. A weak HAL guide on 10-20 is the most likely single trigger for giving back the last 6%.",
+      "counter_argument": "The strongest case against this row is the one I am deliberately not acting on: there is 6.83 points of open profit and only 2.40 of it would need to be given up to raise the stop to 61.50, which would still clear the 1.8 ATR floor for an ETF and would lift the recomputed ratio from 2.13:1 to 2.75:1. That is refused on purpose. It is precisely the KRE pattern CLAUDE.md names \u2014 an unchanged entry with the stop walked in, improving the ratio on paper while making the trade strictly worse \u2014 and the fact that it would be done here to protect a gain rather than to pass a floor does not change the arithmetic or the precedent. A filled position keeps the price it was bought at and the stop that was set against it; the gain is protected in the scale plan, where it belongs, not by rewriting the risk the position was published with.",
+      "evidence": [
+        {
+          "kind": "technical_level",
+          "detail": "67.63 against a fetched 250-day range of 42.35-67.718, so 0.13% off a 52-week high; ten higher closes in eleven sessions from 61.54 on 09-29; 20-day 63.62, 50-day 63.15, 200-day 57.39; ATR 1.22 (1.81%)",
+          "source": "https://www.nasdaq.com/market-activity/etf/xle/historical"
+        },
+        {
+          "kind": "dated_catalyst",
+          "detail": "HAL 2026-10-20 bmo, XOM and SLB 2026-10-23 on the fetched finnhub earnings calendar \u2014 three sector prints inside four sessions",
+          "source": "https://finnhub.io/api/v1/calendar/earnings"
+        },
+        {
+          "kind": "counter_argument_answered",
+          "detail": "Tested whether the sector move is broad or narrow and found it is narrow: XOM is 0.24% off its own 52-week high while HAL is 24.68% off its high and below its 35.62 200-day, so the majors are leading and the services names are not confirming \u2014 which is why the plan trims rather than adds",
+          "source": "https://www.nasdaq.com/market-activity/stocks/hal/historical"
+        }
+      ],
+      "market_cap_usd": null,
+      "avg_dollar_volume": 2209374104,
+      "risk_tier": "standard",
+      "price_source": "nasdaq via scripts/market_data.py",
+      "sources": [
+        "https://www.nasdaq.com/market-activity/etf/xle/historical",
+        "https://finnhub.io/api/v1/calendar/earnings",
+        "https://fred.stlouisfed.org/series/DGS10"
+      ],
+      "rank": 2,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.13,
+        "claimed_risk_reward": 2.13,
+        "breakeven_probability": 0.319,
+        "stated_win_probability": 0.6,
+        "expectancy_r": 0.878,
+        "claimed_edge": 0.281,
+        "stop_atr_multiple": 2.54,
+        "live_price": 67.63,
+        "live_price_asof": "2026-10-14T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 892.3,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": 1.2209,
+        "checked_at_et": "2026-10-15T06:53:31-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.13:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 63.9 is -5.5% from live 67.63"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-10-23 is ahead of us"
+          },
+          {
+            "check": "earnings_date",
+            "status": "warn",
+            "detail": "claims an earnings catalyst but XLE is not on the fetched calendar"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 5.41 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "stop_distance",
+            "status": "pass",
+            "detail": "stop is 2.54 ATR from entry, clear of the 2.25 ATR guide for a swing etf"
+          },
+          {
+            "check": "expectancy",
+            "status": "warn",
+            "detail": "60% claimed vs 32% break-even at 2.13:1 \u2014 expectancy +0.88R \u2014 a +28% edge over a coin flip is a large claim; the thesis has to carry it"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-10-14T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "no bid/ask available (normal outside regular hours)"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "2% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 3 rests on 3 independent kinds: counter_argument_answered, dated_catalyst, technical_level"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "2 of 3 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "GE",
+      "instrument": "GE Aerospace",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 2,
+      "last_price": 307.02,
+      "last_price_asof": "2026-10-14T16:00 ET (prior close; market closed, pre-open session)",
+      "entry": {
+        "ideal": 308.0,
+        "zone_low": 302.0,
+        "zone_high": 312.0,
+        "order_type": "limit",
+        "condition": "ALREADY FILLED at 308.00 on 2026-10-12 and restated for the record, not as a new order. The red-team condition from that publication stands unchanged and is now the operative one: the band is void from below as well as above, so if GE trades under 302 before the 10-19 print do not average into it \u2014 a break of the 296.61 reversal low of 10-08 removes the only level this idea is underwritten on."
+      },
+      "exit": {
+        "target": 341.0,
+        "target_2": 365.0,
+        "scale_plan": "The 2026-10-14 instruction is unchanged and is now due: the line was already cut from 2.5% to 1% of book, and the remaining step is to trim HALF of what is left at the 2026-10-19 open, ahead of the bmo print, then trail the balance under the prior daily low toward 365. That trim is operative in two sessions, which is the only reason this row exists today.",
+        "time_stop": "2026-11-19 \u2014 one month past the print"
+      },
+      "stop": 292.0,
+      "risk_reward": 2.06,
+      "win_probability": 0.36,
+      "position_size_pct": 1,
+      "requires_margin": false,
+      "catalyst": {
+        "event": "Q3 2026 earnings, consensus EPS 2.0576 on revenue $13.223B",
+        "datetime_et": "2026-10-19T07:00",
+        "action": "Trim half the remaining 1% line at the 10-19 open, before the print, per the 10-14 red-team plan. Do not add. Do not average under 302.",
+        "wait": false
+      },
+      "thesis": "UPDATE TO AN EXISTING OPEN POSITION, not a new idea: filled 2026-10-12 at 308.00, last 307.02, so the line is flat at -0.3%. Entry, target and stop are all unchanged, and the honest statement today is that NOTHING MATERIAL HAS CHANGED since the 2026-10-14 publication \u2014 GE closed 307.63 then and 307.02 now. The row exists for one reason: the trim-half-into-the-open instruction set on 10-14 becomes due at the 2026-10-19 open, two sessions away, and a reader holding this line needs that timing restated rather than buried in a prior report. The one thing worth adding is behavioural: GE closed -0.20% on 2026-10-14, the session that took CCJ -5.43%, CEG -5.49% and MU -4.10%, which is consistent with an aftermarket services annuity rather than a long-duration industrial. That is reassuring and it is not new evidence, so conviction stays at the 2 the red team set.",
+      "key_risk": "This is a conviction-2 idea carrying a binary print in two sessions, and the thinness is the risk: the evidence behind it is the earnings record and the analyst book, with no primary document and no valuation work. Technically it is the weakest line in the book \u2014 307.02 sits below the 312.97 20-day, the 333.04 50-day AND the 323.82 200-day, all three overhead, and 21.0% below the 388.84 52-week high. A miss on 10-19 gaps straight through the 292.00 stop with no level in between except the 296.61 low of 10-08.",
+      "counter_argument": "The strongest case against holding at all is that the position is flat, the exit is therefore free, and a conviction-2 line below all three moving averages into a binary print is exactly what a disciplined book sells rather than nurses \u2014 the same reasoning applied to CCJ and DAL above. The answer is that it is not the same situation: CCJ and DAL triggered their stops and GE has not come within 15 points of its. Closing a position that is inside its band, above its stop and two sessions from the catalyst it was bought for would be overriding a plan with a mood. The 10-14 red team already priced this deterioration by cutting size 2.5% to 1% and conviction to 2; doing it again a day later on the same facts is churn, not discipline.",
+      "evidence": [
+        {
+          "kind": "dated_catalyst",
+          "detail": "Q3 2026 earnings 2026-10-19 bmo, consensus EPS 2.0576 / revenue $13.223B, from the fetched finnhub calendar \u2014 two sessions away, which is what makes the trim operative",
+          "source": "https://finnhub.io/api/v1/calendar/earnings"
+        },
+        {
+          "kind": "technical_level",
+          "detail": "307.02 against the 296.61 reversal low of 10-08 that underwrites the idea, and below the 312.97 20-day, 333.04 50-day and 323.82 200-day; ATR 7.03, so the 292.00 stop is 2.28 ATR from the 308.00 fill",
+          "source": "https://www.nasdaq.com/market-activity/stocks/ge/historical"
+        }
+      ],
+      "market_cap_usd": null,
+      "avg_dollar_volume": null,
+      "risk_tier": "lottery",
+      "price_source": "nasdaq via scripts/market_data.py",
+      "sources": [
+        "https://www.nasdaq.com/market-activity/stocks/ge/historical",
+        "https://finnhub.io/api/v1/calendar/earnings"
+      ],
+      "rank": 3,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.06,
+        "claimed_risk_reward": 2.06,
+        "breakeven_probability": 0.327,
+        "stated_win_probability": 0.36,
+        "expectancy_r": 0.102,
+        "claimed_edge": 0.033,
+        "stop_atr_multiple": 2.28,
+        "live_price": 307.02,
+        "live_price_asof": "2026-10-14T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 892.5,
+        "bid": 308.03,
+        "ask": 309.35,
+        "spread_pct": 0.428,
+        "atr14": 7.0291,
+        "checked_at_et": "2026-10-15T06:53:34-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.06:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 308.0 is +0.3% from live 307.02"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-10-19 is ahead of us"
+          },
+          {
+            "check": "earnings_date",
+            "status": "warn",
+            "detail": "claims an earnings catalyst but GE is not on the fetched calendar"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 4.69 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "stop_distance",
+            "status": "warn",
+            "detail": "stop is 2.28 ATR from entry \u2014 clears the 2.0 ATR floor for a swing stock but sits under the 2.5 ATR level where stop-outs have clustered"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "36% claimed vs 33% break-even at 2.06:1 \u2014 expectancy +0.10R"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-10-14T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "pass",
+            "detail": "bid/ask spread 0.43%; the round trip costs 4% of the target move"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 2 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "1% is within the 1% lottery-ticket ceiling for conviction 2"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 2 rests on 2 independent kinds: dated_catalyst, technical_level"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "1 of 2 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    }
+  ],
+  "watchlist": [
+    {
+      "symbol": "XOM",
+      "instrument": "Exxon Mobil Corp",
+      "note": "177.01, 0.24% off its 177.43 52-week high after 161.35 -> 177.01 in 11 sessions. The right sector on this macro \u2014 energy was green on the rates-shock day \u2014 but a breakout entry at 178.20 has no overhead level to target, and the honest invalidation is the pre-breakout base at 166.71/167.82, which is 3.67 ATR of risk. A conservative continuation target of 192.4 (half the realised 1.42/session rate over 20 sessions) gives 1.20:1 against a 2.0 floor. The only way to print 2:1 is to walk the stop in to 170.80, which is the KRE pattern and was refused.",
+      "trigger": "A consolidation above 177.43 that builds a base to stop against, or a pullback to the 164.77 20-day"
+    },
+    {
+      "symbol": "PM",
+      "instrument": "Philip Morris International",
+      "note": "205.58, 1.05% off its 207.76 high. The best analyst book screened all run \u2014 74.1% bullish and improving, 20 of 27 buy-or-better with ZERO sells across four months, and no insider sales in six \u2014 plus 3-of-4 beats and Q3 on 2026-10-20 bmo. It still fails on geometry: entry 208.40, real invalidation at the 10-08 breakaway low of 192.97 where the 20-day also sits, so 3.60 ATR of risk against a 228.5 continuation target = 1.26:1. Strong evidence wasted on a vertical 9-session move.",
+      "trigger": "Re-test after the 10-20 print from a consolidated base rather than from the top of the move"
+    },
+    {
+      "symbol": "GILD",
+      "instrument": "Gilead Sciences Inc",
+      "note": "153.54 against a 250-day high of 154.20, so 0.43% off it, with the 20-day 149.34 and 50-day 145.82 both below and rising. Q3 2026-10-22. Identical at-the-high geometry to XOM and PM: no overhead level to anchor a target and the true invalidation is the base below the 20-day, so the breakout cannot clear 2:1 honestly.",
+      "trigger": "A base above 154.20, or a pullback into the 149 20-day that holds"
+    },
+    {
+      "symbol": "ELV",
+      "instrument": "Elevance Health Inc",
+      "note": "428.09, 1.87% off its 436.24 high with the 20-day (403.10) and 50-day (402.36) 6.2% below. Same at-the-high geometry as XOM, PM and GILD \u2014 0.7 ATRs of room to the high, which cannot support a 2:1 on any honest stop.",
+      "trigger": "A break and hold above 436.24 with a base left behind to stop against"
+    },
+    {
+      "symbol": "LMT",
+      "instrument": "Lockheed Martin Corp",
+      "note": "522.23. The best *evidence* on the tape: revision trend +7.1pp, the largest in the batch, driven by upgrades out of hold (strong_buy 5->6, hold 16->14), 3-of-4 beats including +29.0% and +10.5%, Q3 2026-10-22, and 3-month outperformance of its own sector (+1.70% vs XLI -7.28%). Killed by geometry alone: entry 524.00 on the 10-14 engulfing bar, true support at the 497.00/498.55 two-week floor = 2.81 ATR, and the nearest real resistance is the September 537-542.61 shelf reinforced by the 544.67 50-day, only +3.5-4.0% away = 0.89:1. Clearing 2:1 needs a 579 target and no level exists at 579.",
+      "trigger": "A base built above 545 after the 10-22 print, which would put the 612.75 high in play as a real target"
+    },
+    {
+      "symbol": "HAL",
+      "instrument": "Halliburton Co",
+      "note": "32.83, the clearest intra-sector divergence on the tape \u2014 24.68% off its 43.59 high and BELOW its 35.62 200-day while XLE prints a 52-week high and XOM sits 0.24% off its own. Worked as a long_term idea with real evidence: $27.35B cap, 76.5% analyst bullish and improving, 4-for-4 beats (+1.2%, +9.2%, +25.2%, +14.9%), and the only 8-K since August read in full and found to be Item 8.01 housekeeping, so there is no company disclosure explaining a 25% de-rating. REJECTED on the floor: $2.37 trailing EPS at the 18.4x the market paid inside the last twelve months = $42.66 target, against a defended $21-21.46 bear case = 0.90:1 versus a 2.5 long_term floor. The downside is as large as the upside. As a swing it is worse: 0.46:1 to the 200-day.",
+      "trigger": "A bear case above ~$27 (which needs a cycle floor argument this run could not fetch), or reclaiming the 35.62 200-day to open the 43.59 high as a swing target"
+    },
+    {
+      "symbol": "TXN",
+      "instrument": "Texas Instruments Inc",
+      "note": "280.65, Q3 2026-10-21 amc. The closest thing to a pass that was not taken: entry 292.00 above the 291.635 high of 10-07, stop 271.50 below the 272.31 50-day = 2.52 ATR, target the 334.03 250-day high = 2.05:1. Declined for three stacking reasons \u2014 2.05 is inside the margin where a ratio is really a rounding artifact, the first real resistance at 297.06-298.75 is only +2% away and has to break first, and MU is already a live memory position so a second semiconductor is the same driver under the correlation cap.",
+      "trigger": "A clean break of 298.75 that makes the 334 target the next level rather than the second one"
+    },
+    {
+      "symbol": "MMM",
+      "instrument": "3M Co",
+      "note": "164.46, Q3 2026-10-20 bmo. Entry 165.20 above the 164.99 20-day, stop 158.40 below the 159.21 base low and the 160.68 200-day = 2.01 ATR. Resistance is a tight five-day cluster at 170.43-170.98 reinforced by the 170.94 50-day: reward 5.55 against risk 6.80 = 0.82:1. Only the 184.895 high clears the floor and nothing sits between.",
+      "trigger": "A move through 171 that converts the 184.895 high into the next real level"
+    },
+    {
+      "symbol": "GM",
+      "instrument": "General Motors Co",
+      "note": "83.05, Q3 2026-10-20 bmo against consensus 3.7208. Genuinely mid-range (9.58% off the high) with the right catalyst, and it still fails: entry 84.80 above the 84.52 50-day, true support at the 80.04/80.63 low cluster reinforced by the 80.68 200-day so stop 79.90 = 2.29 ATR, and the only real level above is the 91.85 250-day high = 1.44:1. A 2:1 needs 94.60 and there is no level at 94.60.",
+      "trigger": "A break of 91.85 after the print, or a pullback that tightens the base above the 200-day"
+    },
+    {
+      "symbol": "ITB",
+      "instrument": "iShares U.S. Home Construction ETF",
+      "note": "83.39, which is 1.6% off its 120-day LOW of 82.0801 and 21.6% off the high. The regime read points straight at a homebuilder short and the trade has already happened: PHM is 2.05% off its range low, NVR 4.22% off its own. The pending 2026-09-24 short at 89.80 is now 7.7% ABOVE the market \u2014 deliberately NOT amended down to a chaseable level, because moving a short entry to the price after the move is reverse-engineering an entry, and a level 7.7% away is honest about never filling. Let it expire unfilled.",
+      "trigger": "A bounce back toward 89.80, which is where the pending order already sits"
+    },
+    {
+      "symbol": "COF",
+      "instrument": "Capital One Financial Corp",
+      "note": "194.35, under both the 197.86 20-day AND the 208.88 50-day, 14.81% off the high, Q3 2026-10-20 amc. Neither side qualifies: a long fights both averages into a binary print, and a short on a name already 15% de-rated is selling the hole.",
+      "trigger": "Reclaiming the 197.86 20-day, or a failed rally into the 50-day for the short case"
+    },
+    {
+      "symbol": "CSX",
+      "instrument": "CSX Corp",
+      "note": "48.28, 7.20 ATRs of room to its high, qualifying on geometry \u2014 and declined on the correlation cap rather than on merit, because UNP is the rail already taken and no driver may carry more than 3 rows. Its 2026-10-21 amc print is a live independent read on the UNP thesis and is named in that row's catalyst action: a soft CSX number is a reason to pull the resting UNP order rather than to buy a dip.",
+      "trigger": "The UNP position closing or never filling, which frees the rails slot"
+    },
+    {
+      "symbol": "NSC",
+      "instrument": "Norfolk Southern Corp",
+      "note": "323.73, 7.09 ATRs to its high, same qualifying geometry and same reason for declining: it is the UNP driver. Reports 2026-10-22 bmo, the same morning as UNP, so it reads as confirmation rather than diversification.",
+      "trigger": "The UNP position closing or never filling"
+    },
+    {
+      "symbol": "MSCI",
+      "instrument": "MSCI Inc",
+      "note": "560.52, 7.14 ATRs to its high and above both the 20-day and 50-day \u2014 then capped by the 572.35 200-day sitting only 2.1% overhead, which is all any target could reach. Fails on the same single-level problem as ISRG.",
+      "trigger": "A close above 572.35"
+    },
+    {
+      "symbol": "AXP",
+      "instrument": "American Express Co",
+      "note": "306.95, 3.28% off its 297.20 range LOW and below the 322.70 50-day, Q3 2026-10-23. Nothing to buy and nothing left to short \u2014 the laggard half of today's bifurcated tape.",
+      "trigger": "A reclaim of the 322.70 50-day"
+    },
+    {
+      "symbol": "NOC",
+      "instrument": "Northrop Grumman Corp",
+      "note": "495.69. The best earnings record screened all run \u2014 4-for-4 beats including +17.6% and +11.5% \u2014 and the worst revision trend to go with it: bullish share 60.7% and FALLING 3.6pp, with price below both the 496.78 20-day and the 528.29 50-day into a 2026-10-20 print. LMT is the same sector trade with revisions pointing the other way (+7.1pp) and price above its 20-day, and HII is already a live defense position, so NOC is the redundant row under the correlation cap.",
+      "trigger": "Revisions turning, or a reclaim of the 528.29 50-day"
+    },
+    {
+      "symbol": "TRV",
+      "instrument": "Travelers Companies Inc",
+      "note": "377.82, above both the 366.09 20-day and 369.19 50-day and only 5.24% off its 398.70 high, with Q3 out 2026-10-16 bmo \u2014 it looked like the cleanest rate-regime long on the tape, an insurer reinvesting float at a 5.21% 10-year. The positioning read killed it: analyst bullish share 25.7% and FALLING 7.6pp, the sell count rising 1 -> 2 -> 5 -> 5, hold stuck at 21 of 35, and insiders net -$36.3M over six months on 25 sales with zero open-market buys. That is buying a chart the analysts are leaving, one session before the hurricane-loss quarter.",
+      "trigger": "The 10-16 print, then revisions stabilising"
+    },
+    {
+      "symbol": "IIIN",
+      "instrument": "Insteel Industries Inc",
+      "note": "29.75, $0.58B cap, $4.1M average daily dollar volume, 9.63 ATRs to its high and the only one of six small caps screened that sits above its 20-day. It disqualifies itself on evidence, decisively: the analyst book is 0.0% bullish \u2014 zero buys against 3 holds, 1 sell and 2 strong sells, unchanged for four months \u2014 and the earnings record is -41.0%, -58.6%, -4.4% and +7.5%, three misses in four quarters with two of them by roughly half. Q3 lands 2026-10-22 against consensus 0.4998. That is a falling knife with a dated trigger attached, and 138,273 shares a day makes the exit narrow when it lands.",
+      "trigger": "A single analyst buy rating or one quarter of meeting its own consensus"
+    },
+    {
+      "symbol": "ASPN",
+      "instrument": "Aspen Aerogels Inc",
+      "note": "5.16, $0.43B cap, 44.80% off its high on a 5.34% ATR \u2014 the only genuine lottery-ticket shape left after screening six small caps, and it sits below both its 20-day and 50-day with no catalyst that could be dated from the fetched calendar. Noted because this lane is structurally thin: market_data.py has no screener, so the small-cap search is limited to names reachable by hand off the earnings calendar.",
+      "trigger": "A dateable catalyst and a reclaim of the 20-day"
+    },
+    {
+      "symbol": "EEM",
+      "instrument": "iShares MSCI Emerging Markets ETF",
+      "note": "RED TEAM CUT THE EXIT, NOT THE POSITION. Published as a discretionary close ahead of an unbreached stop; the instruction is withdrawn and the open position stands on its unchanged 63.00 stop. No EEM trade today. Three reasons, all checked against nasdaq daily bars this morning. (1) The stated trigger is false: 'five consecutive lower closes' is not what happened \u2014 10-07 67.37, 10-08 66.10, 10-09 66.80, 10-12 66.15, 10-13 65.74, 10-14 64.39, so 10-09 closed UP and the run is four lower closes in five sessions. The claimed streak is the whole basis for '1.36 ATR is one and a third ordinary sessions in a trend that has produced five of them in a row'. (2) The row contradicts its own number: forward risk 1.39 against 7.11 of reward is a 16.4% driftless baseline, the report states 0.25, and 0.25 at 5.1:1 is +0.53R \u2014 by this report's own expectancy framework the hold makes money and the exit gives it up. (3) The 63.00 stop sits 0.8% BELOW the 63.51 200-day (verified: sma200 63.5121). It was placed to let the 200-day test happen and to trigger only on a failure; selling at 64.39 forfeits exactly the information the stop was positioned to collect. Honouring a stop that was hit (CCJ, DAL) and pre-empting one that was not are opposite behaviours, and only the first is this report's rule.",
+      "trigger": "A close below 63.00, which closes the position on the published plan; or a reclaim of the 66.91 50-day, which re-opens the 71.50 target.",
+      "demoted_from_rank": 6,
+      "demotion_reason": "Discretionary exit ahead of an unbreached stop, on a five-lower-closes streak that the bars do not show, against a stated win probability that makes the hold positive-expectancy."
+    },
+    {
+      "symbol": "CME",
+      "instrument": "CME Group Inc",
+      "note": "Demoted by validation: bid/ask spread 6.46%; the round trip costs 44% of the target move \u2014 too wide to trade this thesis",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 2,
+      "demotion_reason": "bid/ask spread 6.46%; the round trip costs 44% of the target move \u2014 too wide to trade this thesis"
+    },
+    {
+      "symbol": "STLD",
+      "instrument": "Steel Dynamics Inc",
+      "note": "Demoted by validation: bid/ask spread 5.84%; the round trip costs 35% of the target move \u2014 too wide to trade this thesis",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 3,
+      "demotion_reason": "bid/ask spread 5.84%; the round trip costs 35% of the target move \u2014 too wide to trade this thesis"
+    },
+    {
+      "symbol": "CCJ",
+      "instrument": "Cameco Corp",
+      "note": "Demoted by validation: 20% claimed vs 22% break-even at 3.57:1 \u2014 expectancy -0.09R \u2014 the idea loses money at its own stated hit rate",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 4,
+      "demotion_reason": "20% claimed vs 22% break-even at 3.57:1 \u2014 expectancy -0.09R \u2014 the idea loses money at its own stated hit rate"
+    },
+    {
+      "symbol": "DAL",
+      "instrument": "Delta Air Lines Inc",
+      "note": "Demoted by validation: stop is 1.96 ATR from entry \u2014 inside the noise; a swing stock stop must clear 2.0 ATR; 20% claimed vs 30% break-even at 2.35:1 \u2014 expectancy -0.33R \u2014 the idea loses money at its own stated hit rate",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 5,
+      "demotion_reason": "stop is 1.96 ATR from entry \u2014 inside the noise; a swing stock stop must clear 2.0 ATR; 20% claimed vs 30% break-even at 2.35:1 \u2014 expectancy -0.33R \u2014 the idea loses money at its own stated hit rate"
+    }
+  ],
+  "validation_summary": {
+    "checked": 7,
+    "passed": 0,
+    "warned": 3,
+    "failed": 4,
+    "enforced": true,
+    "demoted": 4
+  }
+}
