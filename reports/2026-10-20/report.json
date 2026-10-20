@@ -1,0 +1,1114 @@
+{
+  "date": "2026-10-20",
+  "generated_at_et": "2026-10-20T06:38:02-04:00",
+  "research_minutes": 43,
+  "truncated": false,
+  "data_quality_notes": "RESEARCH COMPLETE \u2014 the research phase finished and ran its own verification pass, so nothing here is truncated. What this report is, stated rather than disguised: it is a POSITION-MANAGEMENT report. All 17 ideas concern the existing 19-position book or its 7 unfilled orders, and ZERO new ideas were opened. That was deliberate, not a shortfall \u2014 with 19 positions open, a 13% hit rate across 23 closed trades, the rates correlation cap already at 2 of 3, and three positions found to be failing their stop-distance floor, the honest use of the budget was fixing the book rather than adding to it. ACTIONS A READER MUST TAKE TODAY: close CEG, close KHC, close SNX; raise the XLE stop 60.80 -> 65.40; widen the FCX stop 63.35 -> 62.90; stand down on AAL; wait on ABT until after tomorrow's 10/21 print; HII target cut 430 -> 340; BCC conviction cut to 2 and size to 1%. The other eight are holds. TWO IDEAS ARE PUBLISHED BELOW THEIR REWARD-TO-RISK FLOOR and are flagged rather than fixed by nudging a number: FCX at 1.94 against the 2.0 swing floor (after widening the stop to a compliant 2.03 ATR) and HII at 2.44 against the 2.5 long-term floor (after cutting an undefended target). Both are filled positions where the published instruction is risk-reducing \u2014 a stop correction and a target cut \u2014 so they are carried here so the correction reaches the position record and the red team, not because they clear the bar. Demotion to the watchlist by enforcement is the correct outcome if it takes them. RATIO CLUSTERING, disclosed because it is the signature the pipeline exists to catch: seven of the ten ideas carrying a ratio land between 2.00 and 2.19 against a 2.0 swing floor. The mitigating fact, independently computed, is that every one of those stops clears its ATR floor with room (2.12-3.72 ATR), so the ratios are tight against the floor because the stops are honestly wide, which is the opposite of targets fitted to pass. The stop audit is the run's highest-value finding: recomputing every open position's stop against today's ATR14 caught three failures no amount of news reading would have surfaced \u2014 CEG at 1.29 ATR, SNX at 1.80, FCX at 1.86 \u2014 and in two of the three the published ratio was clearing 2.0 only because the stop was too tight. CEG and SNX could not be rescued by an honest re-cut (1.66 and 1.86 respectively) and are therefore closes. IYR passes by 0.08 ATR, the thinnest cushion in the book, and that is named in its own key_risk. All three long-term positions (PFE, HII, BCC) were carrying NO priced downside, which strategy.md makes mandatory; anchors were supplied from measured 120-day lows. That is a real weakness and is reported as such: a measured range low is an honest floor but it is closer to a technical level than to the defended valuation the config asks for, which is why PFE and HII are held at conviction 3 rather than the mechanically supported 4. Two of the three also carried targets above every published analyst target \u2014 HII's 430 was 26% above the most bullish located (TD Cowen 340) and BCC's 110 is 29% above the highest (Goldman 85), so HII's target was cut to 340 and BCC was cut to conviction 2 at 1% with its target flagged UNVERIFIED. Against a defensible ~88 target BCC's ratio is ~1.0 and it would not qualify at all. Building defended valuations for these is the highest-value item for the next run. FOUR CONVICTIONS SIT BELOW their mechanically supported score and every deviation is downward \u2014 nothing was inflated: AAL 2 (the entry is a cancellation, not a position), BCC 2, HII 3, PFE 3. GE and LULU are deliberately held at 3. Conviction 3 is where the track record's damage is concentrated (1/14, avg -6.5%) and conviction 2 is 0/6 at -8.4%, so both conviction-2 entries are sized at or below 1%. PRICES: every quote in this report is the 2026-10-19 close, confirmed re-fetched at 06:35 ET and 875 minutes old in the pre-market session \u2014 that is a closed market, not stale data. Two timing caveats matter. GE reports Q3 BEFORE THE OPEN TODAY, so this report is published into that print and no level in the GE entry survives the reaction. STLD already reported after Monday's close ($5.26 diluted EPS vs $5.42 consensus, a headline miss on record shipments) and NO post-print price was obtainable from any source, so its hold is stated explicitly against a pre-print quote. COVERAGE GAPS AND FAILED SOURCES: no index, VIX, rates, DXY, gold or oil quote came from our own feed \u2014 every Yahoo-backed series returned HTTP 429 at 06:01 ET, so all macro figures above are web-sourced with URLs and three supporting pages were snippet-only (HTTP 403). The fetched earnings calendar is INCOMPLETE \u2014 it does not carry GE, FCX, NEM, NUE, HII, BCC, SNX, DG, LULU or XLF at any horizon tested, and GE is confirmed by two other sources to report today while being absent from it. The rule applied throughout: presence on that calendar is reliable evidence of a date, absence from it is evidence of nothing. FCX's earnings date could not be pinned at all (five conflicting sources: 10/15, 10/21, 10/22, 10/23, 10/27, none official) and NO date is claimed for it, which means that position may be carrying an unflagged print; the same treatment was applied to HII (10/29 reported) and BCC (11/02 reported). Crypto was rejected rather than guessed: spot fetched (BTC 81,442, ETH 2,383.53, SOL 103.97) but history failed on all five sources, so there is no ATR and no swing structure, and setting levels off a single spot print would be fabrication \u2014 an uncovered lane with 0 closed trades. Short interest was unavailable all run (api.nasdaq.com ReadTimeout x4), so days-to-cover is unmeasured and named in the key_risk of LULU and AAL. Options-implied move was unavailable (HTTP 401), so no idea was checked against what options price. market_data.py events is broken \u2014 the helper mis-scopes the query and reads retired field names; the Kalshi FOMC probabilities used here were fetched from the API directly and the helper needs a fix plus a test. A short-gold idea was rejected on driver conflict rather than levels: rising real yields is gold-bearish but the same session's Hormuz and Saudi strikes are gold-positive, and it would have been a third idea on the rates driver. Four positions (DG, NKE, XLF, CVS) were reviewed, passed the stop audit, had no new information in the window, and were deliberately NOT re-pitched \u2014 re-publishing a position with nothing new is padding. Not reached: small and micro-cap hunting. RED TEAM (phase 2c, 17 ideas reviewed, 1 cut, 4 convictions lowered, 1 stated probability withdrawn, nothing raised and no level moved outward). CUT: LULU to the watchlist \u2014 its 2.07 reward-to-risk rests entirely on a 77.00 target with no evidence item, no anchor and no method behind it, 7.71 ATR out and 14.8% below a 120-day low that held; re-cut to the only defended level in the idea (90.38) the ratio is 0.90:1. Synthesis caught exactly this defect in HII and BCC and missed it in LULU; this is the consistent treatment, not a new standard. The LULU note is a withdrawal of the recommendation, not an instruction to close the position. CONVICTIONS LOWERED: IYR 5 -> 4 and TLT 5 -> 4, both for the same two reasons \u2014 their 'positioning' evidence restates the single 10/19 rate-and-sector move the catalyst and technical_level already carry rather than confirming it independently, and their counter_argument_answered item is rebutted by their own key_risk (the Kalshi ladder prices the policy rate, not the 10-year, the term premium or the statement language). TLT is the weaker of the two: half its positioning evidence is the Cboe skew reading that key_risk reproduces as the loss mechanism, its counter_argument concedes crowding outright, and its ratio is exactly 2.00 against a 2.00 floor. Both trades, levels and stops are kept \u2014 only the size that a 5 would have justified is withdrawn, which also halves the top-conviction weight sitting on one rate driver. UNP 4 -> 3: the defence of holding through Wednesday's print was 'the thesis driver is the Norfolk Southern combination', and that driver appears nowhere in the evidence, with no source and no date. Checked rather than assumed \u2014 it is real but it is not a swing driver: STB accepted the refiled application 2026-05-28, opening comments are due 2026-11-18, final-comment responses 2027-02-16, completion targeted mid-2027. The 2026-11-18 comment deadline, with BNSF, CSX and shipper groups on the record opposing, has been added to key_risk as a dated adverse-headline risk the idea did not carry. ABT 4 -> 3: its positioning evidence (one beat in four quarters, $46.85M of insider selling against $1.30M of buying) argues against the long, leaving a date and a chart level behind a conviction 4 whose own instruction is 'do not enter'. WITHDRAWN: XLE's stated 45% win probability, set to null rather than re-estimated \u2014 it was scored against a 4.40:1 that only exists because the validator measures risk from a 63.90 cost basis the raised 65.40 stop now sits above. The forward ratio is the ~1.1:1 the idea's own counter_argument states, where break-even is ~48%, so the claimed figure was below its break-even rather than 26 points above it; the stop raise is kept and the half-trim at 68.50 is now named as the load-bearing instruction. VERIFIED, NOT CUT: the Kalshi FOMC ladder was re-fetched at 06:45 ET and returns HTTP 200 with the exact quoted distribution (1c/13c/87c/1c/1c, 1,941,905 open interest on the hold leg), so IYR's 'source returns 404' validation failure is a confirmed false positive and the event URL has been added to IYR and TLT as a second citation; the full STLD Q3 release was read against the thesis and every figure checks out \u2014 $5.26, 3,784,484 tons, $1,400/ton (+$102), $404 scrap, backlog +50% into Q2 2027, $276M buyback, $2.4B liquidity, $846M CFO \u2014 and the release is in fact stronger than the thesis claims, giving an identified and fixed root cause for the aluminum shortfall (hot-strip-mill coolant composition, changed, 'no ongoing additional costs expected', October performance 'excellent') plus the quoted guide that volumes and profitability improve in Q4 2026 and through 2027; and a post-print STLD quote was re-attempted at 06:45 ET and is still unavailable, so that key_risk stands as written. SURVIVED ATTACK UNCHANGED: SMMT at conviction 5 \u2014 five genuinely distinct evidence kinds, a primary document read, verifiable insider data and an arm's-length $2B AstraZeneca investment, with the un-stoppable binary controlled by 1.5% speculative size and a mandatory trim rather than by a stop; the thesis leading on a 'floor' its own key_risk calls sentiment is a wording flaw, not a conviction one. Also deliberately left alone: the three closes (CEG, SNX, KHC), FCX at 1.94 and HII at 2.44 \u2014 all five fail mechanically, and all five fail because they report an honest number instead of nudging one, which is the behaviour this phase exists to protect. ENFORCEMENT NOTE for the reader: phase 2d demotes every FAIL verdict to the watchlist with a note carrying only the mechanical reason, so the three close instructions and the XLE stop raise will appear there stripped of their instruction. The actions listed at the top of these notes are the authoritative version and are unaffected. 16 ideas remain. Validation demoted 10 idea(s) whose numbers did not check out. 6 more carry warnings \u2014 see the validation block on each.",
+  "market_context": {
+    "summary": "Monday 2026-10-19 was a one-factor session and the factor was rates. The 10-year rose 4-6bp to 5.14-5.15% with the 30-year reported near its 2002 highs, and that single move produced the whole sector table: utilities -2.01% and real estate -1.16% were the two worst S&P sectors, with no company-specific story in either. Equities nonetheless rose on a tech-led rebound \u2014 S&P 500 7,690.73 (+0.41%), Nasdaq Composite 26,430.89 (+1.11%) \u2014 while the Dow slipped 0.07% on JPMorgan. VIX closed 18.44 (-7.75%), but Cboe's own 10/19 digest records VIX having run ~5 points higher week-on-week into Friday on a scramble for downside hedges, with 1-month SPX 30-delta skew jumping from the 15th to the 82nd percentile while MOVE held 99-102: equity hedging demand is already in place with rate vol contained. The second live driver is energy supply \u2014 WTI settled $103.66 (+2.22%) and Brent traded ~$110 intraday on Houthi missile strikes on Saudi targets, attacks on shipping near Hormuz and a Ukrainian strike on a Russian refinery, taking XOM, CVX and MPC to 52-week highs. The dated event that governs the next three weeks is the 2026-10-27/28 FOMC, the only meeting before 2026-12-09; Kalshi prices it 86% hold, 13% a 25bp hike and 1% a cut, so the priced tail is hawkish, not dovish.",
+    "regime": "mixed",
+    "levels": {
+      "spx": 7690.73,
+      "ndx_composite": 26430.89,
+      "dow": 51966.03,
+      "russell2000": 2728,
+      "vix": 18.44,
+      "us10y": "5.14-5.15%",
+      "dxy": "~101.8 (sources split 101.82 vs 101.99 \u2014 recorded as a range)",
+      "wti": 103.66,
+      "brent": "~110 intraday",
+      "gold_dec_futures": 4160.1,
+      "btc": 81442,
+      "eth": 2383.53,
+      "sol": 103.97
+    },
+    "econ_calendar": [
+      {
+        "event": "FOMC decision (2026-10-27/28 meeting, day two) \u2014 the only meeting before 2026-12-09; Kalshi prices 86% hold / 13% hike 25bp / 1% cut",
+        "datetime_et": "2026-10-28T14:00",
+        "importance": "high",
+        "consensus": "hold (86% market-implied)"
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "symbol": "SMMT",
+      "instrument": "Summit Therapeutics Inc",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 5,
+      "unit": "usd",
+      "last_price": 15.57,
+      "last_price_asof": "2026-10-19 close (prior session; pre-market 2026-10-20)",
+      "entry": {
+        "ideal": 17.1,
+        "zone_low": 15.0,
+        "zone_high": 17.3,
+        "order_type": "limit",
+        "condition": "Position already filled at 17.10. Any add must be sized as a lottery ticket and completed before 2026-11-14 or not at all \u2014 do not add in the last week before the PDUFA."
+      },
+      "exit": {
+        "target": 23.0,
+        "scale_plan": "this is a binary: trim at least half into the 2026-11-14 PDUFA regardless of price, and let only a lottery-sized remainder carry the decision",
+        "time_stop": "2026-11-28"
+      },
+      "stop": 14.4,
+      "risk_reward": 2.19,
+      "win_probability": 0.4,
+      "position_size_pct": 1.5,
+      "risk_tier": "speculative",
+      "requires_margin": false,
+      "avg_dollar_volume": 106004966,
+      "price_source": "nasdaq via market_data.py history",
+      "catalyst": {
+        "event": "HARMONi PDUFA goal date for the ivonescimab BLA in EGFR-mutated NSCLC (BLA accepted January 2026). Nearer term, Summit opened a global Phase II of ivonescimab-based regimens in advanced clear-cell RCC on 2026-10-19 (SMT112-216 / NCT07877194, ~100 patients, versus nivolumab+ipilimumab as comparator).",
+        "datetime_et": "2026-11-14T00:00",
+        "action": "hold the position entered 2026-10-09 at 17.10; trim at least half into the PDUFA; stop unchanged at 14.40",
+        "wait": false
+      },
+      "thesis": "UPDATE to the open position entered 2026-10-09 at 17.10, now 15.57 \u2014 hold, and the stop stays at 14.40. Two things changed. First, the drawdown found a floor: the 2026-10-16 low of 14.56 came within 16 cents of the 14.40 stop and held, then 2026-10-19 reversed +6.43% to 15.57 on 6.15M shares against a 6.81M 30-day average, on an identified catalyst rather than a bounce \u2014 Summit opened a global Phase II of ivonescimab regimens in advanced clear-cell RCC. Second, the dominant event is now dated and close: the HARMONi PDUFA goal date is 2026-11-14, roughly three and a half weeks out. Underneath both sits the strongest positioning signal in this whole report: $103.6M of open-market insider buying by three distinct buyers over six months with **zero** sells, including co-CEOs Robert Duggan and Mahkam Zanganeh each buying 3,810,000 shares at $13.12 on 2026-06-12, and AstraZeneca completing a ~$2B equity investment on 2026-10-05.",
+      "key_risk": "2026-11-14 is a binary regulatory decision and the 14.40 stop is decoration against it \u2014 a complete response letter takes this stock down 40-60% in one gap, well through the stop, and no stop placement fixes that. The only real control is size, which is why this is 1.5% and why the instruction is to trim at least half into the date. Secondary: SMMT remains below its 20-day (16.42) and 50-day (15.71), is 30.4% off its 22.38 range high, and the ccRCC study that caused Monday rally is a trial *opening* \u2014 a first-patient-in, not data, with no readout for years, so the move it produced is sentiment rather than information.",
+      "counter_argument": "The strongest case against holding is that the insider buys are four months stale at $13.12 \u2014 16% below spot \u2014 and that insiders buying their own binary is exactly the trade with the least informational content, since management cannot know an FDA decision and is paid to be bullish. It is answered by the party that is not management: AstraZeneca completed a ~$2B equity investment on 2026-10-05 and on 2026-10-02 agreed with Daiichi Sankyo to test Datroway alongside ivonescimab, which is an arm length counterparty with its own diligence committing capital at current prices, not a founder averaging down. That does not de-risk the PDUFA, and the trim instruction stands regardless.",
+      "evidence": [
+        {
+          "kind": "dated_catalyst",
+          "detail": "HARMONi PDUFA goal date 2026-11-14 for the ivonescimab BLA in EGFR-mutated NSCLC, disclosed in the 2026-10-19 company release; BLA accepted January 2026; HARMONi-GU1 site activations to begin by Q4 2026",
+          "source": "https://www.stocktitan.net/news/SMMT/summit-therapeutics-announces-opening-of-global-phase-ii-study-of-x5yykvxe0a87.html"
+        },
+        {
+          "kind": "primary_document",
+          "detail": "Read the 2026-10-19 release: global Phase II of ivonescimab-based regimens in advanced clear-cell RCC (SMT112-216 / AK112-216, NCT07877194) with partner Akeso \u2014 randomized, open-label, multiregional, ~100 patients, US and China sites, arms of ivonescimab mono, ivo+cadonilimab and ivo+ipilimumab against nivolumab+ipilimumab in treatment-naive incurable locally advanced/metastatic ccRCC; five Phase III ivonescimab readouts to date, all positive",
+          "source": "https://www.financialcontent.com/article/bizwire-2026-10-19-summit-therapeutics-announces-opening-of-global-phase-ii-study-of-ivonescimab-based-regimens-in-advanced-clear-cell-renal-cell-carcinoma"
+        },
+        {
+          "kind": "positioning",
+          "detail": "Fetched insider data, 6-month window: 6 open-market purchases, 3 distinct buyers, $103,616,650 of buying and $0 of sales. Duggan and Zanganeh each bought 3,810,000 shares at $13.12 on 2026-06-12; Soni bought 25,000 at $14.43 on 2026-06-04.",
+          "source": "https://finnhub.io/api/v1/stock/insider-transactions?symbol=SMMT"
+        },
+        {
+          "kind": "technical_level",
+          "detail": "ATR14 0.9849 (6.33%). Stop 14.40 is 2.74 ATR below the 17.10 entry \u2014 compliant with the 2.0 ATR swing floor measured on today ATR, which is the test CEG fails in this same report. The 2026-10-16 low of 14.56 held 0.16 above it. Price below SMA20 16.42 and SMA50 15.71; range 12.07-22.38.",
+          "source": "https://www.nasdaq.com/market-activity/stocks/smmt/historical"
+        },
+        {
+          "kind": "counter_argument_answered",
+          "detail": "Stale-insider objection answered by a third-party commitment: AstraZeneca completed a ~$2B equity investment (~108,955 convertible preferred shares) on 2026-10-05, and on 2026-10-02 AZ and Daiichi Sankyo agreed to test Datroway with ivonescimab across tumour types",
+          "source": "https://smmttx.com/news/press-releases/news-details/2026/AstraZeneca-Completes-2-Billion-Equity-Investment-in-Summit-Therapeutics/default.aspx"
+        }
+      ],
+      "sources": [
+        "https://www.stocktitan.net/news/SMMT/summit-therapeutics-announces-opening-of-global-phase-ii-study-of-x5yykvxe0a87.html",
+        "https://www.financialcontent.com/article/bizwire-2026-10-19-summit-therapeutics-announces-opening-of-global-phase-ii-study-of-ivonescimab-based-regimens-in-advanced-clear-cell-renal-cell-carcinoma",
+        "https://finnhub.io/api/v1/stock/insider-transactions?symbol=SMMT",
+        "https://smmttx.com/news/press-releases/news-details/2026/AstraZeneca-Completes-2-Billion-Equity-Investment-in-Summit-Therapeutics/default.aspx",
+        "https://www.astrazeneca.com/media-centre/press-releases/2026/az-ds-collaboration-with-summit-for-datroway.html",
+        "https://www.nasdaq.com/market-activity/stocks/smmt/historical"
+      ],
+      "rank": 1,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.19,
+        "claimed_risk_reward": 2.19,
+        "breakeven_probability": 0.313,
+        "stated_win_probability": 0.4,
+        "expectancy_r": 0.276,
+        "claimed_edge": 0.087,
+        "stop_atr_multiple": 2.74,
+        "live_price": 15.57,
+        "live_price_asof": "2026-10-19T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 888.5,
+        "bid": 15.21,
+        "ask": 15.56,
+        "spread_pct": 2.275,
+        "atr14": 0.9849,
+        "checked_at_et": "2026-10-20T06:49:44-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.19:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 17.1 is +9.8% from live 15.57"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-11-14 is ahead of us"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 5.99 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "stop_distance",
+            "status": "pass",
+            "detail": "stop is 2.74 ATR from entry, clear of the 2.5 ATR guide for a swing stock"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "40% claimed vs 31% break-even at 2.19:1 \u2014 expectancy +0.28R"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-10-19T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "bid/ask spread 2.27%; the round trip costs 7% of the target move \u2014 set the entry as a limit, never market"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 5 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "1.5% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 5 rests on 5 independent kinds: counter_argument_answered, dated_catalyst, positioning, primary_document, technical_level"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "1 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "TLT",
+      "instrument": "iShares 20+ Year Treasury Bond ETF",
+      "asset_class": "etf",
+      "venue": "Robinhood Stocks",
+      "direction": "sell_short",
+      "horizon": "swing",
+      "conviction": 4,
+      "unit": "usd",
+      "last_price": 79.46,
+      "last_price_asof": "2026-10-19 close (prior session; pre-market 2026-10-20)",
+      "entry": {
+        "ideal": 79.9,
+        "zone_low": 79.4,
+        "zone_high": 80.6,
+        "order_type": "limit",
+        "condition": "Position already filled at 79.90 on 2026-09-24. Any add belongs on a bounce into the 80.67 50-day, not here \u2014 and must be complete before the 2026-10-28 statement, not after it."
+      },
+      "exit": {
+        "target": 75.7,
+        "scale_plan": "trim half at 76.43, the 120-day range low, since taking out a 120-day low is a different claim from approaching it",
+        "time_stop": "2026-12-05"
+      },
+      "stop": 82.0,
+      "risk_reward": 2.0,
+      "win_probability": 0.44,
+      "position_size_pct": 2,
+      "risk_tier": "standard",
+      "requires_margin": true,
+      "avg_dollar_volume": 3691422922,
+      "price_source": "nasdaq via market_data.py history",
+      "catalyst": {
+        "event": "FOMC decision, announced 2:00pm ET on the second day of the 2026-10-27/28 meeting \u2014 the only Fed meeting between now and 2026-12-09, confirmed against the Chicago Fed published calendar (whose 2026-10-17 to 10-29 blackout corroborates the dates). Kalshi event markets closing 2026-10-28 price the outcome at 86% hold, 13% hike 25bps, 1% cut.",
+        "datetime_et": "2026-10-28T14:00",
+        "action": "hold the short through the statement; do NOT add after it; stop unchanged at 82.00",
+        "wait": false
+      },
+      "thesis": "UPDATE to the open short entered 2026-09-24 at 79.90, now 79.46 \u2014 hold, levels unchanged, and the thesis got two independent confirmations. The first is price: the 10-year rose 4-6bp to 5.14-5.15% on 2026-10-19 with the 30-year reported near 2002 highs, and that single move took utilities down 2.01% and real estate down 1.16% as the worst two S&P sectors. TLT closed 79.46, below its 80.67 50-day. The second is the event market, and it is the more useful one: Kalshi contracts on the 2026-10-28 decision price **86% hold, 13% a 25bp hike, and only 1% a cut**, against roughly 1.9M in open interest on the hold leg. The distribution is skewed toward tightening, not easing, which is the opposite of the risk a short-duration position normally carries into a Fed meeting. The calendar compounds it: this is the only meeting before 2026-12-09, so there is no second chance to reprice the front end this side of December. Requires margin \u2014 flagged.",
+      "key_risk": "The event market prices the *policy* decision, not the long end, and this position is in 20-year-plus duration where term premium and auction demand drive the price \u2014 the Fed can hold exactly as priced and TLT can still rally hard on a weak auction, a growth scare, or a flight to quality. That bid arrives without notice: VIX ran ~5 points higher week-on-week into 2026-10-16 with 1-month SPX 30-delta skew jumping from the 15th to the 82nd percentile, so hedging demand is already in place and an equity air pocket during mega-cap earnings week sends TLT through 82.00 on a day when nothing changed about rates. The 82.00 stop is 2.52 ATR above entry \u2014 fine for an ordinary day, no defence against a risk-off gap. Being short also means paying the distribution.",
+      "counter_argument": "The strongest case against the short is that it is late and crowded: the 10-year at 5.14-5.15% and the 30-year at 2002 highs is a position the whole market now holds, the 75.70 target sits *below* the 76.43 120-day low so the trade needs new lows rather than continuation, and crowded short-bond positioning is what produces violent squeezes. The squeeze mechanism is now answered with a priced number rather than an opinion: the event market puts a rate cut at the 2026-10-28 meeting at **1%**, so the specific catalyst that would force that squeeze is not merely unlikely in my estimation, it is unlikely in the market own pricing with real money behind it. What remains unanswered is the crowding itself, which is why the add instruction is explicitly closed off after the statement and the half-trim sits at 76.43 rather than at the target. RED TEAM (conviction cut 5 -> 4): the Kalshi ladder was independently re-fetched at 06:45 ET and verified (1c/13c/87c/1c/1c, 1,941,905 open interest on the hold leg), so the evidence is real \u2014 but it is doing more work than it can bear in two ways. First, this idea's 'positioning' evidence is half a restatement of the same 10/19 rate move the technical_level already carries, and its other half \u2014 the Cboe skew and MOVE reading \u2014 is reproduced verbatim in key_risk as the mechanism by which this short loses money. Evidence that argues against the trade cannot also pay for conviction in it. Second, the counter_argument states outright that the crowding objection remains unanswered, and crowding is the primary risk in a short-duration trade the whole market is already in. A conviction 5 with its strongest objection conceded is a 4. The reward-to-risk also sits at exactly 2.00 against a 2.00 floor, so there is no margin anywhere in this idea. Levels, stop and the no-add-after-the-statement instruction all stand.",
+      "evidence": [
+        {
+          "kind": "dated_catalyst",
+          "detail": "FOMC meeting 2026-10-27/28, decision 2:00pm ET on day two, from the Chicago Fed Federal Reserve calendars; the listed 2026-10-17 to 2026-10-29 communications blackout independently brackets the same dates, and there is no November 2026 meeting (next is 2026-12-08/09)",
+          "source": "https://www.chicagofed.org/utilities/about-us/federal-reserve-calendars"
+        },
+        {
+          "kind": "technical_level",
+          "detail": "ATR14 0.832 (1.05%). Stop 82.00 is 2.52 ATR above the 79.90 entry, clear of the 1.8 ATR ETF swing floor. Close 79.46 is below the 80.67 50-day and above the 78.65 20-day; the 120-day range is 76.43-87.79, so the 75.70 target requires a break of the range low and the trim is placed at 76.43 for that reason.",
+          "source": "https://www.nasdaq.com/market-activity/stocks/tlt/historical"
+        },
+        {
+          "kind": "positioning",
+          "detail": "The rate move is measured, not inferred: 10-year 5.14-5.15% on 2026-10-19, +4 to +6bp, with utilities -2.01% and real estate -1.16% as the two worst S&P sectors. Cboe 10/19 digest records MOVE holding 99-102 while 1M SPX 30-delta skew moved from the 15th to the 82nd percentile \u2014 equity hedging demand rising while rate vol stayed contained.",
+          "source": "https://www.cboe.com/insights/posts/week-of-10-19-2026-scramble-for-downside-hedges-fuels-vix-surge-ahead-of-mega-cap-earnings"
+        },
+        {
+          "kind": "counter_argument_answered",
+          "detail": "Squeeze objection answered with market-implied probabilities fetched from the Kalshi API for the five mutually exclusive 2026-10-28 outcomes (series KXFEDDECISION-26OCT, close 2026-10-28T17:59Z): Hike >25bp 1c, Hike 25bp 13c, Hold 86c (open interest ~1,941,894), Cut 25bp 1c, Cut >25bp 1c. A dovish surprise \u2014 the catalyst that would squeeze this short \u2014 is priced at 1%, and the tail that is priced is the hawkish one at 13%.",
+          "source": "https://api.elections.kalshi.com/trade-api/v2/markets/KXFEDDECISION-26OCT-H0"
+        }
+      ],
+      "sources": [
+        "https://www.chicagofed.org/utilities/about-us/federal-reserve-calendars",
+        "https://www.nasdaq.com/market-activity/stocks/tlt/historical",
+        "https://investrade.com/market-review-october-19-2026/",
+        "https://www.cboe.com/insights/posts/week-of-10-19-2026-scramble-for-downside-hedges-fuels-vix-surge-ahead-of-mega-cap-earnings",
+        "https://api.elections.kalshi.com/trade-api/v2/markets/KXFEDDECISION-26OCT-H0",
+        "https://api.elections.kalshi.com/trade-api/v2/events/KXFEDDECISION-26OCT"
+      ],
+      "rank": 2,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.0,
+        "claimed_risk_reward": 2.0,
+        "breakeven_probability": 0.333,
+        "stated_win_probability": 0.44,
+        "expectancy_r": 0.32,
+        "claimed_edge": 0.107,
+        "stop_atr_multiple": 2.52,
+        "live_price": 79.46,
+        "live_price_asof": "2026-10-19T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 888.9,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": 0.832,
+        "checked_at_et": "2026-10-20T06:50:19-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.0:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 79.9 is +0.6% from live 79.46"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-10-28 is ahead of us"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 5.05 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "stop_distance",
+            "status": "pass",
+            "detail": "stop is 2.52 ATR from entry, clear of the 2.25 ATR guide for a swing etf"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "44% claimed vs 33% break-even at 2.0:1 \u2014 expectancy +0.32R"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-10-19T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "no bid/ask available (normal outside regular hours)"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 4 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "2% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 4 rests on 4 independent kinds: counter_argument_answered, dated_catalyst, positioning, technical_level"
+          },
+          {
+            "check": "sources",
+            "status": "pass",
+            "detail": "all 4 checked source(s) resolve"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "ABT",
+      "instrument": "Abbott Laboratories",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 3,
+      "unit": "usd",
+      "last_price": 104.06,
+      "last_price_asof": "2026-10-19 close (prior session; pre-market 2026-10-20)",
+      "entry": {
+        "ideal": 103.0,
+        "zone_low": 100.5,
+        "zone_high": 103.5,
+        "order_type": "limit",
+        "condition": "DO NOT ENTER before the 2026-10-21 print. Enter only after earnings are out, and only if the reaction holds above the 101.03 20-day \u2014 if it gaps below 100, the level is void and the idea is re-cut from scratch rather than bought cheaper"
+      },
+      "exit": {
+        "target": 113.5,
+        "scale_plan": "trim half at 109.5 (the mid-range shelf), trail the rest toward 113.5",
+        "time_stop": "2026-11-20"
+      },
+      "stop": 98.0,
+      "risk_reward": 2.1,
+      "win_probability": 0.4,
+      "position_size_pct": 2,
+      "risk_tier": "standard",
+      "requires_margin": false,
+      "avg_dollar_volume": 956668846,
+      "price_source": "nasdaq via market_data.py history",
+      "catalyst": {
+        "event": "Q3 earnings before the open, EPS est 1.4297 on rev est $13.1B \u2014 confirmed on the fetched finnhub calendar",
+        "datetime_et": "2026-10-21T07:00",
+        "action": "WAIT for the print. Stand the 103.0 limit down until the reaction is on the tape, then re-enter if it holds the 20-day",
+        "wait": true
+      },
+      "thesis": "UPDATE to the unfilled ABT idea published 2026-10-16 at 103.0 \u2014 the level is unchanged but the instruction is now WAIT, and that is the whole recommendation. The new fact is that Q3 earnings land 2026-10-21 before the open, one session away, and the fetched surprise record says ABT has beaten consensus in only **one of its last four quarters** (+1.38% in Q2 after -0.45%, -0.75% and -1.06%). With spot at 104.06 and the limit at 103.0, the single most likely way this pullback entry ever fills is the earnings gap itself \u2014 which is the mechanism that selects for exactly the ideas that were already failing. Sell-side has gone the other way into the print: 81.2% bullish of 32 analysts with zero sells, up 9.8 points since July. Analysts raising the bar on a company that keeps missing it by a hair is a reason to let the print clear first, not to pre-position for it.",
+      "key_risk": "Waiting means giving up the gap-up: if ABT finally beats and guides up, it re-rates toward the 105.80 50-day and beyond without ever touching 103, and the idea is never entered at all \u2014 the same outcome it has had since 2026-10-16. The entry risk being avoided is the mirror image: a 2.36 ATR stock that gaps 5% on a guidance change fills the 103 limit on the way to 96, below the 98.0 stop, so the stop is not protection against this particular event.",
+      "counter_argument": "The strongest case for leaving the limit live is that the four misses are tiny \u2014 the largest is 1.06%, which is noise in a $13B quarter and says more about how tightly ABT guides the street than about the business, and a company that lands within 1% of consensus every time is precisely the one you can safely pre-position in. Answered with the price record rather than asserted away: ABT is 11.32% off its 117.34 range high and still 26.95% above an 81.97 range low set inside the same 120 bars, so this name has in fact made large moves this year, and the 101.03 20-day sitting 2.9% under spot with the 105.80 50-day 1.7% above it is a stock with no established trend to lean on through an event. RED TEAM (conviction cut 4 -> 3): the analysis here is right and the WAIT instruction is kept intact, but the score is not paid for. The 'positioning' evidence \u2014 beats in one of the last four quarters, and $46.85M of insider selling against $1.30M of buying whose most recent purchase is five months old and 17% below spot \u2014 argues against a long, not for one. Strip it and the direction is supported by a fetched earnings date and a chart level, with the idea's own thesis describing a stock with no established trend to lean on through an event. A conviction 4 on an idea whose published instruction is 'do not enter' overstates it; 3 is the honest score for standing down.",
+      "evidence": [
+        {
+          "kind": "dated_catalyst",
+          "detail": "Q3 earnings 2026-10-21 before open, EPS est 1.4297, rev est $13.1B \u2014 read off the fetched finnhub earnings calendar",
+          "source": "https://finnhub.io/api/v1/calendar/earnings"
+        },
+        {
+          "kind": "positioning",
+          "detail": "Fetched surprise record: beats in 1 of the last 4 quarters (2026-06-30 +1.38%; 2026-03-31 -0.45%; 2025-12-31 -0.75%; 2025-09-30 -1.06%), against an analyst trend moving the other way \u2014 bullish share 81.2% of 32 analysts (12 strong buy, 14 buy, 6 hold, 0 sell) vs 11/14/10 in July, +9.8 points. Insider buying is stale, not supportive: 3 open-market buys by 3 buyers totalling $1.30M, the most recent 2026-05-07 at 86.82 \u2014 17% below spot and 5 months old \u2014 against $46.85M of sells.",
+          "source": "https://finnhub.io/api/v1/stock/earnings?symbol=ABT"
+        },
+        {
+          "kind": "technical_level",
+          "detail": "ATR14 2.36 (2.27%). Stop 98.0 is 2.12 ATR below the 103.0 entry and sits under the October base (99.78 low on 10/12) and under the 101.03 20-day. Target 113.5 is inside the 117.34 120-day range high and above the 105.79 50-day; the 109.5 trim is a mid-range shelf.",
+          "source": "https://www.nasdaq.com/market-activity/stocks/abt/historical"
+        }
+      ],
+      "sources": [
+        "https://finnhub.io/api/v1/calendar/earnings",
+        "https://finnhub.io/api/v1/stock/earnings?symbol=ABT",
+        "https://finnhub.io/api/v1/stock/recommendation?symbol=ABT",
+        "https://www.nasdaq.com/market-activity/stocks/abt/historical"
+      ],
+      "rank": 3,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.1,
+        "claimed_risk_reward": 2.1,
+        "breakeven_probability": 0.323,
+        "stated_win_probability": 0.4,
+        "expectancy_r": 0.24,
+        "claimed_edge": 0.077,
+        "stop_atr_multiple": 2.12,
+        "live_price": 104.06,
+        "live_price_asof": "2026-10-19T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 889.2,
+        "bid": 104.12,
+        "ask": 105.29,
+        "spread_pct": 1.117,
+        "atr14": 2.36,
+        "checked_at_et": "2026-10-20T06:50:28-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.1:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 103.0 is -1.0% from live 104.06"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-10-21 is ahead of us"
+          },
+          {
+            "check": "earnings_date",
+            "status": "warn",
+            "detail": "claims an earnings catalyst but ABT is not on the fetched calendar"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 4.45 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "stop_distance",
+            "status": "warn",
+            "detail": "stop is 2.12 ATR from entry \u2014 clears the 2.0 ATR floor for a swing stock but sits under the 2.5 ATR level where stop-outs have clustered"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "40% claimed vs 32% break-even at 2.1:1 \u2014 expectancy +0.24R"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-10-19T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "bid/ask spread 1.12%; the round trip costs 11% of the target move \u2014 set the entry as a limit, never market"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "2% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 3 rests on 3 independent kinds: dated_catalyst, positioning, technical_level"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "3 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "PFE",
+      "instrument": "Pfizer Inc",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "long_term",
+      "conviction": 3,
+      "unit": "usd",
+      "last_price": 29.44,
+      "last_price_asof": "2026-10-19 close (prior session; pre-market 2026-10-20)",
+      "entry": {
+        "ideal": 27.6,
+        "zone_low": 26.5,
+        "zone_high": 28.5,
+        "order_type": "limit",
+        "condition": "Accumulation position, filled at 27.60 on 2026-08-18. Spot 29.44 is 6.7% above the entry and 1.5% off the 29.88 120-day high \u2014 do NOT add here. The next add is under 28.50, and preferably under 26.50."
+      },
+      "exit": {
+        "target": 42.0,
+        "scale_plan": "a multi-year re-rating target, not a chart level \u2014 trim a third at 36 if it gets there inside a year, otherwise hold for the pipeline"
+      },
+      "stop": null,
+      "bear_case_price": 23.62,
+      "risk_reward": 3.62,
+      "win_probability": null,
+      "position_size_pct": 3,
+      "risk_tier": "standard",
+      "requires_margin": false,
+      "avg_dollar_volume": 454104891,
+      "price_source": "nasdaq via market_data.py history",
+      "catalyst": {
+        "event": "Driver is the post-patent-cliff pipeline maturing against a de-rated multiple, not a dated event. The nearest dated item IS confirmed on the fetched calendar: Q3 earnings 2026-11-03, EPS est 0.7376.",
+        "datetime_et": "2026-11-03T07:00",
+        "action": "hold; do not add at 29.44; next add under 28.50",
+        "wait": false
+      },
+      "thesis": "UPDATE to the long-term position entered 2026-08-18 at 27.60, now 29.44 (+6.7%) \u2014 hold, and the correction this run makes is to supply the downside anchor the position was missing, which config/strategy.md requires on every long-term idea. It is set at 23.62, the measured 120-day low, which is the level PFE returns to if the pipeline fails to offset the patent cliff and the market re-rates it back to a pure declining-annuity multiple. Against the 42.00 target that is 3.62 reward-to-risk, clearing the 2.5 long-term floor with room. The accumulation instruction is also corrected, and this is the actionable part: at 29.44 PFE sits 1.5% below its 29.88 120-day high and above both its 28.43 20-day and 28.02 50-day, so this is the worst point in the position history to add. The entry zone is restated as under 28.50.",
+      "key_risk": "The concrete invalidation \u2014 required here because there is no stop \u2014 is pipeline failure showing up as revenue rather than as sentiment: two consecutive quarters in which total revenue excluding COVID products declines year on year, or a late-stage readout failure in the oncology franchise built from the Seagen acquisition. Either would mean the pipeline is not replacing the cliff and the thesis is wrong regardless of the multiple. Secondary risk is policy: US drug-pricing action is the sector-wide driver that no stock-level analysis prices, and it has no date.",
+      "counter_argument": "The strongest case against holding is that a 6.9%-yielding pharma at a single-digit multiple has been a value trap for several years, and the +6.7% gain here is a rate-and-rotation bounce rather than evidence the pipeline is working \u2014 PFE is a bond proxy that happened to rally while the 10-year rose, which should not be true and suggests the move is defensive flow, not re-rating. Answered in the position management rather than in the thesis: that is precisely why the add zone is cut to under 28.50 and the position is explicitly not added to at the range high. The thesis is given until the 2026-11-03 print and the revenue test above to prove itself, not an open-ended hold.",
+      "evidence": [
+        {
+          "kind": "valuation_anchor",
+          "detail": "Downside anchored at the measured 23.62 120-day low (range 23.62-29.88) \u2014 19.8% below the 29.44 close \u2014 giving 3.62 R:R to the 42.00 target against the 2.5 long-term floor. Sell-side targets found cluster well below that target and are mixed in direction: JPMorgan to $30, BofA to $29, Cantor to $28 (all Neutral), Scotiabank to $33 (Outperform), all early October.",
+          "source": "https://stockanalysis.com/stocks/pfe/"
+        },
+        {
+          "kind": "dated_catalyst",
+          "detail": "Q3 2026 earnings 2026-11-03, EPS est 0.7376 \u2014 read off the fetched finnhub earnings calendar (one of the few names in this book the calendar actually carries)",
+          "source": "https://finnhub.io/api/v1/calendar/earnings"
+        },
+        {
+          "kind": "technical_level",
+          "detail": "ATR14 0.570 (1.94%). Close 29.44 is above both the 28.426 20-day and the 28.0226 50-day and only 1.5% below the 29.88 120-day high \u2014 the reason the add instruction is withdrawn at this price. No stop by design on a long-term position.",
+          "source": "https://www.nasdaq.com/market-activity/stocks/pfe/historical"
+        }
+      ],
+      "sources": [
+        "https://stockanalysis.com/stocks/pfe/",
+        "https://finnhub.io/api/v1/calendar/earnings",
+        "https://www.nasdaq.com/market-activity/stocks/pfe/historical"
+      ],
+      "rank": 4,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 3.62,
+        "claimed_risk_reward": 3.62,
+        "breakeven_probability": 0.216,
+        "stop_atr_multiple": null,
+        "live_price": 29.44,
+        "live_price_asof": "2026-10-19T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 889.3,
+        "bid": 29.61,
+        "ask": 29.68,
+        "spread_pct": 0.236,
+        "atr14": 0.57,
+        "checked_at_et": "2026-10-20T06:50:30-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 3.62:1 clears the 2.5:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 27.6 is -6.2% from live 29.44"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-11-03 is ahead of us"
+          },
+          {
+            "check": "earnings_date",
+            "status": "warn",
+            "detail": "claims an earnings catalyst but PFE is not on the fetched calendar"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "long-term target is valuation-anchored, not ATR-bound"
+          },
+          {
+            "check": "stop_distance",
+            "status": "pass",
+            "detail": "long-term downside is a bear case, not a stop \u2014 no ATR floor applies"
+          },
+          {
+            "check": "expectancy",
+            "status": "warn",
+            "detail": "no win_probability stated; this idea needs better than 22% to break even at 3.62:1"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-10-19T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "pass",
+            "detail": "bid/ask spread 0.24%; the round trip costs 0% of the target move"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "3% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 3 rests on 3 independent kinds: dated_catalyst, technical_level, valuation_anchor"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "1 of 3 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "GE",
+      "instrument": "GE Aerospace",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 3,
+      "unit": "usd",
+      "last_price": 311.28,
+      "last_price_asof": "2026-10-19 close (prior session). GE reports Q3 pre-open 2026-10-20 \u2014 this price is almost certainly void by the time the report is read.",
+      "entry": {
+        "ideal": 308.0,
+        "zone_low": 303.0,
+        "zone_high": 312.0,
+        "order_type": "limit",
+        "condition": "Position already filled at 308.0 \u2014 this is NOT an instruction to add. Any new entry is void until the Q3 print is on the tape and re-levelled."
+      },
+      "exit": {
+        "target": 341.0,
+        "scale_plan": "trim half at 329 (the 50-day) and trail the balance to 341",
+        "time_stop": "2026-12-05"
+      },
+      "stop": 292.0,
+      "risk_reward": 2.06,
+      "win_probability": 0.4,
+      "position_size_pct": 3,
+      "risk_tier": "standard",
+      "requires_margin": false,
+      "avg_dollar_volume": 1365563882,
+      "price_source": "nasdaq via market_data.py history",
+      "catalyst": {
+        "event": "Q3 2026 earnings BEFORE THE OPEN TODAY, 2026-10-20 \u2014 consensus ~$1.99-2.01 adj EPS on ~$12.79-12.88B. FY26 guidance standing from the 2026-07-16 raise: adj EPS $7.65-7.85, operating profit $10.55-10.75B, FCF $8.9-9.2B.",
+        "datetime_et": "2026-10-20T06:30",
+        "action": "HOLD the existing position. Do not add before the print \u2014 it lands within the hour of this report and no level in it survives the reaction.",
+        "wait": false
+      },
+      "thesis": "UPDATE to the open position entered 2026-10-12 at 308.0, now 311.28 (+1.1%) \u2014 hold, do not add, and be aware this report is published into the print. GE Aerospace reports Q3 before the open today, so the actionable content is the risk posture rather than a level: the 292.0 stop is 2.45 ATR below entry on ATR14 6.53, which is a real cushion against a normal day but not against an earnings gap. The standing FY26 guide from the July raise is adj EPS $7.65-7.85 and FCF $8.9-9.2B, and the one new datapoint since this position was opened is a 2026-10-16 Turkish Airlines/CFM memorandum covering 600+ LEAP-1B engines, which feeds the installed base that drives the aftermarket margin the whole thesis rests on. This symbol has now been published six times in ten sessions, which is an anchoring warning rather than conviction, and the conviction here is marked down to 3 for that reason: nothing in the evidence is new except the MOU and the confirmed date.",
+      "key_risk": "The position is 20% below its 388.84 range high and below the 329.26 50-day, so the tape has been de-rating this name for weeks and the print arrives into weakness rather than strength \u2014 exactly the configuration in which an in-line quarter still sells off. GE also fell with defense on 2026-10-19 on midterm-driven spending worries, a driver that is neither dated nor hedgeable. And a stop 19 points below spot is no protection against a gap: if guidance on FY26 FCF comes down, 292 is a fill price, not a stop price.",
+      "counter_argument": "The strongest case against holding is that six publications in ten sessions is the signature of anchoring, and the honest response to a position that has gone nowhere while being re-pitched repeatedly is to close it rather than defend it once more. That is answered only in part, and the partial answer is the reason conviction is 3 not 4: the stop at 2.45 ATR does clear the volatility floor, unlike CEG in this same report, so the position is structurally sound even if the re-pitching is not \u2014 but the correct action is to stop re-pitching it, hold what exists, and let the print decide.",
+      "evidence": [
+        {
+          "kind": "dated_catalyst",
+          "detail": "Q3 2026 earnings confirmed pre-open 2026-10-20 on the fetched finnhub calendar and corroborated by MarketBeat consensus ~$2.01 adj EPS on ~$12.88B; no Q3 earnings 8-K was on EDGAR as of 06:10 ET (latest GE 8-K is 2026-09-22), so the print was still pending at the time of writing",
+          "source": "https://www.marketbeat.com/earnings/reports/2026-10-20-general-electric-stock/"
+        },
+        {
+          "kind": "technical_level",
+          "detail": "ATR14 6.5348 (2.10%). Stop 292.0 is 2.45 ATR below the 308.0 entry and under the 2026-10-15 swing low of 304.09. Price 311.28 sits essentially on the 312.49 20-day and 5.5% below the 329.26 50-day; range 279.41-388.84, so spot is 19.9% off the high and 11.4% off the low.",
+          "source": "https://www.nasdaq.com/market-activity/stocks/ge/historical"
+        }
+      ],
+      "sources": [
+        "https://www.marketbeat.com/earnings/reports/2026-10-20-general-electric-stock/",
+        "https://news.alphastreet.com/ge-aerospace-q3-2026-earnings-preview-october-20-street-expects-2-01-eps/",
+        "https://www.geaerospace.com/news/press-releases",
+        "https://www.nasdaq.com/market-activity/stocks/ge/historical"
+      ],
+      "rank": 5,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.06,
+        "claimed_risk_reward": 2.06,
+        "breakeven_probability": 0.327,
+        "stated_win_probability": 0.4,
+        "expectancy_r": 0.224,
+        "claimed_edge": 0.073,
+        "stop_atr_multiple": 2.45,
+        "live_price": 311.28,
+        "live_price_asof": "2026-10-19T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 889.5,
+        "bid": 309.0,
+        "ask": 312.79,
+        "spread_pct": 1.219,
+        "atr14": 6.5348,
+        "checked_at_et": "2026-10-20T06:50:35-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.06:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 308.0 is -1.1% from live 311.28"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-10-20 is ahead of us"
+          },
+          {
+            "check": "earnings_date",
+            "status": "warn",
+            "detail": "claims an earnings catalyst but GE is not on the fetched calendar"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 5.05 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "stop_distance",
+            "status": "warn",
+            "detail": "stop is 2.45 ATR from entry \u2014 clears the 2.0 ATR floor for a swing stock but sits under the 2.5 ATR level where stop-outs have clustered"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "40% claimed vs 33% break-even at 2.06:1 \u2014 expectancy +0.22R"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-10-19T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "bid/ask spread 1.22%; the round trip costs 11% of the target move \u2014 set the entry as a limit, never market"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "3% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 3 rests on 2 independent kinds: dated_catalyst, technical_level"
+          },
+          {
+            "check": "sources",
+            "status": "pass",
+            "detail": "all 4 checked source(s) resolve"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "AAL",
+      "instrument": "American Airlines Group Inc",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "sell_short",
+      "horizon": "swing",
+      "conviction": 2,
+      "unit": "usd",
+      "last_price": 11.68,
+      "last_price_asof": "2026-10-19 close (prior session; pre-market 2026-10-20)",
+      "entry": {
+        "ideal": 13.35,
+        "zone_low": 13.2,
+        "zone_high": 13.6,
+        "order_type": "limit",
+        "condition": "STAND DOWN. The level is unchanged at 13.35 and spot is 11.68, so entry requires a 14.3% rally that will not happen before the 2026-10-22 print. Do NOT chase this short lower \u2014 if it is not entered at 13.35 or better it is not entered. Re-arm only if AAL trades back to 13.35 AFTER earnings."
+      },
+      "exit": {
+        "target": 10.9,
+        "scale_plan": "if it is ever filled, trim half at 11.17, the 120-day low",
+        "time_stop": "2026-11-21"
+      },
+      "stop": 14.5,
+      "risk_reward": 2.13,
+      "win_probability": 0.36,
+      "position_size_pct": 1,
+      "risk_tier": "lottery",
+      "requires_margin": true,
+      "avg_dollar_volume": 768495014,
+      "price_source": "nasdaq via market_data.py history",
+      "catalyst": {
+        "event": "Q3 earnings before the open 2026-10-22, EPS est -0.3639 on rev est $16.4B, confirmed on the fetched finnhub calendar",
+        "datetime_et": "2026-10-22T07:00",
+        "action": "WAIT, and in practice stand down \u2014 do not initiate a short into the print at these levels",
+        "wait": true
+      },
+      "thesis": "UPDATE to the unfilled short published 2026-10-03 at 13.35 \u2014 the recommendation is to stand down, and that is the whole content. The thesis worked and we were not paid for it: AAL has fallen to 11.68, which is 12.5% *below* the short entry, so the move happened without a fill and entry now requires a 14.3% rally. What is left is the bad half of the trade. Shorting here means selling a stock that is already 37.84% below its 18.79 range high and only 4.57% above its 11.17 range low, two sessions before a print the street already models at a $0.36 per-share loss. Conviction is 2 and sized as a lottery ticket because the honest content of this entry is a cancellation, not a position.",
+      "key_risk": "Stated plainly because this is a conviction-2 idea: the evidence here is thin \u2014 one fetched calendar date and one price-structure read, with no filing read, no insider or short-interest data (nasdaq short interest timed out twice during this run) and no company news found in the 2026-10-16 to 10-20 window. The trade-level risk is a squeeze: a loss-making airline 38% off its high into an expectations-reset print is the classic configuration for a violent short-cover rally on merely-less-bad guidance, and I could not measure days-to-cover to size that risk. Requires margin.",
+      "counter_argument": "The strongest case for leaving the 13.35 order live is that it costs nothing \u2014 an unfilled limit is free optionality, and if the print produces a relief rally into 13.35 the short re-arms at a better price with the bad news already out. That is accepted rather than refuted, and it is why the level is left standing instead of deleted; the recommendation is specifically against *chasing* below it. What is refuted is any version that lowers the entry to meet the market: with ATR14 at 0.4441 a 11.68 entry would need a stop near 12.80 to clear the 2.0 ATR floor, which sits above both the 12.89 20-day and inside the 2026-10-16 range, so the stop would be hit by an ordinary bounce.",
+      "evidence": [
+        {
+          "kind": "dated_catalyst",
+          "detail": "Q3 earnings 2026-10-22 before open, EPS est -0.3639, rev est $16.4B \u2014 from the fetched finnhub earnings calendar",
+          "source": "https://finnhub.io/api/v1/calendar/earnings"
+        },
+        {
+          "kind": "technical_level",
+          "detail": "ATR14 0.4441 (3.80%). Close 11.68 is 12.5% below the 13.35 short entry, 37.84% off the 18.79 range high and 4.57% above the 11.17 range low; below the 12.89 20-day and 13.33 50-day. The 14.50 stop would be 2.59 ATR above a 13.35 fill, clearing the 2.0 ATR floor, and the 10.90 target sits below the range low.",
+          "source": "https://www.nasdaq.com/market-activity/stocks/aal/historical"
+        }
+      ],
+      "sources": [
+        "https://finnhub.io/api/v1/calendar/earnings",
+        "https://www.nasdaq.com/market-activity/stocks/aal/historical"
+      ],
+      "rank": 6,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.13,
+        "claimed_risk_reward": 2.13,
+        "breakeven_probability": 0.319,
+        "stated_win_probability": 0.36,
+        "expectancy_r": 0.127,
+        "claimed_edge": 0.041,
+        "stop_atr_multiple": 2.59,
+        "live_price": 11.68,
+        "live_price_asof": "2026-10-19T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 889.7,
+        "bid": 11.63,
+        "ask": 11.68,
+        "spread_pct": 0.429,
+        "atr14": 0.4441,
+        "checked_at_et": "2026-10-20T06:50:40-04:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.13:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 13.35 is +14.3% from live 11.68"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-10-22 is ahead of us"
+          },
+          {
+            "check": "earnings_date",
+            "status": "warn",
+            "detail": "claims an earnings catalyst but AAL is not on the fetched calendar"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 5.52 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "stop_distance",
+            "status": "pass",
+            "detail": "stop is 2.59 ATR from entry, clear of the 2.5 ATR guide for a swing stock"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "36% claimed vs 32% break-even at 2.13:1 \u2014 expectancy +0.13R"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-10-19T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "pass",
+            "detail": "bid/ask spread 0.43%; the round trip costs 2% of the target move"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 2 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "1% is within the 1% lottery-ticket ceiling for conviction 2"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 2 rests on 2 independent kinds: dated_catalyst, technical_level"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "1 of 2 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    }
+  ],
+  "watchlist": [
+    {
+      "symbol": "VST",
+      "note": "Awaiting entry at 132.00, left exactly as published \u2014 not re-pitched this run.",
+      "trigger": "price reaches 132.00"
+    },
+    {
+      "symbol": "GLD",
+      "instrument": "SPDR Gold Shares",
+      "note": "Unfilled SELL at 406.77, left untouched. A fresh short-gold idea was considered and rejected today on driver conflict: rising real yields is gold-bearish, but the same session's Houthi strikes on Saudi targets and Hormuz shipping attacks are gold-positive, and it would have been a third idea on the rates driver.",
+      "trigger": "price reaches 406.77 with the geopolitical bid faded"
+    },
+    {
+      "symbol": "OXY",
+      "note": "Awaiting entry at 54.00, left exactly as published \u2014 not re-pitched this run.",
+      "trigger": "price reaches 54.00"
+    },
+    {
+      "symbol": "ITB",
+      "note": "Awaiting entry at 89.80, left exactly as published \u2014 not re-pitched this run.",
+      "trigger": "price reaches 89.80"
+    },
+    {
+      "symbol": "KXCPIYOY-26SEP-T3.5",
+      "note": "Unfilled NO at 18 cents, left exactly as published \u2014 not re-pitched this run.",
+      "trigger": "contract trades at 18 cents"
+    },
+    {
+      "symbol": "DG",
+      "note": "Reviewed and held unchanged, NOT re-pitched: stop 2.32 ATR, R:R 2.30, above both moving averages, and the latest item (a Gordon Haskett upgrade ~10/07) is outside the 10/16-10/20 window. Earnings Dec 3.",
+      "trigger": "no action \u2014 tracked position"
+    },
+    {
+      "symbol": "NKE",
+      "note": "Reviewed and held unchanged, NOT re-pitched: short at 37.21, stop 2.13 ATR, R:R 2.42, thesis intact. 10/16 was a commentary cluster with no corporate event. Days-to-cover unmeasured \u2014 short interest unavailable all run.",
+      "trigger": "no action \u2014 tracked position"
+    },
+    {
+      "symbol": "XLF",
+      "note": "Reviewed and held unchanged, NOT re-pitched: stop 2.08 ATR, R:R 2.36. Banks fell with yields Monday but there was no position-level change, and this symbol has already been published 4x in 10 days.",
+      "trigger": "no action \u2014 tracked position"
+    },
+    {
+      "symbol": "CVS",
+      "note": "Reviewed and held unchanged, NOT re-pitched: stop 3.41 ATR (the widest in the book), R:R 2.33, above both moving averages. Earnings 2026-11-04 confirmed on the fetched calendar, EPS est 1.6596. The $315M DOJ opioid settlement (~10/14-15) predates this position's entry.",
+      "trigger": "no action \u2014 tracked position"
+    },
+    {
+      "symbol": "BTC/ETH/SOL",
+      "note": "Rejected rather than guessed. Spot fetched (BTC 81,442, ETH 2,383.53, SOL 103.97) but history failed on all five sources, so there is no ATR and no swing structure. A short /MBT on rising real yields is a coherent and genuinely uncovered lane, but a futures idea needs a stop clearing 2.5 ATR and setting levels off a single spot print would be fabrication.",
+      "trigger": "a working price-history source for crypto"
+    },
+    {
+      "symbol": "LULU",
+      "instrument": "Lululemon Athletica Inc",
+      "note": "RED TEAM KILL of the rank-13 short (filled 2026-09-08 at 100.61, now 97.76, +2.8%). This is a withdrawal of the recommendation, NOT an instruction to close: the position's standing levels are untouched and it remains a tracked position. What failed is the published 2.07 reward-to-risk, which rests entirely on a 77.00 target that has no evidence item, no valuation anchor and no method behind it anywhere in the idea \u2014 7.71 ATR away against a 6.0 ATR swing guide, and 14.8% below a 120-day low of 90.38 that has held. The idea's own counter_argument concedes the back half of that target. Re-cut to the only defended level in the idea, the 90.38 measured range low, the ratio is 10.23/11.39 = 0.90:1, far below the 2.0 swing floor \u2014 so the trade never cleared the bar except through the undefended number. This is the same defect HII and BCC were caught for in this report (a target above anything anyone will defend) and it gets the same treatment. Aggravating, not decisive: no dated catalyst inside the horizon, squeeze risk unmeasurable because short interest was unavailable all run, a 5.4-point claimed edge sourced to analyst drift, price above its 96.79 20-day having rallied from 94.09 on 10/14, and a third publication in ten sessions. The honest instruction for the live position is to treat 90.38 as the exit rather than a half-trim on the way to 77.00. Note the stop at 3.72 ATR was honestly wide \u2014 this ratio was not manufactured by tightening risk, it was manufactured by reaching for reward.",
+      "trigger": "a defended valuation for a target below the 90.38 range low, or a dated catalyst inside the horizon",
+      "demoted_from_rank": 13,
+      "demotion_reason": "2.07 R:R depends on a 77.00 target with no evidence, no anchor and no method; re-cut to the defended 90.38 range low it is 0.90:1 against a 2.0 floor. No dated catalyst, squeeze risk unmeasured."
+    },
+    {
+      "symbol": "CEG",
+      "instrument": "Constellation Energy Corp",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 2,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined"
+    },
+    {
+      "symbol": "XLE",
+      "instrument": "Energy Select Sector SPDR Fund",
+      "note": "Demoted by validation: downside 65.4 is not below entry 63.9 for a buy; stop is 1.14 ATR from entry \u2014 inside the noise; a swing etf stop must clear 1.8 ATR",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 3,
+      "demotion_reason": "downside 65.4 is not below entry 63.9 for a buy; stop is 1.14 ATR from entry \u2014 inside the noise; a swing etf stop must clear 1.8 ATR"
+    },
+    {
+      "symbol": "SNX",
+      "instrument": "TD SYNNEX Corp",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined; bid/ask spread 87.37% \u2014 too wide to trade this thesis",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 4,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined; bid/ask spread 87.37% \u2014 too wide to trade this thesis"
+    },
+    {
+      "symbol": "KHC",
+      "instrument": "Kraft Heinz Co",
+      "note": "Demoted by validation: entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 5,
+      "demotion_reason": "entry or target is missing; cannot compute without entry and target; no entry or stop, so the stop distance is undefined"
+    },
+    {
+      "symbol": "IYR",
+      "instrument": "iShares U.S. Real Estate ETF",
+      "note": "Demoted by validation: 1 source(s) return 404: https://api.elections.kalshi.com/trade-api/v2/markets/KXFEDDECISION-26OCT-H0",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 6,
+      "demotion_reason": "1 source(s) return 404: https://api.elections.kalshi.com/trade-api/v2/markets/KXFEDDECISION-26OCT-H0"
+    },
+    {
+      "symbol": "STLD",
+      "instrument": "Steel Dynamics Inc",
+      "note": "Demoted by validation: catalyst dated 2026-10-19 already passed \u2014 positioning around it is wrong",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 8,
+      "demotion_reason": "catalyst dated 2026-10-19 already passed \u2014 positioning around it is wrong"
+    },
+    {
+      "symbol": "UNP",
+      "instrument": "Union Pacific Corp",
+      "note": "Demoted by validation: 1 source(s) return 404: https://www.ttnews.com/articles/stb-union-pacific-norfolk-southern-merger-review",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 9,
+      "demotion_reason": "1 source(s) return 404: https://www.ttnews.com/articles/stb-union-pacific-norfolk-southern-merger-review"
+    },
+    {
+      "symbol": "HII",
+      "instrument": "Huntington Ingalls Industries Inc",
+      "note": "Demoted by validation: computed 2.44:1 is below the 2.5:1 floor for long_term; bid/ask spread 13.52%; the round trip costs 45% of the target move \u2014 too wide to trade this thesis",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 12,
+      "demotion_reason": "computed 2.44:1 is below the 2.5:1 floor for long_term; bid/ask spread 13.52%; the round trip costs 45% of the target move \u2014 too wide to trade this thesis"
+    },
+    {
+      "symbol": "FCX",
+      "instrument": "Freeport-McMoRan Inc",
+      "note": "Demoted by validation: computed 1.94:1 is below the 2.0:1 floor for swing",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 14,
+      "demotion_reason": "computed 1.94:1 is below the 2.0:1 floor for swing"
+    },
+    {
+      "symbol": "BCC",
+      "instrument": "Boise Cascade Co",
+      "note": "Demoted by validation: bid/ask spread 32.95%; the round trip costs 75% of the target move \u2014 too wide to trade this thesis",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 15,
+      "demotion_reason": "bid/ask spread 32.95%; the round trip costs 75% of the target move \u2014 too wide to trade this thesis"
+    }
+  ],
+  "validation_summary": {
+    "checked": 16,
+    "passed": 0,
+    "warned": 6,
+    "failed": 10,
+    "enforced": true,
+    "demoted": 10
+  }
+}
