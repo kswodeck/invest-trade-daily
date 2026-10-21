@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-10-21T05:31:16-04:00",
-  "last_run_at": "2026-10-21T05:31:16-04:00",
+  "updated_at": "2026-10-21T10:39:46-04:00",
+  "last_run_at": "2026-10-21T10:39:46-04:00",
   "discovery_error": null,
   "open": [
     {
@@ -261,6 +261,74 @@
       "price_basis": "fixed",
       "expiration_date": "2026-10-22",
       "withdrawal_deadline": "2026-10-22",
+      "withdrawal_basis": "expiration_date",
+      "max_shares_sought": null
+    },
+    {
+      "accession": "0001213900-26-111186",
+      "cik": "0001036044",
+      "company": "INVE Technologies, Inc.",
+      "ticker": "INVE",
+      "form": "SC TO-I",
+      "filed": "2026-10-21",
+      "url": "https://www.sec.gov/Archives/edgar/data/1036044/000121390026111186/ea030895901ex99a1a.htm",
+      "index_url": "https://www.sec.gov/Archives/edgar/data/1036044/000121390026111186/0001213900-26-111186-index.htm",
+      "highlights": [],
+      "documents": [
+        {
+          "name": "ea030895901ex99a1a.htm",
+          "type": "EX-99.(A)(1)(A)",
+          "url": "https://www.sec.gov/Archives/edgar/data/1036044/000121390026111186/ea030895901ex99a1a.htm"
+        }
+      ],
+      "found_by": "\"odd lot\" / SC TO-I",
+      "first_seen": "2026-10-21",
+      "status": "rejected",
+      "tier": null,
+      "rejections": [
+        "odd lots mentioned but no acceptance-before-proration language"
+      ],
+      "risk_flags": [],
+      "last_scored": "2026-10-21",
+      "warnings": [],
+      "documents_read": [
+        "ea030895901ex99a1a.htm"
+      ],
+      "document": "ea030895901ex99a1a.htm",
+      "terms": {
+        "has_threshold": true,
+        "has_proration_preference": false,
+        "is_cash_offer": true,
+        "consideration": "cash",
+        "is_common_equity": true,
+        "subject_security": "Common Stock",
+        "offer_price": 2.85,
+        "dutch_range": [
+          2.85,
+          3.4
+        ],
+        "price_basis": "dutch_low_end",
+        "expiration_date": "2026-11-19",
+        "withdrawal_deadline": "2026-11-19",
+        "withdrawal_basis": "expiration_date",
+        "max_shares_sought": null,
+        "preference_removed": false,
+        "record_holder_condition": null,
+        "restricted_offer": false,
+        "terminated": false,
+        "risk_flags": [
+          "litigation_or_regulatory_condition"
+        ]
+      },
+      "odd_lot_paragraph": "CLASS=\"Text_ind\" STYLE=\"margin:0;padding:0;border-width:0;font-family:Times New Roman PS Std, serif;font-size:10pt;font-style:normal;font-variant:normal;font-weight:normal;margin-bottom:0;margin-left:0;margin-right:0;margin-top:8pt;orphans:2;page-break-after:auto;page-break-before:auto;text-align:left;text-indent:24pt;widows:3;margin-top:8pt;\"> Odd Lots. For purposes of the Offer, the term \u201codd lots\u201d means all shares properly tendered at prices at or below the Final Purchase Price held by a stockholder who owns beneficially or of record an aggregate of fewer than 100 shares, which we refer to as an \u201codd lot holder.\u201d By accepting the Offer, an odd lot holder who holds shares in such odd lot holder\u2019s name and tenders those shares directly to the Depositary would not only avoid the payment of brokerage commissions, but also would avoid any applicable odd lot discounts in a sale of such holder\u2019s shares.",
+      "offer_price": 2.85,
+      "dutch_range": [
+        2.85,
+        3.4
+      ],
+      "price_basis": "dutch_low_end",
+      "expiration_date": "2026-11-19",
+      "withdrawal_deadline": "2026-11-19",
       "withdrawal_basis": "expiration_date",
       "max_shares_sought": null
     }
@@ -2046,15 +2114,15 @@
   "funnel": {
     "queries": 96,
     "pages": 96,
-    "raw_hits": 156,
-    "filings": 21,
-    "documents": 56,
+    "raw_hits": 159,
+    "filings": 22,
+    "documents": 57,
     "window": "2026-08-07..2026-10-21",
     "slices": 4,
     "failed_queries": 0,
     "failures": [],
     "rejected_by": {
-      "no odd-lot language": 3,
+      "no odd-lot language": 4,
       "expired or terminated": 2,
       "no consideration stated": 1,
       "not common equity": 1,

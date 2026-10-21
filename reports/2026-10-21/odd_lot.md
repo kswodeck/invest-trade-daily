@@ -1,6 +1,6 @@
 # Odd-lot tender screener — 2026-10-21
 
-Run 2026-10-21 05:31 ET (premarket slot). 4 offers tracked, 0 clear every gate: 0 Tier A, 0 Tier B, 0 Tier C.
+Run 2026-10-21 10:39 ET (premarket slot). 5 offers tracked, 0 clear every gate: 0 Tier A, 0 Tier B, 0 Tier C.
 
 **No Tier A opportunities today.** That is the ordinary result — an odd-lot tender with a 3%+ spread and a clean condition set is rare, and the thresholds below are not moved to produce one.
 
@@ -20,6 +20,7 @@ _None._
 
 | Ticker | Form | Filed | Reason |
 | --- | --- | --- | --- |
+| INVE | SC TO-I | 2026-10-21 | odd lots mentioned but no acceptance-before-proration language |
 | — | SC TO-I | 2026-09-24 | no ticker for CIK 0001919369 in the filing or the SEC company list — cannot price the trade |
 | PRIF-PD | SC TO-I | 2026-09-18 | no live price for PRIF-PD (no quote source answered) |
 | XFLT | SC TO-I | 2026-09-18 | no 'fewer than 100 shares' odd-lot threshold in the document; odd lots mentioned but no acceptance-before-proration language; an exchange offer for other securities, not cash; no expiration date could be read from the document |
@@ -29,13 +30,13 @@ _None._
 
 A screener that finds nothing reads exactly like one that is broken. This is the difference.
 
-- **96** full-text queries over `2026-08-07..2026-10-21` returned **156** document hit(s) across **21** filing(s) (**56** exhibits kept as candidates)
+- **96** full-text queries over `2026-08-07..2026-10-21` returned **159** document hit(s) across **22** filing(s) (**57** exhibits kept as candidates)
 - searched as **4** date slice(s), **96** result page(s) read
-- **4** offers open, **27** archived
+- **5** offers open, **27** archived
 
 | Turned away for | Count |
 | --- | --- |
-| no odd-lot language | 3 |
+| no odd-lot language | 4 |
 | expired or terminated | 2 |
 | no consideration stated | 1 |
 | not common equity | 1 |
