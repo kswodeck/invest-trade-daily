@@ -115,7 +115,8 @@
     },
     "watchlist": {
       "type": "array",
-      "maxItems": 25,
+      "description": "Up to 25 authored entries, plus every recommendation Phase 2d demotes. Enforce can demote all 50, so the cap is their sum: a smaller one rejects the report at publish for having been honest about its failures.",
+      "maxItems": 75,
       "items": {
         "type": "object",
         "required": [
