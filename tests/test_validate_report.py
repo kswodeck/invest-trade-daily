@@ -266,3 +266,15 @@ class Thresholds(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class SchemaCapacity(unittest.TestCase):
+    """2026-10-24: 16 authored watchlist entries plus 12 demotions made 28
+    against a cap of 25, and publish rejected the whole report."""
+
+    def test_the_watchlist_holds_every_recommendation_enforce_can_demote(self):
+        import json
+        schema = json.loads((REPO / "scripts" / "report_schema.json").read_text())
+        props = schema["properties"]
+        self.assertGreaterEqual(props["watchlist"]["maxItems"],
+                                25 + props["recommendations"]["maxItems"])
