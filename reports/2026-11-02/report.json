@@ -1,0 +1,465 @@
+{
+  "date": "2026-11-02",
+  "generated_at_et": "2026-11-02T06:36:57-05:00",
+  "research_minutes": 37,
+  "truncated": false,
+  "market_context": {
+    "summary": "Friday 2026-10-30 closed hard risk-off on the surface and something stranger underneath: SPY -1.77% to 755.72, QQQ -3.47% to 690.49, IWM -1.65%, Intel -28.6% on a Q4 guide $1-2B below consensus. But GLD fell -3.47% to 355.78 \u2014 its lowest close in four months \u2014 alongside the Nasdaq, while TLT managed only +0.43%. Gold selling off as hard as tech with no duration bid is de-grossing and margin-covering, not a flight to safety. QQQ is now -9.5% off its 120-day high and below both its SMA20 and SMA50; SPY -3.3% and also below both; IWM is above its SMA20, so small caps outperformed on the way down, which is unusual. The one green sector was energy: XLE +1.91% to 70.02, a close 0.19% from its 120-day high, on Brent settling ~$117.64 (+13.6% for October) against a reported Iran-escalation premium explicitly timed to the Nov 3 midterms being past. The 10-year eased 5.05% to 4.98% with fed funds at 3.88%, a steep positive term premium, and unemployment ticked 4.1% to 4.2%. Index levels (SPX, NDX, VIX, DXY) and all futures could not be fetched today; the ETF proxies above are the numbers to trust.",
+    "regime": "risk-off",
+    "levels": {
+      "spy": 755.72,
+      "qqq": 690.49,
+      "iwm": 279.33,
+      "tlt": 81.84,
+      "gld": 355.78,
+      "xle": 70.02,
+      "us10y": 4.98,
+      "us2y": 4.61,
+      "t10y2y": 0.38,
+      "fed_funds_effective": 3.88,
+      "unemployment_pct": 4.2,
+      "brent": 117.64,
+      "wti": 104.0,
+      "btc": 77828,
+      "spx": null,
+      "ndx": null,
+      "vix": null,
+      "dxy": null,
+      "levels_note": "Equity marks are the 2026-10-30 close (asof 20:00 UTC), the freshest honest price with the market shut at 06:34 ET Monday. BTC is live. SPX/NDX/VIX/DXY unavailable (Yahoo HTTP 429, finnhub CFD-gated)."
+    },
+    "econ_calendar": [
+      {
+        "event": "ISM Manufacturing PMI",
+        "datetime_et": "2026-11-02T10:00",
+        "importance": "medium",
+        "consensus": null
+      },
+      {
+        "event": "US midterm elections \u2014 the week's dominant dated catalyst",
+        "datetime_et": "2026-11-03T00:00",
+        "importance": "high",
+        "consensus": null
+      },
+      {
+        "event": "JOLTS job openings",
+        "datetime_et": "2026-11-03T10:00",
+        "importance": "medium",
+        "consensus": null
+      },
+      {
+        "event": "October nonfarm payrolls / jobs report",
+        "datetime_et": "2026-11-06T08:30",
+        "importance": "high",
+        "consensus": null
+      },
+      {
+        "event": "Not this week \u2014 CPI Nov 10, FOMC minutes Nov 18, FOMC decision Dec 9",
+        "datetime_et": "2026-11-10T08:30",
+        "importance": "high",
+        "consensus": null
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "symbol": "RTX",
+      "instrument": "RTX Corporation",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 3,
+      "last_price": 199.8,
+      "last_price_asof": "2026-10-30T20:00:00Z",
+      "price_source": "finnhub via scripts/market_data.py (prior close; market closed at time of research)",
+      "entry": {
+        "ideal": 199.0,
+        "zone_low": 196.5,
+        "zone_high": 201.5,
+        "order_type": "limit"
+      },
+      "exit": {
+        "target": 226.5,
+        "scale_plan": "Trim half at 215 (the mid-October shelf), balance at 226.5."
+      },
+      "stop": 186.0,
+      "position_size_pct": 2.5,
+      "risk_tier": "standard",
+      "win_probability": 0.42,
+      "catalyst": {
+        "event": "US midterm elections Tue Nov 3. Saxo Bank warned on Oct 29 that oil could be more volatile over the following couple of weeks because of the Israeli and US elections, and the reporting has traders fearing the Iran war \u2014 ongoing since February \u2014 intensifies after the vote; a tanker in the Strait of Hormuz was struck by explosive devices attached from a small boat, and Houthi militants claimed attacks on several Saudi sites on Oct 29. RTX interceptors and effectors are consumed in an air campaign and restocked at appropriated prices, unlike a decade-long platform backlog. RED TEAM CORRECTION: the stronger claim this report originally carried \u2014 that US airstrikes on Tehran could 'resume once the midterms are past' \u2014 is not what the cited sources say. Its only source is an aggregator (wisevoter) reporting that US forces 'may consider strikes against Iran following the November 3 midterm elections'; that page does not mention Tehran, names no original reporting and carries an AI-generated illustration. What is sourced is volatility expected around the vote, not a stated precondition for strikes. The idea is kept on its relative-strength and level evidence, not on that claim.",
+        "datetime_et": "2026-11-03T00:00",
+        "action": "Enter on the 196.50-201.50 zone, sized at 2.5%. Do NOT add size for the midterms. This is now the only new money in the Iran-escalation cluster \u2014 XLE and HII were moved to the watchlist, and that is a reduction of the exposure, not room made for more of the same trade.",
+        "wait": false
+      },
+      "thesis": "RTX is the defense prime whose revenue is consumed rather than ordered: an air-defense campaign burns Patriot and SM-series interceptors that are then restocked at appropriated prices, so escalation converts directly into orders instead of into a 10-year program. It is already outperforming into this \u2014 +7.99% over one month against SPY -1.08% and peer ITA +0.82% \u2014 while sitting 11.9% below a 120-day high of 226.88 that was set before the summer drawdown, so the target is a recovery to a level this stock has already traded at, not a new high.",
+      "key_risk": "The catalyst is binary and dated: if the midterms pass and no escalation follows, the whole Middle East premium across defense and energy unwinds together, and RTX gives back the 8% it made in October. Secondary: insiders sold $6.86M across 6 transactions in six months with zero open-market purchases, so there is no insider confirmation under this. Third, added by the red team and absent from the original write-up: the premium can unwind on diplomacy rather than on the midterms passing quietly \u2014 the same reporting has Qatari mediators returning to Tehran with US-Iran talks stalled, so a mediated de-escalation is a live path that takes the complex down with no dated event to trade around. Fourth: the sector has already repriced \u2014 Brent +13.6% in October, XLE at its 120-day high, LMT within 3% of its own \u2014 so RTX is the least repriced member of a repriced group, which is thinner edge than being early.",
+      "counter_argument": "The strongest case against is that I am buying a defense name after the sector has already repriced for war \u2014 LMT is within 3% of its high. Answered with the relative-strength data rather than assertion: RTX has beaten ITA by 7.17 points over 1 month, 6.99 over 3 months and 17.85 over 6 months, so the capital is rotating toward RTX within an already-hot sector, and its analyst revision direction is improving (bullish share 67.7%, +1.0 pt) with 4 beats in the last 4 quarters. The weaker point I cannot answer: I could not fetch the options-implied move (Yahoo options returned HTTP 401), so I cannot say whether a 13.4% target is inside or outside what the market prices.",
+      "evidence": [
+        {
+          "kind": "dated_catalyst",
+          "detail": "US midterms Tue 2026-11-03 confirmed on a fetched calendar. Sourced from the Nation Thailand report of 2026-10-31: December Brent expired 2026-10-30 at $117.64 (+13.6% for October); a tanker in the Strait of Hormuz struck by explosive devices attached from a small boat; Houthi militants claimed attacks on several Saudi sites on Oct 29; Saxo Bank's Oct 29 briefing warning of greater oil volatility over the next couple of weeks because of the Israeli and US elections; US-Iran talks stalled with Qatari mediators returning to Tehran. These facts were originally attributed to the wisevoter page, which does not contain them \u2014 re-attributed by the red team to the source that does.",
+          "source": "https://www.nationthailand.com/news/world/40072956"
+        },
+        {
+          "kind": "positioning",
+          "detail": "Fetched: RTX +7.99% 1m vs SPY -1.08% and ITA +0.82%; vs-ITA +6.99% 3m, +17.85% 6m. Analyst recommendation trend improving, bullish share 67.7% (+1.0 pt), strong_buy 7 / buy 13-to-14 Oct-to-Nov. Earnings surprise: beat 4 of last 4 (+0.35%, +12.63%, +16.10%, +4.58%). Insiders: 0 buys, 6 sells $6.86M.",
+          "source": "https://finnhub.io/"
+        },
+        {
+          "kind": "technical_level",
+          "detail": "Fetched 120-day history: close 199.80, SMA20 190.254, SMA50 194.794, ATR14 5.5937, 120d high 226.884, 120d low 170.78. Stop 186.00 is 2.32 ATR from entry and sits below the SMA20, not at a round number; target 226.50 is the prior 120-day high.",
+          "source": "https://finance.yahoo.com/quote/RTX/"
+        }
+      ],
+      "sources": [
+        "https://wisevoter.com/world/2026/10/31/brent-crude-hits-117-middle-east-tensions",
+        "https://finnhub.io/",
+        "https://finance.yahoo.com/quote/RTX/",
+        "https://www.nationthailand.com/news/world/40072956"
+      ],
+      "rank": 1,
+      "risk_reward": 2.12,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.12,
+        "claimed_risk_reward": 2.12,
+        "breakeven_probability": 0.321,
+        "stated_win_probability": 0.42,
+        "expectancy_r": 0.31,
+        "claimed_edge": 0.099,
+        "stop_atr_multiple": 2.32,
+        "live_price": 199.8,
+        "live_price_asof": "2026-10-30T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 3830.6,
+        "bid": 199.25,
+        "ask": 201.0,
+        "spread_pct": 0.874,
+        "atr14": 5.5937,
+        "checked_at_et": "2026-11-02T06:50:52-05:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.12:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 199.0 is -0.4% from live 199.8"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-11-03 is ahead of us"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 4.92 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "stop_distance",
+            "status": "warn",
+            "detail": "stop is 2.32 ATR from entry \u2014 clears the 2.0 ATR floor for a swing stock but sits under the 2.5 ATR level where stop-outs have clustered"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "42% claimed vs 32% break-even at 2.12:1 \u2014 expectancy +0.31R"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-10-30T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "pass",
+            "detail": "bid/ask spread 0.87%; the round trip costs 6% of the target move"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "2.5% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 3 rests on 3 independent kinds: dated_catalyst, positioning, technical_level"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "1 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "XLU",
+      "instrument": "Utilities Select Sector SPDR Fund",
+      "asset_class": "etf",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 3,
+      "last_price": 43.43,
+      "last_price_asof": "2026-10-30T20:00:00Z",
+      "price_source": "finnhub via scripts/market_data.py (prior close; market closed at time of research)",
+      "entry": {
+        "ideal": 43.3,
+        "zone_low": 42.8,
+        "zone_high": 43.7,
+        "order_type": "limit"
+      },
+      "exit": {
+        "target": 46.6,
+        "scale_plan": "Trim half at 45.0, balance at 46.6 (the 120-day high)."
+      },
+      "stop": 41.8,
+      "position_size_pct": 2.5,
+      "risk_tier": "standard",
+      "win_probability": 0.36,
+      "catalyst": {
+        "event": "October nonfarm payrolls, Fri Nov 6 08:30 ET \u2014 confirmed on the BLS Employment Situation release schedule (13:30 UTC after this weekend's DST change). Utilities are the most rate-sensitive equity sector, and unemployment has already ticked up 4.1% to 4.2%; a soft print pulls the 10-year down from 4.98% and re-rates the sector.",
+        "datetime_et": "2026-11-06T08:30",
+        "action": "Accumulate in the 42.80-43.70 zone before the print. Do not add after it.",
+        "wait": false
+      },
+      "thesis": "This is the one idea in todays report that does not depend on the Middle East. XLU is the sector that led the market over the past month, +9.45% against SPY -1.08%, while still sitting 6.85% below its 120-day high of 46.625 \u2014 the only leading sector with real distance left to a prior level, because healthcare (-1.7% off high) and staples (-1.1%) have already closed the gap. It is above both its SMA20 (41.95) and SMA50 (41.75). The driver is two things at once: a defensive rotation out of an AI complex where SMH is -22% off its high, and structural datacenter load growth on a grid that cannot add capacity quickly.",
+      "key_risk": "The catalyst is two-sided: a hot payroll print on Nov 6 pushes the 10-year back above 5% and utilities are the first sector sold. Second, this is the sector ETF for a thesis I rejected at the single-name level today \u2014 I dropped the VST bid because VST is lagging XLU by 10.4 points over a month on company-specific problems \u2014 so I am explicitly buying the basket and not the operators. Third, the target requires a 7.3% move, about 5.3 ATRs (3.30 against a 0.6282 ATR14) \u2014 inside the 6.0 ATR swing guide, but still a multi-week ask for a 1.45%-ATR sector fund. The original write-up put this at 'about 11 ATRs', which was wrong by a factor of two; corrected by the red team. Fourth, added by the red team: payrolls is not the only rate print inside the holding window. October CPI lands Nov 10, four sessions later, with no FOMC until Dec 9 to confirm either reading \u2014 so a soft NFP that re-rates the sector can be taken straight back by a hot CPI, and the idea has to survive two prints rather than the one it is framed around.",
+      "counter_argument": "The strongest case against: this long conflicts with the IYR short already in the book. Both are long-duration equity proxies, so if the 10-year falls, XLU works and the IYR short bleeds \u2014 I am partly hedging myself. I am taking it anyway because XLU has a load-growth earnings driver that commercial real estate does not, and because the IYR short is 0.64 ATR from its stop and likely to resolve within days either way. But the reader should know the two positions overlap, and that is a real mark against this idea rather than something I can argue away.",
+      "evidence": [
+        {
+          "kind": "dated_catalyst",
+          "detail": "October Employment Situation (nonfarm payrolls) scheduled for Friday 2026-11-06 at 08:30, read directly off the BLS release schedule. This replaces the original catalyst source, which returned HTTP 404.",
+          "source": "https://www.bls.gov/schedule/news_release/empsit.htm"
+        },
+        {
+          "kind": "positioning",
+          "detail": "Fetched relative strength: XLU +9.45% 1m vs SPY -1.08% (+10.53 pts). Honest caveat from the same fetch \u2014 XLU is -6.7% over 6m and lags peer XLP by 12.94 pts over 6m, so this is a sharp recent move off a weak base, not sustained leadership.",
+          "source": "https://finnhub.io/"
+        },
+        {
+          "kind": "technical_level",
+          "detail": "Fetched 120-day history: close 43.43, SMA20 41.9485, SMA50 41.7506, ATR14 0.6282, 120d high 46.625, 120d low 39.03. Stop 41.80 sits under the SMA20; target 46.60 is the prior 120-day high, not a round number. Risk 1.50 = 2.39 ATR (ETF floor is 1.8); reward 3.30; R:R 2.20.",
+          "source": "https://finance.yahoo.com/quote/XLU/"
+        }
+      ],
+      "sources": [
+        "https://finnhub.io/",
+        "https://finance.yahoo.com/quote/XLU/",
+        "https://www.bls.gov/schedule/news_release/empsit.htm",
+        "https://fred.stlouisfed.org/series/DGS10"
+      ],
+      "rank": 2,
+      "risk_reward": 2.2,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.2,
+        "claimed_risk_reward": 2.2,
+        "breakeven_probability": 0.312,
+        "stated_win_probability": 0.36,
+        "expectancy_r": 0.152,
+        "claimed_edge": 0.048,
+        "stop_atr_multiple": 2.39,
+        "live_price": 43.43,
+        "live_price_asof": "2026-10-30T20:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 3830.7,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": 0.6282,
+        "checked_at_et": "2026-11-02T06:51:04-05:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.2:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 43.3 is -0.3% from live 43.43"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-11-06 is ahead of us"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 5.25 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "stop_distance",
+            "status": "pass",
+            "detail": "stop is 2.39 ATR from entry, clear of the 2.25 ATR guide for a swing etf"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "36% claimed vs 31% break-even at 2.2:1 \u2014 expectancy +0.15R"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-10-30T20:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "no bid/ask available (normal outside regular hours)"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "2.5% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 3 rests on 3 independent kinds: dated_catalyst, positioning, technical_level"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "3 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    }
+  ],
+  "watchlist": [
+    {
+      "symbol": "UNG",
+      "instrument": "United States Natural Gas Fund",
+      "note": "Best raw asymmetry found today: US natgas 1.6% off its 120-day low at 9.08 while LNG at 330.32 sits 0.1% off its high. Blocked by having no datable catalyst \u2014 'winter' is not a date \u2014 plus front-month roll decay.",
+      "trigger": "A reported Qatari LNG disruption, or a dated cold-weather event."
+    },
+    {
+      "symbol": "C",
+      "instrument": "Citigroup",
+      "note": "122.64, -17.1% off its 120-day high while XLF is only -3.6% off, and 2.4% above its own 120-day low. Something name-specific is wrong at Citi and research ran out of time to find out what.",
+      "trigger": "Diagnose the name-specific problem before trading it; do not buy the relative-value gap blind."
+    },
+    {
+      "symbol": "EXEL",
+      "instrument": "Exelixis",
+      "note": "69.39, zanzalintinib PDUFA reported Dec 3, above both moving averages with the uptrend intact. Blocked only by room: 3.8% off its 120-day high, so no honest 2.0 R:R exists with a 2.0 ATR stop. Note 0 insider buys against $11.1M sold.",
+      "trigger": "A pullback toward the SMA20 at 62.69 that leaves the Dec 3 date intact."
+    },
+    {
+      "symbol": "VST",
+      "instrument": "Vistra Corp",
+      "note": "138.37. The structural datacenter-power thesis is intact but VST is -10.4% vs XLU over one month on company-specific problems, so the sector ETF (XLU) was bought instead. The standing 132.00 bid published 2026-08-24 is DROPPED today \u2014 not re-pitched. Insiders: one buyer at ~$135 against $21.9M of sales, which is not a cluster.",
+      "trigger": "After the Q3 print clears and the analyst cuts stop, ideally with the CEO's buying joined by a second insider."
+    },
+    {
+      "symbol": "CORT",
+      "instrument": "Corcept Therapeutics",
+      "note": "81.12, relacorilant PDUFA reported Dec 17 after a -35.8% break. Currently $83.3M of insider sales across 89 transactions and a 7.46% ATR.",
+      "trigger": "Insider buying appearing, plus an ATR that permits a stop below a defensible level."
+    },
+    {
+      "symbol": "WMT",
+      "instrument": "Walmart",
+      "note": "123.51. The consumer trade-down thesis behind it is right \u2014 Brent $117 is a gasoline tax on the low-income consumer \u2014 but entry 123.00 / stop 117.00 (2.27 ATR) / target 135.00 (the 120-day high) computes to R:R exactly 2.00. A ratio landing precisely on the floor is the pattern this repo has already shipped once, so it is a reject rather than a rescue.",
+      "trigger": "A pullback to the SMA20 at 115.95, which makes the ratio honest instead of engineered."
+    },
+    {
+      "symbol": "COST",
+      "instrument": "Costco Wholesale",
+      "note": "1012.28. Same thesis and the same failure as WMT: entry 1010 / stop 970 (2.29 ATR) / target 1090 computes to R:R exactly 2.00.",
+      "trigger": "A pullback to the SMA20 at 977.89."
+    },
+    {
+      "symbol": "KRE",
+      "instrument": "SPDR S&P Regional Banking ETF",
+      "note": "72.01. Mechanically qualifies on a steepening curve \u2014 entry 71.80, stop 69.00 (2.11 ATR), target 77.80, R:R 2.14 \u2014 and was held back on this repo's own history with the name (republished three times at an unchanged entry with the stop walked in) rather than on the numbers. Recorded so the decision is visible rather than silent.",
+      "trigger": "Publishable on the numbers today; the block is discretionary."
+    },
+    {
+      "symbol": "GLD",
+      "instrument": "SPDR Gold Shares",
+      "note": "355.78 with SLV at 44.60. The precious-metals bust: GLD closed at the low of the last four months, -17.8% off its high, 5.3% below its SMA20. Not a long, because silver -44.8% off its high says the 'forced liquidation, buy the dip' framing is wrong; not a short, because it is 1.1% off a four-month low. Separately, the standing GLD SELL @ 406.77 published 2026-10-25 is a DEAD LEVEL \u2014 price is 12.5% below it and fell straight through without the level ever being offered. Drop it.",
+      "trigger": "A base forming. Until then there is no trade in either direction."
+    },
+    {
+      "symbol": "OXY",
+      "instrument": "Occidental Petroleum",
+      "note": "Standing BUY @ 54.00 published 2026-09-24 is a DEAD LEVEL and should be dropped, not carried. OXY closed 64.00 \u2014 18.5% ABOVE the entry and 1.5% off its 120-day high. Oil ran away from the bid, and in the only scenario that brings price back to 54 (a crude collapse) the thesis is gone too.",
+      "trigger": "None. Drop the order."
+    },
+    {
+      "symbol": "KXCPIYOY-26SEP-T3.5",
+      "instrument": "Kalshi: September 2026 CPI year-over-year above 3.5%",
+      "note": "Standing NO @ 18 published 2026-09-30. September CPI has long since printed, so this contract is resolved or expired. Research could not confirm which, because the Kalshi endpoint returned count:0 for every macro query today. Flagged rather than guessed.",
+      "trigger": "Reconcile against the Kalshi account once the event endpoint works again."
+    },
+    {
+      "symbol": "SMMT",
+      "instrument": "Summit Therapeutics Inc.",
+      "demoted_from_rank": 1,
+      "demotion_reason": "Target sits above the 120-day high and the ratio cannot clear the floor against a real level; the HARMONi overall-survival miss the report could not confirm is now confirmed, which makes the stated 42% hit rate unsupportable.",
+      "note": "CUT from rank 1 (conviction 5). Three reasons. (1) THE LEVEL. The 2.22:1 exists only because the target is 20.00, above the 19.09 120-day high. Measured to that high the ratio is 1.72:1, and no honest stop fixes it: from a 16.00 entry the tightest stop the 2.0 ATR floor permits is 14.26, giving at best 1.77:1 to 19.09. The report's own counter_argument concedes that a reader who rejects its re-rating argument 'should treat this idea as failing the reward-to-risk floor' \u2014 and quotes 1.46 for that case, which does not reconcile with any entry/stop pair in the idea. This is the construction WMT, COST, EQT and XLP were held back for in the same report. (2) THE PROBABILITY. The HARMONi overall-survival concern the report flagged as 'unverified but material' is now verified: the primary analysis gave HR 0.79 (95% CI 0.62-1.01, p=0.057) against a pre-specified 0.0448 threshold, so OS missed significance, and earlier company messaging has the FDA saying a statistically significant OS benefit was necessary to support marketing authorization. An updated June 2026 analysis (HR 0.76) was given to the agency but is not the pre-specified primary. A 42% chance of the target before the stop, against a 31% break-even, is not supportable on a binary weighted that way. (3) THE EVIDENCE. The item labelled primary_document attributes a standard-review designation, a 'complete review' and Fast Track to the Summit press release; the release gives the Nov 14 PDUFA date and the HARMONi basis and makes none of those three claims \u2014 and the release the URL points to is dated 2026-01-29, which is the BLA acceptance, not a review-designation announcement. Also unflagged anywhere: SMMT reports Q3 on 2026-11-11, three days before the PDUFA and inside the holding window. What survives scrutiny: the Nov 14 PDUFA date is confirmed against the company's own release, and the $103.6M of insider buying across 3 buyers with zero sales is real fetched data. This is a cut on the level and the stated probability, not on the story. The standing unfilled 17.10 bid from 2026-10-27 is left to time out \u2014 no capital was at risk.",
+      "trigger": "An entry at or below 15.60, which is the highest price from which a 19.09 target clears 2.0:1 with a stop no tighter than 2.0 ATR \u2014 i.e. buy the pre-PDUFA fade, not this level. Or confirmation from a primary source that the FDA has accepted the updated OS analysis as sufficient, which would change the probability rather than the level."
+    },
+    {
+      "symbol": "ELAN",
+      "instrument": "Elanco Animal Health Inc.",
+      "demoted_from_rank": 2,
+      "demotion_reason": "The 3.43:1 is carried entirely by a 120-day-high target 7.1 ATR away; to the first real resistance the idea is 0.77:1.",
+      "note": "CUT from rank 2. The ratio is an artifact of where the target was put. 27.98 is the 120-day high \u2014 7.1 ATR and +21.6% away, which the validator flags as beyond the 6.0 ATR swing guide \u2014 on a stock that spent all of October coiled between 22.03 and 24.11. Measured to 24.11, the October ceiling and the first real resistance, which this idea's own scale plan names as where to trim half, it is 0.77:1. So the floor is cleared only by assuming four months of overhead supply clears in twelve sessions. The insider cluster is the real part of this and it is genuinely broad \u2014 7 distinct buyers, $1.67M, zero sells in six months \u2014 but it is three months stale, and the same evidence item carries a deteriorating revision trend (bullish share -4.9 pts m/m, strong_buy 10-10-9-7) into a print four days out that gaps straight through a 2.07 ATR stop. TWO OF THE VALIDATOR'S COMPLAINTS ARE DISMISSED RATHER THAN INHERITED: the Nov 6 earnings date IS on the finnhub calendar (bmo, EPS est 0.2071, revenue est $1.232B), so 'not on the fetched calendar' was a bad fetch and the catalyst is confirmed; and the 16.29% spread that failed it was a 4:00 AM pre-market book (bid 22.33 / ask 26.29) on a stock doing $116M a day, not a spread anyone will trade at 09:30 \u2014 on the same fetch HII's quoted ask sat below its own last sale, which is impossible in a real book. ELAN is cut on its target, not on either of those.",
+      "trigger": "A close above 24.11 that holds, which makes 27.98 a continuation rather than a leap. Failing that, an entry at or below 21.30 \u2014 the highest price from which a 24.11 target clears 2.0:1 with a stop no tighter than 2.0 ATR \u2014 but that needs the 22.03 October floor to break first, which would also break the base-building thesis, so prefer the breakout."
+    },
+    {
+      "symbol": "HII",
+      "instrument": "Huntington Ingalls Industries",
+      "demoted_from_rank": 3,
+      "demotion_reason": "Not a tradeable idea but an update to a filled position: downside 288.00 sits above the 262.00 entry, and the 2.99:1 is measured from a three-week-old fill. Forward geometry is 0.79:1.",
+      "note": "MOVED OFF THE RECOMMENDATION LIST \u2014 BUT ACT ON THE STOP. This was never a trade anyone could put on this morning: it is risk management on a position filled 2026-10-13 at 262.00, now 316.88 (+20.9%), carrying no stop at all. As a published recommendation it is incoherent \u2014 an entry of 262.00 with a 'stop' at 288.00 is a downside above the entry, which is what the validator failed it for, and the 2.99:1 on the sheet is measured from the old fill. From 316.88 the honest geometry is 22.88 of upside to the 339.76 target against 28.88 of stop risk: 0.79:1, a 56% break-even hit rate. So protect it, never add to it. THE STOP ITSELF IS RIGHT AND SHOULD GO ON: 288.00 is 2.89 ATR below Friday's close and below both the SMA20 (274.49) and SMA50 (278.03), so it takes a genuine trend break rather than a normal pullback. Two things the report got wrong about its own position: it republished the size at 3% against the 1% actually held, while its own action line says 'do not add' \u2014 which would have tripled the weight of the book's best winner in every average on the Performance tab; and it reclassified the horizon from the recorded long_term to swing. CONSEQUENCE OF THE DEMOTION: apply_amendment only runs for recommendations, so state/open_positions.json keeps HII at stop=null. The 288.00 stop has to be placed by hand, in the broker and in state.",
+      "trigger": "Place the 288.00 stop now. Republishable as an idea only after a pullback to roughly 302.00 or below, which is where a fresh entry clears the 2.5:1 long-term floor against the 339.76 target and a 288.00 stop."
+    },
+    {
+      "symbol": "XLE",
+      "instrument": "Energy Select Sector SPDR Fund",
+      "demoted_from_rank": 5,
+      "demotion_reason": "Not a tradeable idea but an update to a filled position: downside 66.50 sits above the 63.90 entry, and from 70.02 the position risks 3.52 to make 0.48 \u2014 0.14:1, negative expectancy.",
+      "note": "MOVED OFF THE RECOMMENDATION LIST, and the conclusion is stronger than the report's: TAKE THE TARGET. Open since 2026-08-15, filled 2026-09-16 at 63.90, now 70.02 (+9.6%) \u2014 0.19% from the 120-day high of 70.151 and 0.68% from the 70.50 target. The published 2.54:1 and 72% hit rate are measured from the August fill; from 70.02 the position risks 3.52 to make 0.48, which is 0.14:1 and an 88% break-even hit rate \u2014 negative expectancy on any honest reading, carried into a dated binary. The idea's own counter_argument says this is 'the worst possible place to carry a position into a scheduled binary' and that the trade 'is being closed out, not pressed'; what follows from that is to sell into 70.50, not to hold 5% of downside for 48 cents. The stop raise from 60.80 to 66.50 is still a real improvement on a stop that protected nothing (9.2 ATR from entry) and should go on if the position is kept \u2014 and as with HII, demotion means apply_amendment never runs, so state still carries 60.80 and this must be done by hand. Worth recording that the research phase reached the same view of the sector and wrote it down: 'buying crude or energy equities here is chasing a war premium into the event'. The premium itself rests partly on a claim the sources do not support \u2014 see the RTX catalyst correction.",
+      "trigger": "Sell at 70.50, or on a failure of Friday's 69.28 low. Re-entry only after the midterm premium has resolved and the sector has based \u2014 not at the 120-day high."
+    }
+  ],
+  "data_quality_notes": "RESEARCH COMPLETE \u2014 notes.md carries a RESEARCH COMPLETE block at 06:34 ET and a FINAL COUNTS block at 06:37 that supersedes it with six candidates rather than five (ELAN was found after the first block was written, by screening insider activity across the fetched Nov 6 earnings list). A full falsification pass ran on all of them, so truncated is false. Research ran 06:00-06:37 ET.\n\nPRICES ARE A CLOSED MARKET, NOT STALE DATA. Every equity and ETF mark in this report is the 2026-10-30 close (asof 2026-10-30T20:00Z), re-fetched at 06:34 ET Monday and unchanged, because US equities are shut. That is the freshest honest price available at this hour, not a failure to refresh. Bitcoin ($77,828) is live. SMA200 is unavailable on every name \u2014 only 120 days of history were pulled \u2014 so there are no 200-day reads anywhere in this report.\n\nFLAG FOR THE RED TEAM \u2014 XLE AND HII WILL FAIL direction_consistency, AND IT IS AN ARTIFACT, NOT A BAD NUMBER. Both are position updates whose entire content is a protective stop on a position already deep in profit: XLE's stop moves 60.80 to 66.50 against a 63.90 fill now at 70.02 (+9.6%), and HII gets its first-ever stop at 288.00 against a 262.00 fill now at 316.88 (+20.9%). In both cases the stop therefore sits ABOVE the entry, which check_direction reads as 'downside is not below entry for a buy' and hard-fails. CLAUDE.md forbids the only fix that would clear it \u2014 a filled position may have its exits amended but never its entry, because it was bought at a price \u2014 so the entry stays at the fill and the check stays red. No prior report in this repo has ever shipped a stop on the profitable side of entry, so there is no precedent to follow. If phase 2d demotes these two to the watchlist, the result is that the single most valuable instruction in today's report \u2014 put a stop under a 21% gain that currently has none \u2014 is the thing that gets thrown away. Read the stop, not the verdict. Related: the reward-to-risk figures of 2.54 (XLE) and 2.99 (HII) are computed the way validate_report.py computes them, abs(target-entry)/abs(entry-stop), and they are not meaningful risk ratios \u2014 the 2.60 and 26.00 'risk' are locked-in gains, not money at risk.\n\nWIN PROBABILITY ON THOSE SAME TWO IS ALSO MEASURED AGAINST THE WRONG BASELINE. The 1/(1+R:R) baseline is a random walk starting at the entry, and these two walks start at Friday's close, which is far nearer the target than the stop. Recomputed from current price: XLE's driftless baseline is 0.880 and the stated 0.72 is BELOW it; HII's is 0.558 against a stated 0.55, i.e. claiming no edge at all, just the geometry. Both will trip a '>20 points of claimed edge' check against the entry-based baseline. The four ideas entered at the market (RTX, XLU, SMMT, ELAN) have entries within 0.4% of last price, so for those the entry-based baseline is correct and the stated edges of +9.9, +4.8, +11.0 and +7.4 points stand as written.\n\nWHY SIX IDEAS, AND WHY ALL SIX ARE SWING. Six is the honest count. Running the same two tests across every sector priced today gave one answer repeatedly: what is working is too close to its high to pay for an honest stop (XLP -1.1% off its high, XLV -1.7%, BJ -0.7%, DLTR -2.3%, XLE -0.2%, XOP -1.1%, OXY -1.5%, LMT -3.1%, EXEL -3.8%), and what is cheap is below both moving averages with heavy insider distribution and no datable catalyst (SLV -44.8% off its high, OKLO -67%, ARM -54.5%, WDC -54.2%, STX -43.7%). EQT, WMT, COST and XLP were each rejected for failing the floor at exactly that point. Nothing intraday cleared, because not a single live price could be fetched \u2014 the market is shut and every futures and index feed failed. Nothing long_term cleared: that lane lost its candidate when VST turned out to be lagging its own sector by 10.4 points on company-specific problems, and the sector ETF was bought instead rather than inventing a long-term single name.\n\nRATIOS AND STOPS BOTH CLUSTER JUST ABOVE THEIR FLOORS, AND THAT DESERVES SUSPICION. Three of the four new ideas land at R:R 2.12 (RTX), 2.20 (XLU) and 2.22 (SMMT) against a 2.0 swing floor, and four of six stops land at 1.82, 2.07, 2.07 and 2.32 ATR against floors of 1.8 and 2.0 \u2014 inside the warn band below the 2.25/2.5 ATR level where this report's stop-outs have clustered. Every one of those figures was independently recomputed during synthesis from freshly fetched 120-day history and reproduced the research's numbers to the second decimal, so they are arithmetically sound; but clustering above a floor is the signature of levels fitted to clear a bar, and the reader should price that. Two points in mitigation: the research rejected WMT and COST specifically for computing to exactly 2.00, and it documented the order of operations on the one ratio that was mechanically improved (see below).\n\nTHE XLE STOP RAISE IMPROVED ITS OWN RATIO, WHICH IS THE MANOEUVRE THIS REPO WAS BURNED BY. Moving the stop 60.80 to 66.50 lifted reward-to-risk 2.13 to 2.54 without the trade getting one cent better \u2014 the KRE pattern named in CLAUDE.md. The research's defence is the order it did things in: 66.50 was chosen as the level just under the SMA20 at 67.12, and the ATR test (1.82 against a 1.8 ETF floor) was run afterwards as a check rather than as a target. The corroborating evidence is that the 70.50 exit was explicitly left alone \u2014 someone engineering a ratio would have moved the target too. Residual risk either way: that stop is 5% below Friday's close, so a de-escalation gap hands back most of the gain before it triggers.\n\nCONCENTRATION IS AT THE CAP AND ARGUABLY THROUGH IT. XLE (crude), RTX (escalation) and HII (defense budget) all improve or decay together with the Middle East \u2014 exactly the correlation cap of 3 in config/strategy.md, fully spent, and a reader should treat the three as closer to one position than three. The standing unfilled AAL SELL_SHORT @ 13.35 is a fourth expression of the same outcome, since an airline short is a long position in jet fuel; it is an unfilled limit rather than a position, which is why a reader might not count it. The counterweight already present is XLU, which is roughly the one idea that IMPROVES in the scenario that hurts the other three: midterms pass quietly, the crude premium deflates, headline inflation eases, the 10-year falls from 4.98%, and the most rate-sensitive sector re-rates. No crude short or airline long was manufactured to balance the book \u2014 the honest response to concentration that cannot be cleanly hedged is to disclose it. XLU does partially offset the IYR short already open, which is a real mark against it and is stated in its own counter_argument.\n\nSMMT CARRIES A FLAW ITS OWN RESEARCH NAMED. Its 20.00 target sits ABOVE the 120-day high of 19.09 \u2014 the exact construction WMT, COST, EQT and XLP were rejected for today. The distinction claimed is that a first-in-class PD-1/VEGF bispecific approval is a step-change re-rating rather than a move through resistance, and that 19.09 printed within the last four months with no approval in hand. A reader who does not accept that should treat the idea as failing the floor: against 19.09 the ratio is 1.46, not 2.22. Note also that an earlier SMMT position was STOPPED OUT on 2026-10-26, this entry amends the standing unfilled 17.10 bid from 2026-10-27 down to 16.00 rather than opening a second position, and that a stop does not protect you through a binary \u2014 a complete response letter on Nov 14 gaps straight through 14.20, which is why it is sized at 1% as a lottery ticket. One unverified but material concern is carried in its key_risk: a secondary aggregator describes the original HARMONi overall-survival result as having missed statistical significance, and research could NOT confirm that against a primary source.\n\nTWELVE OF FOURTEEN OPEN POSITIONS WERE REVIEWED AND DELIBERATELY NOT RE-PITCHED. All fourteen were checked against the ATR stop floor and the R:R floor; only XLE and HII changed, and both changes are to risk rather than reward. Emitting twelve recommendations restating unchanged levels would pad this report and re-anchor it on names already held. Two were looked at hardest and left alone on purpose: the IYR short (-1.9%) is going wrong for a real reason \u2014 the 10-year fell 5.05 to 4.98 and IYR is back above both its moving averages \u2014 and the tempting move is to widen the stop, which is precisely what this report has been punished for; it sits 1.90 ATR from entry and 0.64 ATR above Friday's close and will resolve within days. The LULU short (-6.6%) is in the same shape and got the same answer. Note one inconvenient fact recorded against the LULU short rather than ignored: a single insider bought $500K at $117.05 in June.\n\nSOURCES THAT FAILED, ALL OF WHICH NARROWED THIS REPORT: all futures (ES=F, NQ=F, RTY=F, CL=F, MES=F all ok:false), which removed a whole asset class and cost the /MNQ, /M2K and /MCL ideas the universe file prefers; Kalshi event contracts entirely (count:0 for midterm, Senate, House, CPI, inflation, oil, gold, Bitcoin, recession, unemployment \u2014 only null-priced sports parlays returned), so NO event contracts were possible in the week of the midterms, the worst possible week to lose that class, and no market-implied probability is stated anywhere in this report; Yahoo options HTTP 401, so not one target was checked against a straddle \u2014 this is why RTX's counter_argument cannot say whether its 13.4% target is inside or outside the market-priced move; api.nasdaq.com read timeout, so no short-interest data; Yahoo index/quote endpoints HTTP 429 (SPX, NDX, DOW, RUT, VIX all unavailable); history CTRA returned no rows. The finnhub earnings calendar returned ZERO names dated 11-02, 11-03 and 11-04 against 227 on 11-05, which is treated as a feed gap \u2014 no claim is made that this week is empty of earnings, and ELAN's Nov 6 date comes off that same feed. Secondary news sources disagreed with each other on Friday's magnitudes (Nasdaq -2.9% vs -4.5%, gold $3,884.90 vs 'below $3,900'); the fetched quote figures are the ones used here. Research did not reach: the midterm policy trade, a deliberate sweep of small and micro caps below $2B, or crypto beyond spot prices.\n\nRED TEAM (phase 2c). Cut four of six; two survive, and the slate is smaller and less correlated than it looks. SMMT (rank 1, conviction 5) cut: the 2.22:1 needs a 20.00 target above the 19.09 120-day high, and no stop honest enough to pass the 2.0 ATR floor gets it to 2.0:1 against that high from a 16.00 entry; separately the HARMONi overall-survival miss the report called 'unverified' is confirmed (HR 0.79, p=0.057 against a 0.0448 threshold, with the FDA having said OS significance was necessary), so a 42% hit rate on the PDUFA binary is not supportable, and the Nov 11 earnings print three days ahead of it was unflagged. ELAN (rank 2) cut: 3.43:1 rests entirely on a 120-day-high target 7.1 ATR out; to the first real resistance at 24.11 \u2014 which its own scale plan names \u2014 it is 0.77:1. HII (rank 3) and XLE (rank 5) moved to the watchlist because they are not recommendations at all: both are updates to already-filled positions, which is why the validator failed both on a downside sitting above the entry, and their 2.99:1 and 2.54:1 are measured from fills weeks old. Forward, HII is 0.79:1 from 316.88 and XLE risks 3.52 to make 0.48 (0.14:1, negative expectancy, 0.68% from its target). THE RISK INSTRUCTIONS IN BOTH ARE SOUND AND HAVE TO BE CARRIED OUT BY HAND: publish_sheets.apply_amendment only runs on recommendations, so state/open_positions.json still has HII at stop=null and XLE at a 60.80 stop. Put the 288.00 stop on HII; sell XLE into 70.50 or on a failure of 69.28. The report also republished HII at 3% against the 1% actually held while telling the reader not to add, which would have tripled the weight of the book's best winner in every Performance-tab average.\n\nRTX kept at rank 1 but downgraded to conviction 3 and its catalyst rewritten. The claim three of today's six ideas leaned on \u2014 that US airstrikes on Tehran could 'resume once the midterms are past' \u2014 is not in the cited source: wisevoter says US forces 'may consider strikes against Iran following the November 3 midterm elections', does not mention Tehran, names no original reporting and carries an AI-generated illustration. What is properly sourced, from Nation Thailand, is Brent settling at $117.64 (+13.6% in October), a Strait of Hormuz tanker struck by attached explosives, Houthi claims of attacks on Saudi sites on Oct 29, and Saxo Bank warning of oil volatility around the Israeli and US elections \u2014 expectations of volatility, not a stated precondition for strikes. RTX's dated_catalyst evidence cited the wisevoter URL for the Hormuz and Houthi facts, which that page does not contain; re-attributed. Added to its key_risk: a mediated de-escalation (Qatari mediators back in Tehran, US-Iran talks stalled) unwinds the premium with no dated event to trade around. CORRELATION: RTX, HII and XLE were three expressions of one trade \u2014 the Middle East premium persisting past Nov 3 \u2014 at a combined 6.5% of book. Cutting XLE and HII leaves RTX as the only new money in it at 2.5%, which is the intended effect and not room for more of the same.\n\nXLU kept, moved to rank 2, conviction unchanged at 3. Its catalyst source (calendarx.com) returns HTTP 404 and is replaced by the BLS Employment Situation schedule, which confirms October payrolls for Friday Nov 6 08:30. Its key_risk claimed the target was 'about 11 ATRs' away; it is 5.3 (3.30 against a 0.6282 ATR14), wrong by a factor of two and corrected. Added: October CPI on Nov 10 is a second rate print inside the holding window with no FOMC until Dec 9, so the idea has to survive two prints rather than the one it is framed around. Its self-conflict with the live IYR short is left standing because the idea discloses it in the right place and gives a real differentiator.\n\nTWO VALIDATION FAILURES ARE DISMISSED RATHER THAN INHERITED. The spread FAILs on ELAN (16.29%) and HII (4.12%) are pre-market artifacts, not tradeability findings: the quotes were taken at 04:00-05:03 ET, ELAN does $116M a day, and on the same fetch HII's quoted ask (316.80) sat below its own last sale (324.585), which cannot happen in a real book. SMMT's spread moved from 1.11% to 8.73% within an hour on the same source. Neither name was cut on its spread. ELAN's earnings_date warning is also wrong \u2014 ELAN is on the finnhub calendar for 2026-11-06 bmo, confirmed on re-fetch.\n\nThe two survivors point in opposite macro directions: RTX needs the escalation premium to hold, XLU needs rates to fall, and sustained $117 Brent argues against falling rates. That is diversification rather than agreement, and neither is sized as though the other confirms it.",
+  "validation_summary": {
+    "checked": 2,
+    "passed": 0,
+    "warned": 2,
+    "failed": 0,
+    "enforced": true
+  }
+}
