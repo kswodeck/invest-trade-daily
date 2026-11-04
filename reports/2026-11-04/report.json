@@ -1,0 +1,288 @@
+{
+  "date": "2026-11-04",
+  "generated_at_et": "2026-11-04T06:30:17-05:00",
+  "research_minutes": 30,
+  "truncated": false,
+  "data_quality_notes": "RESEARCH COMPLETE \u2014 notes.md carries a RESEARCH COMPLETE block at 06:28 ET and a FINAL COUNTS block at 06:31 that supersedes it, so `truncated` is false and nothing was lost to the clock. Research ran 06:01-06:31 ET; the first candidate was captured at 06:05. Six distinct candidates from ten captured lines (FSLR, HII, VST and TLT were each recaptured after refinement; the last entry per symbol is used), against fourteen rejections logged with full working. PRICES \u2014 THE ONE CAVEAT THAT MATTERS MOST TODAY. Every price in this report is the 2026-11-03 close. A 06:26 ET re-quote of all six finalists returned exactly the figures research fetched at 06:06, each stamped 2026-11-03T21:00Z in the pre-market session; at 6am ET that is the freshest honest equity price, not stale data. But Democrats swept both chambers overnight, and renewables, managed care and defence were all reported moving 1-9% pre-open, so TODAY'S GAP IS IN NONE OF THESE NUMBERS. Research deliberately published no idea on any name reported gapping 5-9% (ENPH, MOH, CNC) rather than set levels against a price that no longer exists. FSLR is the single exception and it is handled with a limit shelf below the prior close plus an explicit instruction to abandon the idea if it opens above 187.60. FAILED SOURCES. `market_data.py macro` lost every index and commodity quote this run - SPX, NDX, Dow, Russell 2000, VIX, ES and NQ futures, DXY, gold and WTI all failed, because Finnhub requires a CFD subscription for indices and Yahoo returned HTTP 429 on every retry. Only bonds_20y (TLT 81.11) returned, and FRED carried the entire rates picture. So there is no index level, no VIX and no dollar in market_context.levels, and the oil figures there come from news coverage rather than a fetch - they are labelled as such and should not be treated as quoted prices. Kalshi returned ok with count 0 on all six queries (Congress, Fed, CPI, inflation, recession, Bitcoin), so there is no event contract on the one morning of the year when the election would have been the natural expression, and the open KXCPIYOY-26SEP-T3.5 position could not be checked either. Yahoo options returned HTTP 401, so no options-implied move was checked on any candidate, and Nasdaq short interest timed out, so there is no short-interest read on the top idea. CORRELATION - at the cap, stated rather than hidden. FSLR and TLT are the two new ideas and both trace to the 2026-11-03 divided-government result, by genuinely different mechanisms: Section 45X can no longer be repealed by legislation, and no further deficit-financed tax cut can pass. HII and LULU also key off the same result but are defensive amendments to existing exposure, not new bets. A third election-driven long, CNC, was researched to the primary document and rejected on the long_term floor; ARRY was rejected on the cap for sharing both FSLR's driver and its sector. No fourth election idea was added. If the market simply decides gridlock is bullish-everything or bearish-everything, FSLR and TLT move together. RATIOS - recomputed from the final entry, target and downside rather than carried from the notes: FSLR 2.13, VST 2.71, TLT 3.27. They are not clustered just above the floor, which is the signature of targets fitted to clear it, and no stop is doing the work: FSLR's sits 2.05 ATR from entry against a 2.0 floor, VST's 2.10 against 2.0, TLT's 1.82 against the 1.8 ETF floor. VST's target was fixed the honest way during the falsification pass - the original 161.00 was entry plus twice the risk and appears nowhere in the fetched history, so it was replaced by the 171.35 120-day high. That asks for a ~30% move inside a swing horizon, which is a large ask and is stated in its own counter-argument; the stop was not tightened to rescue the ratio, and the correct destination if that move is judged unreachable is the watchlist rather than a nudged target. THE THREE POSITION AMENDMENTS WILL FAIL MECHANICAL VALIDATION, AND TWO OF THEM SHOULD. HII (rank 2) will fail direction_consistency because its stop of 296.50 sits above its entry of 262.00. That is a trailing stop being set on a filled position now +20.9%, not a bad number, and the entry cannot be restated because the position was bought at a price. BCC at 0.90 and LULU at -0.21 fail the reward-to-risk floor and fail expectancy, and that negative expectancy is the finding rather than a defect: one is a wind-down and the other is a cover instruction, and an exit is supposed to have no edge. The risk is mechanical - Phase 2d demotes a failing idea to the watchlist with a note generated from the failure reasons, which would delete the actual instruction, and a demoted idea never reaches merge_report, so the stop would not reach the position tracker either. All three instructions are therefore also written into the watchlist in full as a backstop, labelled as such. If they survive validation, the watchlist lines are redundant and harmless; if they do not, the reader still gets the instruction. SIZING AND CONVICTION. FSLR is conviction 5 on five distinct kinds of evidence but sized at 3% rather than the 4-5% that tier allows, because it ran 174.40 to 185.90 in the two sessions into the election and part of the gridlock read is already paid for. BCC's three evidence kinds would support conviction 4 and it is published at 2 on purpose: every one of those confirmations argues the thesis is broken, not that the stock is a buy, so the score should not be raised. Every other conviction score equals its count of distinct evidence kinds. No claimed edge over the break-even hit rate exceeds 20 points; the largest is TLT at +12.6. EMPTY LANES, and why each is empty rather than skipped. No long_term idea: CNC was the best-evidenced idea of the morning and still fails the 2.5 floor, because the honest bear case of ~$45 (1.0x book, if the eAPTCs lapse and the Medicaid benefits ratio stays near 92.7%) would demand a $120.25 target from a 66.50 entry, or 2.68x book, which could not be defended - and walking the bear case up to the 56.67 120-day low to make the ratio work is exactly the reverse-engineering the floor exists to prevent. EQT and AR were rejected because the EIA contradicts the premise. No small or mid cap: the lane got a full second pass after the first RESEARCH COMPLETE block, and CENX, BILL, FTDR and ACIW were all rejected on the same geometry - a name reporting tomorrow that sits within ~5% of its 120-day high cannot carry an honest 2.0 ATR stop and still clear a 2.0 reward-to-risk floor. No crypto: quoted, but with no dated catalyst, no level work and no mechanism carrying the election read into it, and manufacturing one to fill the asset class would be padding. No futures: every futures and index quote failed, so nothing could be levelled. No event contract: dead source, not a judgement. OPEN POSITIONS. All 14 were reviewed and decided; the 11 holds are recorded with reasons in the 06:17 ET block of notes.md and are not re-litigated here. Two deserve a reader's attention anyway. CVS (open at 93.00, last 91.41) reports Q3 today before the open, and after the Q2 beat-and-raise the stock still fell 8.6%, so a beat is not protective and a gap can jump the 85.40 stop. UNP (last 303.43) is 4.1% from a 315.99 target that is also the exact 120-day high - the plan is to trim there rather than extend it. PFE and XLE both had their theses strengthened by the election result and were deliberately not re-pitched, having been recommended five times each in ten days. TRACK RECORD, used honestly. 4 of 34 closed trades have hit target (12%) at an average of -5.3%, and stocks are 1 of 21. The sample is past the ~15-trade noise threshold overall but not within any single bucket, so it is not over-fitted here; what it does justify is the stop-distance discipline above and the refusal to pad the count. Five of this report's six ideas are swing stocks, which is the worst-performing bucket on record. RED TEAM (phase 2c). Cut three of six and kept three. FSLR was cut from rank 1 and conviction 5 on the one thing research itself named as the morning's biggest caveat: the overnight gap happened. A real-time Nasdaq book at 06:32 ET shows FSLR 200.55 (bid 200.04 / ask 200.89, isRealTime true) against the 185.90 close used throughout this report - +7.9%, and 6.9% above the 187.60 line the idea itself set as the point past which it must be abandoned. The 45X gridlock thesis is right and was repriced in a single gap. VST was cut from rank 3 for the documented KRE failure: its 2.71:1 came from walking the stop in from the standing 112.14 (2.87 ATR, in force since 2026-10-25) to 117.50 (2.10 ATR) at an unchanged 132.00 entry. At the standing stop the ratio is 1.98:1, under the 2.0 floor - the idea never cleared it, and the pending position's stop is deliberately left at 112.14 rather than tightened. LULU was moved to the watchlist as an ACTION-REQUIRED cover instruction rather than left as a 'sell' row that reads like an invitation to open a short; the red team also removed the 103.00 'target' synthesis had written on a short entered at 100.61, because price trading there would have been graded target_hit at a 2.4% loss and put a cover-at-a-loss in the win column. TLT's target was cut 85.20 -> 84.30: the 5% duration move had been applied to the 81.11 close rather than to the 80.30 entry, flattering the reward with a price the idea refuses to pay. Recomputed off the entry the ratio is 2.67:1 and still clears the floor, so the idea survives the correction instead of depending on the error. HII was downgraded 4 -> 3 because two of its three evidence kinds are the same Nasdaq history fetch read twice. Three ideas remain: TLT, HII, BCC. TWO THINGS THE OPERATOR MUST KNOW. (1) HII and BCC are position updates, not entries, and phase 2d will read them as entries and demote both - HII because a protective stop at 296.50 sits above the immutable 262.00 fill, BCC because an exit plan priced off the 76.50 fill computes as 0.9:1. Their instructions are the valuable part of this report and are the two amendments that must reach state/open_positions.json: HII is a filled +20.9% long carrying stop null, and BCC is a filled long carrying stop null against a 110.0 target whose thesis the Q3 miss contradicted. If 2d demotes them, APPLY BOTH STOPS BY HAND - 296.50 on HII, 70.40 on BCC with the target cut to 82.00. (2) Every recommendation's cited Nasdaq history URL was the parameterless api.nasdaq.com endpoint, which 404s and failed the sources check on all six ideas; it is replaced on the survivors with the www.nasdaq.com market-activity page for the same series, verified 200. Nothing else was re-sourced and no number was changed to clear a check. Prices here remain the 2026-11-03 close except where a 06:32-06:33 ET real-time book is quoted and labelled as such. Validation demoted 2 idea(s) whose numbers did not check out. 1 more carry warnings \u2014 see the validation block on each.",
+  "market_context": {
+    "summary": "Democrats are projected to take both chambers in the 2026-11-03 midterms - House 245+ seats and Senate 51+ on the CNBC election desk tally - with Trump remaining president, so divided government and legislative gridlock are seated for two years. Futures fell hard on the first results (S&P -1.1%, NDX -2%) then reversed and were higher pre-market, with reported pre-open readings disagreeing by timestamp between Dow +1.28%/S&P +0.90% and Dow +0.6%/S&P +0.2%. The durable read is a removal of risk premium rather than new stimulus: a Democratic Congress cannot pass drug-pricing or PBM legislation over a Republican president, and a Republican Congress can no longer repeal what remains of the IRA clean-energy credits, so both tails are legislatively closed - while tariffs and Section 232 remain executive and untouched. Managed care and hospitals were reported up (MOH +6.3%, CNC +4.7%), renewables leading, hyperscalers and defence down. Rates: the 10-year at 4.91% sits 103bp above an effective fed funds rate of 3.88% with the curve at +0.34 and unemployment turning up to 4.2%, and the 10-year fell from 4.97% to 4.89% as results came in. Oil is elevated against a war backdrop. No index, VIX, futures or dollar quote could be fetched this run, so the tape is described from news coverage and the rates picture comes entirely from FRED.",
+    "regime": "mixed",
+    "levels": {
+      "us10y": 4.91,
+      "us2y": 4.59,
+      "curve_10y_2y": 0.34,
+      "fed_funds_effective": 3.88,
+      "unemployment_rate": 4.2,
+      "tlt": 81.11,
+      "spx": null,
+      "ndx": null,
+      "vix": null,
+      "dxy": null,
+      "gold": null,
+      "wti": "95.83 \u2014 news report, not fetched; market_data wti_crude failed",
+      "brent": "102.82 \u2014 news report, not fetched"
+    },
+    "econ_calendar": [
+      {
+        "event": "CVS Health Q3 earnings (open position, entry 93.00) \u2014 before the open",
+        "datetime_et": "2026-11-04T06:30",
+        "importance": "high",
+        "consensus": "~$1.62-1.66 EPS on ~$104.7B revenue; FY26 adj EPS guidance $7.90-8.10"
+      },
+      {
+        "event": "Vistra Q3 earnings \u2014 before the open (the catalyst rank 3 waits for)",
+        "datetime_et": "2026-11-06T07:00",
+        "importance": "high",
+        "consensus": null
+      },
+      {
+        "event": "Humana Q3 earnings \u2014 before the open (HUM researched and rejected on R:R)",
+        "datetime_et": "2026-11-06T07:00",
+        "importance": "medium",
+        "consensus": null
+      },
+      {
+        "event": "Constellation Energy and NRG Q3 earnings \u2014 the rest of the IPP cluster",
+        "datetime_et": "2026-11-09T07:00",
+        "importance": "medium",
+        "consensus": null
+      },
+      {
+        "event": "Occidental Q3 earnings \u2014 after the close (OXY awaiting entry at 54.00)",
+        "datetime_et": "2026-11-09T16:30",
+        "importance": "medium",
+        "consensus": null
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "symbol": "TLT",
+      "instrument": "iShares 20+ Year Treasury Bond ETF",
+      "asset_class": "etf",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 3,
+      "entry": {
+        "ideal": 80.3,
+        "zone_low": 79.9,
+        "zone_high": 80.6,
+        "order_type": "limit"
+      },
+      "exit": {
+        "target": 84.3,
+        "target_2": null,
+        "scale_plan": "trim a third on a break of the 82.17 Nov 2 high, the rest at 84.30"
+      },
+      "stop": 78.8,
+      "position_size_pct": 2,
+      "risk_tier": "standard",
+      "last_price": 81.11,
+      "last_price_asof": "2026-11-03 close",
+      "price_source": "nasdaq historical via scripts/market_data.py",
+      "avg_dollar_volume": 3692192656,
+      "win_probability": 0.36,
+      "catalyst": {
+        "event": "Divided government seated by the 2026-11-03 Democratic sweep removes the path to further deficit-financed tax cuts, which is the supply-side pressure on the long end. The 10-year already fell from 4.97% to 4.89% as the results came in",
+        "datetime_et": null,
+        "action": "buy the pullback into 79.90-80.60 where the SMA20 (80.09) and SMA50 (80.46) converge - do not pay 81.11 at the top of a five-week run. Half size on the first fill",
+        "wait": false
+      },
+      "thesis": "The 10-year at 4.91% sits 103bp above an effective fed funds rate of 3.88% while unemployment has turned up to 4.2% from 4.1%, so the long end is carrying a wide term premium into a softening labour market. The election removes the fiscal tail that premium was partly paying for: neither further Republican tax cuts nor Democratic spending can pass a divided Congress, so the marginal path of Treasury supply flattens for two years, and the 10-year moved from 4.97% to 4.89% on the results.",
+      "key_risk": "The strongest objection is unanswered rather than rebutted: strategists reading the same result flag 2027 debt-ceiling mechanics under divided government as a reason term premium stays high, and gridlock does nothing about the existing debt stock. If the premium is about the stock rather than the flow of new legislation, this trade has no edge at all. Second, the 78.80 stop is 1.82 ATR from entry on an ATR14 of 0.82 - it clears the 1.8 ATR floor for a swing ETF only barely, and it is a real level (below the 2026-10-14 close of 78.89 and the 2026-10-19 low of 79.34) rather than a round number, but it sits under the 2.25 ATR band where this report's stop-outs have clustered. Size accordingly; this is the half-size first fill for that reason.",
+      "counter_argument": "Treasury yields have no consistent historical pattern around midterms, and inflation, Fed policy and growth remain the actual drivers - several strategists called the result short-term noise rather than a repricing. TLT has also already run 77.14 to 81.11 since 2026-10-07, so the easy part of any rate rally has happened, which is why this is a limit bid into the moving averages and not a market order. Note too that the 84.30 target is a duration calculation rather than a chart level, and it sits well below the 87.79 120-day high, so it is the conservative of the two available anchors. Red team cut this target from the 85.20 synthesis published: that figure applied the 5% duration move to the 81.11 close rather than to the 80.30 entry, which flattered the ratio by anchoring the reward on a price this idea explicitly refuses to pay. Recomputed off the entry the move is worth 84.30 and the ratio is 2.67:1, which still clears the 2.0:1 floor - the idea survives the correction rather than depending on the error.",
+      "evidence": [
+        {
+          "kind": "valuation_anchor",
+          "detail": "Method shown: 10-year 4.91% and 2-year 4.59% on 2026-11-02, effective fed funds 3.88%, curve 10y-2y +0.34 on 2026-11-03, unemployment 4.2% in September against 4.1% prior - all fetched from FRED. TLT duration is roughly 16, so a 31bp fall in the 10-year to 4.60% is worth about 5% on the fund. Applied to the 80.30 entry rather than to the 81.11 close, because the idea is a limit bid and will not pay 81.11: 80.30 x 1.05 = 84.30. The target IS that number rather than a multiple of the risk, and it sits well below the 87.79 120-day high.",
+          "source": "https://fred.stlouisfed.org/series/DGS10"
+        },
+        {
+          "kind": "technical_level",
+          "detail": "Fetched 120-day history: Nov 3 close 81.11, ATR14 0.82 (1.01%), SMA20 80.09, SMA50 80.46, range 76.43-87.79. The entry zone is the moving-average confluence; stop 78.80 sits below the 2026-10-14 close of 78.89 and the 2026-10-19 low of 79.34, a 1.82 ATR distance from the 80.30 entry, clearing the 1.8 ATR ETF floor.",
+          "source": "https://www.nasdaq.com/market-activity/etf/tlt/historical"
+        }
+      ],
+      "sources": [
+        "https://fred.stlouisfed.org/series/DGS10",
+        "https://www.nasdaq.com/market-activity/etf/tlt/historical",
+        "https://capital.com/en-int/analysis/us-midterm-elections-2026-what-could-the-results-mean-for-the-dollar-and-treasury-yields",
+        "https://www.theglobeandmail.com/investing/markets/inside-the-market/article-us-midterms-unlikely-to-alter-outlook-for-bond-markets/"
+      ],
+      "rank": 1,
+      "risk_reward": 2.67,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.67,
+        "claimed_risk_reward": 2.67,
+        "breakeven_probability": 0.272,
+        "stated_win_probability": 0.36,
+        "expectancy_r": 0.321,
+        "claimed_edge": 0.088,
+        "stop_atr_multiple": 1.82,
+        "live_price": 81.11,
+        "live_price_asof": "2026-11-03T21:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 879.7,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": 0.8225,
+        "checked_at_et": "2026-11-04T06:40:06-05:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.67:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 80.3 is -1.0% from live 81.11"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "warn",
+            "detail": "no date given for a timed idea"
+          },
+          {
+            "check": "earnings_date",
+            "status": "warn",
+            "detail": "claims an earnings catalyst but TLT is not on the fetched calendar"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 4.86 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "stop_distance",
+            "status": "warn",
+            "detail": "stop is 1.82 ATR from entry \u2014 clears the 1.8 ATR floor for a swing etf but sits under the 2.25 ATR level where stop-outs have clustered"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "36% claimed vs 27% break-even at 2.67:1 \u2014 expectancy +0.32R"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-11-03T21:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "no bid/ask available (normal outside regular hours)"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "2% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 3 rests on 2 independent kinds: technical_level, valuation_anchor"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "1 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    }
+  ],
+  "watchlist": [
+    {
+      "symbol": "HII",
+      "instrument": "Huntington Ingalls Industries Inc",
+      "note": "BACKSTOP COPY of today's rank-2 position amendment, written here in case validation demotes the recommendation for having a stop above its entry. The open long from 2026-10-12 at 262.00 is +20.9% at 316.93 and is carrying no stop at all. Set a hard stop at 296.50 - the half-fill of the unfilled 2026-10-29 earnings gap, with no traded bar between 282.11 and 296.51 since - which locks in roughly +13%. Do not add here: price is 13.5% above both the SMA20 and SMA50 and defence was among the weakest pre-open sectors on the election result.",
+      "trigger": "Act today: set the stop at 296.50. Trim half at the 339.76 target, 7.2% above."
+    },
+    {
+      "symbol": "BCC",
+      "instrument": "Boise Cascade Co",
+      "note": "BACKSTOP COPY of today's rank-3 position amendment (rank 6 before the red team cut three ideas), written here because a wind-down has a 0.90 ratio by construction and will fail the floor. DOWNGRADE the 2026-08-18 long from 76.50, now -2.3% at 74.81: cut the 110.00 target to 82.00 and add a hard stop at 70.40 where there was none. The original thesis needed a housing recovery and Q3 went the other way - EPS $1.04 against $1.13, a 7.7% miss after beats of 30.8%, 18.3% and 47.2% - with analyst bullish share down to 54.5% from 63.6% and the 10-year at 4.91%. Two reversal bars on 11-02 and 11-03, from highs of 82.00 and 81.20 to closes at the low, are distribution rather than basing. Conviction is deliberately 2 and not 4: all three evidence kinds argue the thesis is broken, not that the stock is a buy.",
+      "trigger": "Treat as an exit. Work the sell into any bounce toward 82.00 rather than waiting for the 70.40 stop; $27M average daily dollar volume means it must be worked, not market-ordered. Do not add."
+    },
+    {
+      "symbol": "LULU",
+      "instrument": "Lululemon Athletica Inc",
+      "note": "ACTION REQUIRED TODAY - COVER THE OPEN SHORT. Not a kill and not a new idea: the short opened 2026-09-08 at 100.61 is live and filled, and today's instruction is to close it. The red team moved it off the recommendation list outright rather than leaving it to be demoted, because a 'sell' row reads as an invitation to open a short, which is the opposite of the instruction - and because a cover instruction has negative expectancy by construction and fails the reward-to-risk floor no matter how it is written. The position is 6.3% against at the 106.95 close, and it got worse overnight: a real-time Nasdaq book at 06:32 ET on 2026-11-04 shows 108.10 last, bid 107.50 / ask 108.18. Price is above both the SMA20 (100.01) and SMA50 (102.46), has risen in four of the last five sessions and sits 18.3% off the 120-day low, so the breakdown the short to 77.00 required has not happened - it is basing, not breaking down. The 112.00 stop is 1.15 ATR away, roughly a coin flip on noise alone, so the loss is near-realised either way. The 2026-11-03 Democratic sweep also hands tariff-authority oversight to the one body that might curb it, a new tailwind for an importer that was not in the original thesis. The red team additionally removed a 103.00 'target' synthesis had written on this position: on a short entered at 100.61, price trading at 103.00 would be graded target_hit at a 2.4% loss, putting a cover-at-a-loss in the win column. The standing 77.00 target and 112.00 stop are left untouched so the tracked position is not corrupted - this exit has to be taken by hand.",
+      "trigger": "Act today: buy the short back in full near 103.00-108.00 rather than waiting for the 112.00 stop, and work the exit rather than market-ordering it. Do not add and do not re-establish unless price makes a decisive loss of the 102.46 SMA50, with levels re-derived then.",
+      "demoted_from_rank": 5,
+      "demotion_reason": "cover instruction, not a tradeable short; its own numbers lose money at the stated 30% hit rate, which is precisely the reason to close the position"
+    },
+    {
+      "symbol": "ARRY",
+      "instrument": "Array Technologies Inc",
+      "note": "Right thesis, wrong slot. It shares both the driver (Section 45X survives divided government) and the sector with FSLR, which is published today at conviction 5, so it was rejected on the correlation cap rather than on its merits. Recorded so a later run can take it on its own.",
+      "trigger": "Pick up on its own merits once FSLR is closed or the solar/45X slot is free."
+    },
+    {
+      "symbol": "CNC",
+      "instrument": "Centene Corp",
+      "note": "The best-evidenced idea of the morning and still rejected: researched to the primary document and failed the 2.5 long_term floor. From an accumulation entry around 66.50 the honest bear case is ~$45 (1.0x book, if the eAPTCs lapse and the Medicaid benefits ratio stays near 92.7%), which would demand a $120.25 target - 2.68x book, indefensible. Gridlock genuinely does kill the drug-pricing and PBM legislation tail, and managed care was reported up 4.7% pre-open, which is also why no level could be set against a price that no longer exists.",
+      "trigger": "A lower entry that makes 2.5:1 reachable against a ~$45 bear case, or a defensible reason to mark the bear case higher than book."
+    },
+    {
+      "symbol": "CENX / BILL / FTDR / ACIW",
+      "instrument": "Small and mid caps reporting 2026-11-05",
+      "note": "The small-cap lane got a full second pass and produced nothing, on geometry rather than thesis: a name reporting tomorrow that sits within ~5% of its 120-day high cannot carry an honest 2.0 ATR stop and still clear a 2.0 reward-to-risk floor. BILL had the best record of the day. FTDR (bullish share -4.9pts) and ACIW (-6.8pts) also have deteriorating revisions. The lane wants names in the middle of a range, not at the top of one.",
+      "trigger": "Re-screen after the prints, for mid-range names rather than ones pinned to their highs."
+    },
+    {
+      "symbol": "FSLR",
+      "instrument": "First Solar Inc",
+      "note": "Red team cut this at rank 1 (conviction 5): it is void by its own abandon rule. A real-time Nasdaq book at 06:32 ET on 2026-11-04 shows 200.55 last, bid 200.04 / ask 200.89 (isRealTime true) against the 185.90 prior close - +7.9% overnight, and 6.9% above the 187.60 top of the entry zone that the idea itself names as the line past which it must not be chased. The gridlock read on Section 45X is correct and it has been paid for in a single gap: the entry shelf at 180.00-187.60 no longer exists and the 169.50 stop is now 15.5% below the market. Being right and being early are different, and the 2.05 ATR stop was already only just over the 2.0 floor before the gap. Nothing here is a criticism of the thesis - only of the price.",
+      "trigger": "Republish only on a retest into 180.00-187.60, or a pullback to the 176.87 SMA20, with levels re-derived from a post-gap bar rather than from the 2026-11-03 close.",
+      "demoted_from_rank": 1,
+      "demotion_reason": "pre-market 200.55 is 6.9% above the idea's own 187.60 abandon line; the entry zone no longer exists"
+    },
+    {
+      "symbol": "VST",
+      "instrument": "Vistra Corp",
+      "note": "Red team cut this at rank 3: the reward-to-risk floor was cleared by walking the stop in, not by finding a better target. The live pending setup published 2026-08-24 has stood since 2026-10-25 at entry 132.00 / target 171.72 / stop 112.14. Today's re-pitch keeps the entry at 132.00 and moves the stop to 117.50 - from 2.87 ATR of room to 2.10 ATR, on an ATR14 of 6.91. That walk is the whole ratio: against the standing 112.14 stop the report's own 171.35 target gives 39.35/19.86 = 1.98:1, below the 2.0:1 swing floor. The idea never cleared the floor; a tighter stop made it look as though it had, while making the trade strictly worse. The report concedes the point itself - key_risk says 117.50 'is not a level anybody is defending - it is simply 2.1 ATR of room'. The rest of the case is thin in the same direction: a 29.8% move inside a swing horizon, a 6-point claimed edge over break-even (the narrowest in the report), a print that has missed consensus by 55% and 77% in two of the last four quarters, and VST at -12.29% versus XLU over one month while this book's XLU long is the thing working. Buying the laggard in a working theme is the error that looks like value - the report's own counter_argument says so, and says the correct destination is the watchlist.",
+      "trigger": "The standing pending setup is left untouched at entry 132.00 / target 171.72 / stop 112.14 - the stop is deliberately NOT tightened. Note price was already 133.57 at 06:33 ET on 2026-11-04, inside the old 128.00-133.50 zone two sessions before the 2026-11-06 print that was supposed to put it there. Republish only if a nearer fetched level clears 2.0:1 at a stop of 2.5 ATR or wider.",
+      "demoted_from_rank": 3,
+      "demotion_reason": "stop walked in 112.14 -> 117.50 at an unchanged entry; at the standing stop the ratio is 1.98:1, under the 2.0 floor"
+    },
+    {
+      "symbol": "HII",
+      "instrument": "Huntington Ingalls Industries Inc",
+      "note": "Demoted by validation: downside 296.5 is not below entry 262.0 for a buy",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 2,
+      "demotion_reason": "downside 296.5 is not below entry 262.0 for a buy"
+    },
+    {
+      "symbol": "BCC",
+      "instrument": "Boise Cascade Co",
+      "note": "Demoted by validation: computed 0.9:1 is below the 2.0:1 floor for swing; 35% claimed vs 53% break-even at 0.9:1 \u2014 expectancy -0.34R \u2014 the idea loses money at its own stated hit rate; bid/ask spread 119.26%; the round trip costs 1659% of the target move \u2014 too wide to trade this thesis",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 3,
+      "demotion_reason": "computed 0.9:1 is below the 2.0:1 floor for swing; 35% claimed vs 53% break-even at 0.9:1 \u2014 expectancy -0.34R \u2014 the idea loses money at its own stated hit rate; bid/ask spread 119.26%; the round trip costs 1659% of the target move \u2014 too wide to trade this thesis"
+    }
+  ],
+  "validation_summary": {
+    "checked": 3,
+    "passed": 0,
+    "warned": 1,
+    "failed": 2,
+    "enforced": true,
+    "demoted": 2
+  }
+}
