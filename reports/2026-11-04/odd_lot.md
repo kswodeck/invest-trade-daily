@@ -1,6 +1,6 @@
 # Odd-lot tender screener — 2026-11-04
 
-Run 2026-11-04 18:32 ET (evening slot). 3 offers tracked, 0 clear every gate: 0 Tier A, 0 Tier B, 0 Tier C.
+Run 2026-11-04 21:42 ET (evening slot). 3 offers tracked, 0 clear every gate: 0 Tier A, 0 Tier B, 0 Tier C.
 
 **No Tier A opportunities today.** That is the ordinary result — an odd-lot tender with a 3%+ spread and a clean condition set is rare, and the thresholds below are not moved to produce one.
 
@@ -29,7 +29,7 @@ _None._
 A screener that finds nothing reads exactly like one that is broken. This is the difference.
 
 - **96** full-text queries over `2026-08-21..2026-11-04` returned **151** document hit(s) across **19** filing(s) (**54** exhibits kept as candidates)
-- searched as **4** date slice(s), **94** result page(s) read
+- searched as **4** date slice(s), **96** result page(s) read
 - **3** offers open, **29** archived
 
 | Turned away for | Count |
@@ -39,11 +39,6 @@ A screener that finds nothing reads exactly like one that is broken. This is the
 | no consideration stated | 1 |
 | not common equity | 1 |
 | an exchange offer, not cash | 1 |
-
-> ⚠ **2 of 96 queries failed**, so this sweep is thinner than it looks. EFTS returns 500s; a failed slice is retried on the next run rather than losing the pass.
-
-> - `SC TO-T/A "odd lot" 2026-10-10..2026-11-03: HTTPError: 500 Server Error: Internal Server Error for url: https://efts.sec.gov/LATEST/search-index?q=%22odd+lot%22&forms=SC+TO-T%2FA&dateRange=custom&startdt=2026-10-10&enddt=2026-11-03`
-> - `SC TO-T "odd-lot" 2026-11-04..2026-11-04: HTTPError: 500 Server Error: Internal Server Error for url: https://efts.sec.gov/LATEST/search-index?q=%22odd-lot%22&forms=SC+TO-T&dateRange=custom&startdt=2026-11-04&enddt=2026-11-04`
 
 ## Thresholds in force
 
