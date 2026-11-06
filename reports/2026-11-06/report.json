@@ -1,0 +1,382 @@
+{
+  "date": "2026-11-06",
+  "generated_at_et": "2026-11-06T06:37:30-05:00",
+  "research_minutes": 29,
+  "truncated": false,
+  "data_quality_notes": "RESEARCH COMPLETE. notes.md carries a RESEARCH COMPLETE block and a later FINAL COUNTS block that supersedes it, so `truncated` is false and nothing was lost to the clock \u2014 research ran 06:00-06:29 ET. The research phase recorded its own timestamp correction: the `[HH:MM ET]` headings in notes.md drifted up to ~70 minutes ahead of the true clock and should be read as sequence, not wall time. Every market figure carries its own fetched `as of` and is unaffected.\n\nWHY TWO RECOMMENDATIONS AND FIVE WATCHLIST INSTRUCTIONS. Research captured seven distinct candidates. Two are publishable ideas (CVS, ONON). The other five are position management on open positions, and all five carry instructions the schema cannot express as recommendations, so they are on the watchlist with the number as the instruction \u2014 not as rejections. VST and RTX are early closes, and there is no field for an exit. HII (stop 265.00 against a 262.00 fill) and ABT (103.20 against 103.00) are profit-protecting stops that sit above the entry of record, which fails validate_report.py's direction_consistency and stop_distance checks because both measure from the fill \u2014 the same reason HII was moved to the watchlist on 2026-11-05. XLE's amended stop is correctly ordered but the remaining trade from its 63.90 fill is 1.32:1, below the 2.0 swing floor, so Phase 2d would demote it; a filled entry cannot be re-struck, so the honest choice is hold-with-a-real-stop or close, which is what the note says.\n\nKNOWN TOOLING GAP, carried over from 2026-11-05 and unfixed. A stop amendment reaches state/open_positions.json only through `recommendations`, so the tracker will keep grading HII with no stop, ABT at 97.00 and XLE at 60.80, and the Performance tab will understate the protection actually in place. The closes of VST and RTX will likewise not reach the tracker and those positions will be carried until their stops trade. That is a tooling gap, not a change of mind.\n\nWHY ONE NEW ENTRY IS THE FINDING RATHER THAN A SHORTFALL. Seven setups were built and killed on arithmetic, each logged with its numbers: GDX 0.83:1, GLD 0.87:1, FSLR 0.94:1, NEM 1.60:1, CVS-as-a-swing 1.83:1, AMAT long-term 0.75:1, plus CSCO, GIS, QCOM, CF, GOLD, XLF, IYR and the HCA/CNC fade on fundamentals. The 2026-11-05 volatility shock repriced every ATR in the book, and because the stop floor is denominated in ATRs, a target that cleared 2:1 on Wednesday needs to be ~40% further away today. Both sides of the rotation fail, for opposite reasons: the defensive and value complex that received it (XLF, IYR, XLV, HCA, CNC, PG, KO, COST) sits at or within a few percent of its 200-day highs, so any 2:1 target is a new high, while the de-rated AI complex that funded it has targets far enough away only by assuming a V-shaped recovery six sessions before AMAT reports on 11-12. The report is also deliberately net-reducing: two closes and three stop amendments against one new entry, with 13 positions already open into a 4.4% down day.\n\nRATIOS, CHECKED FOR FITTING. Both published ratios sit modestly above their floors \u2014 CVS 2.64 against 2.5, ONON 2.13 against 2.0 \u2014 which is the pattern to be suspicious of. The defence is that neither level was set today: CVS's 79.00 entry, 108 target and 68 bear case are unchanged from the 2026-11-05 publication, and ONON's 34.20/41.00/31.00 are unchanged from 2026-11-03, so the targets were not nudged to clear anything. Stops checked the other way too: ONON's 31.00 is 2.16 ATR from entry on an ATR14 of 1.4792, which clears the 2.0 floor for a swing stock but sits under the 2.5 guide where stop-outs have clustered \u2014 expect a stop_distance warning, and the honest reading is that this is a thin-cushion stop sitting above a 31.28-31.90 shelf. CVS is long-term and carries a stated bear case at 68 with an invalidation condition rather than a hard stop; its swing version was explicitly rejected at 1.83:1.\n\nSIZING. CVS is conviction 5 and a long-term core holding, which config/strategy.md would size at 4-5%. It is published at 3% deliberately: this report's long-term record is 0/4 hit target, average -15.2%, and CVS itself was stopped out of a prior conviction-3 long on 2026-11-04. The entry is staged in thirds across 76-82 rather than taken at once.\n\nPRICE FRESHNESS. Every quote in this report is the 2026-11-05 close, fetched from finnhub at 06:33 ET on 2026-11-06 with session `pre` and an age of ~873 minutes. At 6am ET the freshest honest equity price is the previous close; that is a closed market, not stale data, and it is labelled as such throughout.\n\nSOURCES THAT FAILED. Yahoo Finance returned HTTP 429 across the board, so ^GSPC, ^NDX, ^DJI, ^RUT, ^VIX, ES/NQ/GC futures, DXY, gold spot and WTI spot could not be fetched at all \u2014 every index, volatility, commodity and currency level below is an ETF proxy and is labelled as one. `market_data.py implied` returns HTTP 401 from yahoo-options, so no target was checked against a straddle-implied move this run, which matters most for ONON into its 11-10 print. `market_data.py short` timed out against api.nasdaq.com, so there is no short-interest read. `market_data.py events` returns ok:true with zero markets for every topic tried, so no event contract was sourced and the standing KXCPIYOY-26SEP-T3.5 NO at 18 could not be checked. Working all morning: finnhub quotes, nasdaq history and earnings, FRED, SEC EDGAR, CoinGecko.\n\nNOT COVERED. No futures idea appears despite config/universe.md preferring futures, because no contract could be priced and no contract month will be named that was not fetched. Crypto was priced (BTC 76,004 -5.31%, ETH 2,234.15 -7.64%, SOL 89.96 -6.91%) but not researched \u2014 it sold with equities and offered no diversification, and there was no edge to state. Small and micro caps were not hunted; the two that crossed the run's path (SMMT 14.19, SMR 4.37) were not researched and are not published. No intraday idea: the 1.0-ATR intraday stop floor against a VIXY move of +29.71% makes an intraday stop a coin flip, and none was built.\n\nCORRELATION. No driver carries more than three ideas. Across recommendations and watchlist instructions: defence 2 (RTX close, HII hold \u2014 deliberately opposite directions on the same budget news, split on which programme lines analysts expect to survive), healthcare 2 (CVS, ABT), energy 1 (XLE), AI-capex 1 (VST close), consumer 1 (ONON).\n\nTWO VALIDATION FLAGS ANSWERED IN ADVANCE, so the red team does not act on an artifact. (1) ONON's earnings catalyst will flag as 'not on the fetched calendar'. It is on the calendar: `market_data.py earnings --days 14` returns {'symbol': 'ONON', 'date': '2026-11-10', 'hour': 'bmo', 'eps_estimate': 0.4038}, which is exactly the date and consensus published here. validate_report.py calls md.earnings(45) instead, the upstream source caps the response at 1500 rows, and a 45-day window hits that cap \u2014 it loaded 1484 symbols and ONON was truncated out. That is a source-cap artifact in the checker's wider window, not an unverified catalyst. (2) CVS carries a 2.33% bid/ask spread, a round trip costing about 6% of the target move. The entry is already specified as a limit staged in thirds across 76-82 for that reason; it must never be taken at market.\n\nRED TEAM (phase 2c). Killed ONON from rank 2 and downgraded CVS from conviction 5 to 4. One recommendation survives.\n\nONON was cut on its own arithmetic rather than on its thesis. The entry at 34.20 sits 8.9% below the 37.54 close with the 11-10 earnings print in between, so the only route to a fill is a disappointing print \u2014 and the report's own key_risk concedes that in that scenario the 31.00 stop is in the path of the gap rather than below it, which makes the 2.13:1 a ratio with no usable denominator. Recomputing from the fetched ATR14 of 1.4792 settles it: the 31.00 stop is 2.16 ATR, and the trade is 1.84:1 at the 2.5 ATR guide and 1.53:1 at 3.0 ATR, both under the 2.0 swing floor. Widening the stop to one that survives the only scenario that fills the entry kills the idea, so it never cleared. Separately the 41.00 target is 1% under the fetched 41.41 120-day high, so the trade requires the print to knock the stock down 8.9% and then requires a round trip to within 1% of its high. The level and the 11-10 reassess instruction are preserved on the watchlist with the full arithmetic; nothing was deleted.\n\nCVS survives as the single recommendation and every figure in it was re-fetched and matches: TTM EPS 2.09 + 2.58 + 2.57 + 1.09 = 8.33 against the 81.33 close is 9.76x, four consecutive beats of +25.4%, +38.0%, +15.8% and +8.8%, ATR14 3.1929, 200-day range 69.51-110.68 so the 108 target is not a new high, and 0 insider buys against 9 sales worth $358.97M. Conviction comes down to 4 on two grounds. The fifth evidence kind, `positioning`, is the one that lifted the count from four to five and it is a wash rather than a confirmation: 87.5% sell-side bullish and improving means the cheapness is consensus rather than contrarian, and the item has to disclose a $359M insider-sale imbalance with zero buys inside itself. And the report sizes it at 3% against the 4-5% a conviction 5 commands, explicitly because the long-term book is 0/4 at -15.2% and CVS itself was stopped out on 2026-11-04 \u2014 a score the author will not size is not that score, and the by-conviction table is read against size.\n\nTwo fixes to CVS rather than kills. The entry zone_high is closed from 82.00 to 79.00: the condition never bought above 79.00, but a fill at the old zone_high is 1.86:1 against the 2.5 long-term floor, so the published 2.64:1 held only at the ideal and the zone as written was permission the plan did not intend. And key_risk gains the two risks nobody named \u2014 Aetna's medical loss ratio, which is the likelier route to the stated 'two quarters below consensus' invalidation than the federal PBM reform the original leads with, and the dividend reset a separation implies for an income-held holder base. No figure was attached to either because none was fetched.\n\nNot acted on, deliberately. ONON's `earnings_date` warning is a real source-cap artifact: `earnings --days 14` was re-run and returns ONON 2026-11-10 bmo at 0.4038, exactly as published, so the flag was not a reason for the kill. Both `spread` warnings stand as written and both entries are already limit-only. The watchlist was left untouched: the five open-position instructions (VST and RTX closes, HII, ABT and XLE stop amendments) were checked for arithmetic and are consistent with the fetched ATRs and fills, and the seven setups killed on the floor were each already published with the numbers that killed them. Correlation needed no cut once ONON went \u2014 one recommendation cannot cluster.",
+  "market_context": {
+    "summary": "The dominant fact of the morning is that the prior session was a crash. On 2026-11-05 SPY fell 4.41% to 733.00 and QQQ fell 6.49% to 647.05 \u2014 the worst Nasdaq day in 18 months, with the composite off 5.52% into correction territory, all 11 S&P sectors negative, roughly $2T of market cap erased and about $1T of it in the Mag 7. SMH fell 11.21% and AMD 17.26%. VIXY rose 29.71% and UVXY 45.38%, so this was a genuine volatility event rather than a drift.\n\nThe trigger was the 2026 midterms: Democrats took both the House and the Senate, setting up divided government for the final two years of the term, and the market's stated reading is that a Democratic Congress makes the AI datacenter buildout slower, more expensive and more regulated. Wednesday's post-election rally was fully reversed Thursday. The caveat worth holding: a divided Congress legislates very little and the executive levers on AI \u2014 tariffs, export controls, permitting \u2014 are unchanged, so the legislative risk is largely narrative. The de-rating and the positioning unwind are real regardless.\n\nTwo details make the move readable rather than panic. First, it discriminated inside the AI-power trade: the market sold the spending (PWR -12.30%, VRT -14.02%, GEV -7.48%, ETN -7.38%, SMR -14.81%, OKLO -13.20%) and kept the generation (CEG -2.47%, NRG -3.24%, TLN -3.23%), which is a coherent reading of appropriations and permitting bearing on new build rather than on existing megawatts. Second, this was not a flight to quality: on a -4.4% SPY day TLT managed +0.21%, while gold was specifically bid (GLD +0.81%, GDX +1.37%) and healthcare was the defensive winner (XLV -2.50%). Crypto gave no diversification at all, selling with equities (BTC -5.31%, ETH -7.64%).\n\nMacro is hostile to duration and to rate-sensitive equity: the 10-year is 4.90% against a 3.88% funds rate, the 10y-2y curve steepened to +0.38 from +0.32, CPIAUCSL rose 0.65% m/m in September and unemployment ticked up to 4.2%. Nothing reports today or over the weekend; the calendar restarts Monday and the week's decisive event is AMAT on 2026-11-12, the first semicap print after the drawdown.\n\nIndex, volatility, futures, currency and commodity spot levels could not be fetched (Yahoo 429), so every level below is an ETF proxy and labelled as one.",
+    "regime": "risk-off",
+    "levels": {
+      "spx": "unavailable (Yahoo 429) \u2014 SPY 733.00, -4.41% (2026-11-05 close)",
+      "ndx": "unavailable (Yahoo 429) \u2014 QQQ 647.05, -6.49% (2026-11-05 close)",
+      "rut": "unavailable (Yahoo 429) \u2014 IWM 270.98, -4.59% (2026-11-05 close)",
+      "vix": "unavailable (Yahoo 429) \u2014 VIXY 21.22, +29.71%; UVXY +45.38% (2026-11-05 close)",
+      "us10y": 4.9,
+      "us2y": 4.58,
+      "fed_funds_effective": 3.88,
+      "us10y_minus_2y": 0.38,
+      "dxy": "unavailable (Yahoo 429) \u2014 no proxy fetched",
+      "wti": "unavailable (Yahoo 429) \u2014 USO 148.21, +1.93% (2026-11-05 close)",
+      "gold": "unavailable (Yahoo 429) \u2014 GLD 375.49, +0.81% (2026-11-05 close)",
+      "btc": 76004,
+      "eth": 2234.15,
+      "tlt": 81.93,
+      "smh": 447.73,
+      "xlv": 184.91,
+      "xle": 61.63,
+      "xlu": 43.3,
+      "levels_note": "All equity and ETF figures are 2026-11-05 closes read pre-open 2026-11-06 (finnhub, session `pre`, ~873 minutes old). Rates are FRED as of 2026-11-04; the curve spread is 2026-11-05. Crypto is CoinGecko."
+    },
+    "econ_calendar": [
+      {
+        "event": "Nothing reports today (2026-11-06) or over the weekend; the earnings calendar restarts Monday",
+        "datetime_et": "2026-11-06T00:00",
+        "importance": "low",
+        "consensus": null
+      },
+      {
+        "event": "ONON Q3 earnings, before the open \u2014 the dated event the ONON recommendation waits for",
+        "datetime_et": "2026-11-10T07:00",
+        "importance": "high",
+        "consensus": "EPS 0.4038"
+      },
+      {
+        "event": "AMAT Q4 earnings, after the close \u2014 the first semicap print after an 11.2% one-day SMH drawdown and the highest-information event for the AI-capex question",
+        "datetime_et": "2026-11-12T16:30",
+        "importance": "high",
+        "consensus": "EPS 4.1345"
+      },
+      {
+        "event": "CSCO Q1 earnings, after the close",
+        "datetime_et": "2026-11-12T16:30",
+        "importance": "medium",
+        "consensus": "EPS 1.3512"
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "rank": 1,
+      "instrument": "CVS Health Corporation",
+      "symbol": "CVS",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "long_term",
+      "conviction": 4,
+      "last_price": 81.33,
+      "last_price_asof": "2026-11-05T21:00:00+00:00",
+      "price_source": "finnhub (2026-11-05 close, read pre-open 2026-11-06)",
+      "entry": {
+        "ideal": 79.0,
+        "zone_low": 76.0,
+        "zone_high": 79.0,
+        "order_type": "limit",
+        "condition": "accumulate in thirds at or below 79.00 and never above it: first third at 79.00 or better, second third at 76.00 or lower, hold the last third back for a PBM-legislation headline. Red team closed the zone from 82.00 to 79.00 \u2014 the plan never bought above 79.00 anyway, but a fill at the old 82.00 zone_high is (108-82)/(82-68) = 1.86:1, below the 2.5 long-term floor, so the published 2.64:1 held only at the ideal. Limit orders only; the 2.33% spread makes a market order cost ~6% of the target move."
+      },
+      "exit": {
+        "target": 108.0,
+        "target_2": 120.0,
+        "scale_plan": "trim a third at 108 (13x trailing), hold the balance through the separation; 120 only if the two standalone businesses re-rate separately"
+      },
+      "stop": null,
+      "bear_case_price": 68.0,
+      "risk_reward": 2.64,
+      "win_probability": 0.45,
+      "position_size_pct": 3,
+      "risk_tier": "standard",
+      "catalyst": {
+        "event": "Tax-free separation into two independent public companies, announced in the 2026-11-04 8-K and targeted for completion by 2028 \u2014 roughly 9,000 retail pharmacies split from Aetna and Caremark. The driver is the re-rating of the remaining insurance-plus-PBM business, not a dated print",
+        "datetime_et": null,
+        "action": "enter now and accumulate \u2014 do not wait for the separation. The 12.5% announcement drop is the entry; the 2028 completion is the payoff, and there is no intervening date to wait for",
+        "wait": false
+      },
+      "thesis": "CVS fell 12.5% on 2026-11-04 to 79.96 and closed 81.33 on 11-05, and it fell on an announcement rather than a disappointment: the same morning it beat Q3 consensus by 25.4% and raised its outlook while peers rose on the Democratic sweep (ELV +4%, CI +3%). Trailing twelve-month EPS is 1.09 + 2.57 + 2.58 + 2.09 = 8.33, so at 81.33 the stock is 9.8x earnings it has beaten by 8.8%, 15.8%, 38.0% and 25.4% in four consecutive quarters. The separation is the fix for the structural overhang rather than a new risk \u2014 Arkansas has barred pharmacy benefit managers from owning pharmacies, Tennessee has passed a similar law, and CVS's own filing warns those laws limit offering both under one roof \u2014 so splitting the retail estate from Caremark pre-empts the statute instead of conceding the integrated model failed. A 13x multiple on that same 8.33 is 108, which is not a new high: the stock traded at 110.68 inside the last 200 days.",
+      "key_risk": "INVALIDATION (no hard stop, long-term): federal PBM legislation that materially resets Caremark economics, or two consecutive quarters of adjusted EPS below the consensus the company has beaten four straight times, or abandonment of the separation. A price move alone is not invalidation \u2014 at 9.8x the price is the opportunity. The single most likely thing to break it is federal PBM reform, because Caremark is the profit engine that stays with Aetna after the split, and a Democratic Congress is where PBM bills come from. Secondary: a breakup announced for 2028 means two years of distraction, stranded corporate cost and the routine slippage large separations suffer. Disclosed against the idea: zero open-market insider purchases against nine sales worth $359.0M over six months, so there is no confirming buy cluster. ADDED BY RED TEAM, two risks absent from the original: (1) Aetna's medical loss ratio, not PBM reform, is the likeliest route to the 'two consecutive quarters below consensus' invalidation condition \u2014 the insurance book is what stays with Caremark after the split, managed-care MLR deterioration has been the sector's defining story, and the four-beat record raises the bar the fifth quarter has to clear because analyst revisions are improving. No figure is quoted because none was fetched this run. (2) A separation resets dividend policy, and CVS is held in part for income; a reduced or split payout at the 2028 completion would force an income-oriented holder base to rotate out, which is a supply overhang independent of whether the thesis is right. Neither is a reason not to own it at 9.8x; both are things that break it that the original key_risk did not name.",
+      "counter_argument": "The strongest case against is that a company announcing a breakup is admitting the integrated model failed, and that the market marked it down 12.5% for exactly that reason while its peers rose. Answered with the statute rather than with optimism: the integrated model is being made illegal state by state, Arkansas first and Tennessee behind it, so separation is compliance arriving ahead of the mandate, and it converts a regulatory discount into two cleanly valued businesses.",
+      "evidence": [
+        {
+          "kind": "primary_document",
+          "detail": "Read the 8-K filed 2026-11-04 (CIK 64803): Item 7.01 announces the intention to separate into two independent, publicly traded companies, intended to be tax-free to the company and its shareholders for US federal income tax purposes. A second 8-K the same day furnishes the Q3 results release under Item 2.02",
+          "source": "https://www.sec.gov/Archives/edgar/data/64803/000119312526446150/d148827d8k.htm"
+        },
+        {
+          "kind": "valuation_anchor",
+          "detail": "TTM EPS 8.33 (Q4-25 1.09, Q1-26 2.57, Q2-26 2.58, Q3-26 2.09) against 81.33 = 9.8x trailing. The 108 target is 13x that same trailing figure and below the 110.68 200-day high. The 68 bear case is roughly 8.2x and below the 69.51 200-day low",
+          "source": "https://www.nasdaq.com/market-activity/stocks/cvs/earnings"
+        },
+        {
+          "kind": "positioning",
+          "detail": "Four consecutive beats of +8.8%, +15.8%, +38.0% and +25.4%; analyst recommendation trend 8 strong buy / 20 buy / 4 hold / 0 sell, bullish share 87.5% and improving (+2.7). Counterweight disclosed: 0 open-market insider buys against 9 sales worth $359.0M in six months",
+          "source": "https://www.nasdaq.com/market-activity/stocks/cvs/analyst-research"
+        },
+        {
+          "kind": "technical_level",
+          "detail": "2026-11-04 low 77.33 on 34.3M shares against a ~6M norm, closing 79.96; 11-05 held 79.66 and closed 81.33 on 19.9M, +1.71% while SPY fell 4.41%. ATR14 3.19. Moving averages cluster overhead at 88.89 (200d), 90.05 (20d) and 90.56 (50d); 200-day range low 69.51",
+          "source": "https://www.nasdaq.com/market-activity/stocks/cvs/historical"
+        },
+        {
+          "kind": "counter_argument_answered",
+          "detail": "The PBM-reform bear case is answered by state statute: Arkansas became the first state to prohibit PBMs from owning pharmacies and Tennessee passed a similar law this year, and CVS's filing warns those laws limit offering both services under one umbrella \u2014 so the separation pre-empts the specific legal risk the short case rests on",
+          "source": "https://healthcareuncovered.substack.com/p/cvs-is-spinning-off-its-drugstores"
+        }
+      ],
+      "sources": [
+        "https://www.sec.gov/Archives/edgar/data/64803/000119312526446150/d148827d8k.htm",
+        "https://www.cnbc.com/2026/11/04/cvs-to-split-off-drugstore-business.html",
+        "https://247wallst.com/investing/2026/11/04/cvs-tumbles-12-on-plan-to-split-into-two-companies-despite-earnings-beat-elevance-health-rises-4-cigna-climbs-3/",
+        "https://www.ajmc.com/view/cvs-health-to-split-retail-pharmacy-from-aetna-caremark-by-2028",
+        "https://www.nasdaq.com/market-activity/stocks/cvs/historical",
+        "https://healthcareuncovered.substack.com/p/cvs-is-spinning-off-its-drugstores"
+      ],
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.64,
+        "claimed_risk_reward": 2.64,
+        "breakeven_probability": 0.275,
+        "stated_win_probability": 0.45,
+        "expectancy_r": 0.638,
+        "claimed_edge": 0.175,
+        "stop_atr_multiple": null,
+        "live_price": 81.33,
+        "live_price_asof": "2026-11-05T21:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 883.8,
+        "bid": 80.4,
+        "ask": 81.33,
+        "spread_pct": 1.15,
+        "atr14": 3.1929,
+        "checked_at_et": "2026-11-06T06:43:50-05:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.64:1 clears the 2.5:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 79.0 is -2.9% from live 81.33"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "long-term idea, no dated event expected"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "long-term target is valuation-anchored, not ATR-bound"
+          },
+          {
+            "check": "stop_distance",
+            "status": "pass",
+            "detail": "long-term downside is a bear case, not a stop \u2014 no ATR floor applies"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "45% claimed vs 28% break-even at 2.64:1 \u2014 expectancy +0.64R"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-11-05T21:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "bid/ask spread 1.15%; the round trip costs 3% of the target move \u2014 set the entry as a limit, never market"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 4 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "3% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 4 rests on 5 independent kinds: counter_argument_answered, positioning, primary_document, technical_level, valuation_anchor"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "1 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    }
+  ],
+  "watchlist": [
+    {
+      "symbol": "ONON",
+      "instrument": "On Holding AG Class A \u2014 KILLED BY RED TEAM from rank 2; the 34.20 level survives, the trade does not",
+      "demoted_from_rank": 2,
+      "demotion_reason": "The only path to a fill is the event that voids the stop, and an honest stop breaks the 2.0 swing floor.",
+      "note": "Not a rejection of the business or of the 34.20 level \u2014 a rejection of the published 2.13:1. Three legs, any one of which is enough. (1) THE FILL PATH VOIDS THE STOP. Entry 34.20 is 8.9% below the 37.54 close with a dated earnings print on 2026-11-10 in between, so the only route to a fill is a disappointing print \u2014 the report says so itself and calls it the pullback-entry trap. Its own key_risk then concedes that in exactly that scenario 'the 31.00 stop is in the path of the gap rather than below it'. A reward-to-risk ratio whose denominator is a stop that cannot hold in the one world where the trade exists is not a ratio. (2) AN HONEST STOP BREAKS THE FLOOR. Recomputed from the fetched ATR14 of 1.4792 on entry 34.20 and target 41.00: the published 31.00 stop is 2.16 ATR, 0.16 ATR above the bare swing floor, and that is the only reason 2.13:1 exists. At the 2.5 ATR guide where this report's stop-outs cluster the stop is 30.50 and the trade is 1.84:1; at 3.0 ATR \u2014 the least cushion defensible for a position whose sole entry is through an earnings gap, and the report's own counter_argument concedes the name 'routinely moves several ATRs on earnings' \u2014 the stop is 29.76 and the trade is 1.53:1. Both are below the 2.0 swing floor, so widening the stop to one that survives the fill scenario kills the idea, which per CLAUDE.md means it never cleared. (3) THE FILL AND THE TARGET CONTRADICT EACH OTHER. The 41.00 target is 1% under the 41.41 120-day high (fetched). So the trade needs a print bad enough to drop the stock 8.9% to create the entry, and then a round trip to within 1% of its high to pay out. The stated 40% win probability against a 32% break-even prices none of that tension, and the 7.9-point claimed edge was the thinnest in the report. Not killed on: the earnings_date validation warning, which is a genuine source-cap artifact \u2014 `earnings --days 14` was re-run and returns ONON 2026-11-10 bmo, consensus 0.4038, exactly as published. Relative strength is also real but rests on a single session (-2.80% against SPY -4.41%), which is an observation rather than a third confirmation. Watch it properly: reassess after the 11-10 reaction, and if the level is wanted, it needs a stop at 2.5 ATR or wider that still clears 2:1 \u2014 which from 34.20 requires a target above 43.45, i.e. a new high, so the honest version of this trade is a lower entry rather than a further target.",
+      "trigger": "the 2026-11-10 pre-open print, then a re-underwrite from the reaction price. No entry Friday 11-06 or Monday 11-09, and no entry at 34.20 on a gap-down without a stop at 2.5 ATR or wider that clears the 2.0 floor on its own arithmetic."
+    },
+    {
+      "symbol": "VST",
+      "instrument": "Vistra Corp \u2014 OPEN POSITION, close it today",
+      "note": "This is an exit instruction, not a rejection, and it is the highest-conviction call in the run (5 distinct evidence kinds). Close the 2026-08-24 long at 132.00 at the open; do not wait for the 112.14 stop to be tagged. VST closed 112.89, which is 0.75 above that stop on an ATR14 of 8.27 \u2014 0.09 ATR, so the only remaining choice is whether to exit deliberately. Two things broke. The thesis: VST was owned as the merchant-generation play on AI datacenter demand, and that is precisely what the Democratic sweep repriced (Nasdaq -5.52%, SMH -11.21%). And the balance sheet, which is company-specific: the 8-K filed 2026-11-05 shows Vistra completed the Q-Generation purchase for ~$2.2B cash plus ~$1.7B of assumed debt (repaid in cash on or about 2026-11-05) plus 5,000,000 shares the parties valued at a mutually agreed $185 \u2014 it levered up ~$3.9B and spent its equity currency at a mark 39% above where that currency now trades, with the seller's lock-up expiring 2027-01-30 and a resale shelf to come. The peer tape confirms it is not sector beta: VST -6.15% on 2026-11-05 against CEG -2.47%, NRG -3.24% and TLN -3.23%, after -11.4% the prior session. The report schema has no field for an early close, which is why this sits here rather than in recommendations. Sources: https://www.sec.gov/Archives/edgar/data/1692819/000114036126042013/ef20084950_8k.htm and https://www.nasdaq.com/market-activity/stocks/vst/historical",
+      "trigger": "close at the market today \u2014 do not wait for 112.14"
+    },
+    {
+      "symbol": "RTX",
+      "instrument": "RTX Corporation \u2014 OPEN POSITION, close it today",
+      "note": "Exit instruction, not a rejection. Close the 2026-11-02 long at 199.00 for roughly -3.6% (last 191.88). The reason is arithmetic, not fear: ATR14 is 5.90, so the standing 186.00 stop is exactly 1.00 ATR from price against a 2.00 ATR swing floor and will be taken out by an ordinary session; and a floor-compliant 180.00 stop makes the trade 19.00 of risk against 27.50 of reward to the 226.50 target, a 1.45:1 that is below the 2.0 swing floor. There is no version of this position that carries both a real stop and a publishable ratio, and a tight stop is the one characteristic shared by all ten of this report's first-month stop-outs. The thesis separately took a dated, quantified hit two days after entry: a $1.5T White House FY2027 request against a ~$1.15T Democratic House proposal, with Jefferies expecting the House number. Acknowledged against the exit: RTX outperformed both the election day (~-3% against LMT -6.9%, LHX -6%+) and the crash day (-3.30% against SPY -4.41%), because roughly half the company is commercial aerospace no appropriations bill touches \u2014 so this is a case for re-entering later at a price where a 2-ATR stop still clears the ratio, which would be a separate trade, not for carrying a 1.0-ATR stop now. Sources: https://www.nasdaq.com/market-activity/stocks/rtx/historical and https://247wallst.com/investing/2026/11/05/defense-stocks-sank-as-democrats-took-congress-and-the-1-5-trillion-budget-looks-doomed/",
+      "trigger": "close at the market today; re-entry only at a level where a 2.0-ATR stop clears 2:1"
+    },
+    {
+      "symbol": "HII",
+      "instrument": "Huntington Ingalls Industries \u2014 OPEN POSITION, enter the 265.00 stop today",
+      "note": "Held, with a protective stop for the first time \u2014 the instruction is the number and it stands. The position filled at 262.00 on 2026-10-12 and trades 289.41 (+10.5%) with no stop at all, which was tolerable at the fill and is not at +10.5% into a sector headwind. HII gapped 279.26 to 316.21 on 2026-10-29 earnings, based 296.51-322.56 for four sessions, then broke it: 303.99 on 11-04 and 289.41 on 11-05, -8.7% in two sessions. ATR14 11.92, so a stop at the 281.00 gap-fill is only 0.71 ATR; 265.00 is 2.05 ATR below price, sits below the entire pre-earnings 274-282 range, and is still above the 262.00 entry, so it locks the trade green. This sits on the watchlist rather than in recommendations for the same schema reason as on 2026-11-05: a profit-protecting stop above the fill of record cannot pass direction_consistency or stop_distance, both of which measure from the 262.00 entry, so Phase 2d's demotion would be certain and would publish a note reading as a rejection. Why HII and not RTX: analysts expect bipartisan protection for China deterrence and nuclear modernisation, which is Virginia-class, Columbia-class and carrier work, while the Iran- and Israel-related lines are the exposed ones. Against it: the FY2027 gap is real and large, no budget is finalised so the overhang runs for months with no scheduled resolution, HII is thin for a prime at $172.5M ADV, and it is 37% below its 460.00 high. Source: https://www.nasdaq.com/market-activity/stocks/hii/historical",
+      "trigger": "enter the 265.00 stop with the broker today; target unchanged at 339.76"
+    },
+    {
+      "symbol": "ABT",
+      "instrument": "Abbott Laboratories \u2014 OPEN POSITION, raise the stop to 103.20",
+      "note": "Held into the 117.34 target with the stop raised from 97.00 to 103.20, which takes the loss off the table on a position 3.3% from its objective. ABT filled at 103.00 on 2026-10-12 and closed 113.60 (+10.3%), 3.19% below the 117.34 target \u2014 and that target is the 200-day high. The standing 97.00 stop is 16.60 below the market, 4.69 ATR on an ATR14 of 3.54, so a winning position is still underwriting a 14.6% loss it no longer needs to carry. 103.20 is 2.94 ATR below price, above the 103.00 entry, and below both the 50-day at 104.04 and the 20-day at 104.99, so it is a structural level rather than a round number. On the watchlist for the schema reason, not as a rejection: a stop above the fill of record fails direction_consistency. The trade-off is honest \u2014 103.20 is a real buffer but a single 9% medtech gap on a guidance revision clears it and the trade ends flat instead of at target; what is being bought is the guarantee that a +10.3% position cannot become a loss. Healthcare was the defensive winner of the 2026-11-05 crash (XLV -2.50% against SPY -4.41%) and ABT held better than its index at -1.65%. Source: https://www.nasdaq.com/market-activity/stocks/abt/historical",
+      "trigger": "raise the stop to 103.20 today; take 117.34 if it trades there"
+    },
+    {
+      "symbol": "XLE",
+      "instrument": "Energy Select Sector SPDR Fund \u2014 OPEN POSITION, widen the stop to 58.90, do not add",
+      "note": "Held with the stop moved from 60.80 to 58.90, and the arithmetic stated rather than hidden. The old stop sat 0.83 below a 61.63 close against an ATR14 of 1.82 \u2014 0.46 ATR, which an ordinary session takes out without saying anything about energy. 58.90 is below the rising 59.07 200-day, which is where the 2026 uptrend off 48.42 actually breaks, and is 2.75 ATR from the 63.90 fill. Why it is here and not in recommendations: measured from that filled entry the remaining trade is 6.60 of reward to 70.50 against 5.00 of risk, a 1.32:1 that is below the 2.0 swing floor, so Phase 2d would demote it. That is the position already held, not a position being opened \u2014 the choice today is hold-with-a-real-stop or close, not re-underwrite, and the entry cannot be re-struck because it was bought at a price. The reason to hold rather than close: crude rose 1.93% (USO 148.21) on the day equities fell 4.41%, Gulf OPEC+ output is running below target on Iran-conflict export disruption and OPEC+ left November targets unchanged, so the shortfall is physical rather than a risk premium that prices out on a headline. Against it: energy broke its 20-day (67.28) and 50-day (65.09) in two sessions on expanding volume and XOP (-15.5% off its high) is leading XLE down, which says the move is in the producers rather than index beta. Do not add. Sources: https://www.nasdaq.com/market-activity/funds-and-etfs/xle/historical and https://www.oilandgas360.com/tag/brent-crude-oil/",
+      "trigger": "move the stop to 58.90 today; do not add at any price \u2014 the entry is filled at 63.90"
+    },
+    {
+      "symbol": "STLD",
+      "instrument": "Steel Dynamics \u2014 treat as stopped out",
+      "note": "STLD closed 221.895 on 2026-11-05 (-7.59%), which is below its 228.75 stop, so the 2026-10-10 long at 245.50 is a stop-out. No recommendation and no amendment: the stop did the work it was placed to do. Recorded here so the exit is not mistaken for an oversight.",
+      "trigger": "none \u2014 stopped out"
+    },
+    {
+      "symbol": "GDX",
+      "instrument": "VanEck Gold Miners ETF \u2014 the best setup on the board, and it fails the floor",
+      "note": "The setup is genuinely good and is published here rather than as a recommendation because the arithmetic says no. GDX bottomed at 75.83 on 10-30, based 77.29-80.41, broke out 11-04 on 41.9M shares against a 17-20M norm, and on crash day traded 82.50-87.96 to close 85.75 +1.37% on 36.2M \u2014 volume expanding on the up days, and relative strength of +6.03% against SPY and +0.44% against GLD over one month, so the miners are leading the metal, which is the classic bottoming sequence. Why it fails: ATR14 3.46, so the 1.8-ATR ETF stop floor is 6.22. From an 84.20 entry an honest stop under the 77.29 base is 77.20 (2.02 ATR, 7.00 of risk), and the defensible first target is the 90 moving-average confluence (sma50 89.89, sma200 90.26), which is 5.80 of reward on 7.00 of risk \u2014 0.83:1. Clearing 2:1 needs 98.20, above both averages and a 16.6% move. It only passes with a stop walked inside the base, which is the KRE failure mode this report is built to refuse.",
+      "trigger": "GDX reclaiming the 90.26 200-day on expanding volume, which converts that level from target into support and puts 100+ in range"
+    },
+    {
+      "symbol": "GLD",
+      "instrument": "SPDR Gold Shares \u2014 the 406.77 short is withdrawn; the long fails the floor",
+      "note": "Two things. First, retire the unfilled SELL at 406.77 published 2026-10-25: GLD is 375.49, 7.7% below that entry, the metal bottomed at 354.67 and has risen three sessions including the crash day, and GDX broke out on 41.9M shares. A short entry 8.3% above a market that just turned up is a stale opinion, not a resting order. Do not re-offer. Second, it is not being replaced with a long: ATR14 6.45, so the 1.8-ATR floor is 11.61, an honest stop under the 11-03 low is 358 (2.33 ATR, 15.00 of risk), and the nearer target is the 385.96 50-day for 13.00 of reward \u2014 0.87:1. Getting to 2:1 needs 403, which exists only as a Fibonacci-flavoured retrace of the 509.70-to-354.67 crash. Worth keeping in view: gold was bid on the risk-off day while TLT managed +0.21%, so the bid is specific rather than generic flight-to-quality.",
+      "trigger": "none for the short \u2014 withdrawn. For a long: GLD reclaiming the 385.96 50-day, which would halve the risk without moving the target"
+    },
+    {
+      "symbol": "NEM",
+      "instrument": "Newmont Corporation \u2014 the strong miner, same failed floor",
+      "note": "The healthiest name in the gold complex and it fails the same arithmetic as GDX and GLD. NEM 119.71, above its 20-day (114.06) and 50-day (119.12), -11.5% off the 135.29 high, and +1.35% on the crash day. ATR14 4.67, so a 2.0-ATR stop is 110.00 (2.08 ATR, 9.71 of risk) under the early-November 107-109 area, and the 135.29 high gives 15.58 of reward \u2014 1.60:1. Clearing 2:1 needs 139.13, a new high. The whole gold complex is a watchlist today rather than a trade.",
+      "trigger": "a pullback toward 114 that holds, which halves the risk against an unchanged 135.29 target"
+    },
+    {
+      "symbol": "FSLR",
+      "instrument": "First Solar \u2014 right story, wrong price",
+      "note": "Genuine single-name strength on the Democratic sweep: FSLR 195.76, +0.64% on the crash day while TAN fell 3.71% and ENPH fell 8.18%, and cheap on paper at 11.3x TTM EPS of 17.28 (4.84 + 3.22 + 3.92 + 5.30) with analyst bullish share 72.3% and improving (+7.0). Killed by the entry, not the thesis: it gapped open at 206.00 on 11-04 from a 185.90 close, printed 214.87 and reversed to close 194.51, then ranged 185.11-208.00 on 11-05. ATR14 is 9.88 (5.04%) and rising, so a 2.0-ATR stop is 19.75, putting an honest stop at 175.50 under the pre-election 168-176 base against a realistic first target of the 214.85 200-day \u2014 0.94:1. Reaching 2:1 needs 236, which is 10% past the 200-day with nothing in between.",
+      "trigger": "a retest of the 185 area that holds, which halves the risk without moving the target"
+    },
+    {
+      "symbol": "SMH",
+      "instrument": "VanEck Semiconductor ETF \u2014 the de-rated complex, and the date that settles it",
+      "note": "No semiconductor entry today, in either direction. SMH -11.21% to 447.73 with a 20-day at 543.91 (21% above price) and ATR14 23.94; NVDA -9.26%, AMD -17.26% on an 8.88% ATR. The de-rating has a dated test on 2026-11-12 that nobody has to guess ahead of, and buying a tape 1.5 ATR below everything six sessions before the event that settles the question is paying for information available for free. This report's record on exactly this trade is 1/24 on single stocks, average -7.7%. Nothing in semis should be sized before AMAT reports.",
+      "trigger": "the 2026-11-12 AMAT print \u2014 the first semicap report after an 11.2% one-day SMH drawdown and the highest-information event for the AI-capex question"
+    },
+    {
+      "symbol": "AMAT",
+      "instrument": "Applied Materials \u2014 a 57% drawdown is not a valuation",
+      "note": "Rejected as a long-term idea, and the finding is worth keeping: a 57% drawdown is not by itself a valuation. AMAT 319.25, -56.84% off its 739.67 high and -13.58% on 2026-11-05, $253.4B cap, earnings 2026-11-12 after the close on consensus 4.1345. The bull case is real \u2014 TTM EPS 2.17 + 2.38 + 2.86 + 3.50 = 12.91, accelerating hard, with coverage 88.9% bullish and improving. But 12.91 at 319.25 is 24.7x trailing, and annualising the estimate gives ~16.5 and 19.3x forward: a fair multiple for semicap, not a distressed one. A defensible 25x-forward target is ~412 (+29%) against a cycle-rollover bear case of 13 EPS at 15x, ~195 (-39%) \u2014 0.75:1 against the 2.5 long-term floor. AMAT de-rated from ~57x, and the whole fall has bought you a normal multiple. Also 0 insider buys against 36 sells worth $169.0M over six months.",
+      "trigger": "a forward multiple nearer 12-13x, or the 2026-11-12 print resetting the earnings base upward"
+    },
+    {
+      "symbol": "CSCO",
+      "instrument": "Cisco Systems \u2014 a fair price for a no-growth business",
+      "note": "Rejected. CSCO 95.72, -7.62% on the day and -26.6% off the 130.37 high with a 200-day at 101.72, reporting 2026-11-12 after the close. TTM EPS 1.00 + 1.04 + 1.06 + 1.22 = 4.32, so 22.2x, and the surprise record of -0.2%, -0.2%, +0.4%, +2.2% is a company that lands on consensus and does not beat. Analyst revision direction is deteriorating with bullish share 65.7% (-4.0), and there are 0 insider buys against 47 sells. A 22x multiple on a no-growth business with falling analyst support is not a de-rated quality name.",
+      "trigger": "none \u2014 revisit only on a materially lower multiple with revisions turning"
+    },
+    {
+      "symbol": "QCOM",
+      "instrument": "Qualcomm \u2014 the de-rating is earned",
+      "note": "Rejected. QCOM 156.75, -9.49%, gapped open at 150.06 on 2026-11-05 on 40.2M shares after a disappointing outlook, and -39.7% off the 259.92 high. TTM EPS 3.50 + 2.65 + 2.21 + 2.17 = 10.53 looks cheap at 14.9x until the sequence is read in order: earnings are falling quarter on quarter and the last two surprises were -1.5% and -2.7%. Bullish share 41.3% (6 strong buy / 13 buy / 24 hold / 3 sell). A falling earnings stream at 14.9x is not a value stock, and 2026-11-05 did it no injustice.",
+      "trigger": "none \u2014 revisit only if the quarterly EPS sequence stops falling"
+    },
+    {
+      "symbol": "XLF",
+      "instrument": "Financial Select Sector SPDR \u2014 a failed breakout, not a dip",
+      "note": "Rejected in both directions, and the short side is the instructive half. XLF printed 60.04, a new 200-day high, intraday on 2026-11-05 and closed 57.50 \u2014 a 4.2% high-to-close reversal. ATR14 0.96, so a 1.88-ATR stop at 55.70 under the 55.93/56.11 moving-average cluster needs a 61.10 target to clear 2:1, which is a new all-time high immediately after a failed one. Fading it instead needs a 51.50 target, which is below the 200-day on no thesis there is evidence for \u2014 inventing that target is precisely what the floor exists to stop. KRE was also checked and rejected: 72.31 sitting between its 20-, 50- and 200-day (71.32 / 71.86 / 71.09) offers no level to trade against, and it is the name CLAUDE.md records as this report's stop-walking failure.",
+      "trigger": "a pullback to the 55.93/56.11 average cluster that holds, which would make the long's risk real"
+    },
+    {
+      "symbol": "IYR",
+      "instrument": "iShares US Real Estate ETF \u2014 same failed arithmetic",
+      "note": "Rejected. IYR 102.24, ATR14 1.67, 200-day at 100.47. A 1.94-ATR stop at 99.00 needs a 108.72 target to clear 2:1 against a 108.17 200-day high, so the ratio only works by assuming an immediate new high. Macro also cuts against it: the 10-year is 4.90% against a 3.88% funds rate with the 10y-2y curve steepening to +0.38 from +0.32 and CPIAUCSL up 0.65% m/m in September \u2014 hostile to rate-sensitive equity.",
+      "trigger": "a 10-year yield below ~4.5%, or a pullback toward the 100.47 200-day that holds"
+    },
+    {
+      "symbol": "HCA",
+      "instrument": "HCA Healthcare \u2014 the fade was built and killed; no long either",
+      "note": "Recorded because the setup looked clean and the fundamentals contradicted it. The fade thesis was that the market priced an ACA subsidy restoration needing 60 Senate votes and a signature from a president who has threatened a veto, with HCA, UHS and CNC all closing 11-04 above their average analyst price targets. What killed it: the fetched analyst data says fundamentals are improving independently of the politics \u2014 HCA revision direction improving, bullish share 58.1% (+1.4), EPS surprises +8.0%, +1.0%, -0.8%; CNC improving with bullish share 48.1% (+7.4) and surprises of +65.1%, +129.0% and +56.4% off a -1.19 print in Q4 2025. A short whose entire edge is 'the policy will not pass' against a company beating consensus by 50-130% for three straight quarters is a short on the wrong variable, and the 2025 ACA-coverage loss that cost HCA ~$400M of Q3 pretax income is already in the base. Both also held their 11-04 gains through a -4.4% tape, which is strength rather than distribution. No long either: HCA 507.48 and CNC 74.17 are extended above their 20-days (468.15, 69.36) after a two-day move, and no entry clears 2:1 without inventing a target.",
+      "trigger": "a pullback toward the 468.15 20-day that holds \u2014 a level, not a lean"
+    },
+    {
+      "symbol": "OXY",
+      "instrument": "Occidental Petroleum \u2014 standing level unchanged at 54.00",
+      "note": "The BUY at 54.00 published 2026-09-24 (43 days) is still live and still sensible; no change and no re-pitch. Last 56.36, 4.2% above the entry. ATR14 1.89 and the 200-day is 56.38, so price is sitting exactly on its 200-day after falling from 60.43 in three sessions. Nothing researched today bears on it.",
+      "trigger": "54.00 trading \u2014 the level is unchanged"
+    },
+    {
+      "symbol": "TLT",
+      "instrument": "iShares 20+ Year Treasury Bond ETF \u2014 leave the level, do not add",
+      "note": "The BUY at 80.30 published 2026-11-04 never filled and price went up (last 81.93). The level stays, but it is not being re-pitched: CPIAUCSL rose 0.65% m/m in September, the 10-year is 4.90% against a 3.88% funds rate, and the 10y-2y curve steepened to +0.38 from +0.32. Most telling, on the worst equity day in 18 months TLT managed +0.21% \u2014 a bond market refusing to act as a hedge. Source: https://fred.stlouisfed.org/series/DGS10",
+      "trigger": "80.30 trading, but do not add to the level"
+    },
+    {
+      "symbol": "SMMT",
+      "instrument": "Summit Therapeutics \u2014 discrepancy flagged, not re-underwritten",
+      "note": "Flagging rather than re-pitching. The BUY at 17.10 published 2026-10-27 shows as awaiting entry, but SMMT last traded 14.19 after -12.24% on 2026-11-05, which is 17% below the published entry \u2014 so the level is long gone and the position should have filled and be underwater. The tracker and the price disagree and that is worth saying out loud. I have not researched the name today and will not re-underwrite a biotech on price alone; XBI fell 6.73% on the same session. Note the prior record: an earlier SMMT long opened 2026-10-09 was stopped out 2026-10-26.",
+      "trigger": "none \u2014 needs fresh research before any action"
+    },
+    {
+      "symbol": "KXCPIYOY-26SEP-T3.5",
+      "instrument": "Kalshi CPI year-over-year above 3.5% (Sep 2026) \u2014 could not be checked",
+      "note": "The standing NO at 18 published 2026-09-30 could not be checked this run. `market_data.py events` returns ok:true with a count of zero markets for every topic tried \u2014 Fed, CPI, interest rate, recession, inflation, shutdown and bitcoin \u2014 so the Kalshi source is reachable but publishing nothing. No price is stated because none was fetched. For context from FRED rather than from the market: CPIAUCSL for September 2026 came in at 336.298 against 334.131 prior, +0.65% m/m, which is hot.",
+      "trigger": "none available \u2014 re-check when the events source returns markets"
+    },
+    {
+      "symbol": "GIS",
+      "instrument": "General Mills \u2014 cheap, hostile coverage, and duplicative",
+      "note": "Rejected on two counts. GIS 36.46, +1.70% on the crash day, -26.5% off the 49.59 high with the 200-day at 37.32 just overhead and a low 3.30% ATR (1.20) \u2014 and genuinely cheap at 10.6x TTM EPS of 3.44 (1.10 + 0.64 + 0.95 + 0.75). Against it: `analysts GIS` reads 1 strong buy / 2 buy / 16 hold / 7 sell / 2 strong sell, bullish share 10.7% and flat, with an erratic surprise record of +6.1%, -12.7%, +18.0%, +3.2% and 0 insider buys against 4 sells. Separately it is duplicative \u2014 KHC is an open position at +10.1% and is the same packaged-food bet, which is what the correlation cap exists for.",
+      "trigger": "coverage turning, or KHC closing first"
+    },
+    {
+      "symbol": "CF",
+      "instrument": "CF Industries \u2014 a one-day reversal, not a signal",
+      "note": "Chased down from the crash-day gainer list and rejected. CF 118.57 after 111.68 on 11-04, ranging 115.27-122.96, and cheap at 8.8x TTM EPS of 13.47 (3.20 + 2.89 + 4.51 + 2.87) on a $17.9B cap and $284.8M ADV. Against it: the last two prints missed by -20.5% and -5.0%, `analysts CF` is deteriorating (bullish 41.9%, -1.4), and price is sitting on top of its own 20-day (118.28) and 200-day (116.92) \u2014 a +6.17% day that recovers to unchanged is not a breakout.",
+      "trigger": "a close above the 122.96 range high with the earnings misses not repeating"
+    },
+    {
+      "symbol": "GOLD",
+      "instrument": "Barrick Mining \u2014 the divergence is an operational failure, not a discount",
+      "note": "Rejected, and worth recording because the divergence looked like an opportunity. GOLD fell 9.46% to 37.51, gapping open at 37.50 from a 41.43 close, on a day NEM rose 1.35% and GDX rose 1.37% \u2014 a 10.8-point divergence from its own peer group. The gap is the whole story and it is specific: the last two quarters missed by -51.3% and -37.0%, and it is making new 200-day lows (37.01) while its closest peer sits 11.5% off its high and above its 50-day. A miner that cannot convert a gold bid into earnings is not the way to own a gold bid.",
+      "trigger": "none \u2014 needs a quarter that converts the metal price into earnings"
+    }
+  ],
+  "validation_summary": {
+    "checked": 1,
+    "passed": 0,
+    "warned": 1,
+    "failed": 0,
+    "enforced": true
+  }
+}
