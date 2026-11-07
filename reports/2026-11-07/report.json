@@ -1,0 +1,473 @@
+{
+  "date": "2026-11-07",
+  "generated_at_et": "2026-11-07T06:35:33-05:00",
+  "research_minutes": 87,
+  "truncated": false,
+  "data_quality_notes": "Research phase ran to completion (06:01-07:28 ET) and was not truncated; the 07:28 FINAL COUNTS block supersedes an earlier RESEARCH COMPLETE written at minute 25, before the small/mid-cap insider hunt that produced ACM. Nothing was lost to the clock.\n\nSATURDAY RUN. US equities and futures are closed. Every price in this report is the Friday 2026-11-06 close, refreshed at synthesis and re-confirmed identical (finnhub, asof 2026-11-06T21:00:00Z, market_session: closed). That is the freshest honest equity price available, not stale data. No idea here is actionable before the Monday 2026-11-09 open, and there is no same-day-tradeable idea at all \u2014 stated plainly rather than filled with a coin flip. Research set a crypto candidate aside deliberately: the instruments exist (IBIT, /MBT, spot) but BTC sits mid-range 5.8% below its own trend with no dated catalyst this week, and an honest 2.5-ATR crypto stop is 7.7% wide, needing a ~19% target above the 90-day high to clear the 2.0 swing floor.\n\nWHY THE MIX LOOKS LIKE THIS. 9 ideas: 3 new (ACM, NVDA, RSP) and 6 position management \u2014 2 exits and 4 stop amendments on filled positions. That is the honest output of a Saturday with a book of 11 open positions that needed decisions more than it needed additions, and the position management is not padding: per the phase contract, position updates are not new risk and do not count against the idea count. Read that way the new-idea count is 3. No per-horizon quota was applied and nothing was trimmed to a count; every candidate that cleared its floors is published.\n\nTHE TWO EXITS CARRY stop: null AND position_size_pct: 0 BY DESIGN. XLE and BCC are sell-to-close instructions on filled long positions, not new short ideas \u2014 direction 'sell' means close the position at the Monday open, and 'target' is set to Friday's close because that is where the exit happens. They have no stop because a position being closed at market does not need one. Do not read either as an invitation to short. XLE's old 60.80 stop now sits 0.45 ATR below the close, so it is noise rather than a thesis test; BCC's cyclical thesis is falsified by XHB +6.91% over the month BCC fell 5.36%, a 12.27-point shortfall against its own sector.\n\nTHE FOUR STOP AMENDMENTS WILL FAIL THE MECHANICAL STOP-DISTANCE CHECK, and that is a harness limitation on amendments rather than four tight stops. check_stop_distance measures the stop against the entry; on a filled position that has moved, the risk actually sits at the current price. Measured from Friday's close the distances clear their floors: KHC 2.22 ATR, ABT 2.03 ATR, PYPL 2.04 ATR, HII 2.02 ATR. Measured from the historical entry they read 0.13, 0.16, 0.37 and 0.16 ATR. The entries on these four are historical and must not be re-entered \u2014 a filled position can have its exits amended but never its entry. HII is the most material of the four: it is the best open gain in the book at +10.2% and carried no defined downside at all until this stop.\n\nALL THREE NEW IDEAS LAND AT EXACTLY 2.00 R:R, which is the signature worth being suspicious of, so here is the construction: on each one the stop was set first from the ATR floor and the target taken from what the 2.0 floor then implied, not the reverse. Independently recomputed at synthesis from ATR14 fetched fresh: NVDA 36.00/18.00 = 2.00 with the stop 2.245 ATR (floor 2.0 stock), ACM 10.48/5.24 = 2.00 with the stop 2.755 ATR (floor 2.0), RSP 11.10/5.55 = 2.00 with the stop 2.021 ATR (floor 1.8 ETF). None was nudged, but the honest consequence of floor-derived targets is that each one requires roughly a 4-ATR move, and two of the three require a new 120-day high (ACM's 77.22 is 0.5% above its 76.85 high, RSP's 227.15 is 1.3% above its 224.20 high). Only NVDA's target sits inside its existing range. Win probabilities (0.40, 0.40, 0.42) are 6.7-8.7 points over the 0.333 driftless baseline, a modest claim rather than a large one.\n\nBCC's CONVICTION IS RECORDED AT 4 THOUGH ITS EVIDENCE MECHANICALLY SCORES 5 (four distinct kinds: positioning, primary_document, technical_level, counter_argument_answered). Marked down deliberately by research and left as found, because a conviction-5 label implies the 4-5% sizing tier for a position being closed at 0%. Stated here rather than left for validation to find.\n\nOPEN POSITIONS DELIBERATELY NOT RE-PITCHED (5), documented in notes.md and carrying no action this run: RTX (declined to widen the stop from 186), UNP, XLU, PFE (already published three times in ten days), and the AAL short, which is deteriorating \u2014 a close above 13.60 ends it.\n\nTRACK-RECORD CONTEXT THAT SHAPED TODAY'S BAR. 39 closed of 63 tracked: 4/39 hit target (10%), average -5.9%; stocks 1/26 (4%), ETFs 3/13 (23%), long_term 0/4 at -15.2%. n=39 is past the noise threshold, so research set an explicit bar \u2014 a new long equity swing idea must carry a dated catalyst inside the horizon or evidence beyond 'cheap and near support', because pullback-entry longs are the losing pattern. Both new stock ideas carry a dated earnings catalyst. The same record is why four of today's ideas protect open gains rather than reaching for targets.\n\nSOURCES THAT FAILED, and what each cost:\n- Event contracts: total loss, and the most valuable thing to fix. The events helper filters the first 200 unordered Kalshi markets, which are all sports parlays, so every macro search returns 0. Querying by series_ticker directly found the series live (KXCPIYOY, KXFED, KXBTC, KXRECSSNBER and others) but every price field \u2014 yes_bid, yes_ask, last_price, volume, open_interest, liquidity \u2014 is null without auth, on both the list and single-market endpoints. Zero event candidates, and the universe rule forbids stating an implied probability that could not be fetched. A tooling gap, not an absence of mispricing.\n- Yahoo Finance chart API, HTTP 429 on every macro field: no VIX, no DXY, no index or futures quotes, no gold, no WTI. Those four appear as null in market_context.levels rather than estimated, and the equity regime had to be read off SPY/QQQ/IWM/RSP ETF closes.\n- Yahoo options, HTTP 401: no options-implied move on any name, so no target was checked against a straddle. Target feasibility is argued from ATR multiples and prior swings only.\n- Nasdaq short interest, ReadTimeout: no short interest or days-to-cover on any name.\n- No economic-release calendar was reachable. That is why XHB sits on the watchlist with no dateable catalyst, and why the 2026-11-04/05 pivot across every rate-sensitive group (XHB, ROST, TJX, CEG all reversing on one day) is recorded as an observed pattern with no cause attributed to it.\n- Nasdaq history for BTC-USD/ETH-USD returned no rows, and CoinGecko's free /ohlc gives ~4-day buckets for days=90, so no daily-resolution crypto ATR exists this run; daily crypto volatility was read off IBIT (3.09%) instead, whose -13.18% drawdown matches BTC's own -13.23%.\nSources that worked: finnhub (quotes, earnings calendar, insider transactions, analyst trend, quarterly actuals), nasdaq (daily OHLCV, ATR, SMA), FRED (rates, unemployment, CPI), CoinGecko (crypto spot), SEC EDGAR (filings).\n\nVENUE CAVEAT ON RSP: judged Robinhood-tradeable on the same standard as the ETFs this report already holds and trades (XLE, XLU, IYR, TLT, GLD), at $2.15B a day of volume \u2014 but Robinhood's own support pages were not reached this run, so that is an inference from the instrument class rather than a verified lookup. Flagged for validation to check. The six position-management names are proven tradeable by their own fills; NVDA and ACM are US-listed common stock with no ambiguity.\n\nCORRELATION: NVDA is AI capex, ACM is infrastructure with its own guidance catalyst, RSP is index breadth. No driver carries more than two ideas, inside the cap of three. The one real tension \u2014 holding NVDA long alongside RSP's rotation-away-from-megacap thesis \u2014 is stated in RSP's own counter_argument rather than hidden. Rejected with reasons logged in notes.md: SMH (owns AMAT), AMAT long, AMAT short (right thesis, 6.95% ATR and a print three sessions out), TJX, ROST, NKE, CDNL and BORR (the insider screen's two largest clusters, both falling knives, kept as the counter-example to the screen that found ACM). Validation demoted 4 idea(s) whose numbers did not check out. 2 more carry warnings \u2014 see the validation block on each.",
+  "market_context": {
+    "summary": "Saturday run: US equities and futures are closed, so every price here is the Friday 2026-11-06 close \u2014 the freshest honest equity price, not stale data. The frame that matters is that this is not a market correction. SPY closed 735.29 (+0.31%), 5.93% off its 120-day high and 3.7% below its own 20-day MA, which read as a broad correction until equal-weight was checked: RSP is +1.97% over the month QQQ fell 12.24% and SPY fell 4.99%, beating the Nasdaq by 14.21 points. Four independent reads agree \u2014 homebuilders +6.91%, retail +6.66%, semis -23.60% \u2014 and six of eight large caps screened for a de-rating sit within 8% of their highs. This is an AI-capex de-rating inside a healthy tape, and the median US stock is within 4% of its high. Rates are a long-end story, not a growth one: 10y 4.84% sits ~96bp above fed funds of 3.88% with a +35bp 2s10s. Crypto is in a drawdown rather than a dip (BTC $75,923, 13.2% off its 90-day high, 21% off its low, mid-range with no dated catalyst). The week ahead has two hinges, AMAT Thu 2026-11-12 amc and NVDA Tue 2026-11-17 amc, the second of which settles the AI-capex question for the whole tape; retail reports 11-17 to 11-19.",
+    "regime": "mixed",
+    "levels": {
+      "spy": 735.29,
+      "qqq": 656.1,
+      "iwm": 273.67,
+      "rsp": 216.05,
+      "us10y": 4.84,
+      "us2y": 4.46,
+      "fed_funds": 3.88,
+      "curve_2s10s": 0.35,
+      "unemployment": 4.1,
+      "btc": 75923,
+      "eth": 2244.6,
+      "sol": 89.91,
+      "vix": null,
+      "dxy": null,
+      "gold": null,
+      "wti": null,
+      "as_of": "2026-11-06 close (equities, session: closed); rates 2026-11-05 FRED; crypto 2026-11-07 06:04 ET"
+    },
+    "econ_calendar": [
+      {
+        "event": "CEG Q3 earnings (before open) \u2014 datacenter PPA guidance is the read",
+        "datetime_et": "2026-11-09T07:00",
+        "importance": "medium",
+        "consensus": "EPS 3.8857"
+      },
+      {
+        "event": "AMAT FQ4 earnings (after close) \u2014 semicap read-through on AI capex orders",
+        "datetime_et": "2026-11-12T16:20",
+        "importance": "high",
+        "consensus": "EPS 4.13, rev $10.5B"
+      },
+      {
+        "event": "ACM fiscal Q4 earnings with FY27 guidance (after close)",
+        "datetime_et": "2026-11-16T16:20",
+        "importance": "high",
+        "consensus": null
+      },
+      {
+        "event": "NVDA Q3 FY27 earnings (after close) \u2014 the event that settles the AI-capex question",
+        "datetime_et": "2026-11-17T16:20",
+        "importance": "high",
+        "consensus": "EPS 2.53, rev $111.4B"
+      },
+      {
+        "event": "Retail block: HD and DIS 11-17, TGT/LOW/TJX/ROST 11-18, WMT 11-19 \u2014 the consumer read",
+        "datetime_et": "2026-11-18T09:00",
+        "importance": "medium",
+        "consensus": null
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "symbol": "NVDA",
+      "instrument": "NVIDIA Corp",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 3,
+      "unit": "usd",
+      "last_price": 186.64,
+      "last_price_asof": "2026-11-06T21:00:00+00:00",
+      "price_source": "finnhub (Friday close; market closed, Saturday run \u2014 entry is for the Monday 2026-11-09 open or later)",
+      "entry": {
+        "ideal": 184.0,
+        "zone_low": 181.0,
+        "zone_high": 184.0,
+        "order_type": "limit"
+      },
+      "exit": {
+        "target": 220.0,
+        "target_2": 243.37
+      },
+      "stop": 166.0,
+      "bear_case_price": null,
+      "risk_reward": 2.0,
+      "win_probability": 0.4,
+      "position_size_pct": 3,
+      "risk_tier": "standard",
+      "requires_margin": false,
+      "market_cap_usd": 4498024109743.91,
+      "avg_dollar_volume": 21571207665,
+      "catalyst": {
+        "event": "Q3 FY27 earnings, with Applied Materials reporting first as the sector read-through",
+        "datetime_et": "2026-11-17T16:20",
+        "action": "Limit buy in the 181.00-184.00 zone on the Monday 2026-11-09 open or later. Do not pay above 184.00 \u2014 above it the 2.0:1 floor is not met and the trade is not taken. Trim half into the 2026-11-17 after-close print and carry the rest; do not add in the two sessions before it.",
+        "wait": false
+      },
+      "thesis": "NVDA closed Friday at 186.64, just 2.85% above its 120-day low of 181.46, after falling 19.02% in a month against an SPY down 4.99% \u2014 so this is a sector unwind, not an index correction. But the multiple never justified one: trailing EPS from the four reported quarters is $7.01 (2.22+1.87+1.62+1.30), putting NVDA on 26.6x trailing and roughly 18.5x the annualised run-rate of the 2.5263 estimate, while EPS has compounded from 1.30 to an estimated 2.53 in four quarters, about 95% year over year. A business growing earnings at that rate on a high-20s trailing multiple at its 120-day low is the half of the semis selloff that is mispriced.",
+      "key_risk": "The 2.0:1 ratio exists only at 184.00 or better, and NVDA closed Friday at 186.64 after a +2.78% session \u2014 at the market the ratio is 1.62:1 and at the originally published 187.00 zone top it is 1.57:1, both under the floor. The entry is therefore a hard limit and the honest consequence is that this idea may never fill. The 2026-11-17 after-close print is a binary event inside the horizon and it is the dominant risk, not the de-rating \u2014 NVDA carries a 4.30% daily ATR and a disappointing datacenter number or any hint of order digestion can cover the whole 18-point stop in two sessions. A stop 9.8% below the entry does not protect against an earnings gap at all; it only bounds a drift lower. That is why this is sized at 3% and why the instruction is to trim half into the print. Conviction was lowered from 5 to 3 by the red team: of the four evidence kinds, positioning argues against the idea rather than for it \u2014 $1.38bn of insider selling with zero open-market buys, a 95.7% bullish and still-rising sell side with no estimate cuts taken, and a relative strength leg that amounts to falling 17.5% where the sector fell 21.5%. Three supporting kinds, not four.",
+      "counter_argument": "The strongest case against is that insiders sold $1,378,179,465 across 32 transactions in six months with zero open-market buys, and that the sell side is 95.7% bullish and still rising, so nobody has cut estimates yet and the Nov 17 print is where the cuts land \u2014 exactly the trap that makes AMAT untouchable. Two things answer it. First, the insider figure is routine at a $4.5 trillion market cap and is compensation-driven; the absence of buying is not evidence of a problem, whereas AMAT pairs the same selling with a multiple that only fell from 67.8x to 30.5x. Second, the estimate-cut risk is priced differently in the two names: AMAT needs its 30.5x trailing multiple defended on a cycle that may be rolling, while NVDA at 26.6x trailing needs only the growth already reported to persist for one more quarter. The de-rating from 34.7x at the 120-day high to 26.6x has already done the work the cuts would do. A third objection the original did not answer: the 220.00 target is the SMA50 at 219.81, which in a downtrend is overhead resistance rather than a magnet, and both moving averages sit above the price. The target being inside the existing 120-day range is still the strongest level argument in today's report \u2014 it is the only one of the three new ideas that did not need a new high \u2014 but it is resistance, and the trim-half instruction is where that is respected.",
+      "evidence": [
+        {
+          "kind": "dated_catalyst",
+          "detail": "NVDA Q3 earnings confirmed on the fetched finnhub calendar for 2026-11-17, after market close, EPS est 2.5263 on revenue est $111.4B; AMAT reports 2026-11-12 amc as the sector read-through",
+          "source": "https://finnhub.io/api/v1/calendar/earnings"
+        },
+        {
+          "kind": "valuation_anchor",
+          "detail": "Trailing EPS $7.01 summed from the four fetched quarterly actuals (2.22, 1.87, 1.62, 1.30) gives 26.6x at 186.64, versus 34.7x at the 120-day high of 243.37; the 2.5263 next-quarter estimate annualises to ~18.5x forward",
+          "source": "https://finnhub.io/api/v1/stock/earnings?symbol=NVDA"
+        },
+        {
+          "kind": "technical_level",
+          "detail": "Friday close 186.64 is 2.85% above the 120-day low of 181.462; SMA20 211.55 and SMA50 219.81 sit above, and the 220.00 target is the SMA50 at 219.81 rather than a round number; ATR14 8.0193 (4.30%)",
+          "source": "https://www.nasdaq.com/market-activity/stocks/nvda/historical"
+        },
+        {
+          "kind": "positioning",
+          "detail": "Relative strength -19.02% over 1m against SPY -4.99%, and -23.60% for SMH, so NVDA is outperforming its own sector into the washout; analyst strong-buy count rose 23 to 25 over four months to a 95.7% bullish share, with four consecutive beats of +2.0%, +3.6%, +4.3% and +3.8%",
+          "source": "https://finnhub.io/api/v1/stock/recommendation?symbol=NVDA"
+        }
+      ],
+      "sources": [
+        "https://finnhub.io/api/v1/quote?symbol=NVDA",
+        "https://www.nasdaq.com/market-activity/stocks/nvda/historical",
+        "https://finnhub.io/api/v1/calendar/earnings",
+        "https://finnhub.io/api/v1/stock/earnings?symbol=NVDA",
+        "https://finnhub.io/api/v1/stock/recommendation?symbol=NVDA",
+        "https://finnhub.io/api/v1/stock/insider-transactions?symbol=NVDA"
+      ],
+      "rank": 1,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.0,
+        "claimed_risk_reward": 2.0,
+        "breakeven_probability": 0.333,
+        "stated_win_probability": 0.4,
+        "expectancy_r": 0.2,
+        "claimed_edge": 0.067,
+        "stop_atr_multiple": 2.24,
+        "live_price": 186.64,
+        "live_price_asof": "2026-11-06T21:00:00+00:00",
+        "market_session": "closed",
+        "price_age_minutes": 889.3,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": 8.0193,
+        "checked_at_et": "2026-11-07T06:49:46-05:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.0:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 184.0 is -1.4% from live 186.64"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-11-17 is ahead of us"
+          },
+          {
+            "check": "earnings_date",
+            "status": "pass",
+            "detail": "earnings date 2026-11-17 confirmed against the calendar"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 4.49 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "stop_distance",
+            "status": "warn",
+            "detail": "stop is 2.24 ATR from entry \u2014 clears the 2.0 ATR floor for a swing stock but sits under the 2.5 ATR level where stop-outs have clustered"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "40% claimed vs 33% break-even at 2.0:1 \u2014 expectancy +0.20R"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is closed; last price 2026-11-06T21:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "no bid/ask available (normal outside regular hours)"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "3% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 3 rests on 4 independent kinds: dated_catalyst, positioning, technical_level, valuation_anchor"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "3 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "ACM",
+      "instrument": "AECOM",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 3,
+      "unit": "usd",
+      "last_price": 66.74,
+      "last_price_asof": "2026-11-06T21:00:00+00:00",
+      "price_source": "finnhub/nasdaq (Friday close; market closed, Saturday run \u2014 entry is for the Monday 2026-11-09 open or later)",
+      "entry": {
+        "ideal": 66.74,
+        "zone_low": 65.0,
+        "zone_high": 66.74,
+        "order_type": "limit"
+      },
+      "exit": {
+        "target": 77.22
+      },
+      "stop": 61.5,
+      "bear_case_price": null,
+      "risk_reward": 2.0,
+      "win_probability": 0.4,
+      "position_size_pct": 3,
+      "risk_tier": "standard",
+      "requires_margin": false,
+      "market_cap_usd": 8589199112.88,
+      "avg_dollar_volume": 86791633,
+      "catalyst": {
+        "event": "Fiscal Q4 earnings with FY27 guidance \u2014 AECOM September fiscal year end, so this print carries the full-year outlook rather than just a quarter",
+        "datetime_et": "2026-11-16T16:20",
+        "action": "Limit buy in the 65.00-66.74 zone on the Monday 2026-11-09 open. Do not pay above 66.74 \u2014 above it the 2.0:1 floor is not met and the trade is not taken. Trim half into the 2026-11-16 after-close print; do not add in front of it.",
+        "wait": false
+      },
+      "thesis": "AECOM was found by screening open-market insider buying across all 170 mid-cap names reporting 2026-11-12 to 11-19, and it is the cleanest cluster that the price action also confirms: three distinct insiders bought, including CEO Troy Rudd, with zero sells in six months. It is simultaneously the strongest relative strength on the board \u2014 up 12.24% over the month SPY fell 4.99%, which is 16.20 points ahead of its own infrastructure ETF PAVE \u2014 and it has reclaimed both the SMA20 at 61.88 and the SMA50 at 62.26. On earnings it is cheap: trailing EPS of $3.74 includes a single loss quarter, and the three clean quarters annualise to $5.65, putting the stock on 11.8x into a print that carries FY27 guidance.",
+      "key_risk": "The 2.0:1 ratio exists only at 66.74 or better \u2014 Friday's close exactly \u2014 so the originally published 68.00 zone top shipped a 1.42:1 trade. The entry is now a hard limit at the close. The June 2026 quarter was a violent miss \u2014 actual -$0.50 against a $1.4809 estimate, a 133.76% negative surprise and a swing to a loss \u2014 so this is a company that has very recently blown up a quarter, and the 2026-11-16 print is a full-year guidance event that can do it again. The sell side has been trimming into the rally, with the bullish share down 6.8 points and the buy count falling from 11 to 9 since August. The target also requires a new high: 77.22 is 0.5% above the 120-day high of 76.85, so this pays only on a breakout, and the 5.51 ATR distance to it is the largest of any idea published today \u2014 on top of a stock that has already run 13.1% in 20 sessions, so part of the move the target needs has been taken. Sized at 3%. Conviction was lowered from 5 to 3 by the red team on two of the four evidence kinds. Positioning is the leg that found the idea and it is stale and wrong-footed: the three insider buys are dated 2026-05-14 and 2026-06-16, roughly five months old, all underwater by about 6%, and they immediately preceded the quarter that missed by 134% \u2014 insiders who bought and were wrong are not a confirmation. The valuation anchor rests on annualising the three clean quarters and discarding the loss quarter; on the four actually reported quarters the stock is 17.8x, not 11.8x. Two solid kinds remain, dated_catalyst and technical_level.",
+      "counter_argument": "The strongest case against is that the insider buys are stale and underwater \u2014 dated 2026-05-14 and 2026-06-16 at $70.63, $71.12 and $71.02 against Friday close of 66.74 \u2014 so three officers bought right before the quarter that missed by 134%, which makes them look uninformed rather than prescient. CDNL, the top hit on the same screen, is the cautionary version: seven insiders bought in August and the stock is down 62% since. Two things separate ACM. First, the price has confirmed what the insiders did not: ACM is +12.24% over a month and back above both moving averages, where CDNL trades at 14.56 against an SMA50 of 25.08 and is 84.9% off its high. Second, the valuation is anchored on reported earnings rather than hope \u2014 11.8x the three clean quarters annualised, with the 77.22 target equal to just 13.7x that same run-rate, so the target needs a modest multiple rather than a re-rating. One correction to the level framing: the 76.85 '120-day high' is a window artifact. ACM traded at 85.82 within the last 130 sessions, so the 77.22 target is a new 120-session high but not a new six-month high, and the ground between 77 and 86 is prior trading rather than blue sky. That cuts both ways \u2014 the breakout is less demanding than 'new high' implies, and the May breakdown shelf is also real overhead supply.",
+      "evidence": [
+        {
+          "kind": "positioning",
+          "detail": "Three distinct open-market insider buyers and zero sells in six months: CEO Troy Rudd 4,225 shares at $71.02 and Gaurav Kapoor 1,420 at $71.12 on 2026-05-14, Lara Poloni 4,224 at $70.63 on 2026-06-16, total $699,391; separately ACM is +12.24% over 1m against SPY -4.99% and PAVE -3.96%, leading its sector ETF by 16.20 points",
+          "source": "https://finnhub.io/api/v1/stock/insider-transactions?symbol=ACM"
+        },
+        {
+          "kind": "dated_catalyst",
+          "detail": "Earnings confirmed on the fetched finnhub calendar for 2026-11-16 after market close, EPS est 1.5938 on revenue est $1,944,146,576; AECOM has a September fiscal year end so this print carries FY27 guidance",
+          "source": "https://finnhub.io/api/v1/calendar/earnings"
+        },
+        {
+          "kind": "valuation_anchor",
+          "detail": "Trailing EPS $3.74 from the four fetched actuals (-0.50 + 1.59 + 1.29 + 1.36) gives 17.8x at 66.74; excluding the single loss quarter the three clean quarters annualise to $5.65, giving 11.8x, and the 77.22 target equals 13.7x that run-rate",
+          "source": "https://finnhub.io/api/v1/stock/earnings?symbol=ACM"
+        },
+        {
+          "kind": "technical_level",
+          "detail": "Friday close 66.74 is back above both the SMA20 at 61.88 and the SMA50 at 62.26, -13.16% off the 120-day high of 76.85 and +18.35% off the low of 56.39; the 61.50 stop sits below both moving averages at 2.76 ATR (ATR14 1.9019, 2.85%), well clear of the 2.0 ATR stock floor",
+          "source": "https://www.nasdaq.com/market-activity/stocks/acm/historical"
+        }
+      ],
+      "sources": [
+        "https://finnhub.io/api/v1/quote?symbol=ACM",
+        "https://www.nasdaq.com/market-activity/stocks/acm/historical",
+        "https://finnhub.io/api/v1/stock/insider-transactions?symbol=ACM",
+        "https://finnhub.io/api/v1/calendar/earnings",
+        "https://finnhub.io/api/v1/stock/earnings?symbol=ACM",
+        "https://finnhub.io/api/v1/stock/recommendation?symbol=ACM"
+      ],
+      "rank": 2,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.0,
+        "claimed_risk_reward": 2.0,
+        "breakeven_probability": 0.333,
+        "stated_win_probability": 0.4,
+        "expectancy_r": 0.2,
+        "claimed_edge": 0.067,
+        "stop_atr_multiple": 2.76,
+        "live_price": 66.74,
+        "live_price_asof": "2026-11-06T21:00:00+00:00",
+        "market_session": "closed",
+        "price_age_minutes": 889.3,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": 1.9019,
+        "checked_at_et": "2026-11-07T06:49:48-05:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.0:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 66.74 is +0.0% from live 66.74"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-11-16 is ahead of us"
+          },
+          {
+            "check": "earnings_date",
+            "status": "pass",
+            "detail": "earnings date 2026-11-16 confirmed against the calendar"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 5.51 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "stop_distance",
+            "status": "pass",
+            "detail": "stop is 2.76 ATR from entry, clear of the 2.5 ATR guide for a swing stock"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "40% claimed vs 33% break-even at 2.0:1 \u2014 expectancy +0.20R"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is closed; last price 2026-11-06T21:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "no bid/ask available (normal outside regular hours)"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "3% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 3 rests on 4 independent kinds: dated_catalyst, positioning, technical_level, valuation_anchor"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "3 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    }
+  ],
+  "watchlist": [
+    {
+      "symbol": "UNH",
+      "instrument": "UnitedHealth Group Inc",
+      "note": "Best long-term candidate of the day and it still fails the floor, left unpublished rather than tuned through. 394.15, on the SMA50 of 390.65, 14.62% off the 120-day high. Trailing EPS $20.41 from four fetched actuals = 19.3x; the last three quarters annualise to $24.40 = 16.2x. Three consecutive large beats (+12.18%, +28.80%, +8.88%), analyst bullish share 84.4% and +5.0 points with holds 7->5. Target at today's multiple on reported run-rate is $470, bear case $360 (trailing EPS at the 17.8x the market actually paid at the low), giving R:R 2.22 against the 2.5 long_term floor. Clearing 2.5 needs the target at 479.5 or the bear case at 363.8 \u2014 both available, both reverse-engineering. As a swing the arithmetic clears but the next print is mid-January, outside the horizon.",
+      "trigger": "A pullback toward the 362.60 120-day low, which fixes the ratio by improving the entry rather than by moving the target; or the January print confirming a fourth quarter of margin recovery."
+    },
+    {
+      "symbol": "CEG",
+      "instrument": "Constellation Energy Corp",
+      "note": "Washout into support that held \u2014 gapped from 263.40 to close 245.72 on 11-04, bottomed 231.30 on 11-05 against a 120-day low of 228.63, recovered to 249.95 (+4.3%) Friday. 23.5x on trailing EPS of $10.63 from four fetched actuals, analysts 86.2% bullish and +3.4 points. Not recommended for entry because the print is one session away and pre-positioning into a before-open report is a coin flip. The one insider buy is dated 2026-08-11 at $278.62 and is 10.3% underwater \u2014 a stale purchase, not a buy into this washout. There is also a thesis problem: CEG is a datacenter-power name and the day's main finding is that the AI-capex complex is deleveraging, a headwind to the PPA growth the valuation rests on.",
+      "trigger": "The 2026-11-09 before-open print, specifically whether datacenter PPA guidance holds. A close below 228.63 means the washout low has failed."
+    },
+    {
+      "symbol": "XHB",
+      "instrument": "SPDR S&P Homebuilders ETF",
+      "note": "Strongest relative strength found anywhere this run \u2014 1m +6.91% against SPY -4.99%, ahead even of the XLU this report already owns \u2014 and the structure clears the floors cleanly at 102.29 (stop 95.50 = 2.16 ATR and under both MAs, target 115.87 just beneath the 117.91 prior high, R:R exactly 2.0). Held back for three reasons. No dated catalyst: the driver is the rate path and no economic-release calendar was reachable this run, so no CPI or housing print date could be verified, and a swing idea whose catalyst cannot be dated is not a swing idea. It was distributed on 2026-11-05 \u2014 opened 107.44, tagged 108.78, collapsed to close 103.85, lower again Friday \u2014 which is -4.9% off Wednesday's high, not a base. And correlation: XLU is open and TLT awaits entry on the same rate path, so XHB would be the third idea on one driver, at the cap, while RSP already carries homebuilders inside the median-stock thesis at a 1.27% ATR instead of 3.08%.",
+      "trigger": "A daily close back above 104.58 (the 2026-11-02 close, the level the 11-05 reversal broke), or a pullback into the 98.4-98.7 SMA20/SMA50 cluster."
+    },
+    {
+      "symbol": "RSP",
+      "instrument": "Invesco S&P 500 Equal Weight ETF",
+      "note": "Cut by red team from rank 4. The breadth observation is real and independently verified (RSP +1.3% over the last 20 sessions against QQQ -12.1% and SPY -5.5%, corroborated by XHB +8.8% and XRT +6.4% against SMH -21.5%), but it is not a trade yet. The only catalyst named is NVDA 2026-11-17, which the idea's own counter_argument concedes is directionally ambiguous for it \u2014 a beat re-rates cap-weight and stalls the rotation \u2014 so what is left is continuation momentum, which strategy.md calls a bad catalyst. The entry is at Friday's close by the idea's own description a strength entry 3.64% below the high with no support beneath it but the SMA50 at 214.78; the 227.15 target requires a new 120-day high; and key_risk states a 2.57% stop on a 1.27% ATR index ETF is triggered by a single 2% macro day. Pairing it against NVDA long is a self-cancelling directional view across 6% of capital, not two ideas.",
+      "trigger": "A daily close above the 224.20 120-day high, which turns this from continuation into a breakout with a defined level behind it; or a dateable macro print that gives the rotation a catalyst of its own rather than a borrowed one.",
+      "demoted_from_rank": 4,
+      "demotion_reason": "No directional catalyst \u2014 the one named is conceded ambiguous for the idea; continuation thesis bought at strength with no support under the entry, target requires a new 120-day high, stop inside single-day macro noise."
+    },
+    {
+      "symbol": "XLE",
+      "instrument": "Energy Select Sector SPDR Fund",
+      "note": "SELL TO CLOSE the open long XLE position on the Monday 2026-11-09 open, at market \u2014 do not wait for the 60.80 stop. Opened 2026-08-15 at 63.90, filled 2026-09-16, Friday close 61.62 (-3.6%). The 60.80 stop now sits 0.45 ATR below the close (ATR14 1.8379 verified), so it is noise rather than a thesis test and will be taken out at a worse print. Price is below both the SMA20 of 67.11 and the SMA50 of 65.07 and 12.2% off the 120-day high after 51 days held. This is an exit instruction, not an invitation to short. Held off `recommendations` by the red team because `direction: \"sell\"` means short everywhere else in this pipeline: `merge_report` keys live positions on (symbol, direction), so a sell row would not have closed the live buy row \u2014 it would have opened a second, fabricated short position at the August entry price with no stop, and left the long open. The exit decision stands; only the publication route changed.",
+      "trigger": "Already actionable \u2014 execute at the Monday 2026-11-09 open.",
+      "demoted_from_rank": 5,
+      "demotion_reason": "Exit of a filled long, not a new short; publishing it as direction 'sell' would have opened a phantom short row and left the long open."
+    },
+    {
+      "symbol": "BCC",
+      "instrument": "Boise Cascade Co",
+      "note": "SELL TO CLOSE the open long BCC position on the Monday 2026-11-09 open, at market. Opened 2026-08-18 at 76.50, filled the same day, Friday close 70.24 (-8.2%), and it has never carried a stop. The cyclical thesis is falsified by its own sector: XHB is +8.8% over the last 20 sessions while BCC is -4.3%, a 13-point shortfall, and BCC sits 20.6% off its 120-day high below both the SMA20 of 75.53 and the SMA50 of 75.80. A cyclical thesis whose cycle has started without the stock is a company-specific problem, not patience. This is an exit instruction, not an invitation to short. Held off `recommendations` by the red team because `direction: \"sell\"` means short everywhere else in this pipeline: `merge_report` keys live positions on (symbol, direction), so a sell row would not have closed the live buy row \u2014 it would have opened a second, fabricated short position at the August entry price with no stop, and left the long open. The exit decision stands; only the publication route changed.",
+      "trigger": "Already actionable \u2014 execute at the Monday 2026-11-09 open.",
+      "demoted_from_rank": 3,
+      "demotion_reason": "Exit of a filled long, not a new short; publishing it as direction 'sell' would have opened a phantom short row and left the long open."
+    },
+    {
+      "symbol": "HII",
+      "instrument": "Huntington Ingalls Industries Inc",
+      "note": "Demoted by validation: downside 264.0 is not below entry 262.0 for a buy; stop is 0.16 ATR from entry \u2014 inside the noise; a swing stock stop must clear 2.0 ATR",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 3,
+      "demotion_reason": "downside 264.0 is not below entry 262.0 for a buy; stop is 0.16 ATR from entry \u2014 inside the noise; a swing stock stop must clear 2.0 ATR"
+    },
+    {
+      "symbol": "KHC",
+      "instrument": "Kraft Heinz Co",
+      "note": "Demoted by validation: stop is 0.13 ATR from entry \u2014 inside the noise; a swing stock stop must clear 2.0 ATR",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 4,
+      "demotion_reason": "stop is 0.13 ATR from entry \u2014 inside the noise; a swing stock stop must clear 2.0 ATR"
+    },
+    {
+      "symbol": "PYPL",
+      "instrument": "PayPal Holdings Inc",
+      "note": "Demoted by validation: stop is 0.37 ATR from entry \u2014 inside the noise; a swing stock stop must clear 2.0 ATR",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 5,
+      "demotion_reason": "stop is 0.37 ATR from entry \u2014 inside the noise; a swing stock stop must clear 2.0 ATR"
+    },
+    {
+      "symbol": "ABT",
+      "instrument": "Abbott Laboratories",
+      "note": "Demoted by validation: stop is 0.16 ATR from entry \u2014 inside the noise; a swing stock stop must clear 2.0 ATR",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 6,
+      "demotion_reason": "stop is 0.16 ATR from entry \u2014 inside the noise; a swing stock stop must clear 2.0 ATR"
+    }
+  ],
+  "validation_summary": {
+    "checked": 6,
+    "passed": 0,
+    "warned": 2,
+    "failed": 4,
+    "enforced": true,
+    "demoted": 4
+  }
+}
