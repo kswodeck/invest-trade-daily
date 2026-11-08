@@ -1,0 +1,247 @@
+{
+  "date": "2026-11-08",
+  "generated_at_et": "2026-11-08T06:46:15-05:00",
+  "research_minutes": 38,
+  "truncated": false,
+  "market_context": {
+    "summary": "The S&P 500 fell 4.4% on 2026-11-05, its worst session since April 2025, erasing ~$2.9T of market value with every sector down and the Nasdaq entering correction. The cause was the midterm result, not a growth scare: a Democratic sweep of both chambers raised fear of tighter rules on data-center development and a slowdown in AI infrastructure spending, amplified by NVDA's index weight. SPY closed 735.29 on Friday, below both its 20-day 763.36 and 50-day 765.68, with ATR14 at 1.51% \u2014 the 125.9M shares traded on Nov 5 against a 45.0M 30-day average make that a liquidation day, not drift. Rates are falling with it: 2y 4.46% (-12bp), 10y 4.84% (-6bp), 30-year mortgage 7.18% after three straight weekly declines. Friday's bounce was in growth, not defensives (QQQ +1.40%, IWM +0.99%, while ABT -3.23%, KHC -2.80%, UNP -2.61%), so the healthcare/staples/duration leadership is a 1m-3m fact with a one-day counter-signal. The tradeable problem today is structural and arithmetic: elevated post-shock ATRs make a compliant stop wide, yet every group with positive momentum sits only 3-6% below its own high, so the distance to the first real resistance is smaller than the stop costs and reward-to-risk comes out near 1:1. Everything with room to a prior level \u2014 energy, EM, gold, the whole data-center complex, crypto at its 60-day lows \u2014 is below both moving averages with an identified reason for being there. Two ETFs were put forward as the exceptions, XHB and JETS, and the red team found they were not: measured against their first real resistance rather than a months-old range high, both sit in the same near-1:1 bucket as everything else and both were cut. The arithmetic the market_context describes applies without exception today \u2014 no new entry cleared it. The week ahead: October CPI Tuesday 08:30 ET, AMAT and CSCO Thursday, then NVDA and the retail wave the following week.",
+    "regime": "risk-off",
+    "levels": {
+      "spy": 735.29,
+      "qqq": 656.1,
+      "iwm": 273.67,
+      "us10y": 4.84,
+      "us2y": 4.46,
+      "fed_funds_effective": 3.88,
+      "t10y2y": 0.35,
+      "mortgage30us": 7.18,
+      "unrate": 4.1,
+      "cpi_index_sep": 336.298,
+      "gld": 372.52,
+      "tlt": 81.92,
+      "uso": 148.41,
+      "btc": 75836,
+      "eth": 2234.25,
+      "sol": 89.15,
+      "vix": null,
+      "dxy": null,
+      "spx": null,
+      "ndx": null,
+      "wti_spot": null,
+      "gold_spot": null,
+      "levels_note": "spx/ndx/vix/dxy and spot WTI and gold are null because Yahoo Finance returned 429 on every request and finnhub refuses CFD indices. ETF proxies (SPY/QQQ/IWM for the indices, USO for oil, GLD for gold) and FRED for rates are used instead and are labelled as such; the volatility regime could not be quantified. All equity levels are the 2026-11-06 close, the freshest honest price on a Sunday."
+    },
+    "econ_calendar": [
+      {
+        "event": "October CPI (BLS). Note: October 2025 CPI was never published due to the federal shutdown, so the 12-month change is not computable on the usual base.",
+        "datetime_et": "2026-11-10T08:30",
+        "importance": "high",
+        "consensus": null
+      },
+      {
+        "event": "AMAT, CSCO, NU, STNE earnings (after the close)",
+        "datetime_et": "2026-11-12T16:00",
+        "importance": "medium",
+        "consensus": null
+      },
+      {
+        "event": "HD earnings (before the open)",
+        "datetime_et": "2026-11-17T08:00",
+        "importance": "medium",
+        "consensus": null
+      },
+      {
+        "event": "NVDA earnings (after the close)",
+        "datetime_et": "2026-11-17T16:00",
+        "importance": "high",
+        "consensus": null
+      },
+      {
+        "event": "LOW, TGT, TJX, ROST, PANW earnings",
+        "datetime_et": "2026-11-18T08:00",
+        "importance": "medium",
+        "consensus": null
+      },
+      {
+        "event": "WMT earnings",
+        "datetime_et": "2026-11-19T08:00",
+        "importance": "medium",
+        "consensus": null
+      },
+      {
+        "event": "November CPI (BLS)",
+        "datetime_et": "2026-12-10T08:30",
+        "importance": "high",
+        "consensus": null
+      }
+    ]
+  },
+  "data_quality_notes": "Research ran 06:03-06:41 ET and was NOT truncated \u2014 notes.md carries an END OF RESEARCH block and a FINAL COUNTS block that supersede an earlier premature RESEARCH COMPLETE. Nothing was lost to the clock. Six recommendations from 8 candidate entries (XHB was captured three times; the last entry supersedes, carrying both a target correction and the BCC counter-evidence). Nothing was reconstructed from notes; every idea came from candidates.jsonl. \n\nWHY ONLY TWO NEW IDEAS. Four of the six entries are position management on live holdings and do not add new risk; the genuinely new ideas are two swing ETFs, XHB and JETS. Roughly 25-30 instruments were rejected on arithmetic rather than taste, and one pattern explains almost all of them: post-Nov 5 ATRs are elevated (SPY 1.51%, single names 3-11%), so a compliant stop is wide, but every group with momentum sits 3-6% below its own high, making the distance to the first real resistance smaller than the stop costs \u2014 R:R lands near 1:1. TLT (1.21 swing / 1.64 long-term), XLV (0.96), XLP, BLDR (1.12), KBH (0.90), MTH, OC, ITB, ONON (1.21), CVS (0.90) and HD all failed exactly that test. Everything with room to a prior level is below both moving averages for an identified reason. This is a thin report and that thinness is the finding, not a shortfall. \n\nONE REVERSE-ENGINEERED TARGET WAS CAUGHT AND FIXED IN RESEARCH, and it is recorded rather than quietly corrected: XHB was first captured at a 115.00 target that was solved from 102.29 + 2.0 x risk, not read off a chart \u2014 precisely the 'targets nudged until they passed' failure. The published target is 117.91, the fetched 150-day range high. Both new ideas now carry a target at a prior high rather than a comfortable level, and both ratios (2.48 and 2.52) sit just above the 2.0 swing floor. That clustering is normally the signature of fitted targets, so it is flagged here: in this case the floor is cleared from the target side by levels the instrument actually traded, and from the stop side at 2.00 and 2.05 ATR against an 1.8 ATR ETF floor \u2014 but the reader should treat 2.5:1 as the ceiling of what this tape offered, not as comfort. \n\nEVERY FIGURE WAS RE-FETCHED AT SYNTHESIS. Quotes and 150-day history were re-pulled for all six symbols and every ATR14, SMA20, SMA50 and range high in the notes reproduced exactly (XHB 3.15/98.66/98.42/117.91; JETS 1.035/27.01/27.75/34.06; XLE 1.84/67.11/65.07/70.15; RTX 6.04/193.67/193.45/226.88; AAL 0.66/12.51/12.88; BCC 3.51/75.53/75.80/88.43). Ratios were recomputed from entry, target and stop rather than trusted: XHB 15.62/6.29 = 2.48, JETS 5.34/2.12 = 2.52. \n\nPRICES ARE FRIDAY'S CLOSE, AND THAT IS A CLOSED MARKET, NOT STALE DATA. It is Sunday 2026-11-08; US equities and futures were shut all weekend (futures reopen 18:00 ET Sunday), so the 2026-11-06 16:00 ET close is the freshest honest equity price available. Age 38.7h, session 'closed' on every quote. All equity entries are for the Monday 2026-11-09 open. \n\nRANKING DEVIATES FROM THE DEFAULT RULE, DELIBERATELY. Strict conviction-then-R:R ordering would rank the three closures (BCC 2.91, AAL 2.62, XLE 2.13 on their original published levels) above the new JETS long at 2.52, because those ratios are the historical record of targets this report is now abandoning rather than live claims. The two new ideas are therefore ranked 1-2 on merit (XHB conviction 4 ahead of JETS conviction 3) and the four position updates follow at 3-6 ordered by urgency of action: XLE (0.45 ATR from its stop), BCC (guidance broken), AAL (cover the short), RTX (hold). \n\nRTX WILL LIKELY FAIL MECHANICAL VALIDATION AND SHOULD NOT BE READ AS A NEW ENTRY IF IT IS DEMOTED. Its recorded R:R of 0.51 is computed against the original 199.00 entry and the amended 205.62 target, and its 0.40 win probability sits below the 0.66 break-even that ratio implies \u2014 both honest statements about a losing position being managed, not a trade that would be published fresh today. The instruction is HOLD with the 226.50 target withdrawn (it was 6.1 ATR away, beyond the 6.0 ATR feasibility limit) and the stop unchanged at 186.00. If validation demotes it to the watchlist, that instruction still stands. \n\nTHE XHB THESIS CARRIES AN UNANSWERED COUNTER-ARGUMENT, AND IT COMES FROM THIS REPORT'S OWN BCC CLOSURE. Boise Cascade, a wood-products supplier to homebuilding, guided Q4 Wood Products EBITDA down ~65% on 2026-11-02 citing continued single-family housing weakness. The distinction relied on \u2014 XHB is a forward multiple re-rating on the rate path, while BCC's realised segment earnings broke \u2014 is stated so it can be attacked, not asserted. XHB's win probability was cut from 0.35 to 0.32 against a 28.7% break-even because of it, and size held at 2.5%. \n\nCORRELATION. XHB and JETS are both consumer cyclicals helped by a falling rate path, so they are not fully independent, though primary drivers differ (mortgage rates and housing turnover versus jet fuel cost and travel demand) \u2014 2 ideas on related but distinct drivers, inside the 3-per-driver cap. The shared risk is explicit: both lose if the post-midterm correction extends, and both lean on the backdrop a hot Nov 10 CPI would remove. Combined size 4.5%. Closing XLE while buying JETS is internally consistent \u2014 cheaper fuel is the airline's gain and the energy producer's loss. \n\nASSET-CLASS AND HORIZON SKEW, each examined and each rejected for a stated reason rather than skipped. No long_term BUY cleared (that lane is 0/4 with an average -15.2%): a long-term target must be a defended valuation, and the available tools return market cap and analyst trend but no revenue or earnings series, so for INTC I could only reach ~4.8x guided sales \u2014 enough to reject on, not enough to anchor a buy on. No crypto: BTC is 0.3% above its 60-day low and ETH IS its 60-day low, both below both moving averages, with Nov 5's 5-6% pop fully retraced inside 24h. No futures: index shorts fail R:R because the stop must sit above the moving averages, and futures were shut. No event contract: see the hard tool failure below. Both new ideas are swing ETFs. \n\nSOURCES THAT FAILED. (1) Kalshi \u2014 the whole event-contract lane is dark, and on a weekend that is the lane which normally carries this report. Series were confirmed live by querying directly (KXCPIYOY, KXFED, KXU3, KXRECSSNBER, KXBTCMAXY, KXNASDAQ100Y) but EVERY price field \u2014 yes_bid, yes_ask, no_bid, no_ask, last_price, volume, open_interest, liquidity \u2014 is null on both the list and per-market endpoints, so no market-implied probability can be stated and nothing in the lane is publishable. No probability was estimated from memory. Separately, market_data.py's `events` subcommand is near-useless as written: it pulls one page of 200 open markets with no server-side search, so 'CPI', 'Bitcoin' and 'inflation' all returned count=0 while those series trade, and the only 'Fed' hit was an NFL parlay matching the substring MPEFED73K. That is a tool limitation worth fixing, not an empty market. (2) Yahoo Finance \u2014 429 on every request, costing VIX, index levels, DXY, spot WTI, spot gold and BTC-USD history. (3) finnhub indices \u2014 subscription required for CFD indices. (4) stooq \u2014 404 on ^-prefixed symbols. (5) alphavantage and twelvedata \u2014 no API key. (6) BLS direct fetch \u2014 Access Denied to non-browser agents; that is bot policy and was respected, not spoofed, with the CPI date taken from the schedule as surfaced in search. (7) nasdaq short interest \u2014 read timeout on INTC, not retried elsewhere. No level in this report rests on a missing source. \n\nREMAINING COVERAGE GAPS. Small and micro caps were NOT screened bottom-up, which config/universe.md asks for; only a top-down read was done (IWM, IWO, IJR and XBI are all below both their moving averages, so the class sits in today's knife bucket) and that is a reason to deprioritise the lane, not a substitute for having screened it. INTC and BSX were rejected on secondary reporting rather than primary filings, which is why neither carries a primary_document evidence entry. Also not reached: ACM, ONON's fundamentals, and the managed-care-versus-hospital policy split beyond a first look. \n\nBOOK EFFECT AND HOUSEKEEPING. Eleven open positions become eight, with the two weakest out (XLE at 0.45 ATR from its stop after 52 days; BCC carrying no stop and broken guidance). Three open positions are flagged on the watchlist as holds rather than entries \u2014 PFE (42.00 target is 15.69 ATR away, coherent only as a long-term anchor), UNP (277.40 stop is 1.69 ATR out, inside the floor) and HII (a swing long with no stop on a +10.2% gain). Six stale resting orders should be cancelled, each with its reason on the watchlist: TLT 80.30, GLD 406.77, OXY 54.00, ONON 34.20, SMMT 17.10 and the expired KXCPIYOY-26SEP-T3.5. CVS 79.00 was published the day after CVS was stopped out and needs the red team's eye. NVDA 184.00 is flagged, not cancelled: the state-level data-center policy backdrop behind the Nov 5 selloff got worse over the weekend. \n\nCONVICTION WAS CHECKED AGAINST EVIDENCE KINDS ON EVERY IDEA, not assigned. XHB holds 3 distinct kinds (technical_level, positioning, dated_catalyst) \u2192 4. All five others hold 2 kinds \u2192 3. Nothing was inflated, and JETS was explicitly not lifted to 4 by counting the oil-input read, which fits no defined kind.\n\nRED TEAM (phase 2c). Cut both new ideas and kept all four position-management entries. No new entry survives today, and that is the finding rather than a shortfall. \n\nTHE CUT, AND IT IS ONE DEFECT NOT TWO. XHB (was rank 1, conviction 4) and JETS (was rank 2, conviction 3) were both killed for failing the rejection standard this same report applied six times today to other names. The report's own method, written out on the watchlist for BLDR, KBH, MTH, OC, XLV and CVS, is to measure reward-to-risk against the FIRST REAL RESISTANCE and to reject rather than reach past it \u2014 BLDR at 1.12 to its Nov 5 high was 'rejected rather than reverse-engineered', KBH 0.90, XLV 0.96, CVS 0.90. Measured the same way: XHB is 1.03:1 to the 108.78 Nov 5 high, and JETS is 0.45:1 to the 29.67 Nov 5 high. XHB's geometry is worse than the BLDR this watchlist calls 'the single-name expression of the XHB thesis' and rejects; JETS's is worse than both names cut at 0.90. The standard was applied to the instruments that were rejected and not to the two that were published. Validation could not see this: validate_report.py measures the stated target, so a ratio that only exists by skipping intervening structure passes every mechanical check. \n\nTHE PUBLISHED RATIOS DEPEND ON STALE HIGHS, RE-FETCHED AND DATED. XHB's 117.91 target was last traded between 2026-06-03 and 2026-07-02, roughly five months ago \u2014 the thesis called it 'a 150-day high it set inside this same window', which is wrong; the last 50 sessions' high is 108.78, with 111.59 (~Aug) and 113.72 (~Jul) also in the way, so three resistance layers sit between entry and target. JETS's 34.06 was last traded between 2026-07-31 and 2026-08-28 and is 14.4% above its own 50-day high of 29.78. Both scale_plans then disavow the targets their ratios are priced on ('Do not hold the whole position for...'), and the planned exits blend to 1.76:1 and 1.82:1 \u2014 both under the 2.0 swing floor. \n\nTHE DECLARED FIX MADE XHB WORSE. The notes above report catching a 115.00 target solved from 102.29 + 2.0 x risk and replacing it with the 117.91 range high. That moved the target further away and lifted the ratio from exactly 2.00 to 2.48. Relabelling a reverse-engineered target as a fetched range high does not remove the reverse-engineering, and the real defect \u2014 no structure between the first resistance and the target \u2014 was never addressed. Self-reported catches are worth less than the arithmetic; this one went the wrong way and was presented as a correction. \n\nTHE RELATIVE-STRENGTH EVIDENCE WAS ONE SESSION OLD AND ALREADY CONTRADICTED. Re-fetched bars: roughly half of XHB's +11.9% monthly outperformance is one session, Nov 4 (+5.43%, 101.98 -> 107.52), and since that spike XHB is -4.86% against SPY -4.11%, i.e. underperforming, and on Nov 6 XHB fell 1.50% while QQQ rose 1.40% and IWM rose 0.99% \u2014 a 2.5-point miss against its natural benchmark on the freshest data in the report, unmentioned in the idea. XHB is 5.97% below a high set three sessions earlier, which is the same '3-6% below its own high' bucket market_context used to reject everything else. JETS's one distinguishing claim, that it is 'unlike every leading group on this tape' in having real distance, is false on the window the rejections used: it is 3.2% below its 30-day high and 3.6% below its 50-day high. It was distinguished by lengthening the lookback, not by a different setup. \n\nTWO OVERSTATEMENTS CORRECTED IN PASSING. 'The breakout held through the single worst session of the year' describes JETS falling 3.74% on Nov 5 against SPY -4.41% \u2014 beta 0.85 with a 5.6% intraday drawdown, which is near-full participation, and it was the single piece of evidence the idea rested on. And JETS's fuel-cost support is immaterial, not modest: USO is -1.73% over twenty sessions (151.03 -> 148.41, re-fetched), which does not underwrite a claimed +18.6% in the equity. \n\nCONVICTION WAS NOT PAID FOR ON EITHER, which would have been the fix had the geometry held. XHB's third evidence kind was the Nov 10 CPI print, which its own key_risk names as 'the binary risk' \u2014 a two-sided scheduled event cannot be both the confirmation buying conviction 4 and the hazard, so the evidence supported 3. JETS's two kinds both read the same JETS price series (breakout and MA reclaim under technical_level, the same leadership under positioning), so the distinct-kinds requirement was met in label only and the evidence supported 2. Also noted on XHB: the central rate claim is window-dependent, since 7.18% is below the Oct 15 7.40% but above the Sept 17 6.95% \u2014 a retracement of an autumn spike, as the report concedes elsewhere. \n\nWHAT WAS GOOD AND IS RECORDED FOR THE RE-PITCH. Both stops are well constructed \u2014 XHB's 96.00 sits below the 98.42/98.66 MA cluster and the 97.19 Oct 28 swing low at 2.00 ATR, JETS's 26.60 below its breakout shelf and both averages at 2.05 ATR \u2014 and XHB's group breadth (ITB, DHI, LEN, PHM, TOL, MAS all above both their own averages) is real evidence independent of XHB's own price. Both were cut on setup, not on thesis, and both carry a trigger naming the level that would make them buyable. \n\nTHE FOUR POSITION UPDATES WERE EXAMINED AND ALL FOUR STAND. XLE close (0.45 ATR from its own stop after 52 days against 4.83 ATR to target), BCC close (main segment guided down ~65% and carried 81 days with no stop), AAL cover and RTX hold. Each carries validation verdict=fail because the mechanical checks score them as fresh entries \u2014 stop_distance and expectancy on a position being closed are not meaningful \u2014 so phase 2d will demote them to the watchlist. THE INSTRUCTIONS STILL STAND IF DEMOTED, and they were deliberately left in recommendations with their original direction so the tracker amends the existing (symbol, direction) rows rather than opening new ones. RTX's 0.51 R:R and -0.40R expectancy are honest statements about a losing four-day-old position being managed, not a publishable entry. \n\nTWO CONSISTENCY FIXES WERE REQUIRED BY THE CUT, because killing JETS removed the premise two other entries leaned on. AAL's cover was argued partly as 'this report is separately recommending a long in JETS... holding both would be incoherent'; that sentence is now false, so the cover was rewritten to rest on AAL's own evidence \u2014 above both its own 20-day 12.51 and 50-day 12.88, a 1.59 ATR stop inside the 2.0 floor, and +1.3% after 36 days. The cover is correct either way, and a sector can be too firm to short while still offering no 2:1 long, so the JETS cut does not argue for re-shorting AAL. BCC's counter-argument rested on the inconsistency of selling a homebuilding supplier while buying XHB; with XHB cut that tension is gone and the closure is unopposed inside the report, which favours the sale. market_context's 'Two ETFs are the exceptions' was corrected for the same reason. \n\nCORRECTION TO THE CORRELATION PARAGRAPH ABOVE: the XHB/JETS correlated pair no longer exists, so the 4.5% combined size and the shared-CPI risk it described are void. New-entry exposure today is zero and no new capital is committed; the book's direction of travel is one way, with eleven open positions going to eight. Nothing in this report is buying anything. \n\nNOT CUT, AND SAID PLAINLY RATHER THAN HEDGED: the watchlist was not re-litigated. Its rejections are the standard the cuts above were measured against, and the CVS sequence it flags for red-team attention \u2014 recommended 3x in ten days, stopped out 2026-11-04, republished as an entry at 79.00 on 2026-11-05, the day after \u2014 is confirmed as a real process failure and the 79.00 resting order should be cancelled, as that note already says. The clock went on the two published ideas, which is where the size and the weight were. Validation demoted 4 idea(s) whose numbers did not check out. 0 more carry warnings \u2014 see the validation block on each.",
+  "recommendations": [],
+  "watchlist": [
+    {
+      "symbol": "INTC",
+      "instrument": "Intel Corporation",
+      "note": "Rejected, not held. The day's best insider signal \u2014 CEO Lip-Bu Tan bought 150,000 shares at $64.73 on 2026-11-02, three days after a -28.6% single-session crash \u2014 and it still fails on valuation: ~$299B cap, guided Q4 revenue of $15-16B annualising to ~4.8x sales, guided $0.25 quarterly EPS to a ~33-56x P/E, with analyst bullish share down 5.4 points on the month. A 60% drawdown is not a valuation and a CEO purchase is not a floor: the same CEO is 41% underwater on his August lot at $95.00.",
+      "trigger": "A defensible sum-of-parts or book-value anchor, the Israel plant restarting, or a second distinct insider buyer."
+    },
+    {
+      "symbol": "BSX",
+      "instrument": "Boston Scientific Corporation",
+      "note": "Rejected, not held. The broadest insider cluster found today (10 open-market buys, 5 distinct buyers) in the strongest sector on the tape, 36.1% off its high \u2014 and the business is the problem: four guidance cuts in 2026, Q4 net sales guided to DECLINE 1-3% y/y, FY adjusted EPS trimmed to $3.16-3.18, management conceding sub-market growth through 2028. The August buys at 49.22 and 47.59 are underwater against 42.75, so the cluster does not say this price is supported.",
+      "trigger": "A quarter that does not cut guidance, and sales growth guided positive again."
+    },
+    {
+      "symbol": "CVS",
+      "instrument": "CVS Health Corporation",
+      "note": "Rejected, not held, and deliberately not re-pitched. The genuine laggard in the leading sector (83.85, -24.2% off its high) but the geometry fails: a compliant 2.06 ATR stop at 77.00 against the ~90 moving-average cluster is R:R 0.90, and the 110.68 range high is 8.06 ATR away, past the 6.0 swing limit. Separately, CVS has been recommended 3x in ten days, was stopped out 2026-11-04, and was republished as an entry at 79.00 on 2026-11-05 \u2014 the day after the stop-out. That sequence needs the red team's attention, and the 79.00 resting order should be cancelled.",
+      "trigger": "A reclaim of the ~90 moving-average cluster, which would put a real level between the stop and the target."
+    },
+    {
+      "symbol": "TLT",
+      "instrument": "iShares 20+ Year Treasury Bond ETF",
+      "note": "Rejected in BOTH horizons, and the 2026-11-04 BUY @ 80.30 should be CANCELLED \u2014 price has moved up to 81.92, away from that entry, so the level is stale. Swing: an honest 1.88 ATR stop at 80.40 against the 83.60 60-day high gives R:R 1.21, fails the 2.0 floor. Long-term: 10y 4.84%\u21923.75% over ~2y on ~16 duration gives ~96 against a 5.5% bear case of ~73, i.e. 1.64, fails the 2.5 floor. The macro direction looks right (2y -12bp Friday, +10.19% vs SPY on 1m); the arithmetic does not clear.",
+      "trigger": "A pullback toward the 80.40 structural stop, which would restore the room the current price has spent."
+    },
+    {
+      "symbol": "BLDR",
+      "instrument": "Builders FirstSource Inc",
+      "note": "Rejected. The single-name expression of the XHB thesis, and it fails on its own structure: a compliant 2.01 ATR stop at 55.30 (risk 7.24) against the first real resistance at the Nov 5 high of 70.65 gives R:R 1.12. Reaching 2.0 would need a 77.02 target with no structure anywhere between 70.65 and the 94.97 range high to justify it \u2014 rejected rather than reverse-engineered.",
+      "trigger": "A base built above 70.65, which would create a level the stop can be paid for."
+    },
+    {
+      "symbol": "KBH",
+      "instrument": "KB Home",
+      "note": "Rejected, and MTH and OC have the same shape. Both ends fail: the first resistance at the Nov 5 high of 54.94 gives R:R 0.90 against a 2.29 ATR stop at 46.00, while the 63.63 range high that would give 2.75 is 6.3 ATR away, beyond the 6.0 ATR swing feasibility limit.",
+      "trigger": "Either a higher base that shortens the distance to the range high, or a pullback that cheapens the entry."
+    },
+    {
+      "symbol": "ONON",
+      "instrument": "On Holding AG",
+      "note": "Rejected, and the 2026-11-03 BUY @ 34.20 should be CANCELLED \u2014 price ran 9.2% above that order to 37.36 and never filled, so the level is stale. The insider cluster is genuine (8 buys, 3 distinct buyers, $10.58M, co-founders at 30.67 on 2026-08-14) but there is no room: only 9.8% off the 150-day high of 41.41, so a 2.21 ATR stop at 34.00 against that high gives R:R 1.21.",
+      "trigger": "A pullback toward the 34.86 20-day that restores distance to the 41.41 high."
+    },
+    {
+      "symbol": "XLV",
+      "instrument": "Health Care Select Sector SPDR Fund",
+      "note": "Rejected despite being the strongest sector on the tape (+14.89% vs SPY on 1m). This is today's structural finding in one line: a 2.06 ATR stop at 177.00 costs 7.80 of risk, but the 192.32 range high is only 7.52 away, so the range-high target gives R:R 0.96 and clearing 2.0 would need 200.40 \u2014 4.2% above the 150-day high. The leaders are unbuyable at 2:1.",
+      "trigger": "A pullback of 5% or more that puts real distance between a compliant stop and the prior high."
+    },
+    {
+      "symbol": "XLP",
+      "instrument": "Consumer Staples Select Sector SPDR Fund",
+      "note": "Rejected for the identical reason as XLV: a 2.01 ATR stop at 86.50 costs 3.58 of risk against a 93.40 range high only 3.32 away, so 2.0 would need 97.24 \u2014 4.1% above the high. A low-volatility sector trading near its high has less room to the next level than a 2-ATR stop costs.",
+      "trigger": "A pullback that restores room, or a durable break above 93.40 that creates a new level."
+    },
+    {
+      "symbol": "BTC",
+      "instrument": "Bitcoin",
+      "note": "No crypto candidate today, and on a weekend that is the lane which normally carries this report. BTC $75,836 is 0.3% above its own 60-day low of 75,590 and below both its SMA20 79,064 and SMA50 81,783; ETH $2,234 IS its 60-day low. Nov 5 was a failed rally in both \u2014 a 5-6% pop fully retraced inside 24h, which is distribution rather than accumulation. A long here buys a 60-day low with no reversal signal and no dated catalyst; a short is unattractive after a 13-20% decline into that low and would need /MBT, since Robinhood Crypto cannot short.",
+      "trigger": "A reclaim of the SMA20 (BTC 79,064 / ETH 2,315) that holds, or a capitulation flush that produces a reversal bar worth buying."
+    },
+    {
+      "symbol": "KXCPIYOY-26SEP-T3.5",
+      "instrument": "Kalshi CPI y/y September 2026 contract",
+      "note": "DEAD ORDER \u2014 remove. The September contract has resolved or expired and it is now 2026-11-08; a NO @ 18 published 2026-09-30 should not still be resting. More broadly, the entire event-contract lane is dark today: every price field (yes_bid, yes_ask, last_price, volume, open_interest) is null on both the Kalshi list and per-market endpoints, including on series that certainly trade, so no market-implied probability can be stated and nothing in this lane is publishable.",
+      "trigger": "Order-book data returning from the Kalshi public endpoint, so a probability disagreement can be measured rather than remembered."
+    },
+    {
+      "symbol": "GLD",
+      "instrument": "SPDR Gold Shares",
+      "note": "CANCEL the 2026-10-25 SELL @ 406.77. Spot is 372.52, i.e. 9.2% below the sell order \u2014 the move the idea called for happened without the position, which the 2026-10-25 and 10-27 reports have already said twice. Stop republishing this level.",
+      "trigger": "Nothing; the level is dead. A fresh gold idea needs fresh levels."
+    },
+    {
+      "symbol": "OXY",
+      "instrument": "Occidental Petroleum Corporation",
+      "note": "CANCEL the 2026-09-24 BUY @ 54.00. Spot 56.38, so the order sits 4.2% below market and remains unfilled, and energy is the weakest sector on the tape \u2014 OXY and DVN are both below both their own moving averages, which is the same evidence that is closing the XLE long in this report.",
+      "trigger": "Energy reclaiming its moving averages; until then this order is a bid under a falling sector."
+    },
+    {
+      "symbol": "NVDA",
+      "instrument": "NVIDIA Corporation",
+      "note": "FLAG on the 2026-11-07 BUY @ 184.00, still unfilled. The policy backdrop behind the Nov 5 AI selloff got worse over the weekend, not better. I tested the dip-buy hypothesis that a Trump veto blocks federal AI/data-center rules and it FAILS: the binding constraint is state and local \u2014 siting, zoning, utility interconnection, water, tax abatement \u2014 and the governors-elect of Texas, Georgia and Ohio, the three largest build-out states, campaigned on limiting AI infrastructure expansion. An NBC exit poll had 56% of voters calling AI/data centers a crucial or major factor in their vote. Earnings 2026-11-17 amc.",
+      "trigger": "Re-underwrite the entry against state-level siting risk before letting 184.00 fill, or cancel it."
+    },
+    {
+      "symbol": "PFE",
+      "instrument": "Pfizer Inc",
+      "note": "OPEN POSITION, hold as-is \u2014 not an entry. +6.5% from the 2026-08-18 entry at 27.60, no change to any level, and deliberately NOT re-pitched: it has been recommended 3x in ten days and the insider cluster behind it (3 distinct buyers, $2.96M, CEO Bourla 38,000 at 26.34) predates the entry, so re-capturing it today would be anchoring rather than new information. The one thing to fix is the 42.00 target, which is 15.69 ATR from the market (+43%) and is only coherent as a long-term valuation anchor, never as a swing level.",
+      "trigger": "Restate the 42.00 target as a long-term valuation anchor, or cut it to a level inside swing reach."
+    },
+    {
+      "symbol": "UNP",
+      "instrument": "Union Pacific Corporation",
+      "note": "OPEN POSITION, hold \u2014 not an entry, and flagged rather than silently widened. The 277.40 stop is 1.69 ATR from the market, inside the 2.0 ATR floor this report enforces on new stock ideas. The floor does not retroactively apply to a position already open, but it means UNP is one-and-a-half ordinary sessions from a stop-out while only +0.5% after 23 days.",
+      "trigger": "Red-team decision on whether to accept the tight stop or exit; do not widen it to buy room."
+    },
+    {
+      "symbol": "HII",
+      "instrument": "Huntington Ingalls Industries Inc",
+      "note": "OPEN POSITION, hold \u2014 not an entry. +10.2% from the 2026-10-12 entry at 262.00, above both moving averages, target 4.16 ATR away. The flag: it is a swing-horizon long carrying NO stop, which leaves a 10.2% gain undefended 30.3% below its own high.",
+      "trigger": "Set a structural stop under the moving-average cluster, or convert it to a stated long-term thesis with an invalidation condition."
+    },
+    {
+      "symbol": "SMMT",
+      "instrument": "Summit Therapeutics Inc",
+      "note": "Remove the 2026-10-27 BUY @ 17.10 resting order. The same name was opened as a separate position and stopped out on 2026-10-26, so an unfilled entry at 17.10 is a stale level behind a trade that has already failed.",
+      "trigger": "Nothing; cancel the order."
+    },
+    {
+      "symbol": "XHB",
+      "instrument": "SPDR S&P Homebuilders ETF",
+      "note": "KILLED BY RED TEAM (was rank 1, conviction 4). Not a view on housing \u2014 it fails the rejection standard this same report applied to six other instruments today. The report's own method, stated on BLDR, KBH, MTH, OC, XLV and CVS, is to measure reward-to-risk against the FIRST REAL RESISTANCE and to reject rather than reach past it. On that measure XHB is 6.49 to the 108.78 Nov 5 high against 6.29 of risk to the 96.00 stop = R:R 1.03. BLDR, described on this very watchlist as 'the single-name expression of the XHB thesis', was rejected at 1.12 to its own Nov 5 high with the words 'rejected rather than reverse-engineered'. XHB's geometry is WORSE than the BLDR it rejected, and it was published. KBH (0.90), XLV (0.96) and CVS (0.90) were all cut on the same arithmetic. The 2.48 ratio exists only by targeting 117.91, and three further facts were checked and none supports it: (1) 117.91 was last traded between 2026-06-03 and 2026-07-02 \u2014 about five months ago \u2014 not 'inside this same window' as the thesis states; the last 50 sessions' high is 108.78. (2) Three resistance layers sit between entry and target: 108.78 (Nov 5), 111.59 (~Aug) and 113.72 (~Jul), so there is no structure justifying a stop paid for at 117.91 \u2014 the identical objection raised against BLDR's 77.02. (3) The idea's own scale_plan disavows the target it is priced on ('Do not hold the whole position for 117.91'), so the planned exit \u2014 half at 108.78, half at 117.91 \u2014 blends to 1.76:1, below the 2.0 swing floor. The declared fix made this worse, not better: data_quality_notes reports catching a 115.00 target solved from 102.29 + 2.0 x risk and replacing it with 117.91. That moved the target FURTHER out and lifted the ratio from exactly 2.00 to 2.48. The reverse-engineering was relabelled as a fetched range high, not removed. The relative-strength evidence is also one session old and already contradicted. Re-fetched bars: XHB rose 5.43% on Nov 4 alone (101.98 -> 107.52), roughly half of the +11.9% monthly outperformance in one session, and since that spike it has UNDERPERFORMED \u2014 Nov 4 close -> Nov 6 close is -4.86% against SPY -4.11%, and on Nov 6 XHB fell 1.50% while QQQ rose 1.40% and IWM rose 0.99% \u2014 a 2.5-point miss against its natural benchmark on the freshest data available. XHB is 5.97% below a high set three sessions ago, which is the '3-6% below its own high' bucket market_context says it rejected everything else from. Two further defects: the third evidence kind paying for conviction 4 was the Nov 10 CPI print, which key_risk simultaneously names as 'the binary risk' \u2014 a two-sided scheduled event cannot be both the confirmation and the hazard, so the evidence supported 3 at best. And the central rate claim is window-dependent: 7.18% is below the Oct 15 7.40% but above the Sept 17 6.95%, which the report concedes, so the 'three straight weekly declines' is a retracement of an autumn spike. The hardest contrary evidence is this report's own BCC closure \u2014 BCC guided Q4 Wood Products EBITDA down ~65% on 2026-11-02 citing continued single-family weakness. What was genuinely good here is noted for the re-pitch: the 96.00 stop is well built, below the 98.42/98.66 MA cluster and the 97.19 Oct 28 swing low at 2.00 ATR, and the group breadth (ITB, DHI, LEN, PHM, TOL, MAS all above both their own averages) is real evidence independent of XHB's own price. One arithmetic error in the evidence block is also corrected for the record: it put the 108.78 first resistance '4.96 ATR from entry', which is the 117.91 target's distance; 108.78 is 2.06 ATR away. Stating the near level at the far level's distance is how the intervening structure disappeared from view. The setup is wrong, not the thesis.",
+      "trigger": "Either a base built ABOVE 108.78, which creates a level a 2 ATR stop can be paid for (the same trigger set for BLDR at 70.65), or a pullback into the 98.4-98.7 moving-average cluster that cheapens the entry enough to clear 2:1 against the 108.78 first resistance rather than against a five-month-old high. A hold above the cluster after the Nov 10 CPI print, with mortgage 30y through the Sept 17 6.95% low, would make the rate claim directional rather than a retracement.",
+      "demoted_from_rank": 1,
+      "demotion_reason": "Red team: R:R to first real resistance is 1.03:1, below the floor and below the level at which this same report rejected BLDR, KBH, XLV and CVS today; the published ratio depends on a range high last traded months ago with intervening resistance and no structure to justify it."
+    },
+    {
+      "symbol": "JETS",
+      "instrument": "U.S. Global Jets ETF",
+      "note": "KILLED BY RED TEAM (was rank 2, conviction 3). Same defect as XHB and more severe. R:R to the first real resistance is 0.95 of reward (the 29.67 Nov 5 high) against 2.12 of risk to the 26.60 stop = 0.45:1 \u2014 worse than KBH (0.90) and CVS (0.90), both rejected today on that exact number. The first obstacle sits 0.89 ATR above entry while the stop sits 2.05 ATR below: the trade's first hurdle is less than half the distance of its own risk. The one claim that exempted it is false. The thesis reads 'still 15.7% below its own 150-day high of 34.06, so UNLIKE EVERY LEADING GROUP on this tape there is real distance to a level it has actually traded.' Re-fetched: JETS is 3.2% below its 30-day high and 3.6% below its 50-day high (29.67 and 29.78), which is precisely the 3-6% bucket market_context used to reject TLT, XLV, XLP, BLDR, KBH, MTH, OC, ITB, ONON, CVS and HD. The 15.7% figure comes only from lengthening the lookback: 34.06 was last traded between 2026-07-31 and 2026-08-28, about three months ago, and the target sits 14.4% above the 50-day high. JETS was distinguished from the rejected names by changing the measurement window, not by having a different setup. Its scale_plan blends to 1.82:1, also under the 2.0 floor. The resilience evidence overstates the bars. 'The breakout held through the single worst session of the year' describes a session in which JETS fell 3.74% (29.46 -> 28.36) against SPY -4.41% \u2014 beta 0.85, with a 5.6% intraday drawdown from the 29.67 high to the 28.02 low. That is near-full participation, not the resilience 'a mere bounce usually fails to produce', and it was the single distinguishing piece of evidence offered. The cost side is immaterial rather than supportive: USO is -1.73% over the last twenty sessions (151.03 -> 148.41, re-fetched), which is noise, and the report concedes 'modest'. A 1.7% move in the fuel input does not underwrite a claimed +18.6% in the equity. Conviction 3 is also not paid for \u2014 both evidence kinds read the same JETS price series (the breakout and the MA reclaim appear under technical_level, the same leadership under positioning), so the distinct-kinds requirement is met in label only. No dated catalyst exists inside the horizon: Q3 is reported and the thesis rests on a four-session trend continuing. Finally it was the weaker half of a disclosed correlated pair with XHB; with both cut the correlation question is moot. Note the sector READ survives even though the trade does not \u2014 JETS is genuinely above both its averages and +9.5% vs SPY on 1m, which is why the AAL short is still being covered.",
+      "trigger": "A base built above 29.78 (the 50-day high), which would put a compliant 2 ATR stop behind a real level and make the distance to 34.06 payable; or a pullback to the 27.50 breakout shelf with the shelf holding, which clears 2:1 against the 29.67 first resistance instead of against an August high. A dated catalyst \u2014 Q4 guidance or a Thanksgiving traffic datapoint rather than a season \u2014 would also change this from a trend-continuation bet.",
+      "demoted_from_rank": 2,
+      "demotion_reason": "Red team: R:R to first real resistance is 0.45:1, below the floor and below the level at which this same report rejected BLDR, KBH, XLV and CVS today; the published ratio depends on a range high last traded months ago with intervening resistance and no structure to justify it."
+    },
+    {
+      "symbol": "XLE",
+      "instrument": "Energy Select Sector SPDR Fund",
+      "note": "Demoted by validation: stop is 1.69 ATR from entry \u2014 inside the noise; a swing etf stop must clear 1.8 ATR",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 1,
+      "demotion_reason": "stop is 1.69 ATR from entry \u2014 inside the noise; a swing etf stop must clear 1.8 ATR"
+    },
+    {
+      "symbol": "BCC",
+      "instrument": "Boise Cascade Company",
+      "note": "Demoted by validation: catalyst dated 2026-11-02 already passed \u2014 positioning around it is wrong",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 2,
+      "demotion_reason": "catalyst dated 2026-11-02 already passed \u2014 positioning around it is wrong"
+    },
+    {
+      "symbol": "AAL",
+      "instrument": "American Airlines Group Inc",
+      "note": "Demoted by validation: stop is 1.59 ATR from entry \u2014 inside the noise; a swing stock stop must clear 2.0 ATR",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 3,
+      "demotion_reason": "stop is 1.59 ATR from entry \u2014 inside the noise; a swing stock stop must clear 2.0 ATR"
+    },
+    {
+      "symbol": "RTX",
+      "instrument": "RTX Corporation",
+      "note": "Demoted by validation: computed 0.51:1 is below the 2.0:1 floor for swing; 40% claimed vs 66% break-even at 0.51:1 \u2014 expectancy -0.40R \u2014 the idea loses money at its own stated hit rate",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 4,
+      "demotion_reason": "computed 0.51:1 is below the 2.0:1 floor for swing; 40% claimed vs 66% break-even at 0.51:1 \u2014 expectancy -0.40R \u2014 the idea loses money at its own stated hit rate"
+    }
+  ],
+  "validation_summary": {
+    "checked": 4,
+    "passed": 0,
+    "warned": 0,
+    "failed": 4,
+    "enforced": true,
+    "demoted": 4
+  }
+}
