@@ -1,6 +1,6 @@
 # Odd-lot tender screener — 2026-11-13
 
-Run 2026-11-13 05:31 ET (premarket slot). 4 offers tracked, 0 clear every gate: 0 Tier A, 0 Tier B, 0 Tier C.
+Run 2026-11-13 18:31 ET (evening slot). 5 offers tracked, 0 clear every gate: 0 Tier A, 0 Tier B, 0 Tier C.
 
 **No Tier A opportunities today.** That is the ordinary result — an odd-lot tender with a 3%+ spread and a clean condition set is rare, and the thresholds below are not moved to produce one.
 
@@ -20,7 +20,8 @@ _None._
 
 | Ticker | Form | Filed | Reason |
 | --- | --- | --- | --- |
-| MYPS | SC TO-I | 2026-11-12 | spread -10.60% below the 1.5% floor |
+| — | SC TO-I | 2026-11-13 | no 'fewer than 100 shares' odd-lot threshold in the document; odd lots mentioned but no acceptance-before-proration language |
+| MYPS | SC TO-I | 2026-11-12 | spread -12.78% below the 1.5% floor |
 | INVE | SC TO-I | 2026-10-21 | odd lots mentioned but no acceptance-before-proration language |
 | XFLT | SC TO-I | 2026-09-18 | no 'fewer than 100 shares' odd-lot threshold in the document; odd lots mentioned but no acceptance-before-proration language; an exchange offer for other securities, not cash; no expiration date could be read from the document |
 | — | EX-99 | 2026-09-01 | odd lots mentioned but no acceptance-before-proration language; no cash consideration stated in the document; subject security is not common equity (unidentified security); no expiration date could be read from the document |
@@ -29,13 +30,13 @@ _None._
 
 A screener that finds nothing reads exactly like one that is broken. This is the difference.
 
-- **96** full-text queries over `2026-08-30..2026-11-13` returned **141** document hit(s) across **19** filing(s) (**50** exhibits kept as candidates)
+- **96** full-text queries over `2026-08-30..2026-11-13` returned **143** document hit(s) across **20** filing(s) (**51** exhibits kept as candidates)
 - searched as **4** date slice(s), **96** result page(s) read
-- **4** offers open, **30** archived
+- **5** offers open, **30** archived
 
 | Turned away for | Count |
 | --- | --- |
-| no odd-lot language | 4 |
+| no odd-lot language | 6 |
 | expired or terminated | 2 |
 | no consideration stated | 1 |
 | not common equity | 1 |

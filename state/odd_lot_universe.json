@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-11-13T05:31:02-05:00",
-  "last_run_at": "2026-11-13T05:31:02-05:00",
+  "updated_at": "2026-11-13T18:31:58-05:00",
+  "last_run_at": "2026-11-13T18:31:58-05:00",
   "discovery_error": null,
   "open": [
     {
@@ -238,7 +238,7 @@
       "status": "rejected",
       "tier": null,
       "rejections": [
-        "spread -10.60% below the 1.5% floor"
+        "spread -12.78% below the 1.5% floor"
       ],
       "risk_flags": [
         "market_price_above_offer",
@@ -286,15 +286,78 @@
       "withdrawal_deadline": "2026-12-10",
       "withdrawal_basis": "expiration_date",
       "max_shares_sought": null,
-      "market_price": 4.81,
-      "price_asof": "2026-11-12T21:00:00+00:00",
+      "market_price": 4.93,
+      "price_asof": "2026-11-13T21:00:00+00:00",
       "price_source": "finnhub",
-      "spread_pct": -0.106029,
-      "capital": 476.19,
+      "spread_pct": -0.127789,
+      "capital": 488.07,
       "days_to_expiry": 27,
-      "annualized": -1.433356,
-      "gross_profit": -50.49,
+      "annualized": -1.727519,
+      "gross_profit": -62.37,
       "avg_volume_30d": 85580
+    },
+    {
+      "accession": "0001193125-26-460080",
+      "cik": "0002008602",
+      "company": "Franklin Lexington Private Markets Fund",
+      "ticker": "",
+      "form": "SC TO-I",
+      "filed": "2026-11-13",
+      "url": "https://www.sec.gov/Archives/edgar/data/2008602/000119312526460080/d141726dex99a1ii.htm",
+      "index_url": "https://www.sec.gov/Archives/edgar/data/2008602/000119312526460080/0001193125-26-460080-index.htm",
+      "highlights": [],
+      "documents": [
+        {
+          "name": "d141726dex99a1ii.htm",
+          "type": "EX-99.(A)(1)(II)",
+          "url": "https://www.sec.gov/Archives/edgar/data/2008602/000119312526460080/d141726dex99a1ii.htm"
+        }
+      ],
+      "found_by": "\"odd lot\" / SC TO-I",
+      "first_seen": "2026-11-13",
+      "status": "rejected",
+      "tier": null,
+      "rejections": [
+        "no 'fewer than 100 shares' odd-lot threshold in the document",
+        "odd lots mentioned but no acceptance-before-proration language"
+      ],
+      "risk_flags": [],
+      "last_scored": "2026-11-13",
+      "warnings": [],
+      "documents_read": [
+        "d141726dex99a1ii.htm"
+      ],
+      "document": "d141726dex99a1ii.htm",
+      "terms": {
+        "has_threshold": false,
+        "has_proration_preference": false,
+        "is_cash_offer": true,
+        "consideration": "cash",
+        "is_common_equity": true,
+        "subject_security": "SHARES OF BENEFICIAL INTEREST",
+        "offer_price": null,
+        "dutch_range": null,
+        "price_basis": null,
+        "expiration_date": "2026-12-14",
+        "withdrawal_deadline": "2026-12-14",
+        "withdrawal_basis": "expiration_date",
+        "max_shares_sought": null,
+        "preference_removed": false,
+        "record_holder_condition": null,
+        "restricted_offer": false,
+        "terminated": false,
+        "risk_flags": [
+          "foreign_private_issuer"
+        ]
+      },
+      "odd_lot_paragraph": null,
+      "offer_price": null,
+      "dutch_range": null,
+      "price_basis": null,
+      "expiration_date": "2026-12-14",
+      "withdrawal_deadline": "2026-12-14",
+      "withdrawal_basis": "expiration_date",
+      "max_shares_sought": null
     }
   ],
   "archive": [
@@ -2283,15 +2346,15 @@
   "funnel": {
     "queries": 96,
     "pages": 96,
-    "raw_hits": 141,
-    "filings": 19,
-    "documents": 50,
+    "raw_hits": 143,
+    "filings": 20,
+    "documents": 51,
     "window": "2026-08-30..2026-11-13",
     "slices": 4,
     "failed_queries": 0,
     "failures": [],
     "rejected_by": {
-      "no odd-lot language": 4,
+      "no odd-lot language": 6,
       "expired or terminated": 2,
       "no consideration stated": 1,
       "not common equity": 1,
