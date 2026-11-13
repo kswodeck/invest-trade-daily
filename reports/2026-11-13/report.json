@@ -1,0 +1,529 @@
+{
+  "date": "2026-11-13",
+  "generated_at_et": "2026-11-13T06:36:56-05:00",
+  "research_minutes": 33,
+  "truncated": false,
+  "data_quality_notes": "ACT AT THE OPEN \u2014 THREE CLOSE INSTRUCTIONS ON MONEY ALREADY AT RISK. These are exits, not new positions, and none can be expressed as a candidate that clears a reward-to-risk floor, because a close has no target. (1) SMMT \u2014 CLOSE AT MARKET. 15.075, -11.8% from the 17.10 fill. The 14.40 stop is 0.50 ATR away (ATR14 1.3444, 8.92% of price) so the position is a bet on the next tick, and the 2026-11-04 8-K registered an undisclosed amount of new equity. Do not widen the stop. (2) HII \u2014 CLOSE AT MARKET, or at minimum trim half and place a 279.00 stop on the remainder. 308.33, +17.7% from the 262.00 fill, and carrying NO STOP after 30 days. Forward reward-to-risk is 1.07:1 (31.43 to the 339.76 target against 29.33 to a 279.00 stop), and the 339.76 target is ABOVE the 120-day high of 334.53. Defense is the second-worst group on the board (ITA -2.06%). Taking +17.7% beats holding a 1.07:1. (3) BCC \u2014 CLOSE AT MARKET. 67.92, -11.2% from the 76.50 fill, no stop, and it closed 2026-11-12 at 67.92 against a 120-day low of 67.045 \u2014 a new low, below SMA20 74.703 and SMA50 75.2278. The evidence has turned with the price: analyst bullish share 63.6% -> 54.5% (-9.1pp), the 2026-09-30 quarter MISSED by -7.7% (1.04 vs 1.1269), zero insider buys against three sales. With the 10Y at 4.98% the housing-demand thesis has no near-term route back.\n\nKNOWN VALIDATION ARTIFACT \u2014 READ BEFORE THE ENFORCE STEP DEMOTES ANYTHING. A pre-publication run of validate_report.py fails ACM and VVV on the bid/ask `spread` check (ACM 18.69%, VVV 41.99%). Both numbers are pre-market placeholder quotes, not tradeable spreads, and the ideas were left unchanged rather than adjusted to clear a check. The evidence, measured in one call at ~06:40 ET during the `pre` session: ACM shows bid 61.35 / ask 74.00 around a 70.01 last, and VVV bid 28.35 / ask 43.42 around a 34.825 last \u2014 a 15-point indicative band on a $34 stock. VVV's quote additionally returns `is_real_time: false` with an `asof` of 'Nov 12, 2026', i.e. a stale daily record whose bid and ask were never populated for today. The control is in the same call: DKS printed 0.779% and LEN 0.440% from books that had already woken up. Both flagged names are liquid \u2014 ACM averages $91.4M and VVV $92.7M of daily dollar volume over 30 days \u2014 so a 19-42% round-trip cost is not a real feature of either. Treat these two `spread` failures as unresolved data quality, not as a finding about the trades; the check is right to exist and is reading a book that does not exist yet. Enter both as limits, never market orders, and re-read the spread after 09:30 ET before sizing. Separately, every idea carries a `sources` warning that 2 of its URLs could not be verified by a HEAD request: that is SEC EDGAR and nasdaq.com refusing automated requests, which the validator itself treats as no evidence the pages are wrong.\n\nDATA INTEGRITY \u2014 TLT @80.30 (published 2026-11-04) appears to have FILLED on 2026-11-12 and is not marked as a position: TLT traded an 80.81 high / 79.72 low, so the range brackets the limit. It should read as open at 80.30, now -0.7%. This is a tracker item, not a trade idea. On the merits the position is uncomfortable \u2014 the 10Y is at 4.98%, TLT closed at the low of the day below SMA20 81.126 and SMA50 80.2633, and ATR14 is only 0.7575, so there is no stop that is both meaningful and survivable. Treat it as a small duration position and name the 76.43 120-day low as the invalidation.\n\nPRICES: every price in this report is the 2026-11-12 US close, fetched this run at a 06:00 ET start when the market session was `pre`. That is a closed market, not stale data. Quotes and ATR14 for all four finalists were re-fetched during synthesis and match the research log to the cent (ACM 70.11 / 2.1777, DKS 145.66 / 6.0204, LEN 83.58 / 3.887, VVV 34.83 / 1.2593).\n\nWHY FOUR IDEAS, AND WHY ALL LONG EQUITY: three new ideas plus one trim on an existing position is what survived, and nothing was padded to fill a quota. All four are long US equity on a session where every sector except energy fell \u2014 a real skew, stated rather than dressed up. Drivers are distinct, so the 3-per-driver correlation cap holds: LEN is rates/housing book value, DKS a Foot Locker inventory recovery, VVV a vehicle-services momentum continuation, ACM an existing infrastructure position being trimmed into a print. DKS and VVV are both consumer-adjacent \u2014 2 on that driver, inside the cap. The reason these are the four is insider buying rather than the charts: a sweep of ~75 liquid names across six sectors found only six clusters in the entire market, and three of these four are in that six.\n\nTHIN MARGINS, DISCLOSED: ACM's recomputed ratio is 2.00 against a 2.0 swing floor and LEN's is 2.52 against 2.50. Neither was tuned to get there \u2014 ACM's 61.50 stop is the one published on 2026-11-07 and was deliberately NOT walked in to improve the ratio (the KRE anti-pattern), and LEN's 108.50 target is 1.197x a book value computed from the Q3 8-K. But they are thin, not comfortable. Stop distances were checked the other way and all clear the ATR floor on independently re-fetched data: ACM 2.41 ATR, DKS 2.03, VVV 2.14, against 2.0 required for a swing stock. DKS and VVV sit close to that floor, and both key_risk fields say plainly that an earnings gap will go through the stop rather than touch it \u2014 DKS fell 30.7% in a single session three months ago.\n\nEARNINGS GAP RISK IS THE SHAPE OF TODAY'S BOOK: three of the four carry a dated print inside the horizon (ACM 11/16 amc, VVV 11/19 bmo, DKS 11/23 bmo), so the dominant risk is a gap through a stop, not a slide to it. Sizing reflects it; the stops do not pretend to.\n\nCOVERAGE GAPS. Event contracts: entirely uncovered \u2014 `market_data.py events` returned count 0 for oil, Fed, CPI, inflation, recession and Bitcoin, the only hits being null-priced sports parlays, so there was no implied probability to disagree with. Futures and crypto: every Yahoo-backed quote (^GSPC, ^NDX, ^DJI, ^RUT, ^VIX, ^DXY, ^TNX, ES/NQ futures, gold, WTI) returned HTTP 429, so no contract-month entry or 2.5-ATR stop could be set on /MBT, /MES, /MNQ, /M2K, /MGC or /MCL. There is no futures idea today and that is a tooling failure, not a judgement. Crypto spot came from CoinGecko. Short interest and days-to-cover: zero coverage, `market_data.py short` ReadTimeout on api.nasdaq.com for every symbol attempted. Options-implied move: zero coverage, `market_data.py implied` returns HTTP 401 from yahoo-options, so no target here was checked against what the straddle prices. No 10-Q was read for DKS or VVV, which is why DKS is published at conviction 4 though five evidence kinds hold; LEN's Q3 8-K was read in full. Intraday horizon not covered: at a 06:00 ET start before a closed market there was no intraday setup to be had. Index levels below are ETF proxies because the index endpoints failed.\n\nSOURCES THAT FAILED: Yahoo chart API (429 on all index/futures/crypto/macro symbols), Yahoo options API (401), api.nasdaq.com short interest (ReadTimeout), Kalshi via `events` (0 results on every macro query), finnhub index quotes (CFD subscription required). Working: finnhub quotes/earnings/insiders/analysts/filings, nasdaq history, CoinGecko, FRED, SEC EDGAR, WebSearch/WebFetch.\n\nResearch ran 06:00-06:33 ET and finished inside its budget with a RESEARCH COMPLETE block, so this report is not truncated. Synthesis used the second of two DKS captures: the first anchored valuation on trailing EPS of 12.66 and overstated the cheapness, and research caught it in its own falsification pass. The corrected version is the honest one \u2014 DKS is 12.67x the cut $11-12 guidance midpoint against 12.81x the old midpoint pre-cut, so the multiple is unchanged and the entire 40% drawdown is the EPS cut, not a de-rating available to collect.\n\nRED TEAM (phase 2c). Cut 2 of 4, kept 2, cut nothing for the sake of cutting and manufactured no objection to the two that survived.\n\nCUT ACM (rank 4) - and this is the finding of the morning, because it is the report contradicting itself. ACM was pitched as trim-half-and-hold. Its forward reward-to-risk from 70.11 is 0.83:1; this same report orders HII closed for a forward 1.07:1. At ACM's own stated 42% win probability the break-even for 0.83:1 is 54.6%, so the half it wanted to hold through Monday's after-close print is negative expectancy. The validation block's 2.0:1 and +0.26R are measured from the sunk 66.74 fill and say nothing about whether to hold. ACM is now a fourth CLOSE AT MARKET instruction alongside SMMT, HII and BCC. Its conviction had also been raised 3 -> 4 on a position being reduced.\n\nCUT VVV (rank 2) on substance, not on its spread flag - the 41.99% spread is a pre-market placeholder and I agree with the note above that it is an artifact. It failed the correlation test against DKS (one consumer-discretionary earnings bet in two tickers, same size, same ratio, same stop-distance warning) and lost the slot: its insider cluster predates anything by three to six months and its own counter_argument concedes the cluster is not about the November quarter, leaving a chart and an earnings date. The 2026-11-12 bar also opened at its high and closed near its low on above-average volume, which is the shelf being sold rather than held.\n\nKEPT LEN at conviction 5, and all four of its evidence kinds were re-verified against primary sources this morning rather than taken on trust. Two numbers were WRONG and both were wrong in the idea's favour. (1) Berkshire's buying was $595,294,962 across 45 code-P purchases from 2026-09-17 to 2026-10-02, not '$329,017,222 on 2026-10-02' - that single day was $135,689,427. Class A VWAP $79.38 (0.875x book) over 7,387,444 shares, 28,438,045 Class A held after, zero sales, and Berkshire files as a >10% beneficial owner, so this is a large holder adding rather than a new position. (2) Equity of $21,558,959k and 237,756k weighted diluted shares confirmed against SEC XBRL, so 0.92x book stands. Three fixes applied: the catalyst field claimed 'the rate cycle turning' as the driver, which no evidence item supports and which this morning's own market_context contradicts, so it now reads as the balance-sheet-and-book-value case it actually is; and key_risk gained the fact its invalidation nearly missed - total equity has already fallen two consecutive quarters (21.879 -> 21.621 -> 21.559bn) and per-share book is rising only because the share count is shrinking faster, so the anchor is buyback-dependent.\n\nKEPT DKS at conviction 4 (now rank 2). Its insider cluster is the best-verified item in the report: 9 buys, 7 distinct insiders, $5,588,664, all of it AFTER the 2026-08-25 cut at 128.695-136.39, four of the nine within two sessions of the crash, checked against the Form 4 XML today. The 'against 2 sales of $4,581,338' framing was misleading in the idea's disfavour: both sales are CEO Hobart on 2026-05-28 at ~228, three months before the cut, and there has been no insider sale since - so they are not offsetting. Conviction 4 survives on three genuine confirmations (dated_catalyst, positioning, technical_level); the valuation_anchor establishes there is NO cheapness and counter_argument_answered re-uses the thesis's own segment data, so neither counts, and both are now labelled as such. Added the risk nobody listed: NVDA on 11/17 and all of retail week 11/18-11/20 print BEFORE DKS on 11/23, so the group can take the stop out before the thesis is tested. Also flagged that the 170.00 target is not deliverable by the 11/23 print and belongs to the 15-session horizon.\n\nTwo ideas remain, and they are not correlated: one sub-book homebuilder accumulated over quarters with no stop, one post-dislocation retailer with a 2.03 ATR stop into a dated print.",
+  "market_context": {
+    "summary": "A term-premium shock, not a growth scare. The 10-year sits at 4.98% with the 2-year at 4.73% (10y-2y +0.24, fed funds effective 3.88%), and the long bond is breaking down: TLT fell 1.48% to 79.72 and closed at the low of the day. Gold unwound hard alongside higher real rates, GLD -2.82% to 354.89 after a -17.36% decline from its high. Equities fell less than either: SPY -0.35% to 757.12, QQQ -0.32% to 688.17, IWM -1.64% to 278.44 \u2014 small caps lagging large by ~1.3pp and QQQ outperforming IWM, which is what rules out a growth scare. One sector rose and it was energy (XLE +1.51%, USO +3.25%), but XLE at 64.33 is below its own SMA50 of 64.979, so that is a counter-trend bounce into resistance from underneath rather than a breakout. Anything long duration \u2014 TLT, gold, small caps, utilities \u2014 is fighting this tape. The window ahead is dense: NVDA Q3 on 11/17 is the single largest event in it, with retail week 11/18-11/20 behind it. All prices are the 2026-11-12 close, the freshest honest equity price at a 06:00 ET start.",
+    "regime": "mixed",
+    "levels": {
+      "us10y": 4.98,
+      "us2y": 4.73,
+      "fed_funds_eff": 3.88,
+      "spy": 757.12,
+      "qqq": 688.17,
+      "iwm": 278.44,
+      "tlt": 79.72,
+      "gld": 354.89,
+      "xle": 64.33,
+      "btc": 69252,
+      "eth": 1951,
+      "sol": 80.39,
+      "vix": null,
+      "dxy": null,
+      "wti": null,
+      "note": "SPY/QQQ/IWM/TLT/GLD/XLE are ETF proxies: every Yahoo-backed index, futures and macro endpoint returned HTTP 429 this run, so ^GSPC/^VIX/^DXY/^TNX and WTI are unavailable rather than estimated. Rates are FRED (DGS10, 2026-11-10); crypto is CoinGecko spot. Equity and ETF levels are the 2026-11-12 close."
+    },
+    "econ_calendar": [
+      {
+        "event": "ACM Q4 FY2026 earnings (after close) \u2014 open position, decision required today",
+        "datetime_et": "2026-11-16T16:20",
+        "importance": "high"
+      },
+      {
+        "event": "NVDA Q3 earnings (after close) \u2014 the largest event of the window; NVDA was stopped out 2026-11-10 and is deliberately not re-pitched into the print",
+        "datetime_et": "2026-11-17T16:20",
+        "importance": "high"
+      },
+      {
+        "event": "DIS and HD Q earnings (before open)",
+        "datetime_et": "2026-11-17T08:30",
+        "importance": "medium"
+      },
+      {
+        "event": "Retail week: LOW, TGT, TJX, ROST, GAP, BBWI",
+        "datetime_et": "2026-11-18T08:30",
+        "importance": "high"
+      },
+      {
+        "event": "PANW Q earnings (after close)",
+        "datetime_et": "2026-11-18T16:20",
+        "importance": "medium"
+      },
+      {
+        "event": "VVV Q4 FY2026 earnings (before open) \u2014 recommendation rank 2",
+        "datetime_et": "2026-11-19T08:00",
+        "importance": "high",
+        "consensus": "EPS 0.4253, rev $567M"
+      },
+      {
+        "event": "WMT Q earnings (before open); INTU and KEYS (after close)",
+        "datetime_et": "2026-11-19T08:30",
+        "importance": "high"
+      },
+      {
+        "event": "BJ Q earnings",
+        "datetime_et": "2026-11-20T08:30",
+        "importance": "low"
+      },
+      {
+        "event": "DKS Q3 FY2026 earnings (before open) \u2014 recommendation rank 3",
+        "datetime_et": "2026-11-23T08:30",
+        "importance": "high",
+        "consensus": "rev est $5.1B"
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "symbol": "LEN",
+      "instrument": "Lennar Corp Class A",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "long_term",
+      "conviction": 5,
+      "unit": "usd",
+      "last_price": 83.58,
+      "last_price_asof": "2026-11-12T21:00:00+00:00",
+      "price_source": "nasdaq",
+      "entry": {
+        "ideal": 79.5,
+        "zone_low": 77.0,
+        "zone_high": 84.0,
+        "order_type": "limit",
+        "condition": "Accumulate in thirds across 84.00 / 81.00 / 77.50 \u2014 the same 77.12-81.90 band Berkshire bought in on 2026-10-02, which brackets SMA50 at 81.5992 and the 2026-10-20/21 shelf lows of 76.48 and 77.20. Add a fourth third only under 72.00 (the 120-day low is 71.78)."
+      },
+      "exit": {
+        "target": 108.5,
+        "target_2": 122.0,
+        "scale_plan": "No scaling out before 1.20x book. Reassess the multiple each quarter against the reported equity per share rather than against the chart; book value compounds, so the dollar target rises with it."
+      },
+      "stop": null,
+      "bear_case_price": 68.0,
+      "risk_reward": 2.5217,
+      "win_probability": 0.45,
+      "position_size_pct": 4,
+      "risk_tier": "high_conviction",
+      "requires_margin": false,
+      "avg_dollar_volume": 384269414,
+      "catalyst": {
+        "event": "A sub-book homebuilder with 12.7% net debt to capital waiting out a 4.98% 10-year. The driver is a balance sheet that can be bored for two years while book value per share compounds, bought at 0.92x that book - NOT a call on the rate cycle turning, which nothing in the evidence supports and which this morning's term-premium shock is pushing the other way. Berkshire Hathaway, already a >10% holder, added $595,294,962 on the open market into 2026-10-02 at a 0.875x Class A VWAP.",
+        "datetime_et": null,
+        "action": "Accumulate in thirds at 84.00 / 81.00 / 77.50 over the next two quarters. There is no need to rush and no event to front-run; a Q4 print in December that misses again is an opportunity to buy the third tranche, not a reason to stop.",
+        "wait": false
+      },
+      "thesis": "Lennar trades at 0.92x its own reported book value and Berkshire Hathaway bought $595,294,962 of it on the open market across 2026-09-17 to 2026-10-02 at 76.39-81.96, a Class A VWAP of $79.38, which is 0.875x. The Q3 FY2026 release I read gives stockholders equity of $21,558,959 thousand on 237,756 thousand weighted diluted shares \u2014 $90.68 of book per share \u2014 against net homebuilding debt of $3,147,136 thousand, just 12.7% of total capital, $1.15bn of homebuilding cash and only $650m drawn on a $3.1bn revolver. That is a balance sheet built to be bored for two years, which is the only thing a 4.98% 10-year actually requires of it. The de-rating is real and so is its cause: new orders fell to 20,879 homes from 23,004 a year earlier, -9.2%. What is not justified is paying less than liquidation-adjusted equity for the second-largest US homebuilder while it still earns a 15.8% gross margin on every house it does sell.",
+      "key_risk": "Four consecutive quarters have MISSED consensus (-9.2%, -1.1%, -3.9%, -13.7%) and orders are shrinking, so book value is not guaranteed to compound \u2014 a homebuilder that takes land impairments destroys the exact anchor this thesis rests on. INVALIDATION, and it is not a price move: stockholders equity per share declines in two consecutive quarters, or homebuilding gross margin on home sales prints below 14.0% (it was 15.8% in Q3 FY2026). Either would mean the book I am paying 0.92x for is being written down rather than waited out, and the position should be closed regardless of price. Note also that I am recommending CLOSING BCC today out of the same housing complex; the distinction is deliberate and is in the counter_argument. RED TEAM ADDITION, and it is the thing the invalidation as written nearly misses: total stockholders' equity has ALREADY declined two consecutive quarters - $21,879,376k (2026-02-28) to $21,620,638k (05-31) to $21,558,959k (08-31). Book value PER SHARE is still rising (89.51 / 89.80 / 90.68) only because the share count is falling faster (244,438k / 240,776k / 237,756k weighted diluted). So the invalidation written above is not triggered, but the anchor is compounding on buybacks rather than on retained earnings: if the repurchase slows while equity keeps eroding, per-share book stalls and the only reason to own this at 0.92x goes with it. Watch the share count alongside the equity line, not instead of it.",
+      "counter_argument": "The strongest case against is that every housing asset is the same bet and I am closing one today: BCC goes out at a new 120-day low out of the same end-market. The distinction is the balance sheet and what each company owns. BCC sells commodity OSB and plywood at a spot price it does not set, has no book-value floor to buy below, and shows deteriorating analyst revisions, a -7.7% miss and zero insider buying; LEN owns a land bank carried at cost with 12.7% net leverage and has the largest open-market buyer in American finance under it at 0.85x book. The second objection is better: Berkshire is early as often as it is right, bought six weeks ago, and is barely above water at 83.58 \u2014 which is precisely why the entry is an accumulation in thirds down to 77.50 rather than a single purchase at the market, and why the invalidation is written on book value rather than on the share price.",
+      "evidence": [
+        {
+          "kind": "primary_document",
+          "detail": "Read the Q3 FY2026 8-K earnings release (quarter ended 2026-08-31): total stockholders equity $21,558,959k, weighted avg diluted shares 237,756k (= $90.68 book/share), homebuilding gross margin on home sales 15.8%, new orders 20,879 homes vs 23,004 prior year, deliveries 20,840 vs 21,584, EPS $1.19 ($1.23 adj), homebuilding cash $1,150,115k, net homebuilding debt $3,147,136k = 12.7% of total capital, $650m drawn on a $3.1bn revolver. RED TEAM VERIFICATION: stockholders' equity attributable to parent of $21,558,959k at 2026-08-31 and weighted average diluted shares of 237,756k for the quarter both confirmed against the SEC XBRL company-concept API, not the press release alone.",
+          "source": "https://www.sec.gov/Archives/edgar/data/0000920760/000162828026062287/ex991-2026831x8kq3.htm"
+        },
+        {
+          "kind": "positioning",
+          "detail": "RE-VERIFIED BY RED TEAM from the Form 4 XML, and the original figure was understated: BERKSHIRE HATHAWAY INC (filing as a >10% beneficial owner, co-reported with BUFFETT WARREN E) made 45 open-market purchases (code P) totalling $595,294,962 across 2026-09-17 to 2026-10-02, in four Form 4s filed 2026-09-21, 09-25, 09-30 and 10-05. Class A: 7,387,444 shares for $586,445,915 at a VWAP of $79.38 (0.875x book) in a $76.39-81.96 range, leaving 28,438,045 Class A shares held after the last purchase; Class B was an immaterial 114,832 shares. Zero sales. Single blocks of 842,753sh @80.04 and 342,553sh @79.03 on 2026-10-02 confirmed as cited. The report's '$329,017,222 on 2026-10-02' was wrong on both the amount and the date: 2026-10-02 alone was $135,689,427. Against the most bearish sell-side configuration screened today: 7.1% bullish and deteriorating, 2 strong buy / 0 buy / 11 hold / 13 sell / 2 strong sell.",
+          "source": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000920760&type=4"
+        },
+        {
+          "kind": "valuation_anchor",
+          "detail": "Book value per share = $21,558,959k equity / 237,756k shares = $90.68, from the filing above. At 83.58 that is 0.92x book; Berkshire paid 0.85-0.90x. Target 108.50 = 1.197x book \u2014 a mid-cycle homebuilder multiple, not a boom one, and conservative because it is 1.20x TODAY book while equity compounds over the hold. Bear case 68.00 = 0.75x book, a housing-recession multiple struck BELOW where Berkshire bought.",
+          "source": "https://www.sec.gov/Archives/edgar/data/0000920760/000162828026062287/ex991-2026831x8kq3.htm"
+        },
+        {
+          "kind": "technical_level",
+          "detail": "The 83.58 close sits on SMA50 81.5992 after a -12.2% five-session pullback from the 95.22 high of 2026-11-05. Accumulation levels are the 2026-10-20 low 76.48 and 2026-10-21 low 77.20 \u2014 the shelf the October advance launched from \u2014 not round numbers. ATR14 3.887 (4.65%).",
+          "source": "https://www.nasdaq.com/market-activity/stocks/len/historical"
+        }
+      ],
+      "sources": [
+        "https://www.sec.gov/Archives/edgar/data/0000920760/000162828026062287/ex991-2026831x8kq3.htm",
+        "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000920760&type=4",
+        "https://www.nasdaq.com/market-activity/stocks/len/historical",
+        "https://www.fool.com/earnings/call-transcripts/2026/09/17/lennar-len-q3-2026-earnings-call-transcript/"
+      ],
+      "rank": 1,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.52,
+        "claimed_risk_reward": 2.5217,
+        "breakeven_probability": 0.284,
+        "stated_win_probability": 0.45,
+        "expectancy_r": 0.584,
+        "claimed_edge": 0.166,
+        "stop_atr_multiple": null,
+        "live_price": 83.58,
+        "live_price_asof": "2026-11-12T21:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 889.7,
+        "bid": 83.63,
+        "ask": 84.27,
+        "spread_pct": 0.762,
+        "atr14": 3.887,
+        "checked_at_et": "2026-11-13T06:49:50-05:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.52:1 clears the 2.5:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 79.5 is -4.9% from live 83.58"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "long-term idea, no dated event expected"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "long-term target is valuation-anchored, not ATR-bound"
+          },
+          {
+            "check": "stop_distance",
+            "status": "pass",
+            "detail": "long-term downside is a bear case, not a stop \u2014 no ATR floor applies"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "45% claimed vs 28% break-even at 2.52:1 \u2014 expectancy +0.58R"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-11-12T21:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "pass",
+            "detail": "bid/ask spread 0.76%; the round trip costs 2% of the target move"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 5 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "4% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 5 rests on 4 independent kinds: positioning, primary_document, technical_level, valuation_anchor"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "2 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "DKS",
+      "instrument": "DICKS Sporting Goods Inc",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 4,
+      "unit": "usd",
+      "last_price": 145.66,
+      "last_price_asof": "2026-11-12T21:00:00+00:00",
+      "price_source": "nasdaq",
+      "entry": {
+        "ideal": 144.5,
+        "zone_low": 143.0,
+        "zone_high": 146.5,
+        "order_type": "limit",
+        "condition": "Buy into the rising SMA20 at 143.82, which has held on 2026-10-21 (low 140.42), 2026-11-02 (low 142.00) and 2026-11-06 (low 138.50). Do NOT chase above the 150.35 high of 2026-11-10."
+      },
+      "exit": {
+        "target": 170.0,
+        "target_2": 182.0,
+        "scale_plan": "Trim a third into the 2026-11-23 print; the balance runs to 170.00. REPLACES the earlier capture of DKS this run, which anchored the valuation on trailing rather than guided EPS."
+      },
+      "stop": 132.25,
+      "risk_reward": 2.0816,
+      "win_probability": 0.4,
+      "position_size_pct": 2.5,
+      "risk_tier": "standard",
+      "requires_margin": false,
+      "avg_dollar_volume": 333513332,
+      "catalyst": {
+        "event": "Q3 FY2026 earnings 2026-11-23, confirmed on the fetched finnhub calendar \u2014 the second print since the 2026-08-25 guidance cut, and the first since seven insiders bought",
+        "datetime_et": "2026-11-23T08:30",
+        "action": "Accumulate in the 143.00-146.50 zone before the print; trim a third into it",
+        "wait": false
+      },
+      "thesis": "On 2026-08-25 DKS fell 30.7% in a day (179.33 to 124.31), its worst session on record, when FY2026 adjusted EPS guidance was cut to $11-12 from $13.50-14.50. The cut was not the core business: the DICKS banner comped +4.9% while the acquired Foot Locker unit comped -3.6% and swung from a guided $110-150m operating PROFIT to a guided $40-80m operating LOSS. That is a fixable inventory and promotion problem inside an acquisition, not a broken retailer, and management has reiterated $100-125m of cost synergies. Seven distinct insiders then bought $5.59m on the open market at 129.75-136.39 in September with no offsetting cluster of sales, and the tape has begun to agree: +7.97pp against SPY over one month after -25.4pp over three, now above a rising SMA20 143.82 and SMA50 137.43 with the 2026-11-12 pullback coming on the lightest volume of twenty sessions.",
+      "key_risk": "The last two quarters MISSED (-7.1% on 2026-09-30, -1.0% on 2026-06-30) and a third miss on 2026-11-23 \u2014 or any further cut to the $11-12 range \u2014 takes the stock through the 135.02/135.29 twin lows. The stop at 132.25 is 2.03 ATR away on a name with a 4.13% daily range and a demonstrated capacity to fall 30% in one session, so it will be gapped through, not touched: the real risk on this idea is the full 12.25 and possibly more, and 2.5% is sized for that. The thesis also rests on secondary coverage of the August guidance cut rather than on a filing I read. RED TEAM ADDITION - the risk nobody listed is that the sector gets repriced before this prints. DKS reports 2026-11-23, but NVDA lands 11/17 and the whole of retail week (LOW, TGT, TJX, ROST, GAP, BBWI) lands 11/18-11/20, all of it ahead of DKS. A soft read from TGT or ROST takes the group down and the 132.25 stop out before this thesis is ever tested on its own numbers - the one way to lose here while being right. Note also that the 170.00 target is NOT deliverable by the 11/23 print, which falls inside the unchanged $11-12 guide: it needs the 8/25 gap to begin filling once the trough is believed, so the relevant clock is the 15-session horizon, not the 6 sessions to the catalyst.",
+      "counter_argument": "The strongest case against is that the multiple never actually compressed, so there is no cheapness to collect. That is correct and it is the right way to read it: 179.33 before the cut was 12.81x the old $14.00 EPS midpoint, and 145.66 today is 12.67x the new $11.50 midpoint \u2014 the entire 40% drawdown is the earnings cut, not a de-rating. So this cannot be a multiple re-rating trade and is not pitched as one; it is a bet that $11-12 is the trough. The second objection is the sell side, which is capitulating rather than accumulating: bullish share 61.3% to 53.1%, holds 11 to 13, two outright sells \u2014 the weakest configuration of any name screened today.",
+      "evidence": [
+        {
+          "kind": "dated_catalyst",
+          "detail": "Q3 earnings 2026-11-23 on the finnhub earnings calendar fetched this run (revenue estimate $5.1bn); seven sessions out, inside the horizon",
+          "source": "https://finnhub.io/docs/api/earnings-calendar"
+        },
+        {
+          "kind": "positioning",
+          "detail": "RE-VERIFIED BY RED TEAM from the Form 4 XML, and the 'against 2 sales' framing understated it: 9 open-market buys (code P) by 7 DISTINCT insiders totalling $5,588,664, every one of them AFTER the 2026-08-25 guidance cut (2026-08-26 to 09-30, at 128.695-136.39) - Colombo 5,000@128.72 (8/26) and 1,100@129.00 (8/27) and 913@133.19 (9/01), Eddy 4,000@128.695 (8/26), Barrenechea 17,000@130.72 (8/27), Mathrani 1,550@128.892 (8/26), Gupta (CFO) 7,707@129.75 (9/22), Fitzgerald 1,860@131.67 (9/23), Barnes 3,665@136.39 (9/30). Four of the nine landed within two sessions of the 30.7% crash. The two sales are NOT offsetting activity: both are CEO Hobart on 2026-05-28 at 227.69 and 228.34, three months BEFORE the cut and 57% above today's price, and there has been no insider sale since. Relative strength has turned: +7.97pp vs SPY over 1 month after -25.4pp over 3 months.",
+          "source": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=DKS&type=4"
+        },
+        {
+          "kind": "technical_level",
+          "detail": "Stop 132.25 sits below the twin swing lows 135.02 (2026-10-28) and 135.29 (2026-11-03) and below SMA50 137.4262 \u2014 12.25 of risk, 2.03x ATR14 of 6.0204. Entry 144.50 is the rising SMA20 143.82. The 2026-11-12 pullback to 145.66 came on 1,139,082 shares, the lightest of the last twenty sessions.",
+          "source": "https://www.nasdaq.com/market-activity/stocks/dks/historical"
+        },
+        {
+          "kind": "valuation_anchor",
+          "detail": "FY2026 adjusted EPS guided to $11-12, cut from $13.50-14.50 on 2026-08-25. At 145.66 that is 12.67x the $11.50 midpoint; 179.33 before the cut was 12.81x the $14.00 old midpoint \u2014 so the multiple is UNCHANGED and the drawdown is entirely the EPS cut. Target 170.00 = 12.6x a recovery to the old $13.50, i.e. the same multiple on restored earnings rather than any re-rating. RED TEAM CAVEAT: this anchor establishes that there is no valuation cushion, so it is not a confirmation of the long - it is the reason the idea cannot be pitched as a re-rating. Of the five evidence kinds listed, three are genuine independent confirmations (dated_catalyst, positioning, technical_level); this one is neutral and counter_argument_answered is an argument built on the same Foot Locker segment data already in the thesis. Three verified kinds is what conviction 4 requires, which is why the score stands rather than being lowered.",
+          "source": "https://finance.yahoo.com/markets/stocks/articles/dks-cuts-2026-profit-outlook-155500380.html"
+        },
+        {
+          "kind": "counter_argument_answered",
+          "detail": "The bear case is that the de-rating is correct. Answered with the segment split rather than assertion: the DICKS banner comped +4.9% in Q2 FY2026 while Foot Locker pro forma comps fell 3.6%, and the guidance cut is attributable to Foot Locker swinging from a guided $110-150m operating profit to a guided $40-80m operating loss. UBS kept a Buy and attributed the problem to excess legacy footwear inventory and promotions \u2014 a working-capital issue with a clearing date, not a loss of the franchise. Management reiterated $100-125m of acquisition cost synergies.",
+          "source": "https://www.fool.com/investing/2026/08/25/dicks-sporting-goods-core-business-grows-49-but-foot-locker-losses-and-weak-guidance-send-shares-tumbling/"
+        }
+      ],
+      "sources": [
+        "https://finnhub.io/docs/api/earnings-calendar",
+        "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=DKS&type=4",
+        "https://www.nasdaq.com/market-activity/stocks/dks/historical",
+        "https://finance.yahoo.com/markets/stocks/articles/dks-cuts-2026-profit-outlook-155500380.html",
+        "https://www.fool.com/investing/2026/08/25/dicks-sporting-goods-core-business-grows-49-but-foot-locker-losses-and-weak-guidance-send-shares-tumbling/"
+      ],
+      "rank": 2,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.08,
+        "claimed_risk_reward": 2.0816,
+        "breakeven_probability": 0.325,
+        "stated_win_probability": 0.4,
+        "expectancy_r": 0.232,
+        "claimed_edge": 0.075,
+        "stop_atr_multiple": 2.03,
+        "live_price": 145.66,
+        "live_price_asof": "2026-11-12T21:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 889.7,
+        "bid": 145.7,
+        "ask": 146.84,
+        "spread_pct": 0.779,
+        "atr14": 6.0204,
+        "checked_at_et": "2026-11-13T06:49:53-05:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.08:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 144.5 is -0.8% from live 145.66"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-11-23 is ahead of us"
+          },
+          {
+            "check": "earnings_date",
+            "status": "pass",
+            "detail": "earnings date 2026-11-23 confirmed against the calendar"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 4.24 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "stop_distance",
+            "status": "warn",
+            "detail": "stop is 2.03 ATR from entry \u2014 clears the 2.0 ATR floor for a swing stock but sits under the 2.5 ATR level where stop-outs have clustered"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "40% claimed vs 32% break-even at 2.08:1 \u2014 expectancy +0.23R"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-11-12T21:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "pass",
+            "detail": "bid/ask spread 0.78%; the round trip costs 4% of the target move"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 4 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "2.5% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 4 rests on 5 independent kinds: counter_argument_answered, dated_catalyst, positioning, technical_level, valuation_anchor"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "2 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    }
+  ],
+  "watchlist": [
+    {
+      "symbol": "ACM",
+      "instrument": "AECOM",
+      "note": "RED TEAM OVERRIDE - this was rank 4 as a 'trim half and hold the rest'. It is now CLOSE AT MARKET TODAY, in full, before Monday's after-close print. The reason is the report's own arithmetic used consistently: forward reward-to-risk from 70.11 is 0.83:1 (7.11 to the 77.22 target against 8.61 to the 61.50 stop). This same report orders HII closed for a forward 1.07:1. ACM's is worse. At the idea's own stated 42% win probability the break-even hit rate for 0.83:1 is 54.6%, so the half it proposed to hold is NEGATIVE expectancy - about -2.0 points per share. The validation block's 2.0:1 and +0.26R are computed from the sunk 66.74 fill, which is not a decision-relevant number for a hold: the entry is paid and only the forward distances matter. Everything else points the same way - an after-close binary on 2026-11-16, price 12.2% above SMA50, the 2026-11-12 bar reversing from a 73.20 high to a 70.11 close on rising volume, a 134% miss already in this management's record, and sell-side bullish share falling 83.3% to 76.5%. Take the +5.0%. Separately, conviction was raised from the position's stored 3 to 4 on a position being REDUCED, with no new evidence offered for the upgrade.",
+      "demoted_from_rank": 4,
+      "demotion_reason": "Forward reward-to-risk 0.83:1 from the live price is negative expectancy at the stated 42% win rate, and worse than the 1.07:1 this report closes HII for; held into an after-close print four sessions out. Closed at market rather than trimmed."
+    },
+    {
+      "symbol": "VVV",
+      "instrument": "Valvoline Inc",
+      "note": "RED TEAM CUT from rank 2 - not on the 41.99% spread flag, which is a pre-market placeholder quote (bid 28.35 / ask 43.42 straddling a 34.83 close) and not a tradeable spread. Cut on substance, three reasons. (1) The evidence does not speak to the trade. This is an earnings bet four sessions out, and the idea's own counter_argument concedes the insider cluster 'is evidence about value at 32, not about the November quarter' - the buys are from 2026-05-14 to 08-12 at 31.80-33.20, three to six months stale and 4-9% below the 34.50 entry. Strip that and what is left is a chart and an earnings date, and an earnings date is this idea's primary risk, not a confirmation of it. No primary document was read, which key_risk admits. (2) The shelf the entry is built on was being sold in the last bar. 2026-11-12 opened 35.90 at its high and closed 34.83 near its low, -2.98%, on 3,008,522 shares - above the 20-session average, not the quiet hold the thesis describes. 'Held seven sessions without giving the breakout back' is true of the lows and false of that bar. (3) The correlation test. VVV and DKS were one position in two tickers: both long consumer discretionary, both earnings bets inside seven sessions, both 2.5% size, both ~2.1:1 with a stop_distance warning just over the 2.0 ATR floor, both resting on an insider cluster bought well below the entry, neither with a filing read. DKS keeps the slot because its cluster is seven buyers and $5.59m placed AFTER a 30.7% dislocation and verified today against the Form 4 XML, where VVV's is four buyers and $501k placed before anything happened. VVV also needs the further move: 4.61 ATR to target against DKS's 4.24, with no valuation cushion under it at 11.8% above SMA50. BECOMES ACTIONABLE AGAIN after the 2026-11-19 print, on the numbers rather than ahead of them - a beat that holds the 34.41 shelf and a 10-Q worth reading would make this a better idea than it is this morning.",
+      "demoted_from_rank": 2,
+      "demotion_reason": "Evidence does not support the horizon traded: an earnings bet four sessions out whose only non-chart evidence is a 3-6 month stale insider cluster the idea itself says is not about this quarter, with no filing read. Weakest of the VVV/DKS consumer-discretionary earnings pair."
+    },
+    {
+      "symbol": "SMMT",
+      "instrument": "Summit Therapeutics",
+      "note": "NOT a watchlist idea \u2014 an open position to CLOSE AT MARKET today. 15.075, -11.8% from the 17.10 fill; the 14.40 stop is 0.50 ATR away so the position is a bet on the next tick, and the 2026-11-04 8-K registered an undisclosed amount of new equity. Do not widen the stop.",
+      "trigger": "Close at the open. Not re-pitched lower: no evidence the drop is finished and the offering size is undisclosed."
+    },
+    {
+      "symbol": "HII",
+      "instrument": "Huntington Ingalls Industries",
+      "note": "NOT a watchlist idea \u2014 an open position to CLOSE AT MARKET today, or at minimum trim half with a 279.00 stop on the remainder. 308.33, +17.7% from the 262.00 fill, carrying no stop after 30 days, forward reward-to-risk 1.07:1 against a 339.76 target that sits above the 334.53 120-day high.",
+      "trigger": "Close at the open. Taking +17.7% beats holding a 1.07:1."
+    },
+    {
+      "symbol": "BCC",
+      "instrument": "Boise Cascade",
+      "note": "NOT a watchlist idea \u2014 an open position to CLOSE AT MARKET today. 67.92, -11.2% from the 76.50 fill, no stop, and a new 120-day low. Invalidation was already called met on 2026-11-11 and one more session produced a lower low.",
+      "trigger": "Close at the open. Deliberately NOT the same bet as today's LEN long \u2014 BCC sells commodity OSB at a spot price it does not set and has no book-value floor to buy below."
+    },
+    {
+      "symbol": "TLT",
+      "instrument": "iShares 20+ Year Treasury Bond ETF",
+      "note": "DATA INTEGRITY, not an idea: the 80.30 limit published 2026-11-04 was touched on 2026-11-12 (80.81 high / 79.72 low) and the tracker does not show it as filled. It should read open at 80.30, now -0.7%. ATR14 0.7575 leaves no stop that is both meaningful and survivable.",
+      "trigger": "Mark as an open position; treat as small duration exposure with 76.43 as the invalidation."
+    },
+    {
+      "symbol": "KMX",
+      "instrument": "CarMax",
+      "note": "The beat record nobody believes, and the only near-miss of the day. Held off the report rather than stretched into a long_term idea it cannot support: 15.8x trailing EPS of 3.32 is not a valuation anchor, and its 5-distinct-insider cluster is five months stale.",
+      "trigger": "Reclaim SMA50 at 55.53 and hold it."
+    },
+    {
+      "symbol": "XLV",
+      "instrument": "Health Care Select Sector SPDR",
+      "note": "Published 2026-11-09 at a 184.00 limit; level unchanged and still live: 187.83, 2.1% above the limit, -0.59% on the day. Nothing in the thesis changed.",
+      "trigger": "The 184.00 pullback limit stands."
+    },
+    {
+      "symbol": "ADM",
+      "instrument": "Archer-Daniels-Midland",
+      "note": "Published 2026-11-11, level unchanged: 70.97, 3.2% above the 68.80 limit, and the 2026-11-12 low was 70.51.",
+      "trigger": "The 68.80 limit stands."
+    },
+    {
+      "symbol": "GLD",
+      "instrument": "SPDR Gold Shares",
+      "note": "WITHDRAWN (published 2026-10-25 short @406.77). Directionally right and unfillable: GLD is 354.89, 12.8% below the entry, which is 6.8 ATR above the market. Re-shorting would mean selling a close that WAS the 120-day low after a -17.36% decline.",
+      "trigger": "No new gold idea. Remove the stale level."
+    },
+    {
+      "symbol": "CVS",
+      "instrument": "CVS Health",
+      "note": "WITHDRAWN (published 2026-11-05 buy @79.00). CVS is 89.79, 13.7% above the limit. It was stopped out 2026-11-04 and re-pitched the next day at a level the stock never revisited, and has now been published 3x in ten days \u2014 anchoring, not conviction.",
+      "trigger": "Do not publish a fourth. Remove the stale level."
+    },
+    {
+      "symbol": "HUN",
+      "instrument": "Huntsman Corp",
+      "note": "WITHDRAWN (published 2026-11-10 buy @9.00). 9.66, 7.3% above the limit; the 2026-11-11 re-pitch was already cut by the red team for claiming unchanged levels that had changed.",
+      "trigger": "Remove the stale level."
+    },
+    {
+      "symbol": "/MBTZ6",
+      "instrument": "Micro Bitcoin futures, Dec 2026",
+      "note": "WITHDRAWN (published 2026-11-09 short @74,075), direction was right. BTC spot is 69,252, -5.54% in 24h and already 6.5% below the entry. A sell-limit 7% above a falling market is not actionable, and chasing the break after -5.5% is not a trade a 2.5-ATR stop could be set on with every futures quote endpoint 429'd this run.",
+      "trigger": "Remove the stale level."
+    },
+    {
+      "symbol": "KXCPIYOY-26SEP-T3.5",
+      "instrument": "Kalshi CPI YoY Sept 2026 above 3.5%",
+      "note": "REMOVE AS RESOLVED/EXPIRED. It is a September 2026 CPI contract carried since 2026-09-30 and today is 2026-11-13; the referenced print is long past. Resolution unconfirmable because `market_data.py events` returns count 0 for every macro topic this run.",
+      "trigger": "Manual removal \u2014 do not carry as live."
+    },
+    {
+      "symbol": "BURL",
+      "instrument": "Burlington Stores",
+      "note": "REJECTED: improving revisions but still losing to its own sector \u2014 -12.37pp vs XLY over one month while XLY rose 8.04%. Four straight beats including +33.0%, -33.43% off the high, but zero insider buys against $14.4M of sales. The de-rating has not stopped.",
+      "trigger": "Insider buying, or relative strength that stops lagging XLY."
+    },
+    {
+      "symbol": "TJX",
+      "instrument": "TJX Companies",
+      "note": "REJECTED ahead of 11/18 earnings: -20.01% off the high but below SMA20, revisions deteriorating -6.8pp, zero insider buys against $27.7M sold. Same shape as BURL, same verdict.",
+      "trigger": "Reclaim SMA20 with an insider cluster behind it."
+    },
+    {
+      "symbol": "PANW",
+      "instrument": "Palo Alto Networks",
+      "note": "REJECTED ahead of 11/18 earnings: -25.37% off the high but below both SMA20 (-8.3%) and SMA50 (-12.2%), revisions deteriorating, zero insider buys against 109 sells / $67.9M, and four small beats of 2.4-7.2%. A 6.18% ATR would need a 20-point stop. No evidence the de-rating is wrong.",
+      "trigger": "Reclaim SMA50, or an insider cluster."
+    },
+    {
+      "symbol": "INTC",
+      "instrument": "Intel",
+      "note": "REJECTED \u2014 the market's largest dislocation, and the company confirmed the bear case itself.",
+      "trigger": "A thesis the company's own guidance does not contradict."
+    },
+    {
+      "symbol": "XLE",
+      "instrument": "Energy Select Sector SPDR",
+      "note": "REJECTED as a complex despite being the only sector that rose (XLE +1.51%, USO +3.25%, XOP +5.4% over four sessions). Screened properly rather than assumed: a 13-name insider sweep found not one cluster, and the structure says bounce \u2014 XLE 64.33 is BELOW SMA50 64.979 and 3.0% under SMA20, XOP below both. OPEC+ added over 2.0m bpd while the rally is a Hormuz risk premium, and a premium decays unless a barrel is actually lost.",
+      "trigger": "A lost barrel, or XLE reclaiming SMA50. The existing OXY long (+8.1%) is already the right amount of exposure to this; holding it is the position, not a reason to add a second."
+    }
+  ],
+  "validation_summary": {
+    "checked": 2,
+    "passed": 0,
+    "warned": 2,
+    "failed": 0,
+    "enforced": true
+  }
+}
