@@ -1,0 +1,430 @@
+{
+  "date": "2026-11-14",
+  "generated_at_et": "2026-11-14T06:40:29-05:00",
+  "research_minutes": 51,
+  "truncated": false,
+  "market_context": {
+    "summary": "Saturday run: US cash equities and futures are closed, so every equity price here is the Friday 2026-11-13 close \u2014 the freshest honest price, not a stale one. The regime is dispersion, not direction. SPY closed 754.37, below its 759.02 SMA20 and 764.43 SMA50 and -3.49% off its 90-day high, with ATR14 at 12.77 = 1.69% of price. Friday itself opened at the high (760.07) and sold all day to close 754.37, down only 0.36% \u2014 but underneath it was a rotation, not a selloff: XLP +1.42%, XLC +1.05%, XLE +0.98%, XLF +0.81% against XLK -2.01% and SMH -2.99%. Drawdowns off the 150-session high tell the same story: SMH -27.55%, GLD -20.78%, IWM -9.06%, SPY -3.49%, XLF -2.27%, XLP -1.12%. The mechanism is the long end, not growth: the 10y is 5.10% against an effective fed funds rate of 3.88% and unemployment of 4.1%, so this is term premium repricing, and the confirmation that it is liquidity rather than a growth scare is that equities, gold AND crypto fell together \u2014 a growth scare bids bonds and gold. Crypto is in an outright bear market: BTC $67,235 (-2.97% in 24h), and the IBIT proxy is -45.78% from its two-year high, below its 200-day, on five consecutive lower closes. Money is leaving long-duration growth for short-duration cash flow, which is the correct response to a 5.10% 10y, and both of today's new ideas sit on that side of the trade.",
+    "regime": "mixed",
+    "levels": {
+      "spy": 754.37,
+      "spx": null,
+      "ndx": null,
+      "vix": null,
+      "us10y": 5.1,
+      "us2y": 4.86,
+      "us10y_2y_spread": 0.27,
+      "fed_funds_effective": 3.88,
+      "unemployment_rate": 4.1,
+      "tlt": 79.38,
+      "gld": 355.45,
+      "btc": 67235,
+      "eth": 1907.67,
+      "sol": 75.68,
+      "dxy": null,
+      "wti": null,
+      "gold": null,
+      "note": "spx, ndx, vix, dxy, wti and spot gold are null because no source returned them this run; spy/tlt/gld are the fetched ETF closes, and no index level was derived from them."
+    },
+    "econ_calendar": [
+      {
+        "event": "AECOM (ACM) Q4 FY2026 earnings, after the close \u2014 consensus EPS 1.5938",
+        "datetime_et": "2026-11-16",
+        "importance": "high",
+        "consensus": "EPS 1.5938"
+      },
+      {
+        "event": "PDD Holdings Q3 earnings, before the open",
+        "datetime_et": "2026-11-16",
+        "importance": "medium",
+        "consensus": "revenue est $117.1B"
+      },
+      {
+        "event": "NVIDIA (NVDA) Q3 FY2027 earnings, after the close \u2014 the single largest event on the tape; reprices the whole semi complex",
+        "datetime_et": "2026-11-17",
+        "importance": "high",
+        "consensus": "revenue est $111.2B, EPS est 2.5225"
+      },
+      {
+        "event": "Home Depot (HD) earnings, before the open",
+        "datetime_et": "2026-11-17",
+        "importance": "high",
+        "consensus": "revenue est $44.1B"
+      },
+      {
+        "event": "Target (TGT), Lowe's (LOW) and TJX earnings, before the open \u2014 the core of the US consumer read",
+        "datetime_et": "2026-11-18",
+        "importance": "high",
+        "consensus": "revenue est $26.8B / $22.6B / $16.0B"
+      },
+      {
+        "event": "Walmart (WMT) earnings, before the open",
+        "datetime_et": "2026-11-19",
+        "importance": "high",
+        "consensus": "revenue est $189.1B"
+      },
+      {
+        "event": "Dick's Sporting Goods (DKS) earnings \u2014 sits behind this report's unfilled 144.50 limit",
+        "datetime_et": "2026-11-23",
+        "importance": "medium",
+        "consensus": null
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "rank": 1,
+      "instrument": "Conagra Brands Inc",
+      "symbol": "CAG",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "long_term",
+      "conviction": 4,
+      "unit": "usd",
+      "last_price": 14.73,
+      "last_price_asof": "2026-11-13T21:00:00+00:00 (Friday close; US equities shut Saturday \u2014 this is the freshest honest price, not a stale one)",
+      "entry": {
+        "ideal": 14.4,
+        "zone_low": 13.9,
+        "zone_high": 14.8,
+        "order_type": "limit",
+        "condition": "Accumulate in thirds across 13.90-14.80. First tranche at 14.40, just under the 14.4524 SMA50; add a third under 14.00 and the last under 13.50. The November low is 14.28, so the first tranche is reachable without a gap down. No tranche is urgent \u2014 this is an accumulation, not a trigger."
+      },
+      "exit": {
+        "target": 19.48,
+        "target_2": null,
+        "scale_plan": "Hold for the re-rate. Trim a third if it reaches 19.48 inside twelve months, otherwise let the dividend do the work if it survives. Supply above runs 15.54, 15.70, 16.07, 16.36, 16.73 - and then nothing at all until 19.475, the March 2026 high, because CAG collapsed through that zone inside March 2026 and has not traded there since. The target now sits AT that level rather than 0.27 past it: 19.75 was in air only February 2026 ever reached.",
+        "time_stop": "2027-11-14"
+      },
+      "stop": null,
+      "bear_case_price": 12.4,
+      "risk_reward": 2.54,
+      "win_probability": 0.42,
+      "position_size_pct": 4,
+      "requires_margin": false,
+      "risk_tier": "high_conviction",
+      "market_cap_usd": null,
+      "avg_dollar_volume": 161355557,
+      "price_source": "finnhub quote + Nasdaq daily bars via scripts/market_data.py",
+      "catalyst": {
+        "event": "A trough packaged-food multiple re-rating as the profit erosion the Street has priced fails to arrive. Not a dated event \u2014 the driver is the 8.56x multiple itself, in the sector currently leading the tape. The next quarterly print lands 2026-12-17 per the fetched calendar, inside the accumulation window but not the reason for the trade.",
+        "datetime_et": null,
+        "action": "Accumulate in thirds across 13.90-14.80 over the next two quarters; add on any macro-driven flush under 13.50. Nothing to wait for and nothing to front-run \u2014 but size the first tranche so the 2026-12-17 earnings print is not carried on a full position.",
+        "wait": false
+      },
+      "thesis": "Conagra trades at 8.56x trailing ADJUSTED EPS (GAAP trailing EPS is -3.98; see the valuation anchor) \u2014 14.73 against 1.72 of trailing earnings, being the 0.41, 0.47, 0.39 and 0.45 it actually reported in the four quarters to 2026-09-30 \u2014 and the Street has capitulated on it: 0 strong buy, 1 buy, 14 hold, 8 sell and 2 strong sell, a 4.0% bullish share and ten sell ratings against one buy. Three of those four quarters beat and the most recent beat by 43.9% (0.41 against a 0.285 estimate), so the earnings erosion those ten sell ratings price is forecast, not observed. An insider bought 35,000 shares on the open market at 14.5895 on 2026-07-17 \u2014 $510,632, against zero insider sales in six months \u2014 and the stock is 14.73, so the position is still available at his price. Target 19.48 is 11.3x the same trailing 1.72 and sits at the 19.475 March 2026 high where supply resumes, rather than past it: (19.48 - 14.40) / (14.40 - 12.40) = 5.08 / 2.00 = 2.54, still clearing the 2.5 long-term floor - which is the point of pulling it in. The idea did not need the stretch.",
+      "key_risk": "The ten sell ratings are not stupid. The bear case is structural \u2014 GLP-1 drugs reducing centre-store food volumes and private label taking shelf share, against a balance sheet with real leverage \u2014 and a dividend cut is how this thesis breaks fastest, because much of the holder base owns it for the yield. The 12.40 bear case is 8.5x an EPS eroded 15% to 1.46 and sits below both observed lows, 12.53 (June 2026) and 12.88 (October); a dividend cut would take it through that. RED TEAM: the dividend risk is now quantified rather than named. The declared annual dividend is 1.4012 - 89.5% of the 1.72 adjusted EPS this entire thesis is built on, a 9.55% trailing yield on 14.73, against an indicated forward yield of 4.91%, i.e. the fetched data itself implies the trailing rate is not expected to continue. Total debt to equity is 1.21x. So a cut is not the tail risk here, it is close to what the yield is already quoting. The trade does not require the dividend to survive - the thesis is the multiple - but anyone sizing this as an income position is taking a different risk than the one argued above.",
+      "counter_argument": "The strongest case against is that 8.56x is not cheap but correct \u2014 the market pays a low multiple for an earnings stream it expects to shrink, and a value trap looks exactly like this. What answers it is the direction of the actual prints rather than an argument: three of the last four quarters beat and the latest beat by 43.9%. What does NOT answer it is the analyst split, which has been frozen at 0/1/14/8/2 for four straight months \u2014 that is stale sentiment, not improving sentiment, and it is not counted as a tailwind here. RED TEAM: the beat argument is thinner than it reads. The 43.9% beat is measured against a consensus cut to 0.285 from the 0.4619 standing a quarter earlier, and the other two beats are 1.8% and 2.1% - in line, not beats in any economic sense. So the record is one beat against a slashed bar plus three in-line prints, which is consistent with erosion being modelled ahead of time, not with erosion failing to arrive. The 15-month tape argues the same way: 29.46 in November 2024 to 14.73 now, every rally lower - 20.32 February, 19.48 March, 16.74 August, 15.54 November - so 'basing and turning up into the 200-day' is a base inside a two-year 50% decline. None of that kills the idea, and the insider, the multiple and XLP leadership all stand. It is why this is a conviction 4 and not a 5.",
+      "evidence": [
+        {
+          "kind": "valuation_anchor",
+          "detail": "8.56x trailing EPS: 14.73 over 1.72 of trailing four-quarter EPS (0.41 + 0.47 + 0.39 + 0.45, the reported actuals). Target 19.48 = 11.3x that same 1.72, cut by the red team from 19.75/11.5x to the level where supply resumes. Bear case 12.40 = 8.5x a 15%-eroded 1.46. Sector corroboration from the same screen: TAP 8.39x, GIS 9.98x, CPB 10.49x, STZ 12.00x, SJM 13.75x, HRL 15.45x, KVUE 16.23x \u2014 CAG is the cheapest but one and the only one of them where an insider acted. RED TEAM: GAAP trailing EPS is -3.9794 (finnhub epsTTM), so 8.56x is an adjusted-earnings multiple throughout - as is the whole peer screen, consistently - and the trailing year was a GAAP loss. Stated because a valuation thesis whose single load-bearing number is a multiple must say which earnings it divides by.",
+          "source": "https://finnhub.io/api/v1/stock/earnings?symbol=CAG"
+        },
+        {
+          "kind": "positioning",
+          "detail": "Insider John P. Brase bought 35,000 shares on the open market at 14.5895 on 2026-07-17 ($510,632), with zero insider sales in the six-month window, and the price verifies against that day's range. Separately the Street is 4.0% bullish: 0 strong buy / 1 buy / 14 hold / 8 sell / 2 strong sell. Sector is the tape leader \u2014 XLP +6.54% over one month against SPY -2.26%, outperforming on 1m, 3m and 6m.",
+          "source": "https://finnhub.io/api/v1/stock/insider-transactions?symbol=CAG"
+        },
+        {
+          "kind": "technical_level",
+          "detail": "14.73 sits above the SMA20 of 14.6825 and the SMA50 of 14.4524 and below the SMA200 of 15.1614 \u2014 basing and turning up into the 200-day. Verified on 15 months of bars via market_data._load_bars, not the 20-bar window: February 2026 high 20.32, June 2026 low 12.53, October low 12.88, November low 14.28. Resistance 15.54 / 15.70 / 16.07 / 16.36 / 16.73, then a vacuum to 19.48. ATR14 0.4977 = 3.38% of price.",
+          "source": "https://www.nasdaq.com/market-activity/stocks/cag/historical"
+        },
+        {
+          "kind": "counter_argument_answered",
+          "detail": "Value-trap objection answered with the prints rather than assertion: 3 of the last 4 quarters beat and 2026-09-30 beat by 43.9% (0.41 vs 0.285 estimate), so the forecast earnings erosion behind the ten sell ratings has not shown up in reported results. RED TEAM: weakened - the 0.285 estimate it beat had itself been cut from 0.4619, so this answers the value-trap objection only partially. Counted as one kind of evidence, not as a settled argument.",
+          "source": "https://finnhub.io/api/v1/stock/recommendation?symbol=CAG"
+        }
+      ],
+      "sources": [
+        "https://finnhub.io/api/v1/stock/earnings?symbol=CAG",
+        "https://finnhub.io/api/v1/stock/insider-transactions?symbol=CAG",
+        "https://finnhub.io/api/v1/stock/recommendation?symbol=CAG",
+        "https://www.nasdaq.com/market-activity/stocks/cag/historical",
+        "https://www.sec.gov/Archives/edgar/data/23217/000110465926112354/tmb-20260830x10q.htm",
+        "https://finnhub.io/api/v1/stock/metric?symbol=CAG&metric=all"
+      ],
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.54,
+        "claimed_risk_reward": 2.54,
+        "breakeven_probability": 0.282,
+        "stated_win_probability": 0.42,
+        "expectancy_r": 0.487,
+        "claimed_edge": 0.138,
+        "stop_atr_multiple": null,
+        "live_price": 14.73,
+        "live_price_asof": "2026-11-13T21:00:00+00:00",
+        "market_session": "closed",
+        "price_age_minutes": 893.5,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": 0.4977,
+        "checked_at_et": "2026-11-14T06:53:43-05:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.54:1 clears the 2.5:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 14.4 is -2.2% from live 14.73"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "long-term idea, no dated event expected"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "long-term target is valuation-anchored, not ATR-bound"
+          },
+          {
+            "check": "stop_distance",
+            "status": "pass",
+            "detail": "long-term downside is a bear case, not a stop \u2014 no ATR floor applies"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "42% claimed vs 28% break-even at 2.54:1 \u2014 expectancy +0.49R"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is closed; last price 2026-11-13T21:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "no bid/ask available (normal outside regular hours)"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 4 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "4% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 4 rests on 4 independent kinds: counter_argument_answered, positioning, technical_level, valuation_anchor"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "3 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    }
+  ],
+  "watchlist": [
+    {
+      "symbol": "BCC",
+      "note": "NOT a watchlist idea \u2014 an open position to CLOSE AT MARKET at the Monday 2026-11-16 open, in full. Boise Cascade, filled 2026-08-18 at 76.50 with NO STOP, Friday close 67.39 = -11.9%. This repeats the 2026-11-13 red team's call at 67.92; the price is lower and one more negative has landed, so the instruction stands rather than being re-litigated. Six fetched reasons, none of them price alone: (1) Friday's 66.85 low IS the 120-session range low, on five consecutive lower closes (72.57, 70.42, 69.52, 67.92, 67.39), -23.8% off the 88.43 range high; (2) earnings inflected \u2014 2026-09-30 actual 1.04 vs a 1.1269 estimate, -7.7%, the first miss after +47.2%, +18.3% and +30.8%; (3) revisions deteriorating, bullish share 54.5%, -9.1 points over four months; (4) zero open-market insider buys in six months against 3 sells totalling $665,841; (5) the thesis input is moving the wrong way \u2014 a building-products long needs lower long rates and the 10y is 5.10% with fed funds at 3.88%; (6) the 110.00 target is +63% from here and was never a defended valuation. Installing a stop now at the 2.0 ATR floor would sit at 60.32 on a 3.5338 ATR14 \u2014 another -10.5% of permission to lose on a thesis with nothing left supporting it, which is why this is a close and not a stop. A full exit has no entry/target/stop triple and therefore no reward-to-risk, so it cannot be a recommendation.",
+      "instrument": "Boise Cascade Co",
+      "trigger": "Market order at the 2026-11-16 open. No limit, no scaling."
+    },
+    {
+      "symbol": "SMMT",
+      "note": "NOT a watchlist idea and NOT an instruction \u2014 a realised loss to book. Summit Therapeutics, filled 2026-10-27 at 17.10 with a 14.40 stop; the stop was breached intraday on Friday 2026-11-13 (bar: open 15.20, high 15.20, low 14.06, close 14.15). It is out at approximately -17.3%. This was not a noise stop-out: ATR14 is 1.3369 = 9.45% of price and the 2.70 stop distance was 2.02 ATR, i.e. it cleared the floor. The thesis was simply wrong \u2014 17.84 (11-09) to 17.83, 16.64, 15.075, 14.15, a -20.7% four-session collapse with no bounce, -25.9% off the 19.09 high of the last 120 sessions. DO NOT re-pitch: nothing in the move looks like a level being defended, and the 2026-11-13 report had already called for a close at 15.075. A stop that has already triggered is a fact, not an instruction.",
+      "instrument": "Summit Therapeutics Inc"
+    },
+    {
+      "symbol": "HII",
+      "note": "NOT a watchlist idea \u2014 an open position to HOLD with a 279.00 stop INSTALLED at the Monday 2026-11-16 open. Huntington Ingalls, filled 2026-10-12 at 262.00 with NO STOP, target 339.76, Friday close 306.24 = +16.9%, the largest unprotected gain in the book. The stop turns the worst case into +6.5% instead of 'whatever happens'. Why 279.00 and not higher: ATR14 is 13.6432, so the 2.0 ATR swing floor measured from 306.24 is 278.96, and 279.00 also sits just under the 280.52 SMA50 \u2014 a level, not a round number. Anything tighter would be the KRE mistake, buying a better-looking ratio by making the trade worse. The trend is intact: 306.24 over an SMA20 of 295.14 and an SMA50 of 280.52, +19.9% off the 255.36 low of 120 sessions. IMPORTANT: this is NOT a fresh entry at 306.24 \u2014 from the live price the reward is 33.52 against 2.0 ATR of risk at 27.24, an R:R of 1.23 against a 2.0 floor. It only looks fine measured from the 262.00 fill, and a filled entry is not amendable.",
+      "instrument": "Huntington Ingalls Industries Inc",
+      "trigger": "Place the 279.00 stop at the 2026-11-16 open and leave the position otherwise unchanged."
+    },
+    {
+      "symbol": "PFE",
+      "note": "NOT a watchlist idea \u2014 an open position to HOLD, with an invalidation condition recorded for the first time. Filled 2026-08-18 at 27.60, NO STOP, target 42.00 (+45% from Friday's 28.89, which is +4.7% on the fill). Below the 29.79 SMA20, at the 28.80 SMA50, -8.11% off the 31.44 high of 120 sessions. A 42.00 target with no stop is a long-term thesis, and config/strategy.md requires an explicit invalidation for exactly that shape; this position has run 59 days without one, the same gap that let BCC fall 11.9% unchallenged. The invalidation, recorded instead of a price stop: a dividend cut, or two consecutive quarters of declining total revenue excluding the COVID franchises. 'The price fell' is not an invalidation, and 42.00 was not re-derived today, so the target is not amended on no new information.",
+      "instrument": "Pfizer Inc"
+    },
+    {
+      "symbol": "TLT",
+      "note": "NOT a watchlist idea \u2014 an open position to HOLD with the stop UNCHANGED at 78.80, and do not add. Filled 2026-11-04 at 80.30, Friday close 79.38 = -1.1%. The stop is 0.58 away = 0.76 ATR on a 0.761 ATR14, and it will probably be hit this week: five consecutive lower closes (81.96, 80.88, 80.92, 79.72, 79.38), below the 81.0925 SMA20 and the 80.2095 SMA50, -9.58% off the 87.79 high of 150 sessions. Explicitly NOT widening the stop \u2014 the thesis is a long-end rally and the long end is at 5.10% and rising, so widening buys more time for a thesis the dominant macro force is actively refuting. Moving a stop to avoid recording a loss is worse than moving it to flatter a ratio, not better. Also not closing early: the position is -1.1% and the stop is 0.73% away, and front-running your own stop to save 70bp is not a decision worth making. The real lesson is upstream \u2014 a 1.97 ATR stop on a 0.96%-ATR instrument gave a multi-week macro thesis about two days of room, and that was too tight at publication.",
+      "instrument": "iShares 20+ Year Treasury Bond ETF"
+    },
+    {
+      "symbol": "OXY",
+      "note": "NOT a watchlist idea \u2014 an open position to HOLD unchanged and trim at 62.00 as published. Filled 2026-09-24 at 54.00, stop 50.15, target 62.00, Friday close 58.75 = +8.8%, 5.5% from target. New information: OXY has rolled over BELOW both moving averages \u2014 60.50 SMA20 and 59.76 SMA50 \u2014 and sits -9.55% off its 64.955 high, so the 62.00 target is now above both and reaching it requires reclaiming the averages first, which was not true when it was set. The stop at 50.15 is 4.67 ATR away on a 1.842 ATR14, unusually loose, so there is no stop decision to make. Not extending the target: raising a target on a winner trading below its own moving averages is wishful, and the ratio was already earned.",
+      "instrument": "Occidental Petroleum Corp"
+    },
+    {
+      "symbol": "PYPL",
+      "note": "NOT a watchlist idea \u2014 an open position to HOLD unchanged, with one thing worth saying plainly. Filled 2026-10-21 at 56.50, stop 54.10, target 62.70, Friday close 59.28 = +4.9%. Above the 57.91 SMA20 and the 55.61 SMA50, -5.5% off the 62.73 high of 120 sessions. The 62.70 target and the 62.73 range high are the same level: the position cannot reach its target without breaking a 120-session high, so expect a stall at 62.00-62.70 and take the trim there rather than hoping through it.",
+      "instrument": "PayPal Holdings Inc"
+    },
+    {
+      "symbol": "KHC",
+      "note": "NOT a watchlist idea \u2014 an open position to HOLD, no change. Filled 2026-09-20 at 23.00, stop 21.20, target 28.09, Friday close 25.11 = +9.2%. Above the 24.43 SMA20 and the 23.88 SMA50; the 28.09 target is the 120-session high. Working as published. Note for correlation: KHC and today's new CAG are the SAME driver \u2014 a de-rated packaged-food multiple re-rating \u2014 which uses two of the permitted three slots. Do not add a third staple; TAP at 8.39x and GIS at 9.98x were both examined and both lack the insider confirmation that is the whole reason CAG was picked over them.",
+      "instrument": "The Kraft Heinz Co"
+    },
+    {
+      "symbol": "XLU",
+      "note": "NOT a watchlist idea \u2014 an open position to HOLD, no change, with a stated headwind. Filled 2026-11-02 at 43.30, stop 41.80 (3.74 ATR on a 0.599 ATR14), target 46.60 which is the 46.625 range high, Friday close 44.04 = +1.7%. Above both moving averages. The headwind: utilities are the most rate-sensitive thing in the book and the 10y is at 5.10% and rising. Along with TLT and BCC-until-closed, this is part of a book that is net long duration into a repricing long end \u2014 TFC, published today, is the first position pointing the other way.",
+      "instrument": "Utilities Select Sector SPDR Fund"
+    },
+    {
+      "symbol": "UNP",
+      "note": "NOT a watchlist idea \u2014 an open position to HOLD, no change. Filled 2026-10-15 at 288.60, stop 277.40, target 315.99, Friday close 302.44 = +4.8%. Inside its published levels with nothing dated inside the horizon and nothing new today.",
+      "instrument": "Union Pacific Corp"
+    },
+    {
+      "symbol": "ABT",
+      "note": "NOT a watchlist idea \u2014 an open position to HOLD, no change. Filled 2026-10-16 at 103.00, stop 97.00, target 117.34, Friday close 108.52 = +5.4%. Inside its published levels, nothing new today.",
+      "instrument": "Abbott Laboratories"
+    },
+    {
+      "symbol": "RTX",
+      "note": "NOT a watchlist idea \u2014 an open position to HOLD, no change. Filled 2026-11-02 at 199.00, stop 186.00, target 226.50, Friday close 198.58 = -0.2%. Inside its published levels, nothing new today.",
+      "instrument": "RTX Corp"
+    },
+    {
+      "symbol": "AAL",
+      "note": "NOT a watchlist idea \u2014 an open SHORT to HOLD, no change. Shorted 2026-10-03 at 13.35, stop 14.40, target 10.60, Friday close 13.17 = +1.3% in favour. Inside its published levels, nothing new today.",
+      "instrument": "American Airlines Group Inc"
+    },
+    {
+      "symbol": "ONON",
+      "note": "NOT a watchlist idea \u2014 an open position to HOLD, no change. Filled 2026-11-03 at 34.20, stop 30.69, target 41.41, Friday close 33.63 = -1.7%. Inside its published levels, nothing new today. Seven positions were reviewed and left alone rather than re-pitched to fill a report.",
+      "instrument": "On Holding AG"
+    },
+    {
+      "symbol": "/MBTZ6",
+      "note": "STAND DOWN \u2014 cancel the resting order. Short published 2026-11-09 at 74,075; BTC is $67,235, i.e. 9.2% BELOW the entry, so it never filled and now sits 10% above the market. The direction was right and the entry was unreachable \u2014 the pullback-entry failure mode inverted \u2014 and the fix is not a lower entry. Re-striking it at a fillable level fails the floors: entry 68,500, stop 74,500 just above the IBIT 42.0-42.7 shelf of 11-09 to 11-11 (risk 6,000 = 2.56 ATR, clearing the 2.5 crypto floor), target 58,200 mapped from the two-year IBIT low of 32.84 at the 1,772 ratio, gives R:R 1.72 against a 2.0 floor. Clearing 2.0 needs a target below the two-year low; entering higher at 70,000 shrinks the stop to 1.91 ATR and fails the stop floor instead. A 2.5 ATR stop on a 3.5%-ATR instrument costs 8.75%, so the target has to be 17.5% away \u2014 the geometry is the problem, and an idea that only clears the floor with a tight stop has failed the floor.",
+      "instrument": "Bitcoin futures (Dec 2026 micro)"
+    },
+    {
+      "symbol": "GLD",
+      "note": "STAYS WITHDRAWN (short published 2026-10-25 at 406.77), as the 2026-11-13 red team ruled. GLD is 355.45, 12.6% below the limit \u2014 directionally right and unfillable. Also examined and rejected as a LONG at the low: 355.45 is -20.78% off the 448.70 high and only +0.72% above the 352.91 low of 150 sessions, below the 368.78 SMA20 and the 380.91 SMA50. The geometry works and the thesis does not \u2014 gold fell in the same liquidation as crypto and semis while the 10y went to 5.10%, and rising real rates are a gold headwind, so 'it is at support' is the entire case, which is a trigger and not a catalyst. Flipping long 52 points below a short that was right, on no new information, is whipsaw.",
+      "instrument": "SPDR Gold Shares"
+    },
+    {
+      "symbol": "CVS",
+      "note": "STAYS WITHDRAWN (buy published 2026-11-05 at 79.00). CVS is 89.35, 13.1% above the limit. Withdrawn by the 2026-11-13 red team and unchanged.",
+      "instrument": "CVS Health Corp"
+    },
+    {
+      "symbol": "HUN",
+      "note": "STAYS WITHDRAWN (buy published 2026-11-10 at 9.00). HUN is 9.53, 5.9% above the limit. Withdrawn by the 2026-11-13 red team and unchanged.",
+      "instrument": "Huntsman Corp"
+    },
+    {
+      "symbol": "KXCPIYOY-26SEP-T3.5",
+      "note": "REMOVE AS RESOLVED/EXPIRED, and it could not be re-priced this run either. A September 2026 CPI contract carried as a NO at 18 since 2026-09-30; today is 2026-11-14, so the event has long resolved. The Kalshi feed returned no economic markets at all this run (0 markets for Bitcoin, CPI, inflation, interest rate and S&P), so no mark is available, only the arithmetic fact that the contract's period has passed.",
+      "instrument": "Kalshi CPI YoY above 3.5% (Sep 2026)"
+    },
+    {
+      "symbol": "XLV",
+      "note": "Pending buy at 184.00, published 2026-11-09, level UNCHANGED and still plausibly reachable: 188.85, 2.64% above the limit \u2014 the closest of the nine unfilled orders. Nothing re-derived today.",
+      "instrument": "Health Care Select Sector SPDR Fund",
+      "trigger": "A pullback to the 184.00 limit."
+    },
+    {
+      "symbol": "DKS",
+      "note": "Pending buy at 144.50, published 2026-11-13, level unchanged: 149.70, 3.60% above the limit. NEW INFORMATION on an old level \u2014 DKS now reports on 2026-11-23, confirmed on the fetched calendar, which sits behind the limit. Filling it late therefore buys an unhedged binary rather than the setup that was published, and that is a reason to let it expire rather than to chase it.",
+      "instrument": "Dick's Sporting Goods Inc"
+    },
+    {
+      "symbol": "LEN",
+      "note": "Pending buy at 79.50, published 2026-11-13 as that day's rank 1 long-term idea, level unchanged: 83.61, 5.17% above the limit. Still reachable, nothing re-derived today.",
+      "instrument": "Lennar Corp"
+    },
+    {
+      "symbol": "ADM",
+      "note": "Pending buy at 68.80, published 2026-11-11, level unchanged: 72.90, 5.96% above the limit and moving away \u2014 ADM rose 2.72% on Friday. The weakest of the live limits.",
+      "instrument": "Archer-Daniels-Midland Co"
+    },
+    {
+      "symbol": "INTC",
+      "note": "REJECTED, not deferred \u2014 and the reason changed during the run. The signal is the best available anywhere: CEO Lip-Bu Tan bought 150,000 shares at 64.7312 on 2026-11-02 (~$9.71M) and 105,263 at 95.00 on 2026-08-11 (~$10.0M), $19.7M of open-market stock, and INTC closed Friday at 59.66 \u2014 7.8% below his November purchase and 37% below his August one, the only cluster found today that has not paid. Four of four quarters beat, with EPS rising 0.15 to 0.29 to 0.42 to 0.52. Against it: -58.09% off the 142.35 high, below all three moving averages, analysts 29.1% bullish and deteriorating -5.4 points. The arithmetic fails on real structure now that 15 months of bars were pulled: a three-month shelf at 81.79/85.14/85.72, the 98.33 June low above it, the 51.51 November low below, and then a structural VOID to the 40.63 March low because April 2026 gapped 45 to 95 and never traded back. ATR14 is 6.2185 = 10.42% of price, so 2.0 ATR is 47.22 and there is no level there at all. Best honest construction \u2014 entry 59.66, stop 40.00 under the March low (3.16 ATR), target 98.33 \u2014 gives R:R 1.97, failing 2.0, and it only clears on a 55.00 entry, a 7.8% discount off the market, which is the exact pathology that stranded eight of nine unfilled longs. The decisive objection is not arithmetic: INTC opened October at 118.73 and printed 63.20 inside the same month, a ~47% collapse, and the run could not establish why. Also unresolved: an S-3ASR with a 424B5 and an FWP on 2026-08-10 to 08-12 is an equity offering, and Tan's 95.00 purchase on 08-11 sits inside that window, which changes what that buy means.",
+      "instrument": "Intel Corp",
+      "trigger": "Read the 2026-10-29 8-K and the 10-Q for the period ended 2026-09-26 and establish what happened in October. Only then is a level worth setting."
+    },
+    {
+      "symbol": "MP",
+      "note": "REJECTED on verified structure \u2014 the closest call of the day, and settled rather than deferred. The insider signal is the strongest and freshest in the whole 50-name screen and, unlike HBAN's, the prices verify against the tape: Weisenburger 55,000 at 36.00, Rosenthal 17,000 at 36.27 and 10,000 at 37.20 (2026-11-10) plus 5,000 at 37.30 (11-11), Corbett 2,776 at 35.68 and 2,700 at 36.84 (11-10) \u2014 three distinct people, roughly $3.34M, inside two sessions, every print inside its own day's range. 38.76, -49.53% off the 76.80 high, above the 38.168 SMA20. Rejected because no target can be anchored: on 15 months of monthly bars the levels above are 48.65, then 52.42/53.57/53.89, and from 38.76 with the stop at 31.50 under the all-window low (risk 7.26 = 2.69 ATR) the ratios are 1.36 to 48.65, 1.88 to 52.42 and 2.07 to 53.89 at +39%. Two independent reasons not to stretch: trailing EPS is 0.15 (0.04, -0.01, 0.03, 0.09), a 258x multiple with no valuation anchor at all; and the Street is 93.1% bullish and DETERIORATING (-3.3pp) on a stock down 50%, which is downgrade risk still ahead of it. Evidence would have been two kinds = conviction 3, this report's documented worst bucket (2 of 27 closed reached target, avg -6.9%, n=43 \u2014 past the noise threshold).",
+      "instrument": "MP Materials Corp",
+      "trigger": "A close above the 43.93 SMA50 with the 33.82 low of 2026-11-06 intact."
+    },
+    {
+      "symbol": "SIRI",
+      "note": "REJECTED on geometry, and the reason is now exact. Berkshire Hathaway bought 924,281 shares across three sessions \u2014 743,965 at 28.8913 on 2026-10-30, 66,968 at 29.466 on 11-02, 113,348 at 30.233 on 11-03, about $26.9M, filed on Form 4 as a >10% holder \u2014 and analyst revisions improved by +31.0 points to 50.0% bullish, the largest revision swing in anything screened today. Trailing EPS 2.44 gives 13.05x at 31.85; only 1 of 4 quarters beat. The problem: on 15 months of bars the 33.76 November high is the highest print in the whole window, so there is no resistance above the market to target \u2014 the market IS the high. Stop 28.70 under the 28.85 July low is 3.0 ATR, risk 3.15, and a 33.70 target gives R:R 0.59. Berkshire bought into a range the stock has since left; buying 9% above Berkshire is not Berkshire's trade.",
+      "instrument": "Sirius XM Holdings Inc",
+      "trigger": "A pullback into 29.80-30.25 \u2014 back to Berkshire's own range and the 29.7973 SMA20 \u2014 which makes risk about 1.5 against a 33.70 target and the ratio work honestly."
+    },
+    {
+      "symbol": "CE",
+      "note": "WATCHLIST \u2014 a real insider cluster at the wrong moment. 51.41 = 9.15x trailing EPS of 5.62, -27.28% off the 70.70 high. Five open-market buys by three people (Kyrish, Duffie, Murray) on 2026-08-11/14 at 45.51-45.60 with zero sells \u2014 the biggest cluster by headcount in the entire screen. Not captured for three reasons: the dollars are small ($230,062 across three people), only 2 of 4 quarters beat, and it has run +10.6% in five sessions (46.49 on 11-06 to 51.41) straight into its 51.7302 SMA200, which is resistance \u2014 an entry there buys into the level that has to break. The construction would be stop 46.00 under the 46.116 low of 11-06 (2.49 ATR) against a ~62.50 target at 11.1x, R:R 2.03, which is too close to the floor to publish on a name that is also extended.",
+      "instrument": "Celanese Corp",
+      "trigger": "A pullback to the 48.75 SMA20 with the 46.116 low of 2026-11-06 holding, or a daily close clearly above the 51.73 SMA200."
+    },
+    {
+      "symbol": "XLP",
+      "note": "REJECTED on arithmetic despite being the correct read \u2014 recorded because it is a structural finding, not a near miss. XLP is genuinely the tape leader: +6.54% over one month against SPY -2.26% (+8.80pp), +11.43pp over three, +7.05pp over six, outperforming on all three, and it closed Friday AT its high of 92.35, only -1.12% below the 93.40 high of 150 sessions. Entry 92.60, ATR14 1.6429, stop 88.70 under the 88.87 low of 2026-11-06 = 2.37 ATR, clearing the 1.8 ETF floor, risk 3.90. For a 2.0 ratio the target must be 100.40 \u2014 4.75 ATR and +8.7% on a 1.78%-ATR defensive basket whose entire six-month range is 80.10 to 93.40, which cannot be defended. At a defensible 97.00 the ratio is 1.13. The lesson: a low-ATR leader near its range high cannot clear a 2.0 floor with an honest 1.8+ ATR stop, because the stop costs 4.2% and the target would have to be 8.4% away. The floors screen for buying near the BOTTOM of a wide range, not for buying leadership \u2014 which is why the hunt was redirected to de-rated names near support, and how CAG was found.",
+      "instrument": "Consumer Staples Select Sector SPDR Fund"
+    },
+    {
+      "symbol": "HBAN",
+      "note": "REJECTED \u2014 and a DATA INTEGRITY warning worth keeping. Huntington Bancshares 15.82 = 10.48x trailing EPS of 1.51, -18.68% off its 19.455 high and only +6.75% off its 14.82 low; the geometry is better than TFC's and the screen flagged 7 open-market buys by 2 buyers, $854,780. The insider prices do not survive a look: Rollins is recorded buying at 19.43 AND at 14.855 on the same day, 2026-10-26, and at 20.30, 20.35, 16.46 and 16.50 across 2026-06-02 to 06-04 \u2014 but the 200-session range is 14.82 to 19.455, so a 20.35 print does not exist and a 19.43/14.855 same-day pair cannot both be the common stock. Those records are mixing transaction or security types under code P. Only Torgow's 12,700 at 15.735 on 2026-10-27 is consistent with the tape \u2014 about $199,800 by one person, a different fact from '$854,780 by two'. Rejected on fundamentals as well, so the data problem is not what decides it: only 2 of 4 quarters beat and revisions are deteriorating (-1.6pp to 70.4% bullish) where TFC's improve on 4 of 4 beats. The reusable mechanism: an insider dollar total is a sum of records, and a sum is worth nothing until the individual prices are checked against the price history. CAG's 14.5895 and TFC's 48.362/48.3608 both check out.",
+      "instrument": "Huntington Bancshares Inc"
+    },
+    {
+      "symbol": "SMH",
+      "note": "NO POSITION, either direction, and that is the active decision. SMH 486.75, -27.55% off its 671.83 high, below the 518.14 SMA20 and the 559.80 SMA50, -2.99% on Friday \u2014 a genuine bear market in the AI complex. No short: a 1.8 ATR stop on a 27.235 ATR is 49.0, so a 2.0 ratio needs a 388.75 target, below the 435.15 low of 150 sessions and indefensible. No long either, because NVDA reports 2026-11-17 after the close (verified on the fetched calendar, EPS est 2.5225) and reprices the whole complex in one print. This report already lost NVDA that way \u2014 bought 11-07, stopped 11-10. The honest action on semis this week is to carry no position into Tuesday's close.",
+      "instrument": "VanEck Semiconductor ETF"
+    },
+    {
+      "symbol": "BURL",
+      "note": "REJECTED ahead of its 2026-11-23 earnings \u2014 a 4-for-4 beat record breaking down, not basing. 242.86, -35.81% off the 378.33 high, +7.06% off the 226.85 low. The attraction was real: 4 of 4 beats, the last by +33.0% (2.96 vs 2.2248), 20 of 26 analysts bullish with zero sell ratings. Rejected on three counts: it gapped from a 251.87 close to a 244.00 open on Friday and closed 242.86, the lowest close in the window, below both the 247.83 SMA20 and the 253.80 SMA50, -3.58% on the day; zero open-market insider buys against 39 sells worth $14,359,239 in six months; and a 76.9% bullish share with ZERO sell ratings on a stock down 36% is downgrade risk ahead of it, not support \u2014 revisions 'improving' by +0.9pp over four months while the stock halves is stale sentiment, so read the change. Earnings on 11-23 would make it an unhedged binary on top of all that. DATA GAP: market_data.py short BURL timed out, so short interest and days to cover are unknown.",
+      "instrument": "Burlington Stores Inc"
+    },
+    {
+      "symbol": "ELV",
+      "note": "REJECTED \u2014 the insider cluster has already paid. Elevance 429.69: Boudreaux bought 2,725 shares and Peru 1,000 on 2026-07-17 at 366.05-368.25 and the stock is 17% above that. A good company \u2014 4 of 4 beats, the last +47.8% (6.99 vs 4.7291), 67.9% bullish and improving, 14.16x trailing EPS of 30.35 \u2014 rejected purely on geometry: +56.34% off its 274.84 low, only -4.66% off its 450.69 high, above all three moving averages. A 2.0 ATR stop is 26.62, so a 2.0 ratio needs a 483.07 target, above every price in the 200-session window; as a long-term idea against a 12x bear case near 330 the ratio is under 1.0. Buying 17% above the insiders is not their trade. VFC is the same shape further gone \u2014 20.68, +66.04% off its low, insiders in at 14.73-17.167 so the stock is 25-40% above them, 2 of 4 beats, 21.3x. PLAY likewise: insiders in at 6.4999-6.775, stock 8.02, but EPS of -0.36, 0.16, -1.15, -1.22 means there is no earnings power to re-rate.",
+      "instrument": "Elevance Health Inc"
+    },
+    {
+      "symbol": "TFC",
+      "instrument": "Truist Financial Corp",
+      "note": "RED TEAM KILL (was rank 2, conviction 4). The 2.44:1 is an artifact of where the stop was put, and the report says so itself: 'a drift back to 46-45 stops this out without breaking any structure.' A stop its own author expects to be hit without the thesis breaking is not a measure of risk, so the ratio built on it is not a measure of reward-to-risk. Verified independently on 15 months of bars: the October 2026 low is 45.055 (10-01, with 45.06/45.065 again on 10-08 and 10-14) and the September low 46.165, both BELOW the 47.50 stop, and TFC traded at 45.06 one month ago. The stop's only claim to structure is the 8-session coil above it. Apply the rule the way this report applies it to everyone else: widen to 44.90 under the October low and the arithmetic is reward 6.03 against risk 5.07 = 1.19:1, break-even hit rate 1/(1+1.19) = 45.7% against the idea's own stated 40% win probability - expectancy -0.63 per share, NEGATIVE. The idea never cleared the floor; the stop placement did. Second, confirmed by validation's own catalyst_date warn: there is no dated driver inside the horizon. 'A positively-sloped curve repricing bank NIM' is a condition, not an event, and the 2027-01-16 time stop deliberately expires BEFORE the Q4 print, the one dated thing that could reprice it - so the trade is a two-month bet on a laggard closing a gap, entered at market with no discount after a +10.9% run off 45.06, on a relative-strength inflection the report itself calls 'three weeks old, not a trend.' Nothing here says TFC is a bad company: 10.86x on four beats, Michael P. Lyons buying $2.22m across 2026-09-17 and 2026-10-28, and XLF leadership are all real and all verified.",
+      "trigger": "Comes back when the structural stop and the floor can coexist in the same trade, which needs a lower entry rather than a tighter stop: entry near the 47.83/48.12 cluster with the stop at 44.90 under the October low and the 56.00 target gives 8.10 against 3.00 = 2.70:1 on an honest stop. Buy the retest, not the coil. Alternatively a dated catalyst inside the horizon, or a close above 52.26 that holds, which would retire the 2026-11-05 rejection.",
+      "demoted_from_rank": 2,
+      "demotion_reason": "Reward-to-risk 2.44:1 depends on a 47.50 stop sitting above the 45.055 October and 46.165 September lows; at the structural 44.90 stop the ratio is 1.19:1 and expectancy is negative at the idea's own 40% win probability. No dated catalyst inside the horizon and the time stop expires before the Q4 print."
+    },
+    {
+      "symbol": "ACM",
+      "instrument": "AECOM",
+      "note": "RED TEAM KILL, reaffirming the 2026-11-13 override that this report reopened (was rank 3, conviction 4). ACTION: close the position in full at the Monday 2026-11-16 open, before that day's after-close print - not trim half. Today's report concedes the prior kill in its own counter_argument and proceeds anyway with 'the softer half of that call', while the arithmetic that justified the kill got worse, not better. Forward from 70.50 the retained half is reward 6.72 to the 77.22 target against risk 9.00 to the 61.50 stop = 0.747:1; break-even hit rate 1/(1+0.747) = 57.2% against the idea's own stated 48% win probability, so expectancy is 0.48x6.72 - 0.52x9.00 = -1.45 per share, NEGATIVE. The validation block's 2.0:1 and +0.44R are computed off the sunk 66.74 fill, which is not a decision-relevant number for a hold: the entry is paid and only the forward distances matter. The report's own evidence points the same way and it says so - a -133.8% miss on 2026-06-30 (-0.50 vs 1.4809, verified), three in-line quarters around it so no positive surprise skew, bullish share deteriorating 83.3% to 76.5% (verified), the 2026-11-12 bar reversing from a 73.20 high to a 70.11 close, and Friday opening at its high of 71.06 and closing 70.50. No options-implied move is available to size the gap (yahoo-options returned 401), which argues for less exposure into a binary, not more. Finally, conviction was again raised from the position's stored 3 to 4 on a position being REDUCED, with no new evidence offered - the same unexplained upgrade flagged on 2026-11-13. SEPARATE DATA-QUALITY FINDING on the same row, which cuts the other way and is why this is a close rather than a trim: the '+5.6% open position' may not exist for anyone who followed the published order. The idea was published 2026-11-07 (a Saturday) with a 65.00-66.74 limit entry, and NO session since has traded at or below 66.74 - the lowest low is 67.17 on 2026-11-09, then 69.425, 69.41, 69.56, 69.96. The 66.74 is the 2026-11-06 close, the session BEFORE publication. The stored filled_date is 2026-11-08, a Sunday, credited through grade_position's no-bars branch in publish_sheets.py, which fills against the publication-day reference price when the market is shut. So 'ALREADY FILLED 2026-11-07 at 66.74. A filled entry is not amendable' rests on a fill no traded bar supports. Either reading kills the recommendation: if there is a position, the prior red team already correctly ordered it closed in full on the forward arithmetic above; if there is not, then this is a NEW long at 70.50 whose forward reward-to-risk is 0.747:1 into an after-close print one session away, which fails the 2.0 floor outright. Flagged for the tracker, not patched here - a code change needs a test under tests/ and is not this phase's job.",
+      "trigger": "Nothing before the 2026-11-16 after-close print. Reconsider as a fresh idea afterwards, off the post-print price with a stop under whatever low the print leaves behind, and only if the forward reward-to-risk clears 2.0 on its own.",
+      "demoted_from_rank": 3,
+      "demotion_reason": "Forward reward-to-risk from 70.50 is 0.747:1 - break-even 57.2% against a stated 48% win probability, expectancy -1.45 per share - carried into an after-close binary one session away; reaffirms the 2026-11-13 close-in-full override, which this report reopened as a trim without rebutting it. Separately, no session since publication traded at the 66.74 entry the 'filled' status rests on."
+    }
+  ],
+  "data_quality_notes": "RESEARCH WAS NOT TRUNCATED. The research phase ran 06:00-06:51 ET of a ~60-minute budget and closed with a RESEARCH COMPLETE block (three of them, each superseding the last as it found errors in its own work). candidates.jsonl holds 5 lines covering 3 unique symbols \u2014 TFC and ACM were each re-captured after a self-correction, and the last entry per symbol is what is published here.\n\nSATURDAY RUN. US cash equities and futures are closed. Every equity price in this report is the Friday 2026-11-13 close, re-fetched at synthesis and unchanged (finnhub, asof 2026-11-13T21:00:00Z, session 'closed', age 877 minutes at the time of the quote). That is a closed market, not stale data. Two practical consequences: TFC's entry is an on-open order for Monday 2026-11-16, not a live fill; and the bid/ask spread check in validation is unreliable against weekend quotes \u2014 ACM was demoted on 2026-11-12 for a 12.70% spread that was a quote artifact rather than a tradeable spread, so treat any spread flag this run with that in mind.\n\nDATE CORRECTION MADE AT SYNTHESIS. The research notes repeatedly wrote 'Monday 2026-11-17'. 2026-11-16 is the Monday; 2026-11-17 is the Tuesday. ACM's earnings date was re-verified against the fetched finnhub calendar at synthesis and returns 2026-11-16 amc, so ACM's trim is at the 2026-11-16 open \u2014 ahead of that same day's after-close print \u2014 and TFC's on-open entry is 2026-11-16. The last ACM capture said 'trim at the Monday 2026-11-17 open' while carrying a 2026-11-16 time stop, which would have put the trim AFTER the print. That is corrected here. The same calendar confirms NVDA on 2026-11-17 amc, HD 11-17, TGT/LOW/TJX 11-18, WMT 11-19 and DKS 11-23; the dates in the notes were right and only their weekday labels were wrong.\n\nSOURCES THAT FAILED, and what each cost:\n- Yahoo Finance returned HTTP 429 on every index and futures symbol (^GSPC, SPX, ES=F, NQ=F, GC=F, CL=F, ^VIX) and HTTP 401 on options. finnhub requires a paid subscription for indices, stooq 404s on ^ symbols, and there is no alphavantage key. So there is NO VIX, index, DXY, spot-gold or crude print in this report, and the market_context levels for those are null rather than estimated. No S&P level was derived from SPY 754.37 \u2014 that would be a guess with a decimal point.\n- CONSEQUENCE: no equity-index or commodity futures idea was possible at all. /MES, /MNQ, /M2K, /MGC and /MCL each need a fetched contract price to set levels and none was available. /MBT was the only Robinhood futures contract that could be priced (from CoinGecko BTC), and it failed reward-to-risk at 1.72 against a 2.0 floor.\n- Kalshi event-contract search returned 0 markets for 'Bitcoin', 'CPI', 'inflation', 'interest rate' and 'S&P', and one unrelated multi-sport parlay with null bid/ask/volume for 'Fed'. The whole event-contract lane \u2014 the one a weekend run leans on hardest \u2014 was unavailable, not skipped. The open KXCPIYOY-26SEP-T3.5 position could not be marked either.\n- yahoo-options returns HTTP 401, so NO idea in this report carries the options-implied-move check that config/strategy.md asks for at level-setting.\n- api.nasdaq.com timed out on short interest for BURL; short interest and days-to-cover are unknown for that name and were not retried elsewhere.\n- Sources that worked: finnhub quotes, earnings calendar, insider transactions and recommendations; Nasdaq daily bars; FRED; CoinGecko; the SEC EDGAR filing index.\n\nWHY THREE IDEAS, AND WHY ONE OF THEM IS NOT NEW RISK. Two are genuinely new (CAG, TFC); ACM is a position update on a fill from 2026-11-07 and is position management, not new exposure. Both weekend lanes were empty: crypto offers no long (the IBIT proxy is -45.78% from its two-year high, below its 200-day, on five consecutive lower closes, and BTC kept falling through the weekend session to $67,235) and no short that clears a floor. Eleven setups were taken to full level-setting and nine were rejected on arithmetic rather than judgement: XLP at 1.13, /MBTZ6 at 1.72, MP at 1.88 on its best defensible target, SIRI at 0.59, ELV under 1.0, INTC at 1.97, CE at 2.03 and too close to publish, plus BURL, SMH, HBAN, VFC and PLAY on the evidence. The pattern is structural: after the 2026-11-05 shock ATR is elevated everywhere, so a 2.0 ATR stop costs a lot of price \u2014 4.2% on XLP, 8.75% on BTC, 21% on INTC \u2014 and the reward-to-risk floor then demands a target twice that far. Names clear only if they sit near the BOTTOM of a wide range. The two that did clear are the two with low volatility relative to their range position: CAG at a 3.38% ATR basing above its SMA50 after a de-rating, TFC at a 2.37% ATR coiling in an eight-session shelf. 50 names were screened for open-market insider buying to get there.\n\nRATIOS, CHECKED FOR THE SIGNATURE OF FITTING. Recomputed at synthesis from the final levels, not carried from the notes: CAG (19.75-14.40)/(14.40-12.40) = 2.675 against a 2.5 long-term floor; TFC (56.00-49.97)/(49.97-47.50) = 2.441 against 2.0; ACM (77.22-66.74)/(66.74-61.50) = 2.000 against 2.0. ACM sits EXACTLY on its floor, which is the signature worth being suspicious of \u2014 so, stated plainly: its entry, target and stop are all unchanged from its 2026-11-07 publication, so the 2.00 is the ratio the trade was taken with and not a number fitted today. Nothing was nudged. Stops checked the other way too, from entry rather than from the market: ACM 5.24/2.1749 = 2.41 ATR and TFC 2.47/1.1854 = 2.08 ATR, both clearing the 2.0 swing-stock floor but both BELOW the 2.5 ATR level where this report's stop-outs have clustered. That is a real warning and it is not fixable here \u2014 widening TFC's stop to 44.90 under the October low drops the ratio to 1.19 \u2014 so it is stated rather than engineered away. CAG is long-term with no hard stop; its downside is the 12.40 bear case, which sits below both observed lows of 12.53 (June 2026) and 12.88 (October). Win probabilities against their 1/(1+R:R) break-even baselines: CAG 0.45 vs 0.272, TFC 0.40 vs 0.291, ACM 0.48 vs 0.333.\n\nTWO SELF-CORRECTIONS IN RESEARCH, BOTH CARRIED THROUGH RATHER THAN TIDIED AWAY. (1) TFC's first capture claimed the 47.50 stop sat 'under the entire October base'. It does not: on 15 months of bars the October 2026 low is 45.05 and the September low 46.16, both beneath it. The levels are unchanged because they still clear the floors, but the false description is replaced and the consequence is now in key_risk \u2014 a drift to 46-45 stops this out without breaking any 15-month structure. (2) ACM's first capture raised the stop from the published 61.50 to 64.40 to protect a +5.6% gain; from the 66.74 FILL that is 1.08 ATR, a hard breach of the 2.0 floor, and the same capture claimed a 0.32 win probability against a 0.333 break-even \u2014 negative expectancy on its own numbers. Both are reverted: the stop stays at 61.50 and the gain is protected by the trim, not by moving a line.\n\nTOOL LIMITATION THAT WEAKENED EVERY LEVEL SET BEFORE 06:45. market_data.py history returns only the last 20 bars in its `recent` field, so structure older than a month was invisible, and it produced two wrong level claims in ten minutes. Research re-pulled MP, SIRI, CAG, TFC and INTC through market_data._load_bars(sym, 400) \u2014 15 months of bars \u2014 which confirmed three rejections, confirmed CAG's levels and found the TFC error above. Any level claim in this repo sourced from `history` alone should be treated as unverified.\n\nONE FETCHED FACT ADDED AT SYNTHESIS. The earnings calendar re-run to confirm ACM's date also returns CAG reporting 2026-12-17. That is inside CAG's accumulation window and is not the reason for the trade, but it is why the action says to size the first tranche so the print is not carried on a full position. TFC has no date on the fetched calendar at all; its Q4 report is mid-January, past the 2027-01-16 time stop, so it is correctly a swing idea with no dated company catalyst \u2014 which is itself a standing WARN from validation rather than a defect.\n\nTRACK-RECORD CAVEAT ON THE TOP-RANKED IDEA. CAG is a long_term idea and this report's long_term bucket is 0/4 to target, avg -15.2% (n=9), while conviction 5 has no closed trades at all (n=2). The sample is under the ~15-closed noise threshold in both cases, so neither is a result \u2014 but the honest reading is that the best-evidenced idea today sits in the horizon this report has least demonstrated it can trade. Size accordingly. For contrast, conviction 4 is the one bucket with a positive-looking record (2/8 to target, avg -0.8%, n=17) and both of the other two ideas are 4s.\n\nTHE WATCHLIST IS LONG (32 authored entries) AND THAT IS THE POINT, NOT CLUTTER. Fifteen open positions and nine unfilled orders each need a disposition, and none of them can be a recommendation, because a close, a stop-install or a stand-down has no entry/target/stop triple and therefore no reward-to-risk. THREE OF THEM ARE ACT-AT-THE-OPEN INSTRUCTIONS ON MONEY ALREADY AT RISK: BCC close at market in full, SMMT is already out at its 14.40 stop (a realised -17.3%, a fact to book rather than an order), and HII needs a 279.00 stop installed on a +16.9% unprotected gain. The remaining entries are nine holds, one invalidation recorded for PFE, four live limits re-priced, four withdrawals and nine rejections with their arithmetic. Two of the book's three structural problems are the same one: BCC and HII were both published with no stop.\n\nCORRELATION. CAG and the open KHC position are the same driver \u2014 a de-rated packaged-food multiple re-rating \u2014 which uses two of the permitted three slots; no third staple was added, and TAP (8.39x) and GIS (9.98x) were both examined and both lack the insider confirmation that is why CAG was picked. TFC is the only financial and the only position in the book that WANTS a high long end; everything rate-sensitive currently held (TLT, XLU, and BCC until it closes) is positioned for the 10y to fall, so the book is net long duration into a 5.10% 10y and TFC is the first position pointing the other way. The retail earnings cluster \u2014 HD, LOW, TGT, TJX, ROST, GAP, WMT, BJ, KSS, BURL, all reporting between 11-17 and 11-23 \u2014 would have been one bet with ten tickers, and nothing was taken from it. That is the correlation cap working, not a coverage gap.\n\nCOVERAGE GAPS FOR THE NEXT RUN, in priority order: (1) the `history` 20-bar limitation above \u2014 use _load_bars; (2) event contracts, the entire lane, unavailable; (3) index and commodity futures, unpriceable from any source; (4) the options-implied-move check, HTTP 401; (5) what happened to INTC in October 2026 \u2014 it opened the month at 118.73 and printed 63.20 inside it, a ~47% collapse this run could not explain, and the 2026-10-29 8-K and the 10-Q for the period ended 2026-09-26 are where the answer is. No sub-$2B name is in today's three; PLAY, MP, CE and EMN were screened and none cleared.\n\nRED TEAM (phase 2c, 2026-11-14). Cut 2 of 3, kept 1, and every number below was recomputed from freshly fetched source rather than read off the report.\n- KILLED TFC (rank 2): the 2.44:1 is produced by stop placement, not by the setup. The 47.50 stop sits ABOVE the October 2026 low of 45.055 and the September low of 46.165 (verified on 15 months of bars), and the report itself concedes a drift to 46-45 stops it out 'without breaking any structure'. At the honest 44.90 stop the ratio is 1.19:1, break-even 45.7%, and expectancy is negative at the idea's own 40% win probability. No dated catalyst inside the horizon, and the time stop expires before the only event that could reprice it.\n- KILLED ACM (rank 3) and restored the 2026-11-13 instruction it had softened: CLOSE IN FULL at the Monday open, not trim half. Forward reward-to-risk from 70.50 is 0.747:1, break-even 57.2% against a stated 48% win probability, expectancy -1.45 per share, carried into a 2026-11-16 after-close print. The validation block's 2.0:1 is computed off the sunk 66.74 fill and is not decision-relevant to a hold. Conviction had again been raised 3 to 4 on a position being reduced, with no new evidence.\n- TRACKER FINDING, not a report error: ACM's position shows filled at 66.74, but no session since the 2026-11-07 publication has traded at or below it (lowest low 67.17 on 2026-11-09), and the stored filled_date 2026-11-08 is a Sunday - the fill came through grade_position's no-bars branch, which matches the publication-day reference price while the market is shut. The '+5.6% open gain' may not exist for a reader who placed the published limit. Left for a tested code change, not patched here.\n- KEPT CAG at rank 1 but DOWNGRADED conviction 5 to 4 and win probability 0.45 to 0.42, and pulled the target from 19.75 to 19.48 - the 19.475 March 2026 high where supply actually resumes, rather than 0.27 beyond it in air only February 2026 reached. Reward-to-risk falls 2.68 to 2.54 and still clears the 2.5 long-term floor, which is the test: the idea did not need the stretch. The downgrade is evidence-weighting, not a new objection - the 43.9% beat is against a consensus cut to 0.285 from 0.4619, and the other two 'beats' are 1.8% and 2.1%, so the record is one beat against a slashed bar plus three in-line prints. Newly fetched and absent from the report: GAAP trailing EPS is -3.9794, so the 8.56x is an adjusted multiple (consistently, including the peer screen) over a GAAP loss year; and the 1.4012 declared dividend is 89.5% of the 1.72 adjusted EPS the thesis divides by, a 9.55% trailing yield against a 4.91% indicated forward yield, with debt to equity at 1.21x. The multiple, the verified insider buy and XLP leadership all stand, which is why it survives.\n- NOT a reason for any cut: Saturday's unavailable bid/ask and the bot-blocked source URLs. Both are artifacts of a closed market and a 6am fetch, not defects in the ideas.\n- Correlation test passed on what remains: one idea, one sector. It was also not a factor in the cuts - CAG, TFC and ACM were staples, financials and infrastructure, three separate bets.\n- CAG's `validation` block below was stamped 06:45 ET against the old 19.75 target and has NOT been hand-edited; its 2.67 computed_risk_reward is stale by design. Phase 2d recomputes it from source.",
+  "validation_summary": {
+    "checked": 1,
+    "passed": 0,
+    "warned": 1,
+    "failed": 0,
+    "enforced": true
+  }
+}
