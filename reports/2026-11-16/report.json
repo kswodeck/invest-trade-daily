@@ -1,0 +1,379 @@
+{
+  "date": "2026-11-16",
+  "generated_at_et": "2026-11-16T06:39:26-05:00",
+  "research_minutes": 36,
+  "truncated": false,
+  "market_context": {
+    "summary": "A tightening-regime selloff in everything rate- and liquidity-sensitive, with the equity index the single odd one out. The 2-year at 4.86% sits 98bp ABOVE the 3.88% effective funds rate, which is a market pricing hikes rather than cuts, and the macro supports it: CPI +0.35% MoM (~4.3% annualised) with unemployment improving to 4.1% from 4.2%. The 10-year at 5.10% is 122bp over funds with 10y-2y steepening to +0.27 from +0.24 \u2014 the long end demanding term premium, not pricing inflation, which matters because oil is -16.7% off its 10/30 level and so a soft November CPI will not rescue a duration long. Every cross-asset reading agrees: gold -27.8% off its high and below its 20/50/200-day, bitcoin -19.6% in eleven days, crude at $89.62, TLT at new lows. SPY closed Friday at 754.37, just 0.4% off its high, and has not participated. That argues for defensive positioning, against duration, and against high-multiple or speculative length \u2014 it is not by itself a short-equity signal, and no index short is published on the strength of one distribution bar.",
+    "regime": "mixed",
+    "levels": {
+      "us10y": 5.1,
+      "us2y": 4.86,
+      "fed_funds_effective": 3.88,
+      "t10y2y": 0.27,
+      "cpi_mom_pct": 0.35,
+      "unemployment_pct": 4.1,
+      "spy": 754.37,
+      "tlt": 79.38,
+      "gld": 355.45,
+      "btc": 64644,
+      "wti": 89.62,
+      "gasoline_crack_321_nov_bbl": 36.34,
+      "gasoline_crack_321_oct_bbl": 48.64,
+      "spx": null,
+      "ndx": null,
+      "vix": null,
+      "dxy": null,
+      "gold_futures": null,
+      "note": "Index, VIX, DXY and commodity-futures levels are null because yahoo returned HTTP 429 on every one and finnhub refuses indices. Equity levels are the Friday 2026-11-13 close (US cash equities are shut at this 06:37 ET Monday pre-open). Rates and CPI are FRED, asof 2026-11-12/13."
+    },
+    "econ_calendar": [
+      {
+        "event": "ACM Q4 FY26 earnings (we hold this position; date contested \u2014 finnhub says tonight, MarketBeat estimates 11/17, no 8-K settles it)",
+        "datetime_et": "2026-11-16T16:20",
+        "importance": "high",
+        "consensus": null
+      },
+      {
+        "event": "NVDA Q3 earnings \u2014 the week's dominant single event",
+        "datetime_et": "2026-11-17T16:20",
+        "importance": "high",
+        "consensus": null
+      },
+      {
+        "event": "HD earnings (before open)",
+        "datetime_et": "2026-11-17T06:00",
+        "importance": "medium",
+        "consensus": null
+      },
+      {
+        "event": "LOW, TGT, TJX earnings (before open); PANW after close",
+        "datetime_et": "2026-11-18T06:00",
+        "importance": "high",
+        "consensus": null
+      },
+      {
+        "event": "WMT, BABA earnings (before open)",
+        "datetime_et": "2026-11-19T06:00",
+        "importance": "high",
+        "consensus": null
+      },
+      {
+        "event": "DKS earnings \u2014 we hold a pending buy at 144.50",
+        "datetime_et": "2026-11-23T06:00",
+        "importance": "medium",
+        "consensus": null
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "symbol": "VLO",
+      "instrument": "Valero Energy",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "sell_short",
+      "horizon": "swing",
+      "conviction": 2,
+      "risk_tier": "speculative",
+      "requires_margin": true,
+      "entry": {
+        "ideal": 388.0,
+        "zone_low": 386.0,
+        "zone_high": 392.0,
+        "condition": "Only on a bounce into the declining 20-day at 386.00-392.00. Do NOT chase at 379.83 \u2014 if VLO rolls over from here without tagging the zone the trade never fills, and that is the acceptable outcome. Abandon the thesis if the 3-2-1 crack stabilises above $40/bbl.",
+        "order_type": "limit"
+      },
+      "exit": {
+        "target": 296.0
+      },
+      "stop": 434.0,
+      "position_size_pct": 1.0,
+      "avg_dollar_volume": 1099000000,
+      "last_price": 379.83,
+      "last_price_asof": "2026-11-13T21:00:00+00:00",
+      "price_source": "nasdaq daily close (2026-11-16 pre-open, equities shut)",
+      "catalyst": {
+        "event": "NO DATED EVENT, stated rather than invented. The driver is 3-2-1 refining margin reverting from an extreme: $48.64/bbl in October to $36.34 in November against a 14-year November median of $19.24. VLO does not report until late January, outside this horizon.",
+        "datetime_et": null,
+        "action": "Short into the declining 20-day at 386-392 \u2014 do NOT chase at 379.83. If VLO rolls over without tagging the zone the trade never fills, which is the acceptable outcome. Weekly EIA inventory data is the read on whether the crack keeps reverting; abandon the thesis if the 3-2-1 stabilises above $40.",
+        "wait": true
+      },
+      "win_probability": 0.38,
+      "thesis": "REVISED DOWN TWICE. Research first overstated the case with the gasoline-only crack (-49.1%); the correct 3-2-1 measure is -25.3%. The red team then recomputed that measure from FRED (DGASNYH/DHOILNYH/DCOILWTICO, 2x gasoline + 1x heating oil, less WTI, monthly means) and found the published seasonality claim wrong in the thesis's favour. VERIFIED: refining margin fell from $48.64/bbl in October to $36.34 in November-to-date, -25.3%, because spot gasoline fell 16.4% while WTI fell 8.2%. CORRECTED: that is the 2nd-worst October-to-November change of the 16 since 2011, NOT 'the fastest in 15 years' \u2014 2011 fell -40.9% ($32.52 to $19.22). The honest median change is -2.8% and the mean +0.1% (published as -2.0% and +3.1%). So the compression is abnormal \u2014 top 12% of the sample \u2014 but it is not unprecedented, and the one true precedent is instructive rather than disqualifying: after November 2011 the crack kept falling to $15.65 in December before reverting to $21-28 by February 2012, which is the path this trade needs over a 15-session horizon. The claim is mean reversion toward the $19.22 November median with $17/bbl of room, not an earnings cliff. VLO rallied 9.6% off its 11/06 close of 346.45 in the same week margin compressed, and sits below a 20-day (389.70) that has crossed under its 50-day (399.97).",
+      "key_risk": "The absolute margin is still roughly 1.9x normal \u2014 $36.34 is the 2nd-highest November of the 16 since 2011, behind only 2022's $49.22 \u2014 so VLO can post a strong quarter and this short can be right about the direction of margins and still lose. ADDED BY THE RED TEAM, the two risks the published idea did not name: (1) THIS IS A COUNTER-TREND SHORT. VLO has gone from $116.09 (2025-04-30) to a $461.52 high in nineteen months, close to 4x, and at 379.83 it still trades 28.9% ABOVE its own 200-day. Mean reversion is the thesis, but the trend being faded is powerful and the name has beaten estimates three quarters running (+12.3%, +22.7%, +32.2%). (2) THE TARGET'S LEVEL JUSTIFICATION DECAYS. The published idea anchors the 296.00 target to the 200-day at 294.76, but that average is rising $1.04 a session and reaches roughly 310 by the end of a 15-session horizon \u2014 it will be above the target, not below it. The target is retained at 296.00 anyway, and is NOT moved to rescue a ratio, because a static anchor exists underneath it: VLO closed between 280 and 320 for 24 sessions from 2026-07-08 to 2026-08-10. Read the target against that shelf, not against the moving average. Also: no dated catalyst inside the horizon (VLO does not report until late January), short equity requires a Robinhood margin account, and the 2.38 ATR stop sits 11.9% away on a 5.08%-ATR instrument.",
+      "counter_argument": "Two objections; the first is answered more weakly than published, the second is not answered at all. PARTLY ANSWERED \u2014 autumn crack compression is seasonal. Recomputed across 16 years of FRED data: the Oct-to-Nov 3-2-1 change has a median of -2.8% and a mean of +0.1%, and 2026's -25.3% ranks 2nd worst of 16. The published version of this claim (-2.0% median, +3.1% mean, 'worst prior year -15.1% in 2019', 'rank 1 of 15') was wrong: 2011 fell -40.9%. The move is still abnormal rather than calendar, which is what the thesis needs, but it is a top-12% event with a worse precedent on the record, not a record. That correction is why conviction is 2 rather than 3. NOT ANSWERED \u2014 the $36.34 level is the second-highest November in 16 years against a $19.22 median, so refiners remain very profitable and estimates may not need to fall at all. That is a genuine negative, it is why size is cut to 1.0%, and it is the reason this is a reversion trade rather than a distress trade.",
+      "evidence": [
+        {
+          "kind": "technical_level",
+          "detail": "Every level re-verified against 409 sessions of Nasdaq daily closes this morning: 20-day 389.70 now BELOW the 50-day 399.97 with price 379.83 beneath both, 17.7% off the 461.52 high, ATR14 19.2982. Entry 386-392 is the declining 20-day; the 434 stop sits just above the 10/19 close of exactly 433.31 (confirmed). The 296 target is NOT anchored to the 200-day as published \u2014 that average is 294.76 but rising $1.04/session, so it reaches ~310 within the 15-session horizon and would sit above the target. It is anchored instead to real prior structure at the same place: VLO closed between 280 and 320 for 24 consecutive sessions, 2026-07-08 to 2026-08-10. The target was left at 296.00 rather than moved to fit the ratio.",
+          "source": "https://www.nasdaq.com/market-activity/stocks/vlo/historical"
+        },
+        {
+          "kind": "positioning",
+          "detail": "Analyst revisions deteriorating: bullish share 48.0%, down 5.8pp, strong-buy cut 4 to 2 over four months while holds stayed at 11 and a strong-sell persisted. The red team also closed the short-interest gap the research run flagged as unchecked (nasdaq ReadTimeout, and nasdaq serves short interest only for Nasdaq-listed names): VLO short interest is 6.93M shares, 2.49% of shares out and 2.50% of float, 2.61 days to cover, and DOWN from 9.00M the prior month. The name is lightly shorted and getting lighter, so there is little squeeze fuel working against a new short \u2014 a modest point in the trade's favour rather than the risk it could have been.",
+          "source": "https://stockanalysis.com/stocks/vlo/statistics/"
+        },
+        {
+          "kind": "counter_argument_answered",
+          "detail": "Seasonality tested on the correct 3-2-1 measure and then recomputed independently by the red team from FRED across 16 years: median Oct-to-Nov change -2.8%, mean +0.1%, and 2026's -25.3% ranks 2nd worst of 16. This CORRECTS the published claim of 'rank 1 of 15, worst prior -15.1% (2019)' \u2014 2011 fell -40.9%, from $32.52 to $19.22. The compression is therefore abnormal but not unprecedented, and the single genuine precedent supports the direction over this horizon: the 2011 crack fell further to $15.65 in December before reverting to $21-28 by February 2012. The absolute-level objection remains disclosed and unanswered.",
+          "source": "https://fred.stlouisfed.org/series/DGASNYH"
+        }
+      ],
+      "sources": [
+        "https://www.nasdaq.com/market-activity/stocks/vlo/historical",
+        "https://stockanalysis.com/stocks/vlo/statistics/",
+        "https://fred.stlouisfed.org/series/DGASNYH",
+        "https://fred.stlouisfed.org/series/DHOILNYH",
+        "https://fred.stlouisfed.org/series/DCOILWTICO",
+        "https://finnhub.io/api/v1/stock/recommendation",
+        "https://robinhood.com/us/en/support/articles/short-selling/"
+      ],
+      "rank": 1,
+      "risk_reward": 2.0,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.0,
+        "claimed_risk_reward": 2.0,
+        "breakeven_probability": 0.333,
+        "stated_win_probability": 0.38,
+        "expectancy_r": 0.14,
+        "claimed_edge": 0.047,
+        "stop_atr_multiple": 2.38,
+        "live_price": 379.83,
+        "live_price_asof": "2026-11-13T21:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 3777.8,
+        "bid": 378.0,
+        "ask": 381.0,
+        "spread_pct": 0.791,
+        "atr14": 19.2982,
+        "checked_at_et": "2026-11-16T06:58:12-05:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.0:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 388.0 is +2.2% from live 379.83"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "warn",
+            "detail": "no date given for a timed idea"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 4.77 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "stop_distance",
+            "status": "warn",
+            "detail": "stop is 2.38 ATR from entry \u2014 clears the 2.0 ATR floor for a swing stock but sits under the 2.5 ATR level where stop-outs have clustered"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "38% claimed vs 33% break-even at 2.0:1 \u2014 expectancy +0.14R"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-11-13T21:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "pass",
+            "detail": "bid/ask spread 0.79%; the round trip costs 3% of the target move"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 2 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "1.0% is within the 1% lottery-ticket ceiling for conviction 2"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 2 rests on 3 independent kinds: counter_argument_answered, positioning, technical_level"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "2 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    }
+  ],
+  "watchlist": [
+    {
+      "symbol": "BCC",
+      "instrument": "Boise Cascade",
+      "note": "NOT a watchlist idea \u2014 an open position to CLOSE AT MARKET at today's open, in full, and do not average down. Filled 2026-08-18 at 76.50, now 67.39 (-16.8%) after 89 days, and it has NEVER carried a stop. Five consecutive down sessions (72.57 > 70.42 > 69.52 > 67.92 > 67.39), -23.8% off the 150-day high of 88.43 and only 3.7% above the 150-day low of 65.00 \u2014 making new lows, not basing \u2014 below a falling 20-day (74.27) and 50-day (75.03), ATR14 3.53 (5.24% of price). The stored 110.00 target is +63% from spot, which is not a target but an anchor to the August entry price, and that anchoring is why no stop was ever set. The macro has also moved against it: a 10-year at 5.10% and steepening is a mortgage-rate regime and BCC sells wood products into housing starts. The 2026-11-14 report already ordered this closed at today's open; it is repeated because it is still open. This is the position the book's -6.2% average is made of.",
+      "trigger": "Close at market on the 2026-11-16 open."
+    },
+    {
+      "symbol": "TLT",
+      "instrument": "iShares 20+ Year Treasury Bond ETF",
+      "note": "NOT a watchlist idea \u2014 an open position to CLOSE AT MARKET at today's open. Filled 2026-11-04 at 80.30, now 79.38 (-1.1%). The thesis is falsified by this morning's own macro pull, which is the only honest reason to close a three-day-old position at a small loss: a duration long needs the long end to rally, and instead the 10-year is at 5.10% (122bp above the 3.88% funds rate) with 10y-2y steepening to +0.27 from +0.24 and CPI at +0.35% MoM. The refinement that settles it: long yields are rising WHILE the inflation impulse falls (oil -16.7% off 10/30), so the long end is demanding term premium and absorbing supply \u2014 a soft November CPI will therefore not rescue this trade. Price agrees: 81.96 > 80.88 > 80.92 > 79.72 > 79.38, below the 20-day (81.09) and 50-day (80.21), 3.9% off the 150-day low of 76.43. And the 78.80 stop is unworkable at 0.58 below spot = 0.76 ATR (ATR14 0.76), far inside the 1.8 ATR ETF floor \u2014 a coin flip on one day's noise, so waiting for it is not risk control. Take the 1.1% loss.",
+      "trigger": "Close at market on the 2026-11-16 open."
+    },
+    {
+      "symbol": "HII",
+      "instrument": "Huntington Ingalls Industries",
+      "note": "NOT a watchlist idea \u2014 an open position needing a MISSING STOP SET at 278.00 today. Filled 2026-10-12 at 262.00, now 306.24 (+16.9%) after 33 days and carrying NO stop at all: the largest unprotected gain in the book. 278.00 sits just under the rising 50-day (280.52) and is 2.07 ATR below spot (ATR14 13.64) \u2014 a real level rather than a round number, and wide enough to breathe. It would lock +6.1% against the 262.00 entry on a name 24% off its high in an uptrend. Deliberately not captured as a candidate: a stop above the filled entry makes risk negative, so entry/target/stop would compute a meaningless ratio. The 2026-11-15 report ordered a 278.50 stop and the 2026-11-14 report a 279.00 one; this is the same instruction, re-derived from today's fetched ATR, and it is still outstanding.",
+      "trigger": "Place a 278.00 stop on the open long today."
+    },
+    {
+      "symbol": "CVS",
+      "instrument": "CVS Health",
+      "note": "CANCEL the resting BUY @ 79.00 published 2026-11-05. CVS is 89.35, 13.1% ABOVE the limit \u2014 unreachable. Note the sequence, because it is the pattern worth remembering: this name stopped us out on 2026-11-04 and was re-pitched at 79.00 the next day, right at the low, then ran 13%. It now sits exactly on all three moving averages (89.55 / 89.66 / 89.17), which is a decision point and not an entry, so no new idea is pitched here."
+    },
+    {
+      "symbol": "LEN",
+      "instrument": "Lennar",
+      "note": "WITHDRAW the BUY @ 79.50 published 2026-11-13, on consistency grounds rather than on a new fact. This report closes BCC this morning because a 10-year at 5.10% and steepening is a mortgage-rate regime that breaks building products; a homebuilder long is the same bet with the same driver. LEN at 83.61 is -32.7% off its high and below its 200-day (89.92) for exactly that reason. Closing BCC on a rate thesis while buying LEN into it on the same page is not a position, it is a contradiction."
+    },
+    {
+      "symbol": "/MBTZ6",
+      "instrument": "Micro Bitcoin futures, Dec 2026",
+      "note": "WITHDRAW the SHORT @ 74,075 published 2026-11-09, and do NOT re-level it lower. BTC spot is $64,644, so the entry is 14.6% above spot and will not fill. The short was right and the move happened without us: BTC fell from 80,443 (11/05) to 64,711 (11/16), -19.6% in eleven days, accelerating into it (-3.0% on 11/13, -4.3% on 11/14, -6.1% on 11/15), and it is now only 3.1% above its 120-day low of 62,773 against an sma20 of 74,291. Re-pitching it 10,000 lower would be chasing a -20% move with a 2.5-ATR futures stop. No crypto candidate today in either direction: 3% above a 120-day low after -19.6% is neither a clean short (chasing) nor a clean long (a falling knife)."
+    },
+    {
+      "symbol": "XLV",
+      "instrument": "Health Care Select Sector SPDR",
+      "note": "Pending BUY @ 184.00 from 2026-11-09 left standing, level UNCHANGED and not re-pitched because nothing changed. XLV is 188.85, 2.6% above the limit and only -1.8% off its high, above all three MAs (183.65 / 175.05 / 160.20). The 184.00 entry sits on the rising 20-day (183.65) \u2014 genuine support rather than a reflex discount. Live."
+    },
+    {
+      "symbol": "DKS",
+      "instrument": "Dick's Sporting Goods",
+      "note": "Pending BUY @ 144.50 from 2026-11-13 left standing, level unchanged: DKS is 149.70, 3.6% above the limit, and the entry sits on the 20-day (144.09). ONE THING MUST BE SAID IF IT FILLS: DKS reports 2026-11-23, inside a swing hold, so the fill and the print can collide. Size accordingly.",
+      "trigger": "Fill at 144.50; be aware the 2026-11-23 print lands inside the hold."
+    },
+    {
+      "symbol": "HUN",
+      "instrument": "Huntsman",
+      "note": "Pending BUY @ 9.00 from 2026-11-10 left standing, level unchanged: HUN is 9.53 and the 9.00 entry is the 50-day (9.01). -40.8% off its high; $28M/day of dollar volume is thin but clears the floor, so keep it lottery-sized. Live."
+    },
+    {
+      "symbol": "CAG",
+      "instrument": "Conagra Brands",
+      "note": "Pending BUY @ 14.40 from 2026-11-14 left standing, level unchanged: CAG is 14.73 and the entry sits just under the 50-day (14.45). No new information this run in either direction. Live."
+    },
+    {
+      "symbol": "ADM",
+      "instrument": "Archer-Daniels-Midland",
+      "note": "Pending BUY @ 68.80 from 2026-11-11 \u2014 NOT withdrawn, but flagged, and it should not be re-pitched without a reason the 68.80 level holds. ADM is 72.90 and below its 20-day (74.97), 50-day (79.82) AND 200-day (76.72) \u2014 a clean downtrend, -17.9% off its high. A buy 5.6% below spot in that structure is likely to fill BECAUSE the name keeps falling, which is the pullback-entry selection effect this repo has been caught by before."
+    },
+    {
+      "symbol": "OXY",
+      "instrument": "Occidental Petroleum",
+      "note": "HOLD unchanged, trim at 62.00 as published, and an assumption is corrected on the record. I expected to find OXY had not yet priced the 12% crude decline; the fetched data says the opposite, so the warning I was about to write would have been wrong. OXY went 62.69 (11/02) to a 54.97 low (11/09) to 58.75 (11/13) \u2014 a 12% fall then a 5.3% recovery, and the 11/09 low came within $4.80 of the 50.15 stop and held. XLE did the same, five green sessions from 61.62 to 64.96 while WTI fell 90.40 to 89.62: energy equities refusing to make new lows against falling crude is a bullish divergence. For the record, OXY is the sector laggard (vs XLE: 1m -0.76%, 3m -4.29%, 6m -10.75%) \u2014 the weakest horse in a sector that just absorbed a 12% commodity shock. +8.8% at 58.75, target 5.5% away. No amendment."
+    },
+    {
+      "symbol": "AAL",
+      "instrument": "American Airlines",
+      "note": "HOLD the open SHORT, no change, and the earlier 'on notice' framing is WITHDRAWN. Shorted 2026-10-03 at 13.35, now 13.17 (+1.4%), stop 14.40 (2.0 ATR on ATR14 0.61). The cheap-fuel risk to this short was tested by the tape and rejected: the whole group spiked 11/09-11/11 as crude collapsed, then handed it all back by 11/13 \u2014 DAL 87.20 to 92.20 to 86.25 (-6.5%), UAL 112.74 to 120.56 to 109.31 (-9.3%), AAL 13.18 to 14.16 to 13.17 (-7.0%). A fuel tailwind the market refuses to pay for is not a tailwind. The stop was also tested and HELD BY 3.5 CENTS: the 11/10 intraday high was 14.365 against the 14.40 stop, and it closed back at 13.17. AAL is still above its 20-day (12.90) and 50-day (12.94), so the invalidation stands.",
+      "trigger": "Close the short if AAL closes above 13.60."
+    },
+    {
+      "symbol": "ONON",
+      "instrument": "On Holding",
+      "note": "HOLD, no amendment, and flagged as the next position to fail a stop-distance check. 33.63 against a 34.20 entry (-1.7%) after a -7.5% gap on 11/10 (37.53 to 34.70); below the 20-day (34.73) but above a rising 50-day (32.16). The 30.69 stop measured from the 34.20 entry is 3.51 = 1.99 ATR on ATR14 1.76 \u2014 it passes the 2.0 swing floor only just, and would fail if the position were re-entered at spot or if ATR expands. The 41.41 target is exactly the 150-day range high, so there is no room above it."
+    },
+    {
+      "symbol": "PFE",
+      "instrument": "Pfizer",
+      "note": "HOLD, and a REAL HOLE IN THE BOOK recorded rather than papered over. Entry 27.60, now 28.89 (+4.7%), stored target 42.00 (+45% from spot), NO stop and NO stated invalidation condition. A +45% target with no stop is a long_term claim, and config/strategy.md requires a long-term idea to carry an explicit invalidation even where a hard stop is optional; the tracker has neither. This is NOT fixable from research alone \u2014 nobody has done the work to defend a 42.00 valuation anchor or to name the development that breaks it, and inventing one to fill the field would be worse than the gap. Below its 20-day (29.79), above its 50-day (28.80), ATR14 0.80. For a later run to close."
+    },
+    {
+      "symbol": "RTX",
+      "instrument": "RTX Corp",
+      "note": "HOLD as-is, no change. 198.58 against a 199.00 entry (-0.2%), above a rising 20-day (196.56) and 50-day (192.80). The 186.00 stop is 2.26 ATR below spot (ATR14 5.57) and clears the 2.0 swing floor. No new information and no catalyst inside the window, so no amendment and no candidate."
+    },
+    {
+      "symbol": "KHC",
+      "instrument": "Kraft Heinz",
+      "note": "HOLD, no change. 25.11, +9.2% from a 23.00 entry, above both MAs; the 21.20 stop is 2.44 ATR out on ATR14 0.74."
+    },
+    {
+      "symbol": "UNP",
+      "instrument": "Union Pacific",
+      "note": "HOLD, no change. 302.44, +4.8% from a 288.60 entry, above both MAs, stop 277.40 on ATR14 6.51."
+    },
+    {
+      "symbol": "ABT",
+      "instrument": "Abbott Laboratories",
+      "note": "HOLD, no change. 108.52, +5.4% from a 103.00 entry, above both MAs, stop 97.00 on ATR14 3.03."
+    },
+    {
+      "symbol": "PYPL",
+      "instrument": "PayPal",
+      "note": "HOLD, no change. 59.28, +4.9% from a 56.50 entry, above both MAs, stop 54.10 on ATR14 1.69."
+    },
+    {
+      "symbol": "XLU",
+      "instrument": "Utilities Select Sector SPDR",
+      "note": "HOLD, no change, with a stated headwind. 44.04, +1.7% from a 43.30 entry, above both MAs, stop 41.80 on ATR14 0.60. The headwind is this morning's regime: utilities are a bond proxy and the 10-year is at 5.10% and steepening. Not enough to close a +1.7% position with a workable stop, but it is the reason this one is not added to."
+    },
+    {
+      "symbol": "LOW",
+      "instrument": "Lowe's Companies",
+      "note": "THE REAL WATCHLIST ENTRY \u2014 the best long found all morning and still not good enough to buy today. It is the ONLY name all day with IMPROVING analyst revisions (bullish share 72.5%, +4.2pp), a reliable modest beater (+3.1%, +0.9%, +0.8%, +2.1% over four quarters), -22.3% off its high at 227.73 yet back above its 20-day (213.43), 50-day (199.87) and 200-day (223.57) \u2014 a real recovery rather than a bounce \u2014 it gets the cheap-gasoline consumer tailwind, and it reports 2026-11-18 BMO. On the housing-consistency question: this is NOT the BCC/LEN trade, because BCC is wood products into new construction and LEN builds houses, both driven by the mortgage rate, whereas LOW is repair-and-remodel against the existing home stock and a 5.10% 10-year actually SUPPORTS remodel by locking owners into the homes they have. Why it is not a position: +13.9% above its 50-day two days before a binary print, insiders net sellers (0 buys, 2 sells, -$2.66M), and improving revisions is a SINGLE evidence kind \u2014 a conviction-2 case at an extended price into an earnings gap, which is the same chase XRT was rejected for. HD is the same shape but weaker (bullish 63.0%, 0 buys against 4 sells, erratic surprises) and is not watchlisted.",
+      "trigger": "Wait for the 2026-11-18 print, then buy a hold of the 20-day."
+    },
+    {
+      "symbol": "TJX",
+      "instrument": "TJX Companies",
+      "note": "REJECTED, no position in either direction, ahead of its 2026-11-18 print. It screened as the day's asymmetric candidate \u2014 -21.0% off its high at 134.37, the only name in the retail cohort below its 20-day (140.77), 50-day (136.12) and 200-day (150.46), 9.4% off its low, a quality off-price retailer that should win on consumer trade-down plus cheap gas. The evidence killed it: insiders are 0 open-market buys against 8 sells, net -$27.7M; revisions are deteriorating (bullish 77.8%, -6.8pp, strong-buy cut 11 to 8); and the decline is orderly distribution rather than a flush \u2014 146.70 (10/23) to 134.37 (11/13), -8.4% in three weeks of lower highs and lower lows on RISING volume (9.0M Friday against a 4-6M norm), including a 10.0M-share outside-down reversal on 11/05. Not a short either: -21% off the high with a two-day earnings binary is a coin flip, not an edge."
+    },
+    {
+      "symbol": "XRT",
+      "instrument": "SPDR S&P Retail ETF",
+      "note": "REJECTED along with XLY \u2014 the thesis is real and already in the price. Retail gasoline at $3.995 against an October average of $4.309 (-7.3%) is genuine disposable income landing exactly on retail earnings week, but XRT is 91.05, only -4.1% off its 94.93 high and above its 20-day (89.50), 50-day (86.05) and 200-day (85.70); XLY is 119.98, -2.4% off its high and above all three. Buying either 2-4% below the highs, into a week carrying HD, LOW, TGT, TJX and WMT, with the 10-year at 5.10% raising every consumer credit cost, is a momentum chase wearing a macro thesis."
+    },
+    {
+      "symbol": "KXCPIYOY-26NOV",
+      "instrument": "Kalshi CPI year-over-year ladder, Nov 2026",
+      "note": "REJECTED \u2014 the largest apparent edge of the morning and it was correctly priced, which is worth recording in full. The ladder prices 'Above 4.0%' at 2c against a 12-year November seasonal base rate of 42% (5/12), and the mechanics are fetched not remembered: Nov-2025 NSA 324.122 and Oct-2026 NSA 337.511 mean >4.0% needs only MoM >= -0.078% against a 12-year Oct-to-Nov median of -0.128%. The method was validated on the settled 26SEP market, which resolved at a 3.7% print against 3.738% from the same arithmetic. It is still wrong, because the 12-year seasonal ignores THIS November's energy complex: gasoline -5.5% month-on-month (latest print -7.3% vs the October average) at ~3.5% of the basket subtracts roughly 0.19-0.25pp from headline NSA, which stacked on the ordinary non-energy seasonal arrives at about the -0.32% MoM the ladder is pricing \u2014 a 3.8% print, exactly where the market is centred. 54,864 contracts of open interest against a measured 12% crude decline is not something to bet against on a base rate. No edge, no candidate. NOTE: this ladder was only reachable by querying Kalshi directly; see the tooling bug in data_quality_notes."
+    },
+    {
+      "symbol": "ACM",
+      "instrument": "AECOM",
+      "note": "KILLED AS A RECOMMENDATION, BUT THE TRIM INSTRUCTION STANDS AND IS STRENGTHENED \u2014 cut the open position to half size before 16:00 ET today, and treat closing it in full as the defensible alternative rather than the aggressive one. What is killed is its publication as a ranked 2.00:1 buy, because that ratio describes a trade entered nine days ago, not the decision in front of you. Recomputed forward from the live 70.50 Friday close: +6.72 to the 77.22 target against -9.00 to the 61.50 stop is 0.75:1, whose break-even hit rate is 57.3%, against the idea's own stated 38% win probability \u2014 an expectancy of -0.34R on the half the instruction tells you to keep. The published 2.00:1 is computed from the sunk 66.74 fill and is an artifact of cost basis. This is the THIRD consecutive red team to make this exact objection (2026-11-13, 2026-11-14), today's synthesis notes explicitly concede it is unanswered, and the idea was re-pitched at unchanged levels, so it is being resolved rather than raised a fourth time. Two further findings of this morning's review, both absent from the published idea: (1) the 200-day sits at 74.69, i.e. BETWEEN the 70.50 spot and the 77.22 target, so the target requires breaking overhead long-term resistance that the thesis never mentions while citing the 20-day and 50-day it is above; (2) the stock is 47.98% below its 135.52 all-time high, and the '8.3% off the high' framing in the evidence is measured against a 120-day window only. The earnings date is confirmed on the fetched finnhub calendar as tonight 11/16 AMC (EPS est. 1.5938), and the -133.8% Jun-30 miss (-0.50 vs 1.4809) is verified from finnhub's surprise history \u2014 though it followed three in-line-to-positive quarters (+1.5%, +9.6%, +0.7%), so it reads as a one-off charge rather than operational collapse. That does not rescue the arithmetic; it is why trimming rather than closing is still acceptable. The validation block's 10.06% spread FAIL is a pre-market artifact (a stale 63.75 bid against a 70.50 ask at 06:42 on a closed market) and is NOT a reason this was cut \u2014 ACM trades $91.6M a day and the spread is immaterial in session.",
+      "trigger": "Trim the open ACM long to half size before 16:00 ET today, ahead of tonight's print; closing in full is equally defensible on -0.34R forward expectancy. Do not place a new buy order at 66.74.",
+      "demoted_from_rank": 1,
+      "demotion_reason": "Forward reward-to-risk from the live 70.50 is 0.75:1 (break-even 57.3%) against a stated 38% win probability = -0.34R expectancy; the published 2.00:1 is measured from the sunk 66.74 fill. Third red team to raise it, conceded unanswered by synthesis. The 200-day at 74.69 also sits between spot and target, unmentioned."
+    },
+    {
+      "symbol": "GLD",
+      "instrument": "SPDR Gold Shares",
+      "note": "KILLED. The rate thesis is sound and verified \u2014 the 2-year at 4.86% does sit 98bp above the 3.88% effective funds rate (FRED DGS2/DFF, both 2026-11-12), GLD is 30.26% off its high and below its 20-day (368.78), 50-day (380.91) and 200-day (408.44), and the complex-liquidation read is real (SLV 44.13, GDX 81.64, both confirmed). The LEVELS are what fail. (1) The target was derived from the ratio, not from price: the idea's own technical_level evidence says it outright \u2014 'the 336.0 target then follows from the 2.0 floor' \u2014 and 366 minus twice the 15-point risk is exactly 336, a round number sitting 3% above the real level, the 326.19 300-day low (verified: 300-session low is 326.19, 200-session low 352.91). This is the precise failure mode phases 2b-2d exist to catch, admitted in the report's own text. (2) The stop is at the floor: 15.00 on an ATR14 of 7.597 is 1.97 ATR, clearing the 1.8 ATR ETF minimum by 0.17 ATR. Rebuilt at the 2.25 ATR level where this book's ETF stop-outs cluster, the stop is 383.09 and the reward-to-risk becomes 30.00/17.09 = 1.76:1, which does not clear the 2.0 floor \u2014 so the published 2.00:1 is an artifact of a minimum-permitted stop, and the idea never cleared the bar. (3) Tradeability is unresolved after a runtime re-check, not merely 'unconfirmed': the Robinhood short-selling support page was re-fetched this morning and it confirms short sales in a margin account as a rolling release, but says 'stock' throughout, nowhere names ETFs, and publishes no eligibility list either way. Under the Robinhood-tradeable-only rule an instrument that cannot be verified does not get published at rank 2. (4) No dated catalyst, and the trade needs 75% of the whole distance from the 366 entry to the 326.19 support (-10.9%) to reach its target (-8.2%) \u2014 thin room to a level shorts get squeezed at, on an asset already at a 200-session low. The view is not withdrawn: config/universe.md prefers futures for a bearish gold view, /MGC is confirmed available, and this should be re-derived there once a gold futures quote can actually be fetched (this morning's failed: yahoo 429, finnhub subscription). A futures framing carries a 2.5 ATR stop floor, so it must be priced from a real quote rather than back-solved from a ratio.",
+      "trigger": "Re-derive as /MGC from a fetched gold futures quote, with the stop set at 2.5 ATR and the target at an independently identified level rather than at twice the risk. Do not short GLD on these levels.",
+      "demoted_from_rank": 2,
+      "demotion_reason": "Target admittedly derived from the 2.0 floor ('the 336.0 target then follows from the 2.0 floor') and a round number 3% above the real 326.19 support; stop 1.97 ATR is 0.17 ATR over the ETF floor and at a defensible 2.25 ATR the ratio falls to 1.76:1, below the floor; ETF shortability on Robinhood unresolved after a runtime re-check; no dated catalyst."
+    }
+  ],
+  "data_quality_notes": "RESEARCH WAS NOT TRUNCATED. The research phase ran 06:00-06:36 ET and closed with a RESEARCH COMPLETE block, so nothing here was abandoned for want of clock. candidates.jsonl holds 5 lines covering 3 distinct symbols and the last entry per symbol is what is published: ACM was re-captured at 06:34 to disclose a contested print date, and VLO was re-captured at 06:24 after the researcher caught its own headline number overstating the case. No candidate was reconstructed from prose \u2014 all three were captured in report shape.\n\nACT AT THE OPEN \u2014 FOUR INSTRUCTIONS ON MONEY ALREADY AT RISK, which are the highest-value output of this run and are in the watchlist only because a close has no target and therefore cannot clear a reward-to-risk floor. (1) CLOSE BCC at market, in full: -16.8% after 89 days with no stop ever set, five straight down sessions, 3.7% above its 150-day low, and a stored target implying +63% that is an anchor to the August entry rather than a target. (2) CLOSE TLT at market: the thesis is falsified by this morning's own macro pull, and its 78.80 stop is 0.76 ATR away, which is not risk control. (3) SET HII'S MISSING STOP at 278.00: +16.9% and wholly unprotected, the largest exposed gain in the book. (4) CANCEL four dead pending orders: CVS @79.00 (13.1% below spot), LEN @79.50 (refused on the same rate thesis that closes BCC), /MBTZ6 @74,075 (14.6% above spot after BTC fell 19.6% in eleven days), and the stale GLD short @406.77 from 2026-10-25 \u2014 that last one is superseded rather than merely cancelled, because rank 2 below re-levels the same gold short to a reachable 366.00. BCC and HII have been ordered twice before (2026-11-14 and 2026-11-15) and are still outstanding, which is why they are repeated rather than assumed done.\n\nMONDAY PRE-OPEN, 06:37 ET. US cash equities are shut, so every equity and ETF price here is the Friday 2026-11-13 close, re-fetched at synthesis and unchanged (finnhub, asof 2026-11-13T21:00:00Z, session 'pre', age ~3758 minutes). That is a closed market, not stale data. ACM 70.50, VLO 379.83, GLD 355.45 \u2014 all three confirmed at synthesis against the figures the research captured. Two of the three ideas are therefore marked wait: their entries are above spot (VLO) or above spot (GLD) and must not be chased at the open.\n\nALL THREE RATIOS LAND ON EXACTLY 2.00, AND THAT PATTERN IS THE SIGNATURE THIS REPO HAS BEEN BURNED BY, so it is flagged rather than left for the reader to notice. Recomputed at synthesis from the final levels: ACM 10.48/5.24 = 2.00, GLD 30.00/15.00 = 2.00, VLO 92.00/46.00 = 2.00. The clustering is real and none of the three has any margin above its floor. What the research offers against the 'targets nudged until they passed' reading, and it is checkable: each target coincides with an independent level rather than being derived to clear the bar \u2014 ACM's 77.22 is the pre-existing target on an open position, just above the 120-day high of 76.85, and was not newly derived at all; VLO's 296.00 is the 200-day at 294.76; GLD's 336.00 deliberately stops 3% SHORT of the 326.19 300-day low rather than reaching through it. And no stop was walked in to make a ratio work, which is the other direction the floor gets cleared from: ACM's 61.50 is unchanged from the original fill, VLO's 434 sits above the 10/19 close of 433.31, GLD's 381 above both the 11/09 swing close of 379.53 and the 50-day at 380.91. Stop distances recomputed here from fetched ATR14: ACM 5.24/2.1749 = 2.41 ATR against a 2.0 stock floor, VLO 46/19.2982 = 2.38 against 2.0, GLD 15/7.597 = 1.97 against the 1.8 ETF floor. All clear, but GLD clears by 0.17 ATR and is the one to check first. Stated win probabilities against the 0.333 break-even implied by 2:1 \u2014 ACM 0.38, VLO 0.38, GLD 0.42 \u2014 so the claimed edges are +4.7pp, +4.7pp and +8.7pp, none large enough to need a thesis it cannot carry.\n\nWHY ONLY THREE IDEAS, AND WHY TWO OF THEM ARE SHORTS. No idea was dropped at synthesis: everything captured was published, and nothing was added or promoted for balance. The directional skew is honest rather than manufactured \u2014 the long candidates examined were rejected on evidence (XRT/XLY already priced, TJX insider-sold and knife-like into a two-day print, LEN refused on the rate thesis that closes BCC, nat gas declined because no degree-day forecast was fetched and 'winter is coming' is a category not a catalyst), and LOW, the best long of the morning, is watchlisted rather than bought. CORRELATION: VLO and GLD are two expressions of ONE driver \u2014 the tightening/commodity-deflation regime \u2014 which is inside the 3-per-driver cap but only just, and a dovish surprise or a crude rebound hurts both together. The book also holds a short in AAL. Any further short on that driver today would breach the cap.\n\nTRADEABILITY, CHECKED AT RUNTIME RATHER THAN RECALLED, AND ONE LIVE UNCERTAINTY. Robinhood short selling is CONFIRMED from the fetched support page, in a margin account only, so VLO and GLD both carry requires_margin \u2014 but the page is a 'rolling release' that may not be enabled on a given account, and it says 'stock' and never mentions ETFs. ETF shorting is therefore NOT confirmed by any source fetched today: if it is unavailable, rank 2 (GLD) is not actionable as written. That is carried in GLD's key_risk rather than papered over. /MGC micro gold futures ARE confirmed available and config/universe.md prefers futures for a bearish gold view, but the gold short is deliberately NOT written that way: this morning's gold quote failed (yahoo 429, finnhub subscription), so pricing an /MGC entry, stop and target would have meant inventing three numbers. A futures framing would also raise the stop floor to 2.5 ATR and force a target essentially at the 326.19 prior low. If a later phase has a fetched gold futures quote, /MGC is the config-preferred expression and should be re-derived from it.\n\nACM CARRIES TWO DISCLOSED WEAKNESSES AND THE RED TEAM SHOULD LOOK AT IT FIRST. (a) The print date is contested: the fetched finnhub calendar says tonight 11/16 after close, MarketBeat says the date is not company-confirmed and estimates 11/17, and SEC EDGAR holds no 8-K that settles it. The instruction is robust to the ambiguity \u2014 trimming to half a day early costs nothing \u2014 which is why it is published on the earlier date. (b) PRIOR RED TEAMS KILLED THIS IDEA TWICE, on 2026-11-13 and 2026-11-14, arguing that forward reward-to-risk from the live price is 0.83:1 (7.11 to the 77.22 target against 8.61 to the 61.50 stop) and therefore negative expectancy for the half being held, and that the published 2.00 is computed from the sunk 66.74 fill. Today's candidate does not answer that objection; it re-pitches the same trim at the same levels. It is published because it is a genuine reduction of risk into a binary print and the alternative instruction (close in full) is the strictly more conservative version of the same call, but synthesis is not in a position to overrule the arithmetic and is flagging it rather than burying it. Separately, ACM's evidence lists four distinct kinds, which would support conviction 5; it is published at the captured 4.\n\nCOVERAGE GAPS \u2014 what could not be checked, each one a real limit on the three ideas above. NO IMPLIED-MOVE TEST ON ANY CANDIDATE: market_data.py implied returns 401 from yahoo-options, so the prescribed 'is the target inside what options price?' step was impossible for all three and no target here has been checked against market-priced vol. NO VIX AND NO INDEX LEVELS AT ALL, so there is no volatility-regime read and the SPY distribution comment rests on a single daily bar. NO SHORT INTEREST FOR VLO (nasdaq ReadTimeout) \u2014 materially relevant to a short, since a crowded one is fuel against it, and it is unchecked. NO primary_document EVIDENCE ON ANY IDEA: SEC EDGAR refused the Archives directory listing and index.json to this client, so no filing was read today and all three ideas rest on market data and calendars; the ACM guidance-cut figure ($5.65-$5.85 cut to $3.95-$4.15) is reported-not-primary and is not claimed as a primary document. NO SMALL/MICRO-CAP SCREEN, which config/universe.md asks for deliberately \u2014 the only sub-$2B name touched was HUN, as an existing pending order. NO LONG_TERM AND NO INTRADAY CANDIDATE: not manufactured to fill the horizon table, and in the long_term lane that is a genuine omission rather than a judgement \u2014 the lane is 0/4 with an average of -15.2% and the bar was raised instead of the lane being researched properly.\n\nTRACK-RECORD CONTEXT THE READER SHOULD SIZE AGAINST: 4/42 hit target (10%), average -6.2%. Stocks are 1/28 (4%, avg -8.3%) against ETFs at 3/14 (21%, avg -1.9%), and conviction 2 is 0/6. Both ETF and conviction samples are under the ~15-trade noise floor, so they tilt the bar rather than set policy.\n\nSOURCES THAT FAILED: yahoo finance HTTP 429 on every index and commodity (spx, ndx, dow, russell2000, vix, es/nq, DXY, us10y quote, gold, wti); finnhub indices ('subscription required for CFD indices'); stooq 404 on all '^'-prefixed symbols; alphavantage no API key; yahoo-options 401, which breaks implied entirely; nasdaq short interest ReadTimeout; SEC EDGAR directory listing and index.json refused (needs a contact UA); the Robinhood futures support article 404'd and was worked around via their metals learn article. Equity quotes, history, earnings, insiders, analyst recommendations, relative strength, crypto and FRED all worked \u2014 the run was not data-starved, but it was blind to volatility and options pricing.\n\nREPO BUG WORTH FIXING, not a data outage: market_data.py events() returns null for every price field, because Kalshi now serves yes_bid_dollars / no_bid_dollars / last_price_dollars and the function still reads yes_bid / no_bid / last_price. It also fetches at most 200 unfiltered markets and filters client-side, so sports parlays at the head of the list crowd out every macro series \u2014 searches for 'CPI', 'Fed', 'inflation', 'recession' and 'unemployment' all returned count 0 while those series exist and are deeply liquid. Event contracts cannot be priced through the tool until both are fixed; today's CPI ladder was reached only by querying api.elections.kalshi.com/trade-api/v2/markets?series_ticker=KXCPIYOY directly.\n\nRED TEAM (phase 2c), 2026-11-16. Cut two of three ideas and kept one, downgraded. KILLED ACM (rank 1): forward reward-to-risk from the live 70.50 is 0.75:1 \u2014 +6.72 to target against -9.00 to stop \u2014 whose break-even hit rate is 57.3% against the idea's own stated 38%, i.e. -0.34R expectancy on the half it tells you to hold; the published 2.00:1 is measured from the sunk 66.74 fill. This was the third consecutive red team to raise it and synthesis conceded it unanswered, so it is resolved rather than re-flagged. Two things the idea omitted: the 200-day at 74.69 sits between spot and the 77.22 target, and the stock is 48% below its all-time high behind an '8.3% off the high' framing measured on a 120-day window. The TRIM INSTRUCTION SURVIVES in the watchlist and is strengthened \u2014 cut to half before 16:00 ET today, with a full close equally defensible. ACM's 10.06% spread FAIL was NOT a factor: it is a stale pre-market bid on a $91.6M/day name. KILLED GLD (rank 2): its own evidence says 'the 336.0 target then follows from the 2.0 floor', and 366 - 2x15 = 336 is a round number 3% above the real 326.19 300-day low, so the target was built from the ratio; the 15.00 stop is 1.97 ATR, 0.17 over the 1.8 ETF floor, and rebuilt at the 2.25 ATR cluster level the ratio becomes 1.76:1 and fails \u2014 the 2.00 was an artifact. ETF shortability on Robinhood was re-checked at runtime and remains unresolved: the support page confirms margin-account short selling but says 'stock' throughout and names no ETF either way. The gold view is not withdrawn, it is handed to /MGC once a futures quote can be fetched. KEPT VLO, re-ranked 1 and DOWNGRADED to conviction 2, because the red team recomputed its load-bearing number from FRED and found an error flattering the thesis: the Oct-to-Nov 3-2-1 crack did fall from $48.64 to $36.34 (-25.3%, verified), but that is the 2nd-worst of 16 years, not 'the fastest in 15' \u2014 2011 fell -40.9% \u2014 and the true median change is -2.8%, not -2.0%. Thesis, counter_argument and the seasonality evidence are rewritten with the correct figures; the 2011 precedent is retained because its aftermath (down again in December, reverting by February) actually supports the direction. VLO's levels all verified against 409 sessions: entry = the 389.70 20-day, stop above the 10/19 close of exactly 433.31, and the 296 target re-anchored off the rising 200-day onto the static 280-320 shelf VLO held for 24 sessions in Jul-Aug 2026 \u2014 the 200-day rises $1.04/session and would be ~310 by the end of the horizon. No level was moved to rescue a ratio. Two gaps closed: VLO short interest is 2.50% of float at 2.61 days to cover and falling (not crowded), and its dead api.nasdaq.com source URL was replaced with the human-readable Nasdaq page \u2014 that endpoint 404s on the validator's HEAD probe but returns correct data on GET, which was confirmed, so all three ideas' 'sources' FAIL was a probe artifact and no source was invented. DISCLOSED RATHER THAN HIDDEN: VLO's own stop is 2.38 ATR, also under the 2.5 ATR level where this book's stop-outs cluster, and widened to 2.5 ATR its ratio would be 1.91:1 \u2014 its margin over the floor is real but thin, and it is kept because both its stop and its target sit on independently verified levels, which is what separates it from GLD. One idea remains; it is a counter-trend short at conviction 2 and 1.0% size, in a lane where this book is 1/28. SIZE CUT 1.5% -> 1.0% as a consequence of the conviction downgrade rather than as a separate judgement: validate_report.py caps conviction 2 at the 1% lottery-ticket ceiling, enforcement demoted VLO for the mismatch on a first pass, and the size has been brought down to match. A downgrade that left the size alone would have been a conviction change in name only, so this is the downgrade actually taking effect \u2014 the risk budget on the one surviving idea falls by a third.",
+  "validation_summary": {
+    "checked": 1,
+    "passed": 0,
+    "warned": 1,
+    "failed": 0,
+    "enforced": false
+  }
+}
