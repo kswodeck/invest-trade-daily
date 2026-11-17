@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-11-17T05:31:16-05:00",
-  "last_run_at": "2026-11-17T05:31:16-05:00",
+  "updated_at": "2026-11-17T18:31:24-05:00",
+  "last_run_at": "2026-11-17T18:31:24-05:00",
   "discovery_error": null,
   "open": [
     {
@@ -238,7 +238,7 @@
       "status": "rejected",
       "tier": null,
       "rejections": [
-        "spread -15.35% below the 1.5% floor"
+        "spread -13.83% below the 1.5% floor"
       ],
       "risk_flags": [
         "market_price_above_offer",
@@ -286,14 +286,14 @@
       "withdrawal_deadline": "2026-12-10",
       "withdrawal_basis": "expiration_date",
       "max_shares_sought": null,
-      "market_price": 5.08,
-      "price_asof": "2026-11-16T21:00:00+00:00",
+      "market_price": 4.99,
+      "price_asof": "2026-11-17T21:00:00+00:00",
       "price_source": "finnhub",
-      "spread_pct": -0.153543,
-      "capital": 502.92,
+      "spread_pct": -0.138277,
+      "capital": 494.01,
       "days_to_expiry": 23,
-      "annualized": -2.436666,
-      "gross_profit": -77.22,
+      "annualized": -2.194389,
+      "gross_profit": -68.31,
       "avg_volume_30d": 87733
     },
     {
@@ -2341,14 +2341,78 @@
       "max_shares_sought": 125000000,
       "outcome": "expired 2026-09-29, never cleared the gates",
       "archived_on": "2026-11-05"
+    },
+    {
+      "accession": "0001104659-26-129092",
+      "cik": "0001918712",
+      "company": "ARES STRATEGIC INCOME FUND",
+      "ticker": "",
+      "form": "SC TO-I",
+      "filed": "2026-11-17",
+      "url": "https://www.sec.gov/Archives/edgar/data/1918712/000110465926129092/tm2630009-1_sctoi.htm",
+      "index_url": "https://www.sec.gov/Archives/edgar/data/1918712/000110465926129092/0001104659-26-129092-index.htm",
+      "highlights": [],
+      "documents": [
+        {
+          "name": "tm2630009-1_sctoi.htm",
+          "type": "SC TO-I/A",
+          "url": "https://www.sec.gov/Archives/edgar/data/1918712/000110465926129092/tm2630009-1_sctoi.htm"
+        }
+      ],
+      "found_by": "\"odd lot\" / SC TO-I",
+      "first_seen": "2026-11-17",
+      "status": "expired",
+      "tier": null,
+      "rejections": [
+        "odd lots mentioned but no acceptance-before-proration language",
+        "no cash consideration stated in the document",
+        "offer expired 2026-09-18"
+      ],
+      "risk_flags": [],
+      "last_scored": "2026-11-17",
+      "warnings": [],
+      "documents_read": [
+        "tm2630009-1_sctoi.htm"
+      ],
+      "document": "tm2630009-1_sctoi.htm",
+      "terms": {
+        "has_threshold": true,
+        "has_proration_preference": false,
+        "is_cash_offer": false,
+        "consideration": "unstated",
+        "is_common_equity": true,
+        "subject_security": "Shares of Beneficial Interest",
+        "offer_price": 0.01,
+        "dutch_range": null,
+        "price_basis": "fixed",
+        "expiration_date": "2026-09-18",
+        "withdrawal_deadline": "2026-09-18",
+        "withdrawal_basis": "expiration_date",
+        "max_shares_sought": null,
+        "preference_removed": false,
+        "record_holder_condition": null,
+        "restricted_offer": false,
+        "terminated": false,
+        "risk_flags": []
+      },
+      "odd_lot_paragraph": "50,412,264 Shares of the Fund were validly tendered and not withdrawn prior to the expiration of the Offer. The Fund accepted for purchase 19,268,702 Shares on a pro rata basis based on the number of tendered Shares subject to \u201codd lot\u201d priority for holders of fewer than 100 Shares as described in the Offer to Purchase, representing 38.2% of the Shares of the Fund that were validly tendered and not withdrawn prior to the expiration of the Offer.",
+      "offer_price": 0.01,
+      "dutch_range": null,
+      "price_basis": "fixed",
+      "expiration_date": "2026-09-18",
+      "withdrawal_deadline": "2026-09-18",
+      "withdrawal_basis": "expiration_date",
+      "max_shares_sought": null,
+      "outcome": "expired 2026-09-18, never cleared the gates",
+      "archived_on": "2026-11-17"
     }
   ],
   "funnel": {
     "queries": 96,
     "pages": 96,
-    "raw_hits": 111,
-    "filings": 17,
-    "documents": 37,
+    "raw_hits": 115,
+    "filings": 18,
+    "documents": 38,
     "window": "2026-09-03..2026-11-17",
     "slices": 4,
     "failed_queries": 0,

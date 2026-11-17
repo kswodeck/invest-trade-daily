@@ -1,6 +1,6 @@
 # Odd-lot tender screener — 2026-11-17
 
-Run 2026-11-17 05:31 ET (premarket slot). 5 offers tracked, 0 clear every gate: 0 Tier A, 0 Tier B, 0 Tier C.
+Run 2026-11-17 18:31 ET (evening slot). 5 offers tracked, 0 clear every gate: 0 Tier A, 0 Tier B, 0 Tier C.
 
 **No Tier A opportunities today.** That is the ordinary result — an odd-lot tender with a 3%+ spread and a clean condition set is rare, and the thresholds below are not moved to produce one.
 
@@ -21,18 +21,22 @@ _None._
 | Ticker | Form | Filed | Reason |
 | --- | --- | --- | --- |
 | — | SC TO-I | 2026-11-13 | no 'fewer than 100 shares' odd-lot threshold in the document; odd lots mentioned but no acceptance-before-proration language |
-| MYPS | SC TO-I | 2026-11-12 | spread -15.35% below the 1.5% floor |
+| MYPS | SC TO-I | 2026-11-12 | spread -13.83% below the 1.5% floor |
 | INVE | SC TO-I | 2026-10-21 | odd lots mentioned but no acceptance-before-proration language |
 | XFLT | SC TO-I | 2026-09-18 | no 'fewer than 100 shares' odd-lot threshold in the document; odd lots mentioned but no acceptance-before-proration language; an exchange offer for other securities, not cash; no expiration date could be read from the document |
 | — | EX-99 | 2026-09-01 | odd lots mentioned but no acceptance-before-proration language; no cash consideration stated in the document; subject security is not common equity (unidentified security); no expiration date could be read from the document |
+
+## Expired today
+
+- — ARES STRATEGIC INCOME FUND — expired 2026-09-18, never cleared the gates
 
 ## Where the universe went
 
 A screener that finds nothing reads exactly like one that is broken. This is the difference.
 
-- **96** full-text queries over `2026-09-03..2026-11-17` returned **111** document hit(s) across **17** filing(s) (**37** exhibits kept as candidates)
+- **96** full-text queries over `2026-09-03..2026-11-17` returned **115** document hit(s) across **18** filing(s) (**38** exhibits kept as candidates)
 - searched as **4** date slice(s), **96** result page(s) read
-- **5** offers open, **30** archived
+- **5** offers open, **31** archived
 
 | Turned away for | Count |
 | --- | --- |
