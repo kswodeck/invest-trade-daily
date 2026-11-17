@@ -1,0 +1,308 @@
+{
+  "date": "2026-11-17",
+  "generated_at_et": "2026-11-17T06:34:32-05:00",
+  "research_minutes": 39,
+  "truncated": false,
+  "data_quality_notes": "Research ran 06:01-06:40 ET and completed on schedule - not truncated, no late-run stamp. All 14 open positions were reviewed and decided.\n\nTHE CAVEAT THAT MATTERS MOST: six symbols here are not six bets. BJ long and XLV long are the same side of one trade - the real-rate-shock rotation into near-dated-cashflow defensives - and all four closes (TLT, BCC, ONON, ACM) are exits from its wrong side. If tonight's NVDA print reignites risk appetite and the 10Y falls, both new ideas lose together. Size the pair as one position on one driver, not two diversified ideas. Two new ideas on that driver is inside the correlation cap of 3; XLV is separately the THIRD position on the healthcare driver behind open PFE and ABT, which is exactly at the cap, so no further healthcare idea can be added behind it.\n\nIDEA COUNT: 2 new-money ideas and 4 position exits. The exits are position management, not new risk, and carry position_size_pct 0 with null stop, null target and null risk_reward - a position close has no reward-to-risk and inventing one would be a fabricated number. The count is low deliberately: the research phase rejected 13 ideas with a stated reason each (TJX/ROST both ways, SLV short, a GLD re-pitch, /MBT short, XLF long, XLP long, BRBR, JJSF, IESC, ROAD, NGVC, BABA both ways, and the whole FRO/NAT/SBLK/DSX/ZIM shipping complex), and declined two conviction upgrades that the evidence-kind arithmetic would have allowed (BJ at 06:34, XLV at 06:37).\n\nONE EDITOR CORRECTION, DISCLOSED: BJ's captured entry zone was 112.80-114.60 and I narrowed it to 113.35-113.60. Both ends were wrong for arithmetic reasons the research note did not check. 112.80 is below the 113.35 breakout trigger, so a fill there is not this setup at all; and against the 107.40 stop and 126.00 target, a 114.60 fill is 1.58:1, below the 2.0 swing floor - 113.60 is the exact highest fill that still clears it. The stop and target are untouched. Fixing this by moving the target up or the stop in is precisely what this repo's rules forbid, so the zone moved instead. XLV's zone needed no correction: its worst in-zone fill at 184.00 still gives 2.05.\n\nRATIOS, RECOMPUTED FROM FINAL LEVELS RATHER THAN CARRIED FROM THE NOTES: BJ 113.60/107.40/126.00 = risk 6.20, reward 12.40, R:R 2.000 against a 2.0 floor; stop 2.503 ATR (ATR14 2.4775) against the 2.0 stock floor. XLV 183.50/174.50/203.50 = risk 9.00, reward 20.00, R:R 2.222; stop 2.348 ATR (ATR14 3.8338) against the 1.8 ETF floor. Both clear on both tests. BE SUSPICIOUS ANYWAY, and here is the honest read: two ratios at 2.00 and 2.22 against a 2.0 floor is exactly the clustering pattern this repo treats as the signature of targets fitted to clear the bar. What argues against that here is the order the levels were built in and that it is checkable: BJ's 107.40 sits below the 107.60 shelf low of 2026-11-06 and XLV's 174.50 below the SMA50 at 175.37, both derived from structure, and the targets were then set from those stops rather than the reverse. BJ's 2.000 is met exactly and not exceeded, which is what a target that was not nudged looks like. Judge it on the stop placement, which is the number that cannot be massaged without being visible in ATRs.\n\nWIN PROBABILITIES carried from the candidates, both above their break-even baselines: BJ 0.40 against 1/(1+2.00) = 33.3%, a claimed edge of +6.7 points; XLV 0.42 against 31.0%, +11.0 points. CONVICTION equals the distinct evidence-kind count on every line - BJ 3 kinds (dated_catalyst, positioning, technical_level) at 4; XLV 2 kinds at 3; ACM and ONON 3 kinds at 4; TLT and BCC 2 kinds at 3. No line claims 5.\n\nTHE ONE FACT THAT RUNS AGAINST A PUBLISHED IDEA, kept visible rather than buried: BJ insiders show ZERO open-market purchases against 27 sales totalling $35,591,483 over the trailing six months, net -$35.6M, with Form 144 notices on 2026-10-15 and 2026-11-02. Scheduled 10b5-1 and option-exercise sales cannot be separated from discretionary ones with this data, so it proves nothing - but it is not the empty record that config/strategy.md says to ignore. Size was cut 3% to 2% for it and the entry is conditional on the market confirming first.\n\nRANK ORDER CONVENTION: conviction first, then reward-to-risk, as the rules require. Within a conviction tier the new-money idea ranks above the position exits, which have no ratio to rank on. So rank 1 BJ and ranks 2-3 ACM/ONON are all conviction 4, and rank 4 XLV above ranks 5-6 TLT/BCC are all conviction 3. Note what this means for the reader: ranks 1 and 4 are both marked WAIT and may never trigger, while ranks 2, 3, 5 and 6 are unconditional actions at today's open. Urgency today runs opposite to rank.\n\nPRICES: every equity and ETF figure is the 2026-11-16 16:00 ET close, re-fetched at synthesis and unchanged, with market_session=pre and age ~872 minutes. At 06:00 ET that is the freshest honest equity price there is - a closed market, not stale data. Crypto is live. No price was estimated and nothing is null that could have been fetched.\n\nCOVERAGE GAPS: no long_term idea - no defensible valuation anchor with an explicit bear-case price was built, and assembling one in the last ten minutes would be a fabricated number; open PFE and HII already carry long-horizon exposure. No intraday idea - every equity price available at 06:00 ET is the previous close, and today's only dated intraday catalysts (HD, DIS) land at the same moment as this report. No event contracts - the Kalshi feed returned count=0 for Nvidia, Fed, inflation, CPI, recession and bitcoin, and an empty query returned 40 markets of which every one was a multi-leg sports parlay, so no implied probability could be stated honestly. No options-implied move on any idea - the yahoo options endpoint returns HTTP 401, so every target here is justified from price history and ATR alone. No orthogonal-driver idea, searched for twice (BABA, the shipping complex) and not found, which is why the concentration caveat above stands rather than being solved.\n\nSOURCES THAT FAILED: yahoo - HTTP 429 on ^GSPC/^NDX/^DJI/^RUT/^VIX, ES/NQ futures, DXY, the 10Y quote, gold and WTI, and HTTP 401 on the options endpoint; finnhub - refuses index CFDs (\"subscription required\"); stooq - 404 on indices; alphavantage - no API key; api.nasdaq.com - ReadTimeout on `short BJ`, so there is no short-interest reading on any idea today; Kalshi events - count=0 on every economic topic; `history BTC-USD` - ok:false, so IBIT was used as the daily-level proxy for bitcoin. coingecko failed inside the macro call but succeeded on a direct retry, which is why crypto spot levels are present. Consequence: there is no VIX level, no overnight futures and no dollar reading behind this morning's regime call - it rests on the 2026-11-16 cash closes, FRED rates and relative-strength measurements, all of which were fetched.\n\nTRACK-RECORD CONTEXT THAT SHAPED TODAY'S SELECTION, not a disclaimer: closed trades run 1 of 28 to target on single stocks at an average -8.3%, against 3 of 14 on ETFs at -1.9%. n=28 is past the noise threshold, so the single-name record is a real signal and the research phase required a dated catalyst AND a measured positioning read AND a real technical level before capturing any single name. The 4-of-42 overall target hit rate (10%) is also the explicit reason ACM's +8.6% is being taken rather than held for its last 6.5%.\n\nRED TEAM (phase 2c), 2026-11-17. One recommendation survives as a recommendation, and the report went from six entries to one for two different reasons - one kill and four relocations. Read the relocations first, because they are the actionable part of this morning and nothing about them is a rejection.\n\nTHE STRUCTURAL FIX, AND IT IS THE MOST CONSEQUENTIAL THING DONE TODAY. The four position closes (ACM, ONON, TLT, BCC) were published as recommendations with direction 'sell', position_size_pct 0 and null stop/target. scripts/publish_sheets.py has no concept of a close: positions_from_report() turns every recommendation whose catalyst.wait is falsy into a new PENDING position keyed on (symbol, direction), and merge_report() matches one live position per (symbol, direction). The four open longs are keyed (ACM, buy), (ONON, buy), (TLT, buy), (BCC, buy), so a 'sell' row matches nothing. Simulated against the real state file, merge_report opened FOUR PHANTOM SHORT POSITIONS - ACM at 72.50, ONON at 32.76, TLT at 79.38, BCC at 66.37, each with no stop and no target - while the four longs they were meant to close stayed open. TLT is the worst case: a (TLT, sell) row already exists as a target_hit short opened 2026-09-02, so this would have opened a second TLT short and graded it as a real trade. That is exactly the class of tracker corruption CLAUDE.md's 'How the Performance tab counts' section exists to prevent. The second path was no better: all four carry validation verdict 'fail' on checks that cannot apply to a close (no target, so direction_consistency and risk_reward and stop_distance fail; a catalyst in the past, because the catalyst is what the position was held FOR), and phase 2d --enforce demotes every FAIL to the watchlist and overwrites the note with the failure list. That already happened to BCC on 2026-11-15, where a close instruction was published as 'Demoted by validation: entry or target is missing'. So the choice was phantom positions or a shredded instruction. Both avoided by moving the four to the watchlist with the full instruction intact, which is also the house convention on 2026-11-14 and 2026-11-16 ('NOT a watchlist idea - an open position to CLOSE AT MARKET'). ALL FOUR CLOSE INSTRUCTIONS STAND AND ARE UNCHANGED IN SUBSTANCE: close ACM, ONON, TLT and BCC at today's open. They are in the watchlist because the schema has nowhere better to put them, not because they were downgraded. Fixing this properly needs a close/exit concept in positions_from_report and a session guard in the validator, which is a code change with tests and not a 2c edit.\n\nONE KILL. BJ (was rank 1, conviction 4) on geometry, not on thesis. Fetching 400 sessions instead of 120 moved the whole argument: BJ's 400-day range high is 121.10, so 113.35 is a fifty-two-week high and 111.88 is 7.61% below the 18-month high - not the '1.3% from the all-time high' the key_risk asserted. That puts a real prior high at 121.10 between the 113.60 entry and the 126.00 target. Priced to 121.10 the trade is 7.50 reward against 6.20 risk = 1.21:1 against a 2.0 floor; a shelf measured move (113.35 + 5.75) gives 119.10 and is worse. The published 2.000:1 exists only because the target sits 4.90 points past the only identifiable resistance, and neither 126.00 nor the 133.00 second target is derived anywhere in the evidence - which supplies structure for the entry and the stop and none for the target. A structurally anchored target existed, it failed the floor, and the published target went past it: the target-side version of the stop-walking this repo already refuses. The aggravations (a 2.000 ratio with zero slippage margin on a stop-limit breakout whose fill is not controllable; zero insider buys against $35.6M of sales; a conceded need for a beat-and-raise with earnings inside the horizon) are recorded in the watchlist entry but are not the reason. Two honest ways back are specified there, including a pullback at or below 111.19 with a ~106.20 stop that clears both floors against the 121.10 target.\n\nONE DISPUTED VALIDATION FLAG, AND I AM OVERRULING IT RATHER THAN HIDING IT. BJ's spread check failed at 25.76% on a Nasdaq bid/ask of 96.23/124.68. That is not a market. The depth record carries is_real_time false and asof 'Nov 16, 2026', the two prices sit -12.8% and +12.9% around the 110.34 prior close, BJ's own 2026-11-16 range was 110.52-111.93, and its 30-day average dollar volume is $208M - a 25% spread in that name is impossible, and the 'round trip costs 236% of the target move' line built on it is meaningless. check_spread has no session guard: when depth is missing it warns 'normal outside regular hours', but when depth is a stale daily record it fails. ACM's 7.37% is a genuine real-time pre-market quote (72.00/77.51 at 06:23 ET) and so is a real but thin book, not an artifact. This did not affect the BJ decision - BJ was killed on geometry and would have been killed with a one-cent spread - but it is logged because a pre-open run will keep failing liquid names on it.\n\nONE IDEA FIXED AND KEPT. XLV survives at rank 1, conviction 3, 3% - the evidence genuinely rests on two distinct kinds (positioning, technical_level), which is what a 3 means, so the score is paid for and was not moved. But its breadth evidence was materially wrong and has been rewritten. The original claimed the eight largest constituents were all positive over six months and concluded 'the ETF is not a proxy for a single stock that could roll over and take the thesis with it'. The fetched holdings say otherwise: LLY 16.85%, JNJ 10.05%, ABBV 7.61%, UNH 5.34%, MRK 5.32%, TMO 3.78%, AMGN 3.67%, GILD 3.04% - top three 34.51%, top five 45.17%. The list was also not the eight largest; it named BMY, which is 14th at 1.89%, and omitted GILD, which is 8th. GILD is +29.24% over six months so the all-positive count survives, but an equal-weighted count cannot support that conclusion in a fund this top-heavy: LLY returned +13.89% over the past month against XLV's +6.32%, which on current weights is about 2.3 of those 6.3 points, roughly 37% of the one-month move from one stock, and about 7.6 of the 28.93 six-month points. The thesis, key_risk, counter_argument and the evidence detail all now say so, and the holdings URL is in sources. A second concession is now on the record: XLV's 203.50 target has NO structural anchor, because at 187.88 the fund is 2.3% off an all-time high of 192.32 and there is no overhead resistance to measure to, so the 2.22:1 is derived from the stop rather than measured to a level. That is the same objection that killed BJ, and the distinction is deliberate and stated so it can be argued with: BJ had an available structural target at 121.10 and the published target went past it, whereas XLV has none available in either direction. Entry 183.50 (the rising SMA20) and stop 174.50 (below the rising SMA50) are both structural; the target is not, and that asymmetry is the weakest part of the surviving idea. Also noted: PFE and ABT, the two open healthcare positions that put XLV at the correlation cap, are themselves 2.40% and 2.74% of XLV, so the three overlap rather than diversify.\n\nWHAT THE CORRELATION PICTURE LOOKS LIKE NOW. With BJ killed, the BJ/XLV pair the synthesis phase warned about is gone and one new-money idea remains, so there is no longer a pair to size as one. The warning that replaces it is on the exits: closing TLT and closing BCC are the SAME bet, not two - both were long positions that needed the 10Y to fall, so both exits are a bet that it does not. Add the XLV long, which is the defensive side of the same real-rate shock, and the whole report is one macro view. If tonight's NVDA print reignites risk appetite and the long end rallies, the surviving idea and two of the four exits are wrong together. The exits are still right on their own terms - a contradicted thesis and a 90-day unstopped 13% loser - but they are not independent decisions and should not be read as four separate confirmations of one macro call.\n\nNOT CUT, AND SAID EXPLICITLY SO THIS DOES NOT READ AS INDISCRIMINATE. All four close instructions survive in substance and were examined on their merits, not waved through: ACM's forward 0.86:1, ONON's 1.20-ATR stop, TLT's bear steepener re-verified against FRED this morning (DGS10 5.15%, DGS2 4.88%, DFF 3.88% all 2026-11-13; T10Y2Y +0.29 on 2026-11-16 against a prior 0.27), and BCC's new 90-day low all check out. Two arithmetic corrections were made in passing. ACM's note called its 67.00 stop 'an honest 2.0-ATR stop'; ATR14 is 2.2638, so 2.0 ATR is 4.53 and sits at 67.97, while the 67.00 quoted is 5.50 below the price and therefore 2.43 ATR - the level is a sound structural choice just under the 2026-11-09 low of 67.17, but the label was wrong, and the conclusion holds either way (0.86:1 at 67.00, 1.04:1 at a true 2.0-ATR stop, both far under the floor). And ONON's stockanalysis.com/quote/nyse/ONON/ source returns 404, which the validation sources check caught correctly; the working URL is stockanalysis.com/stocks/onon/ and the note carries it.\n\nONE MORE RED TEAM FIX, ON THE PLUMBING RATHER THAN THE IDEA. XLV was published with catalyst.wait true, and positions_from_report() skips every recommendation whose catalyst.wait is set, so today's amendment would have been silently dropped: state/open_positions.json holds a pending (XLV, buy) row from 2026-11-09 at entry 184.00, stop 176.00, target 201.00, conviction 4, and it would have kept grading against those while this report told the reader 183.50 / 174.50 / 203.50 at conviction 3. A stop 1.50 wide of the published one is not a rounding difference. Flipped to false, which is how the SAME idea was published on 2026-11-09 (wait false, undated rotation catalyst, limit below market) and how every other undated limit idea in the recent record went out. It is also correct on its own terms: catalyst.datetime_et is null, so there is no event to wait for, and the order is placed today. Verified against the real state file - merge_report now reports 1 amended and 0 opened, appends a dated amendment record rather than overwriting, and revises entry, target and stop because the position has never filled. No second XLV row is created.",
+  "market_context": {
+    "summary": "One trade is driving the tape: a real-rate shock repricing every asset whose value sits far in the future or pays no cash. The nominal 10Y is 5.15% (2026-11-13) against fed funds 3.88%, 127bp of term premium above policy, and the 10y-2y spread steepened to +0.29 on 2026-11-16 - a bear steepener, with October PPI final demand at +6.5% YoY behind it. Equities fell hard into that on 2026-11-16: SPY -1.91% to 739.95 and QQQ -2.67% to 661.75, both closing at their session lows, with the Nasdaq already in correction since the post-midterm 2026-11-05 session (NDX -6.36%, its worst day since 2020). What has been repriced down is uniform: gold -17.8% off its high, silver -38.9%, bitcoin/IBIT -25.5%, NVDA -35.8%, TLT below both its moving averages. What is leading is equally uniform: XLV +28.9% over six months, XLP 0.9% off its own high, BJ and WMT - cash-generative, near-dated-cashflow defensives. The week's two events are NVDA tonight (2026-11-17 AMC) and then the entire US consumer (HD, DIS, TGT, LOW, TJX, ROST, WMT, BJ) inside 72 hours. NVDA reports with Colette Kress as interim CEO while remaining CFO, no named successor after Jensen Huang's ~2026-11-12 resignation, and a live reinstatement campaign; no position was taken for or against it, by choice.",
+    "regime": "risk-off",
+    "levels": {
+      "spy": 739.95,
+      "qqq": 661.75,
+      "iwm": 272.94,
+      "gld": 352.93,
+      "slv": 42.39,
+      "tlt": 79.38,
+      "us10y": 5.15,
+      "us2y": 4.88,
+      "fed_funds": 3.88,
+      "t10y2y": 0.29,
+      "unemployment_pct": 4.1,
+      "cpi_index_oct": 337.476,
+      "ppi_final_demand_yoy_pct": 6.5,
+      "btc": 64407,
+      "eth": 1804.79,
+      "sol": 72.94,
+      "nvda": 156.14,
+      "vix": null,
+      "dxy": null,
+      "es_futures": null,
+      "wti": null,
+      "levels_note": "Equity and ETF levels are the 2026-11-16 16:00 ET close, fetched at ~06:20 ET on 2026-11-17 with market_session=pre and age ~872 minutes. That is a closed market, not stale data. Crypto is live (24/7). VIX, DXY, index futures and WTI are null because yahoo returned HTTP 429 for every index and futures symbol and finnhub refuses index CFDs - not estimated."
+    },
+    "econ_calendar": [
+      {
+        "event": "NVDA Q3 FY2027 earnings - interim CEO, no named successor",
+        "datetime_et": "2026-11-17T16:05",
+        "importance": "high",
+        "consensus": "revenue $111.28B, EPS $2.525"
+      },
+      {
+        "event": "HD and DIS earnings (BMO)",
+        "datetime_et": "2026-11-17T07:00",
+        "importance": "medium",
+        "consensus": "HD revenue $44.08B; DIS revenue $25.43B"
+      },
+      {
+        "event": "TGT, LOW, TJX, ROST earnings (BMO) - the off-price and big-box consumer block",
+        "datetime_et": "2026-11-18T07:00",
+        "importance": "high",
+        "consensus": "TGT $26.82B, LOW $22.63B, TJX $16.00B"
+      },
+      {
+        "event": "PANW earnings (AMC)",
+        "datetime_et": "2026-11-18T16:05",
+        "importance": "medium",
+        "consensus": "revenue $3.37B"
+      },
+      {
+        "event": "WMT and BABA earnings (BMO)",
+        "datetime_et": "2026-11-19T07:00",
+        "importance": "high",
+        "consensus": "WMT $189.14B; BABA $275.21B"
+      },
+      {
+        "event": "BJ Q3 FY2026 earnings (BMO) - the catalyst for rank 1",
+        "datetime_et": "2026-11-20T07:00",
+        "importance": "high",
+        "consensus": "revenue $6.14B, EPS $1.2924"
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "symbol": "XLV",
+      "instrument": "Health Care Select Sector SPDR Fund",
+      "asset_class": "etf",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 3,
+      "unit": "usd",
+      "last_price": 187.88,
+      "last_price_asof": "2026-11-16T16:00:00-05:00",
+      "price_source": "nasdaq via market_data.py history (previous close; market_session=pre at 06:25 ET 2026-11-17)",
+      "entry": {
+        "ideal": 183.5,
+        "zone_low": 182.0,
+        "zone_high": 184.0,
+        "order_type": "limit",
+        "condition": "Accumulate only into the 182.00-184.00 pullback, which is the rising SMA20 (184.26). Do NOT pay 187.88. Every fill inside this zone clears the 2.0 reward-to-risk floor against the 174.50 stop; a fill above 184.00 does not, so do not chase."
+      },
+      "exit": {
+        "target": 203.5,
+        "target_2": 212.0,
+        "scale_plan": "Trim half at 203.50 and trail the remainder against the SMA20."
+      },
+      "stop": 174.5,
+      "bear_case_price": null,
+      "risk_reward": 2.22,
+      "win_probability": 0.42,
+      "position_size_pct": 3,
+      "requires_margin": false,
+      "avg_dollar_volume": 1953000000,
+      "risk_tier": "standard",
+      "catalyst": {
+        "event": "Sector rotation out of AI-levered technology into healthcare while the Nasdaq is in correction - XLV has outperformed SPY by 14.27 points over three months and is the only major sector making new highs",
+        "datetime_et": null,
+        "action": "AMENDS the XLV BUY published 2026-11-09 at 184.00, which never filled - post-publication session lows were 185.36, 186.70, 186.85, 187.75, 187.22 and 187.60, so 184.00 was never touched. The entry level is essentially UNCHANGED at 183.50 because the rising SMA20 has come up to meet it; the stop moves from 176.00 to 174.50, below the SMA50, and the target from 201.00 to 203.50. Accumulate in halves inside the zone. The order is live today - there is no dated event to wait for, which is why catalyst.wait is false, matching how this same idea was published on 2026-11-09. The red team flipped it back from true: positions_from_report() skips any recommendation whose catalyst.wait is set, so with wait true this amendment would never have reached the tracker and the stored row would have gone on grading against the old 176.00 stop while the report told the reader 174.50.",
+        "wait": false
+      },
+      "thesis": "Healthcare is the leadership sector of this correction, and that is a measured fact rather than a defensive guess: XLV is +6.32% over one month and +10.69% over three while SPY is -3.05% and -3.58%, giving +9.37 and +14.27 points of relative performance, and it is +28.93% over six months. On 2026-11-16, when SPY fell 1.91% and QQQ fell 2.67%, XLV closed down 0.5%. Participation is broad in count - the eight largest holdings are all positive over six months - but NOT in weight, and the red team corrected the original claim here: XLV is cap-weighted, LLY alone is 16.85% of the fund and the top three (LLY 16.85%, JNJ 10.05%, ABBV 7.61%) are 34.51%, so this is partly a proxy for one stock. It sits 2.3% off its all-time high of 192.32, above a rising SMA20 at 184.26 and a rising SMA50 at 175.37. This is still the right instrument for the view: this report's closed record is 1 of 28 on single stocks at an average -8.3% against 3 of 14 on ETFs at -1.9%, so a sector thesis belongs in the sector ETF rather than in more individual names.",
+      "key_risk": "CONCENTRATION, added by the red team and the reason the original breadth claim was overstated. XLV is cap-weighted: LLY is 16.85% of the fund, JNJ 10.05%, ABBV 7.61% - top three 34.51%, top five 45.17%. LLY returned +13.89% over the past month against XLV's +6.32%, so on current weights roughly 2.3 of those 6.3 points - about 37% of the one-month move - is LLY alone, and about 7.6 of the 28.93 six-month points (26%). An LLY reversal therefore does take a large part of this thesis with it, and LLY is the most crowded momentum long in US large-cap. The original evidence counted the eight largest holdings equally and also mis-listed them (it named BMY, which is 14th at 1.89%, and omitted GILD, 8th at 3.04%); GILD is +29.24% over six months so the all-positive conclusion survives, but an unweighted count cannot support 'not a proxy for a single stock' in a fund this top-heavy. SECOND, the 203.50 target is an extrapolation, not a level: XLV is at all-time highs, so there is no overhead resistance between 187.88 and the target and nothing anchors it - treat the 2.22:1 as an assumption of trend continuation rather than a measured reward. THIRD, the entry requires a 2.3% pullback that may never come - XLV has not traded below 185.36 since 2026-11-09 - so the most likely outcome is no fill at all. That is deliberate; chasing at 187.88 breaks the reward-to-risk floor. FOURTH, a strong NVDA print tonight reverses the rotation wholesale: XLV's 14-point outperformance is partly the mirror image of the AI de-rating, and if QQQ rallies 5% the defensive bid unwinds first. Note also that XLV is the THIRD position on the healthcare driver alongside open PFE and ABT, which is the correlation cap in config/strategy.md, so no further healthcare idea can be added behind it - and PFE and ABT are themselves 2.40% and 2.74% of XLV, so the three overlap rather than diversify.",
+      "counter_argument": "The strongest case against is that +28.93% in six months is not a de-rating being corrected, it is a sector that has already re-rated, and buying a leadership sector 2.3% from its high late in a rotation is buying the crowded hedge at its highest price - the same trade that made XLP and gold look obvious shortly before gold fell 17.8% off its high. That is a real analogue and it is why the entry is a limit below the market and the stop is below the SMA50 rather than a token level: if the rotation is finished, 184.00 trades and then 174.50 trades, and the loss is 2.35 ATR as designed. What the exhaustion argument does not account for is that the relative strength is still widening, not narrowing - the one-month relative gain (+9.37) is running at a faster rate than the three-month (+14.27 over three times the window). Two concessions the red team insisted on, neither of which is answered: the acceleration is itself mostly LLY, which is 16.85% of the fund and ran +13.89% in that month; and the 203.50 target has no structural anchor because the fund is in blue sky, so the ratio that qualifies this idea is derived from the stop rather than measured to a level. The entry and the stop are structural; the target is not, and that asymmetry is the weakest part of the idea.",
+      "evidence": [
+        {
+          "kind": "positioning",
+          "detail": "Two measurements, same kind so counted once. (1) relstrength XLV --peer SPY: XLV +6.32% 1m / +10.69% 3m / +28.93% 6m against SPY -3.05% / -3.58% / +0.18%, i.e. +9.37 and +14.27 points relative - the strongest of seven sector ETFs measured (XLP +8.73/+11.78, XLF +7.84/+4.17, KRE +6.46/-2.48, XLE -3.62/+3.60, GLD -4.56/-7.87, SLV -14.66/-22.62). (2) BREADTH, as CORRECTED BY THE RED TEAM. The original entry claimed the eight largest constituents were all positive over six months and that the sector gain therefore could not be one mega-cap. The list was not the eight largest - it named BMY, which is the 14th holding at 1.89%, and omitted GILD, the 8th at 3.04% - and the fetched weights do not support the inference: LLY 16.85%, JNJ 10.05%, ABBV 7.61%, UNH 5.34%, MRK 5.32%, TMO 3.78%, AMGN 3.67%, GILD 3.04%, so the top three are 34.51% and the top five 45.17%. Six-month returns are positive for all eight of the true largest (LLY +44.89%, JNJ +23.43%, ABBV +40.66%, UNH +5.34%, MRK +28.34%, TMO +56.41%, AMGN +42.52%, GILD +29.24%), so the count is right; the weighting is what fails. On current weights LLY contributes roughly 2.3 of XLV's +6.32 one-month points and 7.6 of its +28.93 six-month points. Breadth in count, concentration in weight - the idea survives on relative strength, not on breadth.",
+          "source": "https://stockanalysis.com/etf/xlv/"
+        },
+        {
+          "kind": "technical_level",
+          "detail": "history XLV --days 120: close 187.88, ATR14 3.834 (2.04%), SMA20 184.26 and SMA50 175.37 both rising and below price, range 145.31-192.32 with the high on 2026-11-05. Entry 183.50 sits on the SMA20; the 174.50 stop sits below the SMA50, 9.00 away = 2.35 ATR, against the 1.8 ATR ETF floor. Reward to 203.50 is 20.00, so R:R 2.22, and the worst fill in the zone (184.00) still gives 2.05. Average dollar volume $1.95B.",
+          "source": "https://stockanalysis.com/etf/xlv/"
+        }
+      ],
+      "sources": [
+        "https://stockanalysis.com/etf/xlv/",
+        "https://www.sectorspdrs.com/mainfund/xlv",
+        "https://stockanalysis.com/etf/xlv/holdings/"
+      ],
+      "rank": 1,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.22,
+        "claimed_risk_reward": 2.22,
+        "breakeven_probability": 0.311,
+        "stated_win_probability": 0.42,
+        "expectancy_r": 0.352,
+        "claimed_edge": 0.109,
+        "stop_atr_multiple": 2.35,
+        "live_price": 187.88,
+        "live_price_asof": "2026-11-16T21:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 888.6,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": 3.8338,
+        "checked_at_et": "2026-11-17T06:48:45-05:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.22:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 183.5 is -2.3% from live 187.88"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "warn",
+            "detail": "no date given for a timed idea"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 5.22 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "stop_distance",
+            "status": "pass",
+            "detail": "stop is 2.35 ATR from entry, clear of the 2.25 ATR guide for a swing etf"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "42% claimed vs 31% break-even at 2.22:1 \u2014 expectancy +0.35R"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-11-16T21:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "no bid/ask available (normal outside regular hours)"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "3% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 3 rests on 2 independent kinds: positioning, technical_level"
+          },
+          {
+            "check": "sources",
+            "status": "pass",
+            "detail": "all 3 checked source(s) resolve"
+          }
+        ]
+      }
+    }
+  ],
+  "watchlist": [
+    {
+      "symbol": "BABA",
+      "instrument": "Alibaba Group Holding",
+      "note": "Rejected both directions, but the positioning read is the cleanest one-sided set-up found today: analyst bullish share is 91.5% with revision_direction flat - unchanged through a 32.4% decline off the 134.09 high and four consecutive EPS misses (-20.69%, -89.50%, -38.47%, -22.09%). Closed 2026-11-16 at its 120-day low of 90.57. The sell side has not cut this name at all. No short entry exists that is not chasing a new low, it needs margin, ATR is 4.21%, and Chinese ADRs carry stimulus-headline squeeze risk a 2.5-ATR stop would not survive.",
+      "trigger": "A fifth miss on the 2026-11-19 BMO print would start a downgrade cycle that has not begun. Revisit then - on a bounce entry, not at the low."
+    },
+    {
+      "symbol": "XLF",
+      "instrument": "Financial Select Sector SPDR Fund",
+      "note": "Sound thesis with an internal contradiction that could not be resolved in the research window, so no recommendation. The bear steepener (10y-2y +0.29, 10Y 5.15% vs fed funds 3.88%) widens bank NIM, and XLF is +7.84 vs SPY over 1m at 58.18, 3.1% off its 60.04 high and above SMA20 57.22 and SMA50 55.97. But KRE is 7.9% off its high, below its SMA20 (72.53 vs 72.19 close) and -2.48 vs SPY over 3m - the credit-sensitive half is not participating, which most plausibly says the market is pricing bank credit risk, the thing a steepener thesis ignores.",
+      "trigger": "KRE reclaiming its SMA20 would resolve the divergence in the thesis's favour. No KRE idea either way - CLAUDE.md records KRE as this repo's stop-walking offence."
+    },
+    {
+      "symbol": "GLD",
+      "instrument": "SPDR Gold Shares",
+      "note": "The 2026-11-16 short at entry 366.00 (target 336.00, stop 381.00) never filled - GLD's entire 2026-11-16 range was 351.96-356.29, so 366.00 did not trade after publication. It is awaiting entry, now 3.7% above market at 352.93, and 17.81% off the 429.42 high. Deliberately not re-pitched: engaging it needs a 3.7% rally and there is no new information since 2026-11-16. The 366.00 level remains structurally valid, sitting between the SMA20 at 367.45 and the 2026-11-11 high of 369.38.",
+      "trigger": "A bounce into 366.00. Not a new idea - the existing unfilled order."
+    },
+    {
+      "symbol": "SLV",
+      "instrument": "iShares Silver Trust",
+      "note": "Rejected despite an intact and accelerating downtrend: 42.39, 38.9% off the 69.34 high, closed 2026-11-16 at a new 120-day low (bar low 42.01, gapped down from 44.13), SMA20 47.27 sitting 11.5% above price. Rejected because the only honest entry is a bounce into the 44.00-45.20 shelf, because it is the same real-rates driver as the already-published GLD short and so a second unit of one bet, and because shorting it needs margin.",
+      "trigger": "A bounce into 44.00-45.20, and only if the GLD short has closed or been cancelled - otherwise it doubles one driver."
+    },
+    {
+      "symbol": "JJSF",
+      "instrument": "J&J Snack Foods Corp",
+      "note": "The closest call of five small/mid-cap earnings names screened, rejected on arithmetic rather than story. Positioning is genuinely good: revision_direction improving, bullish share 88.9% and +11.1pp, last print +11.94%, +15.13 vs SPY 1m, above a rising SMA20 86.55 and SMA50 82.35 at 88.26, 4.8% off the 92.75 high. But ATR14 is only 2.638 (2.99%), so from a post-print breakout entry near 93.00 the 2.0 floor demands a 104-107 target - +17.8% to +21% from the last close and 12-15% above its own 120-day high. That is a target built to clear a floor, which is the thing this repo refuses to publish.",
+      "trigger": "A post-print pullback that puts a defensible target inside the 120-day range. Reports 2026-11-18 BMO."
+    },
+    {
+      "symbol": "NVDA",
+      "instrument": "NVIDIA Corp",
+      "note": "Deliberately no position, either direction, into tonight's print. Jensen Huang resigned as president, CEO and board member ~2026-11-12; Colette Kress is interim CEO while remaining CFO, with no named successor, and a reinstatement campaign is live (~180k-signature petition, a Gerstner/Baker open letter, reported allies' war room). NVDA is 156.14, 35.84% off its 243.37 high, with ATR14 11.33 = 7.25% of price - so a 2.0-ATR swing stop is 22.7 points wide and the event is an overnight gap that would not honour it anyway. Taking the stop tighter to make a ratio work is the exact failure this repo's rules name. 148.80, the 2026-11-12 resignation-bar low on 747.7M shares, is the only level in this decline with real volume beneath it.",
+      "trigger": "Not a trade until there is a named permanent CEO or the post-print range establishes a level. This is context for everything AI-adjacent, not a setup."
+    },
+    {
+      "symbol": "HII",
+      "instrument": "Huntington Ingalls Industries",
+      "note": "Not an idea - a flag on an open position. HII is 302.09 and +15.3% from a 262.00 entry with NO stop at all, which is the largest unprotected open profit in the book. ATR14 is 14.019, so an honest 2.0-ATR stop would be 28 points wide. Held as a long-horizon position and not retro-fitted with a stop today, because inventing a stop late is its own distortion, but recorded here rather than left silent. PFE (28.86, +4.5%) carries the same no-stop condition on a smaller gain.",
+      "trigger": "Decide a stop deliberately on a day it is the primary task, not as an afterthought to a morning report."
+    },
+    {
+      "symbol": "BJ",
+      "instrument": "BJ's Wholesale Club Holdings Inc",
+      "note": "RED TEAM KILL (was rank 1, conviction 4). The thesis is fine and the stop is honest; the 2.000:1 that qualified it is not. The entry is 113.60 with the stop at 107.40 (risk 6.20) and the target at 126.00 (reward 12.40). The red team fetched 400 sessions instead of 120 and the picture changes: BJ's range high over 400 days is 121.10, not 113.35, so 113.35 is a FIFTY-TWO-WEEK high and the last close of 111.88 is 7.61% below the 18-month high, not the '1.3% from the all-time high' the key_risk asserted. That puts a real prior high at 121.10 directly between the entry and the target. Priced to that level the trade is reward 7.50 against risk 6.20 = 1.21:1, well under the 2.0 swing floor. The 2.000:1 exists only by placing the target 4.90 points PAST the only identifiable overhead resistance, into new all-time-high territory, inside a 15-session horizon - and 126.00 and the 133.00 second target are round numbers with no derivation anywhere in the evidence, which lists structure for the entry (113.35) and the stop (the 107.60 shelf low of 2026-11-06) and nothing at all for the target. A shelf measured move gives 113.35 + 5.75 = 119.10, which is lower still. So a structurally anchored target existed, it failed the floor, and the published target went past it instead: the target-side version of the stop-walking this repo already refuses. Three aggravations, none of which is the reason for the kill: the ratio is exactly 2.000 at the single highest permitted fill, from a stop-limit breakout order whose fill price is not controllable, so any slippage above 113.60 puts a triggered trade under the floor; insider flow is zero open-market buys against 27 sales totalling $35,591,483 over six months with Form 144s on 2026-10-15 and 2026-11-02; and the report concedes the target 'needs a beat-and-raise rather than an in-line quarter' with earnings on 2026-11-20, inside the horizon. Everything else checked out and is worth keeping: four EPS beats for four, +12.5 points on XLP over three months (share gain, not the sector bid), flat sell-side at 9/9/13/1 unchanged since August, close 111.88 on 1.997M shares against 0.95-1.6M the prior week, ATR14 2.4775, SMA20 108.03 and SMA50 100.32 both rising below price. SEPARATELY, and NOT a reason for the kill: the validation spread check failed BJ at 25.76% on a Nasdaq bid/ask of 96.23/124.68. That is a data artifact, not a market - the record carries is_real_time false and asof 'Nov 16, 2026', the two prices sit -12.8% and +12.9% around the 110.34 prior close, and BJ's own 2026-11-16 range was 110.52-111.93 on $208M of average daily dollar volume. A 25% spread in a $208M-a-day name is impossible; check_spread has no session guard, so it warns when depth is missing but fails when depth is nonsense.",
+      "trigger": "Two honest ways back, both requiring a level rather than a ratio. (1) A decisive break and hold above 121.10, which turns the 18-month high into support and makes blue-sky targets arguable instead of assumed. (2) A PULLBACK entry priced to the 121.10 resistance: at or below 111.19 with the stop at ~106.20 (2.00 ATR, comfortably under the 107.60 shelf) the reward to 121.10 is 9.91 against 4.95 of risk = 2.00:1, clearing both the reward-to-risk floor and the 2.0-ATR stop floor at once. Note this is NOT today's idea - it is a pullback into a print rather than a breakout confirmation, and the report was right to refuse to buy ahead of 2026-11-20 without the breakout, so it is a setup for after the print, not before it. Do not revive the 126.00 target without a derivation.",
+      "demoted_from_rank": 1,
+      "demotion_reason": "Reward-to-risk is an artifact of an unanchored round-number target placed 4.90 points beyond the 121.10 prior high; priced to that resistance the idea is 1.21:1 against a 2.0 floor."
+    },
+    {
+      "symbol": "ACM",
+      "instrument": "AECOM",
+      "note": "NOT a watchlist idea and NOT a new short - an OPEN LONG to CLOSE IN FULL at the 2026-11-17 open, or on any strength toward 74.00. Moved out of recommendations by the red team for a structural reason given in data_quality_notes, not because the exit is wrong: the exit is right. Long opened 2026-11-07 at 66.74, now 72.50, +8.6%. The reason to hold was the FY2026 print and it landed on 2026-11-16: the 8-K filed that day (accession 0001104659-26-128300) confirms the Q4/full-year release and a quarterly dividend declared at $0.34, up 10% from $0.31, payable 2027-01-22 to holders of record 2027-01-06. The stock closed 72.50, +2.8%, on 2.349M shares against 1.215-1.459M on each of the four prior sessions, on a day SPY fell 1.91%. That is the thesis paying off and the news being out. Forward geometry, with the red team's arithmetic correction: the remaining reward to the 77.22 target is 4.72. The original note called its 67.00 stop 'an honest 2.0-ATR stop' and that label is wrong - ATR14 is 2.2638, so 2.0 ATR is 4.53 and sits at 67.97; the 67.00 used is 5.50 below the price, which is 2.43 ATR, chosen to sit just under the 2026-11-09 swing low of 67.17. The conclusion is unchanged either way and the stated 0.86:1 is right for the level quoted: 4.72 against 5.50 is 0.86:1 at the 67.00 structural stop, and 4.72 against 4.53 is 1.04:1 at a true 2.0-ATR stop. Both are far under the 2.0 floor. Risking 7.6% of an open profit to make 6.5% more, with no catalyst left inside the horizon, is a worse bet than the one originally taken. Against holding: a 10% dividend raise is a statement about forward free cash flow and letting winners run is how a book makes money - answered with this report's own record rather than by assertion, 4 of 42 closed trades have reached their target, a 10% hit rate. The dividend raise is a reason to own AECOM; it is not a reason to keep this swing position open past its catalyst. Accepted cost: ACM is well above its SMA20 (65.45) and SMA50 (62.69) and may simply run to 77.22 and beyond, in which case this exits a winner early.",
+      "trigger": "No trigger - a close instruction for today's open. Nothing to wait for.",
+      "demoted_from_rank": 2
+    },
+    {
+      "symbol": "ONON",
+      "instrument": "On Holding AG Class A",
+      "note": "NOT a watchlist idea and NOT a new short - an OPEN LONG to CLOSE IN FULL at the 2026-11-17 open, rather than waiting for the 30.69 stop. Moved out of recommendations by the red team for the structural reason in data_quality_notes; the exit itself stands. Long opened 2026-11-03 at 34.20, now 32.76, -4.2%. The position was opened ahead of a Q3 print; the print has happened and the verdict is against it. ONON filed Q3 2026 results on Form 6-K on 2026-11-10 (report date 2026-09-30, CIK 0001858985) and beat consensus EPS by 12.88% ($0.46 against $0.4075) - and the stock fell from 37.53 to 34.70, -7.5%, on the day, then closed lower in all four following sessions to 32.76, with highs stepping down 37.99, 35.58, 35.55, 34.51, 34.28, 33.64. finnhub revision_direction is deteriorating and bullish share is 81.6% and falling 1.7 points, so the sell side is being reduced rather than defended. A 13% beat sold for 13% over five sessions is the market saying the earnings line was not what mattered, and with October PPI final demand at +6.5% YoY the squeeze is on exactly the discretionary wallet that buys premium footwear. The specific reason to close rather than wait: the 30.69 stop is only 2.07 away, 1.20 ATR on an ATR14 of 1.7189, and CLAUDE.md records that all ten of this report's first stop-outs had a stop tighter than 1.6 ATR - a stop that close is not protection, it is a coin flip on one day's range. Accepted cost: the SMA50 at 32.26 is 1.5% below the last close, so if it bounces there this exit will look like selling the low by a whisker; the reason is the rejected beat, not the distance to the stop. Source URL corrected by the red team - the original https://stockanalysis.com/quote/nyse/ONON/ returns 404 (the validation sources check caught it); the working page is https://stockanalysis.com/stocks/onon/.",
+      "trigger": "No trigger - a close instruction for today's open. Nothing to wait for.",
+      "demoted_from_rank": 3
+    },
+    {
+      "symbol": "TLT",
+      "instrument": "iShares 20+ Year Treasury Bond ETF",
+      "note": "NOT a watchlist idea and NOT a new short - an OPEN LONG to CLOSE IN FULL at the 2026-11-17 open, without waiting for the 78.80 stop. Moved out of recommendations by the red team for the structural reason in data_quality_notes, and relocating it matters more here than anywhere else: a (TLT, sell) row already exists in the tracker as a target_hit short opened 2026-09-02, so leaving this in recommendations would have opened a SECOND TLT short rather than closing the long. Long opened 2026-11-04 at 80.30, now 79.38, -1.1%. The thesis was that the long end rallies as the Fed cuts; the fetched data says the opposite is happening, and the red team re-verified every figure against FRED this morning: DGS10 5.15% and DGS2 4.88% (both 2026-11-13), DFF 3.88% (2026-11-13), T10Y2Y +0.29 on 2026-11-16 against a prior 0.27 - so 127bp of term premium above policy and a curve still steepening. October PPI final demand ran +6.5% YoY. That is a bear steepener, the specific regime that hurts 20-year duration most, and a long-duration long is the worst instrument to hold into it. Price confirms: 79.38 is below both the SMA20 (81.09) and the SMA50 (80.15), and the existing 78.80 stop is 0.58 away, 0.75 ATR on an ATR14 of 0.7767 - one ordinary day from being stopped regardless of thesis. Against closing: a sharp equity drawdown normally sends money into long Treasuries and could carry TLT to the 84.30 target without the inflation picture changing. Answered - it has not happened. NDX is already in correction and had its worst day since 2020 on 2026-11-05, and TLT has made no net progress across two weeks of equity decline. The duration bid is absent exactly when it should be most visible, which is the evidence that the long end is driven by inflation and supply rather than risk aversion. Accepted cost: this books a small loss with price only 0.58 above the stop, so a growth scare out of tonight's NVDA print makes the exit look premature. The reason to exit is that the thesis is contradicted, not that the price fell.",
+      "trigger": "No trigger - a close instruction for today's open. Nothing to wait for.",
+      "demoted_from_rank": 5
+    },
+    {
+      "symbol": "BCC",
+      "instrument": "Boise Cascade Co",
+      "note": "NOT a watchlist idea and NOT a new short - an OPEN LONG to CLOSE AT MARKET at the 2026-11-17 open. Moved out of recommendations by the red team for the structural reason in data_quality_notes. THIS IS THE FOURTH CONSECUTIVE MORNING THIS INSTRUCTION HAS BEEN ISSUED - 2026-11-14, 2026-11-15 (where validation demoted it to the watchlist and replaced the instruction with 'entry or target is missing'), 2026-11-16, and now - and state/open_positions.json still shows it open from 2026-08-18. The repetition is itself the finding: a discretionary close is not something the pipeline can execute or grade, so it will keep reappearing until someone closes it by hand. Long opened 2026-08-18 at 76.50, now 66.37, -13.2%. The housing/building-products thesis required mortgage rates to fall; instead DGS10 is 5.15% with October PPI final demand at +6.5% YoY, so the long end is going the other way. BCC closed 66.37 against a 90-day range low of 66.05, 24.9% off its 88.43 range high, below its SMA20 (73.83) and SMA50 (74.78), with ATR14 3.62 (5.45%) - a new 90-day low with price 7.5 ATR below the SMA50. The position has never had a stop, which is why a 13% loss was allowed to accumulate, and the fix is to close it rather than to invent a stop 13% late. Against closing: the entire 2026 rate shock is arguably already in a 25% drawdown, so selling now captures the de-rating with none of the recovery, and a growth scare that pulls the 10Y down is exactly what BCC needs. Answered on the dates - the 10Y has not fallen through two weeks of equity correction, and BCC made a new 90-day low on 2026-11-16 while doing so. A cyclical that cannot rally on its own best macro news is not bottoming. Accepted cost: this exits at the low of the range, which is the worst-looking moment to sell and is often the bottom. Taken deliberately - a 90-day position with no stop, no catalyst inside its horizon and a macro driver running against it is a position held by inertia, and inertia is what turned this into -13%.",
+      "trigger": "No trigger - a close instruction for today's open, outstanding since 2026-11-14.",
+      "demoted_from_rank": 6
+    }
+  ],
+  "validation_summary": {
+    "checked": 1,
+    "passed": 0,
+    "warned": 1,
+    "failed": 0,
+    "enforced": true
+  }
+}
