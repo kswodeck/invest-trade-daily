@@ -1,6 +1,6 @@
 # Odd-lot tender screener — 2026-11-18
 
-Run 2026-11-18 05:31 ET (premarket slot). 5 offers tracked, 0 clear every gate: 0 Tier A, 0 Tier B, 0 Tier C.
+Run 2026-11-18 18:31 ET (evening slot). 5 offers tracked, 0 clear every gate: 0 Tier A, 0 Tier B, 0 Tier C.
 
 **No Tier A opportunities today.** That is the ordinary result — an odd-lot tender with a 3%+ spread and a clean condition set is rare, and the thresholds below are not moved to produce one.
 
@@ -21,7 +21,7 @@ _None._
 | Ticker | Form | Filed | Reason |
 | --- | --- | --- | --- |
 | — | SC TO-I | 2026-11-13 | no 'fewer than 100 shares' odd-lot threshold in the document; odd lots mentioned but no acceptance-before-proration language |
-| MYPS | SC TO-I | 2026-11-12 | spread -13.83% below the 1.5% floor |
+| MYPS | SC TO-I | 2026-11-12 | spread -14.51% below the 1.5% floor |
 | INVE | SC TO-I | 2026-10-21 | odd lots mentioned but no acceptance-before-proration language |
 | XFLT | SC TO-I | 2026-09-18 | no 'fewer than 100 shares' odd-lot threshold in the document; odd lots mentioned but no acceptance-before-proration language; an exchange offer for other securities, not cash; no expiration date could be read from the document |
 | — | EX-99 | 2026-09-01 | odd lots mentioned but no acceptance-before-proration language; no cash consideration stated in the document; subject security is not common equity (unidentified security); no expiration date could be read from the document |
