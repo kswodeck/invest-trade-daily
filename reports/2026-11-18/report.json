@@ -1,0 +1,577 @@
+{
+  "date": "2026-11-18",
+  "generated_at_et": "2026-11-18T06:41:44-05:00",
+  "research_minutes": 39,
+  "truncated": false,
+  "data_quality_notes": "RESEARCH WAS NOT TRUNCATED. The research phase ran 06:01-06:40 ET of a ~60 minute budget and closed with a RESEARCH COMPLETE block, so nothing here was abandoned for want of clock. candidates.jsonl held 5 lines covering 3 distinct symbols (BCC was captured three times as its framing was corrected; only the last counts). All three are published. Note the log's own timestamp correction: labels from ~06:18 onward ran up to 20 minutes fast, so block times in notes.md are ordered correctly but should not be used to judge pacing.\n\nWHY ONLY ONE NEW TRADE IDEA, AND IT IS NOT A THIN TAPE. Four long setups were fully worked up and rejected on arithmetic, not sentiment: J 1.64:1, AMTM 1.28:1, BURL 0.83:1, and MDT where a 2:1 target would sit 7.2% above the highest price it has traded in 400 sessions. The structural reason is stated in the 06:27 note: R:R = (target-entry)/(entry-stop), so with the stop floored at 2.0 ATR for a stock, clearing 2:1 requires the target to be at least 4 ATR away - which in today's 4-6% ATR equity tape means a 15-20% move and therefore, almost always, a target in dead space above real resistance. The floors are rejecting swing equity longs close to categorically today. That is them working. Two further index shorts cleared the floors on the arithmetic alone - QQQ at 2.53 and DIA at 3.32 - and were deliberately NOT published, because all three are one bet on US equity beta against the rate path and publishing them would read as three independent confirmations of one view.\n\nRATIOS ARE NOT CLUSTERED AT THE FLOOR. 2.77 against a 2.5 long_term floor and 2.27 against a 2.0 swing floor are 0.27 above their bars with the levels derived first: CVS's target is 13x a guided $8.20, a multiple the tape paid within the last 140 sessions (110.68 = 13.5x), and IWM's 238.69 target is its own 180-day low read off six history windows. Both stops/downsides were checked the other way too - IWM's 14.00 of risk is 2.41 ATR against the 1.8 ETF floor, and CVS carries a stated bear case rather than a stop, as long_term permits.\n\nPRICES: every figure is the 2026-11-17 16:00 ET close, re-quoted this morning at 06:5x ET via finnhub (session=pre, age ~879 min). At 6am ET the previous close is the freshest honest equity price; that is a closed market, not stale data. No intraday price is claimed anywhere in this report.\n\nSOURCES THAT FAILED, AND WHAT EACH COST. (1) Yahoo Finance chart API returned HTTP 429 on every attempt, and finnhub refuses indices ('Market data subscription required for CFD indices'). So SPX, NDX, DJI, RUT, VIX, /ES, /NQ, DXY, the 10y quote, gold and WTI are all unavailable - market_context.levels carries null for them rather than a remembered number. Consequence: no futures idea was published at all, and the IWM short is a DOCUMENTED SUBSTITUTION for the /M2K micro Russell contract config/universe.md prefers for an index view, because naming a /M2KZ6 entry price would have been fabricated. The stale /MBTZ6 short could not be marked for the same reason. (2) No event contract is quotable: 'FOMC', 'interest rate', 'recession', 'inflation' and 'Bitcoin' all returned count 0, and 'Fed' returned 17 Kalshi KXMVECROSSCATEGORY sports tickers matched on a substring, every one with null bid, ask, last and volume. None was published. (3) Short interest failed on every symbol tried (api.nasdaq.com read timeout), so there is no short-interest evidence anywhere in today's work. (4) The options-implied move endpoint returned HTTP 401, so no idea today - including the IWM short - was checked against what the options market prices. (5) sma200 comes back null on a 140-day fetch; where a 200-day average mattered (IWM, CVS, AMTM, MDT) a 400-day window was used instead.\n\nTHE DECEMBER HIKE PROBABILITY IS APPROXIMATE AND SOURCED HONESTLY. The 91-95% figure behind the IWM short comes from prediction-market and aggregator pages, several of which disagree on the meeting date (Dec 8-9 vs Dec 9) and some of which are low quality. The DIRECTION is corroborated four ways and independently by the FRED curve itself (effective fed funds 3.88% against a 2y at 4.83% - about 95bp of tightening priced into the front end). Treat the exact percentage as approximate. This is also why IWM is published at conviction 4 rather than the 5 its four distinct evidence kinds would score: no primary Fed document and no valuation anchor underpins it. Validation will report 'supported score 5'; that disagreement is deliberate understatement and should not be corrected upward.\n\nBCC IS AN EXIT, NOT AN IDEA, AND IT CARRIES NO win_probability ON PURPOSE. The position has reached the 65.00 bear case the report itself published (65.14 close, 0.22% off a 140-day low of 65.00, six consecutive down closes). The honest estimate that 110.00 prints before 65.00 is below the 25.6% break-even baseline 2.91:1 implies - that negative expectancy IS the argument for closing - but a stated probability below baseline is a hard FAIL that Phase 2d demotes to the watchlist, and the tracker reads only `recommendations`. A demoted BCC never receives the 64.50 stop and goes on running unprotected, which is the exact defect being fixed. An absent win_probability is a WARN, so the field is omitted and the reasoning sits in the thesis. Do not repair this by inventing a probability above the baseline, and do not widen or remove the 64.50 stop - it sits below the reached bear case by design, because the instruction is to exit. The entry is restated UNCHANGED at 76.50 because a filled entry is never amended; 65.14 is NOT a cheaper entry on the same idea and position_size_pct is 0.\n\nTHE THIRD CVS ENTRY IN A MONTH, DECLARED. CVS stopped out 2026-11-04, was re-published at 79.00 on 11-05 and never filled while the stock ran to 90.71. The research log listed it at 06:32 as 'STALE - withdraw' with the trigger 'a genuine re-underwrite, not a level'; the 06:42 block did that re-underwrite and reversed the call. That is the one place in today's log where a later block supersedes an earlier one. What changed is not the level but that a primary document (the Q3 2026 release) and a defended valuation now stand behind it. The 76.00-78.00 zone sits 9.7% BELOW the last price of 85.81 and may never fill - that is stated in key_risk rather than discovered later, because two of this month's shorts (GLD, /MBTZ6) were directionally right and made nothing for exactly that reason.\n\nPOSITION BOOK: all 15 open positions reviewed and all 8 awaiting-entry orders marked. ACM HIT ITS 77.22 TARGET on the 11/17 gap open (+20.7%, closed 80.53 on a +11.08% day after FY2026 results) and is closed - the win is banked and it is deliberately not re-pitched, because a long_term re-entry at 80.53 is 1.28:1 and would require an entry at or below 74.43. BCC closes. ONON holds with its stop deliberately NOT widened at 0.65 ATR from the market - widening a stop because price approached it is the free-ratio manipulation check_stop_distance exists to catch, run in reverse. DKS holds into its 11/23 print, the only earnings event in the entire book across a 21-day calendar (consensus EPS $1.4242; the calendar returns no hour, so bmo vs amc is UNCONFIRMED and the 11/13 publication's 08:30 ET assumption must not be restated as verified). PFE holds - MEVPRO-1 is still ACTIVE_NOT_RECRUITING per ClinicalTrials.gov NCT06551324 (status verified October 2026), so its published invalidation is intact, and the Q4 2026 readout window is still open on an unresolved binary inside six weeks. XLV is left live and unamended at 183.50 after yesterday's amendment; a third publication with identical levels would be anchoring, not conviction. GLD (406.77 SELL, gold now 352.48, entry 15.4% above market) and /MBTZ6 (74,075 SHORT, bitcoin 64,158, entry 13.4% above market) are WITHDRAWN - both calls were right and both made nothing because an entry placed against the direction of your own thesis only fills when you are wrong. Do not re-pitch either at the market.\n\nTENSION DECLARED RATHER THAN HIDDEN: BCC is being closed on a housing-and-rates argument while the LEN buy order at 79.50 is kept live. They are genuinely different claims - LEN was published at 0.92x book with Berkshire buying $595m on the open market and its own text says it is not a call on the rate cycle turning, whereas BCC's thesis WAS a demand call. Still, both are housing-levered, so if LEN fills the book carries housing exposure the BCC close was meant to reduce. Separately: ADM's 68.80 entry sits 0.01 above its 140-day low with the SMA20 and SMA50 far above, so it only fills on a break to new lows - kept, but a fill there is a fill into new-low momentum.\n\nSTRUCTURAL GAP FLAGGED FOR THE REPO, NOT ACTED ON: a trailing protective stop on a filled winner is currently unrepresentable. HII is +13.5% (entry 262.00, last 297.44) with stop None; a protective 278.00 would lock in roughly +6% but sits above the entry, so |entry-stop| = 16.00 = 1.12 ATR, failing the 2.0 floor, and the R:R goes negative. The only stop satisfying the floor from entry is ~233.37, which is 21.5% below the market and protects nothing. HII and PFE are therefore left unamended rather than broken to fit the schema. BCC ran 91 days with no stop at all, which is what that gap costs.\n\nCOVERAGE GAP WITH A NAMED HANDOFF: LOW, TGT and TJX all report before the open TODAY and PANW reports amc; none was available or indexed when research searched at 06:28 ET, so nothing in this report is a result - only consensus and pre-release facts. Those three plus WMT bmo on 11/19 are the direct read-across to the DKS print on 11/23. Tomorrow's run should open by reading those actuals against the DKS position (entry 144.50, last 140.87, stop 129.00), because DICK'S own 2026-08-25 guidance cut was blamed on the acquired Foot Locker unit rather than the core banner, and off-price strength against home-improvement weakness bears directly on which of those reads is right.\n\n=== RED TEAM (PHASE 2C), 2026-11-18 ===\n\nNOTHING WAS CUT, AND THAT IS THE FINDING RATHER THAN A PASS. All three entries\nsurvive. Two of them survive because their load-bearing facts were re-fetched\nfrom source and matched exactly; the third was downgraded for a claim that did\nnot. No idea was moved to the watchlist, because the defect found was an\noverstated confirmation, which the fix for is a lower score - not a deleted\nidea. Note that the correlation test the skill asks for was already applied\nupstream: QQQ at 2.53 and DIA at 3.32 cleared the floors and were deliberately\nwithheld as one bet with IWM on US equity beta, so there is nothing left to cut\non correlation grounds - the surviving three are a healthcare valuation long, a\nsmall-cap index short and an exit.\n\nCVS (rank 1, conviction 5) KEPT AT 5, having been attacked hardest for being\nthe 5. Every number in its primary_document evidence was re-fetched from the\nSEC exhibit independently of the research phase and matches the filing to the\ndecimal: adjusted EPS guidance at least $8.20 raised from $7.90-8.10, GAAP at\nleast $6.98 from $6.84-7.04, operating cash flow at least $15.5bn from at least\n$11.5bn, MBR 91.3% against 92.8%, revenues $108.4bn +5.4%, adjusted EPS $2.09,\nGAAP $1.68, nine-month OCF $15,318m, and NO 2027 guidance of any kind - which\nis what key_risk already says is the hole in the idea. The insider buy was\nverified against the Form 4 itself (accession 0000064803-26-000112, the only\nCVS Form 4 since 2026-11-01): Shah Prem S, 2026-11-06, code P, acquired, 23,855\nshares at 83.895, 88,516.1575 held after, so the purchase lifted his own\nposition by roughly 37%. The price levels were re-pulled: 140-session range\n77.33-110.68, SMA20 88.8985, SMA50 89.2922, ATR14 3.6883 - all exact. The\nentry arithmetic was recomputed by hand and the quoted break-points are right,\nincluding the 78.314 tick above which the idea stops clearing its 2.5 floor and\nthe 1.11:1 it degrades to at the 85.81 last price. ONE CORRECTION: the Form 4\ntitles Shah 'EVP and Group President', not 'President'. ONE ADDITION, because\nit changes what a reader should do this morning: state/open_positions.json\ncarries a PENDING CVS long at entry 79.00 / target 108.00 from the 2026-11-05\npublication, so today's 77.50 amends that unfilled position rather than opening\na second one, and anyone holding a 79.00 limit must move it down - 79.00 is\nabove the price at which this idea's own arithmetic works. I considered and\nrejected the objection that valuation_anchor is arithmetic on the other two\nevidence entries rather than a third independent confirmation:\nconfig/strategy.md defines the kind by whether a defended number with its\nmethod shown is given, which it is, and manufacturing an objection to look\ndiligent is as harmful as missing one.\n\nIWM (rank 2) DOWNGRADED 4 -> 3 AND ITS HIT RATE 42% -> 36%, on a factual error\nplus a mechanism that does not fit the holding period.\n\n  (1) THE VOLUME CONFIRMATION IS FALSE AND HAS BEEN REMOVED FROM THE THESIS.\n  The report claimed the breakdown came 'on 29.1M shares against a ~20M\n  average' and that it was 'confirmed rather than anticipated' on '45%\n  above-average volume'. Recomputed from the same nasdaq series: 11/17 traded\n  29,111,850 against a 26,337,142 average over the preceding eight sessions\n  (11/05-11/16) - +10.5%, not +45% - and +16.3% against the 25,028,995 30-day\n  average. The ~20M figure matches 10/21-10/30 (20.09M), three weeks earlier,\n  not the eight sessions preceding the break. Worse for the thesis: 11/05, the\n  session that BUILT the 270.52 shelf, traded 50,885,530 - nearly double the\n  day that broke it. A shelf formed on twice the volume that breaks it is the\n  opposite of confirmation, and this was the explicit answer to the 'it could\n  be capitulation' objection.\n\n  (2) THE EDGE MECHANISM DOES NOT OPERATE INSIDE THE HOLDING PERIOD. The\n  counter_argument answered 'you are shorting a 91-95% priced consensus' by\n  pointing at the 81bp of further hikes transmitting to small-cap refinancing\n  'over quarters rather than on the announcement' - while the plan mandates\n  covering into the 12/08-12/09 meeting, about 13 sessions away. A multi-quarter\n  mechanism cannot be the edge in a three-week trade. The catalyst block has\n  been reframed accordingly: the FOMC is this position's DEADLINE, not its\n  catalyst.\n\n  (3) THE SURVIVING CONFIRMATIONS ARE TWO, NOT FOUR. `counter_argument_answered`\n  was removed from `evidence`: it stated the case against and noted the position\n  is sized at 2% and covered early, which is risk management, not the\n  evidence-backed answer the kind requires. `dated_catalyst` is kept on the page\n  but not counted - strategy.md requires the event be verified against a\n  calendar that was fetched, and no Fed calendar was; the date and the 91-95%\n  come from aggregator pages the report itself records as disagreeing on whether\n  the meeting is Dec 8-9 or Dec 9. The direction is independently corroborated\n  by the FRED curve, the probability is not. That leaves technical_level and\n  positioning, and positioning is horizon-mismatched: it cites IWM -10.83% 3m\n  against SPY -4.76%, but over the 20 sessions the trade actually holds for the\n  sign flips - re-measured this morning, IWM -2.69% against SPY -5.26%, 2.57\n  points of OUTperformance, which is the key_risk's own admission confirmed on\n  the relevant window. Two kinds supports 3.\n\n  NOT CUT, AND WHY. The levels are real and were verified: the 120-session low\n  of 267.865, the 180-day low of 238.69, the 250-day low of 228.90, SMA20\n  278.1225 / SMA50 279.7892 / SMA200 279.5119, ATR14 5.8061, and the 11/05 and\n  11/06 shelf lows of 270.52 and 270.23 - every figure exact, no round numbers\n  dressed up. The stop at 284.50 is 2.41 ATR, properly clear of the 2.25 ATR\n  ETF floor, so the 2.27:1 is not the stop-walked artifact this report has\n  shipped before. What remains is a plain momentum-continuation short below\n  three clustered moving averages, which is worth 2% as a hedge against a book\n  that is 14 of 15 long - but it is not a four.\n\n  THE RATIO'S CEILING IS NOW STATED ON THE IDEA. 238.69 is 5.48 ATR from entry\n  with ~13 sessions before the mandatory cover, so the modal good outcome is a\n  discretionary exit short of the target and a REALISED reward-to-risk below\n  2.27. That is not a nudged target - it is the structural consequence the\n  research phase already identified from the other side: with the stop floored\n  at 2.25 ATR, no target closer than ~4.8 ATR clears a 2.0 floor at all, so\n  every idea that passes today passes because a distant prior low happens to\n  sit there. Stating it beats pretending 2.27 is what the trade will pay.\n\nBCC (rank 3) KEPT AS A CLOSE, with `risk_reward` set to null. Its facts check\nout exactly - 65.14 close, 140-day low 65.00 (0.22% away), the six consecutive\ndown closes 70.42/69.52/67.92/67.39/66.37/65.14, SMA20 73.2715, SMA50 74.542,\nATR14 3.5334 at 5.42%, -26.34% off the high - and state/open_positions.json\nconfirms the position is live and was filled 2026-08-18 at 76.50 with stop\nnull, so the amendment is correctly an exit-only change to a filled position\nwhose entry is left untouched. The field was the problem: the entry carried\nrisk_reward 2.913 (validation recomputed 2.79), which publish_sheets.py prints\nas a '2.9:1' in the ratio column of a row whose only instruction is to close.\nThe prose disclaimed it; the sheet would have shown it. Nulled. Also noted and\nleft alone deliberately: the 64.50 backstop is 0.18 ATR below the last close,\nwhich on any live trade would be the tight-stop failure this repo has catalogued\n- here it is the mechanical device that makes a close actually close, and the\nratio it produces is no longer published, so it manufactures nothing.\n\nWHAT I DID NOT GET TO. I did not independently verify the October CPI, the\n10-2 October vote, or the OIS +81.1bp figure behind market_context, and I did\nnot re-read the TJX/LOW/TGT consensus figures in econ_calendar - the three\nrecommendations took the clock, which is the right priority since they carry\nthe size. The December hike probability remains the weakest sourced number in\nthe report and is now flagged as such on the idea that depends on it.\n",
+  "market_context": {
+    "summary": "This is a HIKING cycle into firm inflation with a solid labour market, and it is the frame for everything below. The target range is 3.75-4.00%, the last move was a +25bp HIKE in September 2026, October was a hold on a 10-2 vote with Cook and Hammack dissenting IN FAVOUR of a hike, and December 8-9 is priced 91-95% for another +25bp with OIS carrying +81.1bp of hikes over twelve months - roughly 3.2 more at a 25bp step. October CPI was +0.4% m/m headline and +0.3% core; the FRED series agrees at +0.35% m/m, and unemployment FELL to 4.1% from 4.2%. Curve: 10y 5.12%, 2y 4.83%, effective fed funds 3.88%, 10y-2y +0.30. The 2y sitting ~95bp above effective funds is the front end pricing those hikes directly, and a 5.12% long end against 4.1% unemployment is a restrictive-long-end, non-recessionary tape - the long end is pricing term premium and fiscal supply, not growth. 11/17 was broadly risk-off: of 15 open positions only RTX (+1.60%), TLT (+0.21%) and ACM (+11.08%) closed green. Equity indices sit below their moving averages across the board, with IWM at a 120-session low, QQQ and XLK below all three and SMH -31.5% off its high. The day's most striking cross-asset read is a deflating-asset picture running alongside the hikes: gold -19.4% off its high and at a 140-day low, copper miners -35%, metals -34%, ADM at a 140-day low, and housing weak with both ITB and XHB below their 200-day averages. Commodities and cyclicals are deflating WHILE services inflation keeps the Fed hiking - a late-cycle tightening pattern, and the reason a duration long is not the hedge it looks like. Leadership is healthcare (XLV only -3.7% off its high) and staples (-2.2%), with infrastructure design the standout idiosyncratic strength. Practical consequence for the book: 14 of 15 open positions are longs and three are rate-sensitive, so no new long-duration or rate-sensitive long was published today.",
+    "regime": "risk-off",
+    "levels": {
+      "us10y": 5.12,
+      "us2y": 4.83,
+      "fed_funds_effective": 3.88,
+      "t10y2y": 0.3,
+      "unrate": 4.1,
+      "cpiaucsl_mom_pct": 0.35,
+      "tlt": 79.55,
+      "iwm": 269.05,
+      "gld": 352.48,
+      "btc": 64158,
+      "eth": 1797.87,
+      "sol": 74.43,
+      "spx": null,
+      "ndx": null,
+      "vix": null,
+      "dxy": null,
+      "gold_spot": null,
+      "wti": null,
+      "note": "spx/ndx/vix/dxy/gold_spot/wti are null because Yahoo returned HTTP 429 on every call and finnhub refuses indices. Equity and ETF levels are the 2026-11-17 close."
+    },
+    "econ_calendar": [
+      {
+        "event": "LOW, TGT, TJX Q3 earnings (bmo); PANW (amc) - results not available when research closed at 06:28 ET",
+        "datetime_et": "2026-11-18T08:00",
+        "importance": "high",
+        "consensus": "LOW ~$2.88 EPS on ~$22.36bn, down from $3.06 and into an already-lowered FY sales forecast; TGT ~$2.08 on ~$26.50bn, prior quarter flattered by $1.65 of tariff refunds; TJX ~$1.33-1.34 on ~$15.82-15.85bn with FY2027 margin and EPS guidance already RAISED"
+      },
+      {
+        "event": "WMT Q3 earnings (bmo) - read-across to the DKS position",
+        "datetime_et": "2026-11-19T07:00",
+        "importance": "high",
+        "consensus": null
+      },
+      {
+        "event": "DKS (DICK'S Sporting Goods) Q3 FY2026 earnings - the only earnings event in the entire open book",
+        "datetime_et": "2026-11-23T08:30",
+        "importance": "high",
+        "consensus": "EPS $1.4242. The calendar returns no hour, so bmo vs amc is UNCONFIRMED - the 08:30 ET here is the 11/13 publication's assumption, not a verified time"
+      },
+      {
+        "event": "FOMC decision - +25bp hike priced at roughly 91-95% against a 3.75-4.00% target range",
+        "datetime_et": "2026-12-09T14:00",
+        "importance": "high",
+        "consensus": "+25bp hike to 4.00-4.25%; OIS carries +81.1bp over 12 months"
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "symbol": "CVS",
+      "instrument": "CVS Health Corp",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "long_term",
+      "conviction": 5,
+      "last_price": 85.81,
+      "last_price_asof": "2026-11-17T16:00 ET close",
+      "price_source": "nasdaq via scripts/market_data.py history",
+      "avg_dollar_volume": 934068537,
+      "risk_tier": "high_conviction",
+      "entry": {
+        "ideal": 77.5,
+        "zone_low": 76.0,
+        "zone_high": 78.0,
+        "order_type": "limit",
+        "condition": "Accumulate ONLY inside 76.00-78.00, in thirds at 78.00 / 77.00 / 76.00. The zone is not a reflex discount off the 85.81 last price - it is the band in which the idea clears its 2.5 long_term floor, and every tick above 78.31 breaks that. It also brackets the 140-day low of 77.33 (verified: nasdaq 140-session range 77.33-110.68). Do NOT pay 85.81: at that price the same target and bear case give 1.11:1. RED TEAM - THIS SUPERSEDES A WORKING ORDER: there is one CVS long, and state/open_positions.json carries it as PENDING at entry 79.00 / target 108.00 from the 2026-11-05 publication, unfilled. Today's levels amend that position rather than opening a second one, which is permitted because it never filled. If you are holding a 79.00 limit, move it down to 78.00/77.00/76.00 - 79.00 sits above the 78.31 tick where this idea stops clearing its floor, so the old order would fill at a price today's arithmetic rejects."
+      },
+      "exit": {
+        "target": 106.6,
+        "target_2": 114.8,
+        "scale_plan": "No scheduled trim. Reassess the multiple each quarter against the reported adjusted EPS rather than against the chart - the target rises with the earnings base. Trim only if the multiple reaches 14x (114.80) inside a year, which would be re-rating faster than the business is compounding."
+      },
+      "stop": null,
+      "bear_case_price": 67.0,
+      "position_size_pct": 4,
+      "win_probability": 0.45,
+      "catalyst": {
+        "event": "A managed-care and health-services business re-rating as the Aetna medical cost problem resolves, bought at 10.5x its own guided earnings. The driver is the medical benefit ratio: 91.3% in Q3 2026 against 92.8% a year earlier, a 150bp improvement that carried full-year adjusted EPS guidance to at least $8.20 from $7.90-8.10 and - far more striking - operating cash flow guidance to at least $15.5bn from at least $11.5bn, a $4bn raise in one quarter. This is NOT a call on the rate cycle, which is the one macro input the rest of today report is fighting.",
+        "datetime_et": null,
+        "action": "Accumulate in thirds at 78.00 / 77.00 / 76.00 over the coming quarters. There is nothing to front-run - the next print is roughly February 2027 - so patience costs nothing and the zone is where the arithmetic works. Be prepared for this never to fill: it sits 9.7% below the last price.",
+        "wait": false
+      },
+      "thesis": "CVS is at 85.81 against full-year 2026 adjusted EPS guidance of at least $8.20, which is 10.5x, and 12.3x the at-least-$6.98 GAAP figure. I read the Q3 2026 release rather than a story about it: total revenues $108.4bn up 5.4%, Q3 adjusted EPS $2.09 against GAAP $1.68, nine-month operating cash flow $15,318m, and the Health Care Benefits medical benefit ratio at 91.3% versus 92.8% a year earlier. That MBR line is the whole thesis - it is the metric that broke the stock, and it is mending. The company raised full-year adjusted EPS guidance to at least $8.20 and operating cash flow guidance to at least $15.5bn from at least $11.5bn in the same release. The valuation anchor is deliberately unambitious: 13x the guided $8.20 is $106.60, and the market itself paid 110.68 for this business within the last 140 sessions, which on the same $8.20 is 13.5x - so the target is a multiple the tape has already granted, not one I need it to discover. Management is buying too: President Prem S. Shah took 23,855 shares on the open market at $83.895 on 2026-11-06, $2,001,315, two days after the print.",
+      "key_risk": "INVALIDATION, not a price move: the thesis is wrong if the medical benefit ratio rises back above 92.5% for two consecutive quarters, or if initial fiscal 2027 adjusted EPS guidance comes in below $8.00 - no growth off the raised 2026 base - or if operating cash flow guidance falls back below $12bn. The release gives NO 2027 financial guidance at all, so the single most important number for this idea does not yet exist; the only 2027 datapoint disclosed is operational, that more than 69% of Aetna Medicare Advantage members are in 2027 plans rated 4 stars or higher. Medicare Advantage rate notices and utilisation trend are policy-exposed and have broken this stock before. Separately, the practical risk is that a 76.00-78.00 zone 9.7% below the market never fills - CVS stopped out of this report on 2026-11-04 and a 79.00 re-entry published 11-05 never filled while the stock ran to 90.71.",
+      "counter_argument": "The strongest case against: this is the third CVS entry in a month, the stock has already rallied 11% off its low, and 10.5x is the multiple a business with structurally declining pharmacy retail and permanent Medicare Advantage policy risk deserves - a value trap pays you to wait and then does not re-rate. Also the insider picture is not clean: one $2.0M buy sits against eight sells totalling $352.7m. Answer, with evidence rather than assertion: the re-rating case does not rest on the multiple expanding for its own sake but on the earnings base being understated, and the surprise record says it is - adjusted EPS has beaten consensus by 25.2%, 38.0%, 15.8% and 8.8% in the last four quarters, so at-least-$8.20 is a floor the company has beaten every time it has set one. Analyst revisions are improving rather than deteriorating, 87.5% bullish and up 2.7 points, 8 strong buy / 20 buy / 4 hold with ZERO sells. And the sells are weak evidence by construction, being mostly scheduled and option-related, whereas a code-P open-market purchase by the President at 83.895 is a discretionary act at a price 2.3% from today. The deep entry zone is the answer to the value-trap risk: at 77.50 the idea pays 2.77:1 against a full MBR relapse, and that is the only price at which I am willing to make the argument.",
+      "evidence": [
+        {
+          "kind": "primary_document",
+          "detail": "Read the Q3 2026 earnings release (Exhibit 99.1 to the 2026-11-04 8-K): total revenues $108.4bn +5.4%, Q3 adj EPS $2.09, GAAP diluted EPS $1.68, nine-month net cash from operating activities $15,318m, HCB medical benefit ratio 91.3% vs 92.8%. FY2026 guidance RAISED: adj EPS at least $8.20 (was $7.90-8.10), GAAP at least $6.98 (was $6.84-7.04), operating cash flow at least $15.5bn (was at least $11.5bn). RED TEAM VERIFIED 2026-11-18: the exhibit was re-fetched and re-read independently of the research phase, and every figure above matches the filing exactly - at least $8.20 adj EPS raised from $7.90-8.10, at least $6.98 GAAP raised from $6.84-7.04, at least $15.5bn operating cash flow raised from at least $11.5bn, MBR 91.3% vs 92.8%, revenues $108.4bn +5.4%, adj EPS $2.09, GAAP $1.68, nine-month OCF $15,318m. No 2027 guidance of any kind appears in the release, which is what key_risk says.",
+          "source": "https://www.sec.gov/Archives/edgar/data/64803/000006480326000107/cvs_ex99x1q3-26.htm"
+        },
+        {
+          "kind": "valuation_anchor",
+          "detail": "85.81 / $8.20 guided adj EPS = 10.5x. Target 13x x $8.20 = $106.60, which is BELOW the 110.68 the stock traded at within the last 140 sessions (13.5x the same number) - the multiple has already been paid this year. Bear case 67.00 = roughly 9.5x a relapsed $7.00. At the 77.50 ideal that is 2.77:1 against the 2.5 long_term floor.",
+          "source": "https://www.sec.gov/Archives/edgar/data/64803/000006480326000107/cvs_ex99x1q3-26.htm"
+        },
+        {
+          "kind": "positioning",
+          "detail": "President Prem S. Shah bought 23,855 shares open-market (code P) at $83.895 on 2026-11-06 = $2,001,345, two days after the print. Adjusted EPS surprise record +25.25%, +37.95%, +15.80%, +8.80% over the last four quarters. Analyst revision direction IMPROVING, bullish share 87.5% and +2.7 points, 8 strong buy / 20 buy / 4 hold / 0 sell. RED TEAM VERIFIED 2026-11-18 against the Form 4 itself (accession 0000064803-26-000112, the only CVS Form 4 filed since 2026-11-01): reporting owner Shah Prem S, transaction date 2026-11-06, code P, acquired, 23,855 shares at 83.895, shares owned following the transaction 88,516.1575 - so the purchase raised his own holding by roughly 37%, which is what makes it discretionary rather than cosmetic. One correction: the Form 4 titles him EVP and Group President, not President.",
+          "source": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000064803&type=4"
+        },
+        {
+          "kind": "technical_level",
+          "detail": "140-day range 77.33-110.68, last 85.81, -22.5% off the high and +11.0% off the low. The 76.00-78.00 accumulation zone brackets the 77.33 low. SMA20 88.90 and SMA50 89.29 are both above price after a -3.1% session on 11/17. ATR14 3.6883 (4.30%).",
+          "source": "https://www.nasdaq.com/market-activity/stocks/cvs/historical"
+        }
+      ],
+      "sources": [
+        "https://www.sec.gov/Archives/edgar/data/64803/000006480326000107/cvs_ex99x1q3-26.htm",
+        "https://www.sec.gov/Archives/edgar/data/64803/000006480326000108/cvs-20260930.htm",
+        "https://www.nasdaq.com/market-activity/stocks/cvs/historical",
+        "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000064803&type=4"
+      ],
+      "rank": 1,
+      "risk_reward": 2.7714,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.77,
+        "claimed_risk_reward": 2.7714,
+        "breakeven_probability": 0.265,
+        "stated_win_probability": 0.45,
+        "expectancy_r": 0.696,
+        "claimed_edge": 0.185,
+        "stop_atr_multiple": null,
+        "live_price": 85.81,
+        "live_price_asof": "2026-11-17T21:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 894.9,
+        "bid": 85.3,
+        "ask": 86.56,
+        "spread_pct": 1.466,
+        "atr14": 3.6883,
+        "checked_at_et": "2026-11-18T06:55:13-05:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.77:1 clears the 2.5:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 77.5 is -9.7% from live 85.81"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "long-term idea, no dated event expected"
+          },
+          {
+            "check": "earnings_date",
+            "status": "warn",
+            "detail": "claims an earnings catalyst but CVS is not on the fetched calendar"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "long-term target is valuation-anchored, not ATR-bound"
+          },
+          {
+            "check": "stop_distance",
+            "status": "pass",
+            "detail": "long-term downside is a bear case, not a stop \u2014 no ATR floor applies"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "45% claimed vs 26% break-even at 2.77:1 \u2014 expectancy +0.70R"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-11-17T21:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "bid/ask spread 1.47%; the round trip costs 4% of the target move \u2014 set the entry as a limit, never market"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 5 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "4% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 5 rests on 4 independent kinds: positioning, primary_document, technical_level, valuation_anchor"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "3 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "IWM",
+      "instrument": "iShares Russell 2000 ETF",
+      "asset_class": "etf",
+      "venue": "Robinhood Stocks",
+      "direction": "sell_short",
+      "horizon": "swing",
+      "conviction": 3,
+      "requires_margin": true,
+      "last_price": 269.05,
+      "last_price_asof": "2026-11-17T16:00 ET close",
+      "price_source": "nasdaq via scripts/market_data.py history",
+      "entry": {
+        "ideal": 270.5,
+        "zone_low": 268.5,
+        "zone_high": 273.0,
+        "order_type": "limit",
+        "condition": "Sell the retest of the shelf that just broke: the 11/05 low was 270.52 and the 11/06 low 270.23, and 11/17 closed 269.05 beneath both. Short into 268.50-273.00. Do NOT chase below 266.00 - if it is already gone, the 2.27 reward-to-risk no longer holds and the retest is the only entry worth taking."
+      },
+      "exit": {
+        "target": 238.69,
+        "target_2": 228.9,
+        "scale_plan": "Cover two thirds at 238.69, the 180-day low. Run the last third to 228.90 (the 250-day low) only while price stays below a falling SMA20. Cover everything into the 12/08-12/09 FOMC if 238.69 has not printed - the hike is priced and holding a short through the event that confirms it is how a won argument becomes a lost trade. RED TEAM, on what that mandatory cover does to the ratio: 238.69 sits 5.48 ATR below the 270.50 entry and there are only about 13 sessions before the cover, so the modal GOOD outcome is a discretionary exit well short of the target and a REALISED reward-to-risk below the quoted 2.27. The 2.27 is not an artifact - 238.69 is the verified 180-day low and the 284.50 stop is a correctly floored 2.41 ATR, neither nudged - but note what produced it: with the stop floored at 2.25 ATR for an ETF, no target closer than ~4.8 ATR can clear the 2.0 floor at all, so the ratio exists because a seven-month-old low happens to sit that far away, not because an 11.8% move is expected in three weeks. Size it as the 2% hedge it is against a book that is 14 of 15 long."
+      },
+      "stop": 284.5,
+      "bear_case_price": null,
+      "position_size_pct": 2,
+      "win_probability": 0.36,
+      "catalyst": {
+        "event": "The FOMC on 2026-12-08/09 is this trade's DEADLINE, not its catalyst. The plan covers into the decision, so the meeting is the date by which the position must be off, and a +25bp hike priced at 91-95% is already in the tape - there is no repricing of the December outcome left to capture. What the position is actually short is continuation of the 11/17 breakdown while the rate path stays restrictive: a 3.75-4.00% target range, the last move a +25bp HIKE in September 2026, October a hold on a 10-2 vote with two governors dissenting FOR a hike, and OIS carrying a net +81.1bp of hikes over twelve months as of 2026-11-17. Small caps being the most floating-rate-exposed equity cohort is the reason to pick IWM for a short rather than a reason the short pays inside three weeks.",
+        "datetime_et": "2026-12-09T14:00",
+        "action": "Short the 270.23-270.52 shelf retest now - do not wait for the meeting. The position is for the roughly 13 sessions into the print, not through it; cover into the decision.",
+        "wait": false
+      },
+      "thesis": "IWM closed 2026-11-17 at 269.05 with a low of 267.865 - the lowest price in 120 trading sessions, back to 2026-05-29 - on 29.11M shares - which is +10.5% against the 26.34M average of the preceding eight sessions and +16.3% against the 25.03M 30-day average, an unremarkable uptick rather than the volume confirmation originally claimed here - breaking the 270.23/270.52 double low that had held since 11/05. It now sits beneath a tight, flat-to-falling cluster of all three moving averages at SMA20 278.12, SMA200 279.51 and SMA50 279.79, so every bounce runs into 3.5-4.0% of stacked overhead within one ATR of itself. The macro points the same way: the Fed last HIKED in September 2026, held in October on a 10-2 vote with two governors dissenting for a hike, and December 8-9 is priced 91-95% for another +25bp with 81bp of further hikes priced over twelve months. Small caps carry more floating-rate and near-dated debt than any other equity cohort, so a hiking path is transmitted to the Russell before it reaches the S&P.",
+      "key_risk": "Small caps have been RELATIVELY resilient over the last month - IWM is -0.82% on 1m against SPY -4.44%, so it OUTPERFORMED by 3.62 points even while breaking down in absolute terms, and the red team re-measured this on the window the trade actually holds for and got the same sign: over the last 20 sessions (10/21-11/17) IWM is -2.69% against SPY -5.26%, 2.57 points of outperformance. This is the central objection to the idea. If the correction keeps rotating out of mega-cap AI and into everything else, IWM can fall less than the index and a short loses on a day the tape is red. This also requires margin, and a short has unbounded loss if the December hike is priced out - a single soft CPI print before 12/09 would unwind the whole premise. Added by the red team: nothing in this report checked the idea against what the options market prices, because the implied-move endpoint returned HTTP 401, and there is no short-interest read on IWM because api.nasdaq.com timed out on every symbol.",
+      "counter_argument": "The strongest case against: a 91-95% priced hike is not news, so shorting it is shorting consensus, and the 120-day low could be the capitulation rather than the start. RED TEAM - THE ORIGINAL ANSWER DOES NOT SURVIVE, on two counts. (1) It claimed the position is aimed at the 81bp of FURTHER hikes beyond December, which transmit to small-cap refinancing 'over quarters rather than on the announcement' - but the plan covers into the 12/08-12/09 meeting, roughly 13 sessions out, so a mechanism that works over quarters is not what pays this trade and cannot be offered as its edge. (2) It claimed the breakdown was confirmed 'on 45% above-average volume'. That is wrong. 11/17 traded 29.11M against a 26.34M average over the preceding eight sessions (+10.5%) and a 25.03M 30-day average (+16.3%), and 11/05 - the session that built the shelf - traded 50.89M, nearly double the day that broke it. Volume is not confirming this breakdown. What honestly remains, and all this idea is now entitled to claim: price is at a 120-session low beneath three clustered flat-to-falling moving averages having broken an eight-session shelf, with the rate path restrictive and no cut priced. That is a plain momentum-continuation short, held three weeks, against a cohort that has OUTperformed SPY on the same window. Hence conviction 3 rather than 4, and 36% rather than 42% - which still clears the 31% break-even, but by 5 points instead of 11.",
+      "evidence": [
+        {
+          "kind": "technical_level",
+          "detail": "11/17 close 269.05, low 267.865 = lowest in 120 sessions (range_low unchanged at 267.865 across the 60/90/120-day windows, but 238.69 over 180 days) - so the next real support is 11.3% lower. Broke the 270.23/270.52 double low. SMA20 278.12, SMA50 279.79, SMA200 279.51 clustered overhead.",
+          "source": "https://www.nasdaq.com/market-activity/etf/iwm/historical"
+        },
+        {
+          "kind": "positioning",
+          "detail": "Relative strength is the measured read here: IWM -10.83% 3m vs SPY -4.76% = -6.07 points. RED TEAM CORRECTION - the breakdown-volume claim originally filed under this kind was wrong. It read '29.1M vs ~20M on the preceding eight sessions'; the preceding eight sessions (11/05-11/16) averaged 26.34M, so 11/17's 29.11M is +10.5%, and +16.3% against the 25.03M 30-day average. 11/05 itself traded 50.89M. The ~20M figure matches 10/21-10/30 (20.09M), three weeks before the breakdown, not the eight sessions preceding it. Volume does not confirm this breakdown and is no longer offered as evidence. Note also that the 3m relative window above is not this trade's window: over the 20 sessions it actually holds for, IWM is -2.69% against SPY -5.26%, i.e. 2.57 points of OUTperformance - so this confirmation is horizon-mismatched and is why conviction came down.",
+          "source": "https://www.nasdaq.com/market-activity/etf/iwm/historical"
+        },
+        {
+          "kind": "dated_catalyst",
+          "detail": "FOMC 2026-12-08/09. Target range 3.75-4.00%, last move a +25bp HIKE in Sept 2026, October a hold on a 10-2 vote (Cook and Hammack dissenting for a hike). December priced 91-95% for +25bp; OIS net +81.1bp over 12 months as of 11/17. Corroborated independently by the FRED curve: fed funds effective 3.88% against a 2y at 4.83%. RED TEAM: this does not meet the bar config/strategy.md sets for `dated_catalyst` - 'the event is verified against a calendar you fetched, not a date you remember'. No Fed calendar was fetched; the 91-95% figure and the meeting date come from prediction-market and aggregator pages that the report's own data_quality_notes record as disagreeing on the date (Dec 8-9 vs Dec 9) and partly low quality, and the Kalshi URL could not be verified. The DIRECTION is corroborated independently by the FRED curve (effective funds 3.88% against a 2y at 4.83%); the precise probability is not. So it is not counted toward conviction.",
+          "source": "https://kalshi.com/markets/kxfeddecision/fed-meeting/kxfeddecision-26dec"
+        }
+      ],
+      "sources": [
+        "https://www.nasdaq.com/market-activity/etf/iwm/historical",
+        "https://kalshi.com/markets/kxfeddecision/fed-meeting/kxfeddecision-26dec",
+        "https://fred.stlouisfed.org/series/DGS2",
+        "https://fred.stlouisfed.org/series/DFF",
+        "https://www.benzinga.com/markets/prediction-markets/26/10/62728825/will-the-fed-hike-rates-in-december-heres-what-the-prediction-market-is-saying"
+      ],
+      "rank": 2,
+      "risk_reward": 2.2721,
+      "risk_tier": "standard",
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.27,
+        "claimed_risk_reward": 2.2721,
+        "breakeven_probability": 0.306,
+        "stated_win_probability": 0.36,
+        "expectancy_r": 0.177,
+        "claimed_edge": 0.054,
+        "stop_atr_multiple": 2.41,
+        "live_price": 269.05,
+        "live_price_asof": "2026-11-17T21:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 895.0,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": 5.8061,
+        "checked_at_et": "2026-11-18T06:55:35-05:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.27:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 270.5 is +0.5% from live 269.05"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-12-09 is ahead of us"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 5.48 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "stop_distance",
+            "status": "pass",
+            "detail": "stop is 2.41 ATR from entry, clear of the 2.25 ATR guide for a swing etf"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "36% claimed vs 31% break-even at 2.27:1 \u2014 expectancy +0.18R"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-11-17T21:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "no bid/ask available (normal outside regular hours)"
+          },
+          {
+            "check": "instrument_choice",
+            "status": "warn",
+            "detail": "short IWM needs margin; /M2K expresses the same view with defined sizing and near-24h trading"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "2% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 3 rests on 3 independent kinds: dated_catalyst, positioning, technical_level"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "3 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "BCC",
+      "instrument": "Boise Cascade Co",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "long_term",
+      "conviction": 2,
+      "last_price": 65.14,
+      "last_price_asof": "2026-11-17T16:00 ET close",
+      "price_source": "nasdaq via scripts/market_data.py history",
+      "entry": {
+        "ideal": 76.5,
+        "zone_low": 76.5,
+        "zone_high": 76.5,
+        "order_type": "limit",
+        "condition": "UNCHANGED AND NOT ACTIONABLE - this is the 2026-08-18 fill, restated because a filled entry is never amended. Do NOT add at 65.14 and do NOT read this as a cheaper entry on the same idea."
+      },
+      "exit": {
+        "target": 110.0,
+        "scale_plan": "EXIT PLAN, NOT A HOLD. Sell into any bounce toward the 66.37-67.39 shelf broken on 2026-11-16/17; otherwise the 64.50 stop takes it out. The 110.00 target is restated unchanged ONLY so the record shows what was originally claimed - it is explicitly no longer being pursued. RED TEAM: `risk_reward` has been set to null on this entry for that reason. It previously carried 2.913 (and validation recomputed 2.79 against the new stop), which publish_sheets.py would have printed as a '2.9:1' edge in the ratio column of a row whose single instruction is to close. The prose said not to read it as a live edge while the field said otherwise; the field was the one the sheet shows."
+      },
+      "stop": 64.5,
+      "bear_case_price": 65.0,
+      "position_size_pct": 0,
+      "catalyst": {
+        "event": "AMENDMENT - CLOSE. The position has arrived at its own published bear case. BCC was published three times (2026-08-25, 2026-10-27, 2026-11-12) as a long_term hold with entry 76.50, target 110.00, NO stop, and bear_case_price 65.00. It closed 2026-11-17 at 65.14, with the 140-day low at 65.00. The downside scenario the idea was underwritten against is now the market price.",
+        "datetime_et": null,
+        "action": "CLOSE THE POSITION. Exit at market or into any bounce toward 66.37-67.39. A hard stop at 64.50 - below both the reached 65.00 bear case and the 65.00 140-day low - is the backstop and is the single operative instruction here. This position ran 91 days with NO stop at all, which is the defect being fixed. Do not re-enter without re-underwriting from scratch.",
+        "wait": false
+      },
+      "thesis": "Update to the 2026-08-18 long: CLOSE the position. This is a recommendation to CLOSE, and the reason is the cleanest invalidation available: the price has reached the bear case the report itself published. BCC was carried as a long_term hold at entry 76.50 with target 110.00 and bear_case_price 65.00, which is exactly how it cleared the 2.5 long_term floor - (110.00-76.50)/(76.50-65.00) = 2.91:1, with the 65.00 bear case doing all of the work. It closed 65.14 on 2026-11-17, 0.22% off a 140-day low of 65.00, after six consecutive down closes (70.42/69.52/67.92/67.39/66.37/65.14), 11.1% below the SMA20 at 73.27 and 12.6% below the SMA50 at 74.54. Continuing to hold requires a NEW and lower bear case, which means re-underwriting the idea from the beginning - work this run did not do and will not pretend to have done. No win_probability is stated because the only honest estimate that 110.00 prints before 65.00 is BELOW the 25.6% break-even baseline, which is precisely the argument for closing; stating it as a figure would hard-fail the expectancy check and demote this entry to the watchlist, and the tracker reads only recommendations, so the 64.50 stop would never reach the position and it would go on running with no stop - the exact defect being fixed.",
+      "key_risk": "Conviction is 2 and the evidence is deliberately thin because this is an exit rather than a thesis - the only confirmations are a price structure and a rate path, and no BCC filing was read this run. The real risk in closing is that cyclicals are meant to be bought at troughs: selling a wood-products name 26% off its high, at a 140-day low, into a depressed housing cycle may be selling the bottom. That is accepted, because the macro input the thesis needed has reversed - the 10y is 5.12%, the Fed last HIKED in September 2026, December 8-9 is 91-95% priced for another +25bp and OIS carries 81bp of further hikes over twelve months. The original idea named its mechanism precisely: a 50% Section 338 plywood duty raising price, with housing demand the offset. The duty did its job on price; the rate path took the volume.",
+      "counter_argument": "The strongest case against closing: a bear case is a scenario, not a stop, and a long_term thesis is allowed to trade through its downside case and still be right - that is what a multi-year horizon means, so mechanically exiting at the bear case is just selling weakness. Answer: config/strategy.md does not let long_term mean open-ended. It mandates an explicit INVALIDATION condition, and this position never had one; the only downside it ever articulated was the 65.00 price, so reaching it with nothing else stated leaves the position with no invalidation at all. That is how it ran 91 days and -18% unchecked. If a lower bear case is defensible it has to be researched and published as such, not assumed into existence to justify holding.",
+      "evidence": [
+        {
+          "kind": "technical_level",
+          "detail": "65.14 close, 0.22% off the 140-day low of 65.00, six consecutive down closes; SMA20 73.27 and SMA50 74.54 far above. ATR14 3.5334 (5.42%), avg daily dollar volume $24.0M.",
+          "source": "https://www.nasdaq.com/market-activity/stocks/bcc/historical"
+        },
+        {
+          "kind": "valuation_anchor",
+          "detail": "The published bear_case_price was 65.00 across all three BCC publications and the last close is 65.14 - the 2.91:1 that cleared the long_term floor was entirely a function of a bear case now equal to spot. Corroborated as a sector move rather than a company one: ITB 91.73 vs SMA200 95.51 and XHB 99.09 vs SMA200 104.61, both homebuilder ETFs below their 200-day averages.",
+          "source": "https://fred.stlouisfed.org/series/DGS10"
+        }
+      ],
+      "sources": [
+        "https://www.nasdaq.com/market-activity/stocks/bcc/historical",
+        "https://fred.stlouisfed.org/series/DGS10",
+        "https://kalshi.com/markets/kxfeddecision/fed-meeting/kxfeddecision-26dec"
+      ],
+      "rank": 3,
+      "risk_reward": null,
+      "risk_tier": "speculative",
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.79,
+        "claimed_risk_reward": null,
+        "breakeven_probability": 0.264,
+        "stop_atr_multiple": 3.4,
+        "live_price": 65.14,
+        "live_price_asof": "2026-11-17T21:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 895.1,
+        "bid": 64.9,
+        "ask": 65.79,
+        "spread_pct": 1.362,
+        "atr14": 3.5334,
+        "checked_at_et": "2026-11-18T06:55:46-05:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.79:1 clears the 2.5:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "warn",
+            "detail": "entry 76.5 is +17.4% from live 65.14 \u2014 far from the market"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "long-term idea, no dated event expected"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "long-term target is valuation-anchored, not ATR-bound"
+          },
+          {
+            "check": "stop_distance",
+            "status": "pass",
+            "detail": "long-term downside is a bear case, not a stop \u2014 no ATR floor applies"
+          },
+          {
+            "check": "expectancy",
+            "status": "warn",
+            "detail": "no win_probability stated; this idea needs better than 26% to break even at 2.79:1"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-11-17T21:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "bid/ask spread 1.36%; the round trip costs 3% of the target move \u2014 set the entry as a limit, never market"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 2 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "0% is within the 1% lottery-ticket ceiling for conviction 2"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 2 rests on 2 independent kinds: technical_level, valuation_anchor"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "2 of 3 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    }
+  ],
+  "watchlist": [
+    {
+      "symbol": "J",
+      "instrument": "Jacobs Solutions Inc",
+      "note": "Fully worked up and genuinely good on every axis except the arithmetic: 158.23 close, only 2.33% off its 140-day high, ATR14 5.1376 (3.25%), 162.00 resistance tested five times in seven sessions, and relative strength of +18.82 points over SPY on 1m and +40.34 on 6m. A disciplined 147.00 stop (2.14 ATR, below the 11/05 capitulation close) against a 176.00 target derived two independent ways gives 1.64:1 against a 2.0 swing floor. Passing would need a 180.00 target - above every method defensible - or a ~149 stop at 1.75 ATR. Both routes are the manipulations the floors exist to catch, so it stays here. Against it: zero insider buys and 2 sells ($2.48m) in 6 months, and a flat analyst trend for four straight months.",
+      "trigger": "A pullback into the 149.70-151.00 shelf, where a 140.00 stop is 2.04 ATR and the 176.00 target gives 2.43:1; OR, after the 2026-11-23 amc print, a hold above 162.00 on volume."
+    },
+    {
+      "symbol": "AMTM",
+      "instrument": "Amentum Holdings Inc",
+      "note": "Constructive five-session pullback to 21.22 on DECLINING volume (1.08M on 11/17, lowest in 20 sessions, against 1.9-3.0M on the advance - accumulation, not distribution), holding a rising SMA50 at 20.24, into a 11/23 print. Direct ACM/J comp as Jacobs' former Critical Mission Solutions business. Killed by geometry: ATR14 0.9456 (4.46%) needs 1.891 of risk, a 19.30 stop below the whole late-October base is 2.03 ATR, and the first defensible target is the SMA200 at 23.6845 for 1.28:1. Clearing 2:1 needs 25.06, which is dead space between the SMA200 and the 26.67 high. Also against it: analyst revisions deteriorating (52.6% bullish, -3.0) and zero insider activity either way in 6 months.",
+      "trigger": "A fill back toward the 20.15-20.53 base, where the SMA200 target clears 2:1; or a post-print hold above 23.68."
+    },
+    {
+      "symbol": "BURL",
+      "instrument": "Burlington Stores Inc",
+      "note": "The trade-down thesis is live and independently corroborated this morning by TJX going into its print with FY2027 margin and EPS guidance already raised while LOW cuts its full-year sales outlook - a squeezed consumer trading down, which is the same picture as the BCC close and ITB/XHB below their 200-day averages. 235.14, -37.9% off its high and 3.65% off its 140-day low, earnings 11/23, ADV $294m. Rejected on arithmetic alone: a 214.00 stop is 2.05 ATR and the SMA50 at 252.79 gives 0.83:1, with 2:1 needing 277.4 in dead space.",
+      "trigger": "A reclaim of the SMA50 at 252.79 that makes the 140-day high a reachable target, or a washout toward the 226.86 low that resets the geometry."
+    },
+    {
+      "symbol": "ACM",
+      "instrument": "AECOM",
+      "note": "POSITION CLOSED AT TARGET. The 2026-11-07 long hit its 77.22 target on the 11/17 gap open and the session traded 78.25-83.55, closing 80.53 (+11.08%) on 4.15M shares after FY2026 results - +20.7% from the 66.74 entry, the 5th target hit of 43 closed, and it came from a wide 7.9% stop rather than a tight one. Deliberately NOT re-entered: long_term at 80.53 is 12.9x the FY27 adj EPS guide of $6.15-6.35 and gives (103-80.53)/(80.53-63) = 1.28:1 against a 2.5 floor. A pass could be forced with an 18x target and a shallower $68 bear case, which is tuning two inputs at once until the floor clears - refused. Note also that the headline FY27 EPS step-up of ~53% is partly company-specific (two Construction Management projects rolling off) and does NOT read across; what does read across is record total backlog $28,016m +13% and 1.3x book-to-burn in infrastructure design.",
+      "trigger": "Below 74.43, which is 11.9x the FY27 adj EPS guide."
+    },
+    {
+      "symbol": "GLD",
+      "instrument": "SPDR Gold Shares",
+      "note": "WITHDRAW the stale 2026-10-25 SELL at 406.77. The call was RIGHT - gold has gone 406.77 to 352.48, now 0.15% off its 140-day low of 351.96 and -19.4% off the 437.42 high, with SMA20 366.19 and SMA50 378.88 far above - but the entry sat above the market and only fills on a rally, so a correct call made nothing. This is the lesson of the day and it is about entry style, not direction: an entry placed against the direction of your own thesis only fills when you are wrong.",
+      "trigger": "None. Do NOT re-short 0.15% off a 140-day low - the bounce risk is all of the remaining reward. Revisit only on a rally back toward the SMA50 at 378.88."
+    },
+    {
+      "symbol": "/MBTZ6",
+      "instrument": "Micro Bitcoin futures (Dec 2026)",
+      "note": "WITHDRAW the stale 2026-11-09 SHORT at 74,075. Bitcoin spot is 64,158 (-0.3% 24h, $30.0bn volume), so the entry sits 13.4% above the market and never filled while bitcoin fell ~13% exactly as the idea argued - the same failure as GLD, in the same month, for the same reason. Two directionally correct shorts made nothing because of where their entries were placed.",
+      "trigger": "None, and no futures quote is obtainable this run in any case."
+    },
+    {
+      "symbol": "MDT",
+      "instrument": "Medtronic plc",
+      "note": "Good on every axis except the one that counts, and the fourth independent confirmation of today's structural finding. 102.32, ATR14 2.5833 (2.52%, the lowest of any single stock screened), above all three moving averages (SMA20 99.35, SMA50 94.10, SMA200 88.26), ADV $1.99bn, earnings 2026-11-24 bmo, in the healthcare complex that is this correction's leadership. A 96.50 stop between the SMA20 and SMA50 is 2.25 ATR, which then requires a 113.96 target for 2:1 - but the multi-window highs are 106.20 at 60/120/180 days and 106.33 at 250 AND 400 days, so 113.96 is 7.2% above the highest price MDT has traded in 400 sessions with no structure whatsoever between. Dead space. Also, ABT (open) and XLV (awaiting entry) already give the book two healthcare positions, so MDT would sit at the 3-per-driver correlation cap next to a near-identical medtech name.",
+      "trigger": "A pullback that puts the 106.20-106.33 ceiling 4+ ATR away from entry, or a confirmed break above 106.33 that makes a measured move the target instead of empty space."
+    },
+    {
+      "symbol": "QQQ",
+      "instrument": "Invesco QQQ Trust",
+      "note": "CLEARED THE FLOORS AND WAS DELIBERATELY NOT PUBLISHED. 656.95, a 2.0-ATR stop at 697.02 against the 180-day low of 555.60 gives 2.53:1 at 5.1 ATR of distance, below all three moving averages. Held back on the correlation cap: it, DIA and IWM are one bet on US equity beta against the rate path, and publishing three would read as three independent confirmations of a single view. IWM was chosen over the better raw ratio because it is the only one of the three that has ALREADY broken down - below a cluster of all three MAs inside 1.67 points at a 120-session low - whereas QQQ's target is 15.4% away with its MAs spread over 33 points, so no tight line defines failure.",
+      "trigger": "Only if the IWM short is closed or stopped; two index shorts at once is the same trade twice."
+    },
+    {
+      "symbol": "DIA",
+      "instrument": "SPDR Dow Jones Industrial Average ETF",
+      "note": "CLEARED THE FLOORS WITH THE BEST ARITHMETIC OF THE THREE AND WAS STILL NOT PUBLISHED. 507.31, lowest ATR of the group at 1.69%, a 2.0-ATR stop at 524.45 against the 450.44 180-day low gives 3.32:1 at 6.7 ATR. Rejected on structure rather than ratio: at 507.31 against an SMA200 of 507.64 it is a short entered at the one level most likely to hold, and its target is a 180-day low last seen around March 2026. A confirmed break beneath a tight falling wall beats a better ratio into support.",
+      "trigger": "A decisive close below the SMA200 at 507.64 that converts this from shorting support into shorting a confirmed break - and only if no other index short is live."
+    }
+  ],
+  "validation_summary": {
+    "checked": 3,
+    "passed": 0,
+    "warned": 3,
+    "failed": 0,
+    "enforced": true
+  }
+}
