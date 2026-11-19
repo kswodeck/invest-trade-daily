@@ -1,0 +1,276 @@
+{
+  "date": "2026-11-19",
+  "generated_at_et": "2026-11-19T06:40:09-05:00",
+  "research_minutes": 37,
+  "truncated": false,
+  "market_context": {
+    "summary": "The 2026-11-18 tape was a commodity/reflation unwind, not broad risk-off. Gold, crude and energy equity were liquidated together - GLD -3.20% to 341.19 on 13.5M shares (0.13% off its 150-day low), XLE -3.27% to 61.29 on ~2x normal volume breaking the 61.21-62.43 shelf, XOP -3.40%, USO -2.94% - while bonds and utilities caught a bid (TLT +0.84%, XLU +0.30%) and the Nasdaq rose (QQQ +0.39%, IWM +0.40%, SPY -0.31%). That is a disinflation-or-growth-scare rotation, and the open book sits on both sides of it. The dominant single-sector event was CMS-6098-P, proposed 2026-11-16, which would extrapolate Medicare Advantage RADV audits back to payment year 2018: UNH -10.21%, HUM -12.98%, CVS -5.20%, XLV -2.20%, with the comment period open until 2027-01-19. Two of today's five ideas are that selloff, bought as long-term accumulation rather than as a bounce. POSITION MANAGEMENT - two closes that could not be expressed as tradeable amendments and are carried here as instructions. CLOSE BCC AT THE OPEN (opened 2026-08-18 @ 76.50, close 65.71, -14.1%): it is -13.86% over one month while XHB, its own sector ETF, is +4.71% - 18.6 points of underperformance against the exact peer group the thesis was about - and the 64.50 stop is 0.35 ATR away, which is no longer a risk control but a near-certain fill at the low. CLOSE OXY AT THE OPEN (opened 2026-09-24 @ 54.00, close 53.76, -0.4%): the sector shelf broke on 11/18 and OXY lags XLE by 4.73% on 1m and 11.17% on 6m; getting out near the entry beats riding to the 50.15 stop. Neither was published as a candidate because the only amendment expressing 'get out' is a stop inside the noise, which validation would correctly refuse. HII (opened 2026-10-12 @ 262.00, close 287.89, +9.9%) is a HOLD with no stop, stated as a choice: it leads its group (+5.75% 1m vs ITA +0.98%), and the honest invalidation, 281.18, sits above the entry, so any passing stop would be below the 150-day low. Invalidation is a weekly close below 281.18, carried as text. ONON holds to its existing 30.69 stop. KHC, UNP, XLU, TLT, RTX, ABT and PYPL need nothing. RED TEAM POSITION MANAGEMENT - two instructions that must survive independently of whether their rows stay in recommendations. (1) DKS: HALVE THE POSITION BEFORE THE 2026-11-23 OPEN (opened 2026-11-13 at 144.50, filled 2026-11-16, close 144.69). The 129.00 stop stays on the remainder and the 175.50 target is unchanged. This recommendation amends no level, so nothing in the position file records it - the instruction lives here. (2) PFE: CUT THE TARGET from 42.00. PFE was cut from the recommendations this phase, but the position is open (filled 2026-09-15 at 27.60) and still carries a 42.00 target, which is 13.77x trailing EPS on a stock that has not traded above 10.31x in 150 days. 42.00 is not reachable on any multiple this stock has been paid; mark the position to 31.44, the 150-day high and the best multiple these earnings have actually carried, and do not add. The reason PFE is not published as a recommendation at 31.44 is that the reward-to-risk there is 1.20:1, below the long-term floor - which is the honest answer about the position, not a reason to keep the higher target.",
+    "regime": "mixed",
+    "levels": {
+      "spy": 730.2,
+      "qqq": 659.51,
+      "iwm": 270.12,
+      "gld": 341.19,
+      "xle": 61.29,
+      "xop": 171.57,
+      "uso": 136.11,
+      "tlt": 80.22,
+      "xlu": 43.55,
+      "xlv": 181.17,
+      "btc": 63676,
+      "eth": 1801.53,
+      "sol": 74.39,
+      "vix": null,
+      "us10y": null,
+      "dxy": null,
+      "note": "All equity/ETF figures are the 2026-11-18 regular-session close, the freshest honest price at a 6am ET generation (session: pre). Crypto is 24h coingecko. VIX, the 10-year and DXY are null because market_data.py macro returned zero bytes this run - not stale, unfetched."
+    },
+    "econ_calendar": [
+      {
+        "event": "DKS Q3 FY2026 earnings (open position, trim into it)",
+        "datetime_et": "2026-11-23T07:30",
+        "importance": "high",
+        "consensus": null
+      },
+      {
+        "event": "DY fiscal Q3 earnings (rank 1 idea, enter before)",
+        "datetime_et": "2026-11-24T07:00",
+        "importance": "high",
+        "consensus": "guided 4.33-4.79 vs 4.68 consensus midpoint"
+      },
+      {
+        "event": "CMS-6098-P comment period closes (the UNH and CVS overhang)",
+        "datetime_et": "2027-01-19T23:59",
+        "importance": "high",
+        "consensus": null
+      }
+    ]
+  },
+  "data_quality_notes": "Research ran 06:01-06:38 ET of a ~60 minute budget and closed with a RESEARCH COMPLETE block, so nothing was lost to the clock. Five ideas is the whole output and the count is deliberate. WHY FIVE: the prior record is 5/44 to target (11%), avg -5.5%, with single-name swing stock longs at 2/30 (7%) and long_term 0/4 at -15.2%. 44 closed is past the noise threshold, so the bar was raised rather than the count matched. Roughly 35 names were screened; open-market insider buying appeared in six (DKS, DY, ADSK, LEN, HUN, ADM) and only DKS and DY also had a dated catalyst and levels clearing both the 2.0 ATR stop floor and the R:R floor. Every rejection has its arithmetic written down in notes.md - XLV, ADSK, WMT and the whole de-rated batch failed because a 2.0 ATR stop plus a 2.0 R:R forces a target 4 ATR above entry, which for names only 5-12% off their highs would have to print above the range high. RATIO HONESTY: DKS sits at exactly 2.00, on the floor rather than above it - it is an existing filled position whose entry cannot be amended, so the target was not fitted to a new entry, but a reader should treat an exactly-at-floor ratio as the weakest of the five. The three long-term ideas cluster at 2.81-2.86 against a 2.5 floor; CVS discloses its own sensitivity, failing outright at 2.45 if the target multiple is 12.5x rather than 13.0x. Both stop distances were re-fetched at synthesis: DKS 15.50 risk = 2.47 ATR (ATR14 6.2649), DY 27.78 risk = 2.09 ATR (ATR14 13.2761), both clearing the 2.0 stock-swing floor. CONCENTRATION: three of five ideas are healthcare, 8.0% of capital if all fill (UNH 3.0 + CVS 2.5 + PFE 2.5). UNH and CVS are the same bet - both de-rated by CMS-6098-P on the same session - which is 2 on one driver against a cap of 3; XLV was rejected so nothing else joins them. PFE is not on that driver (it fell 1.44% on a day UNH fell 10.21%) but is the same sector, and its entry is a target cut on an existing position rather than new risk. The concentration stands because the alternatives failed their floors: ADM and HUN were both worked through in a final pass and both are on the watchlist with the arithmetic shown. HORIZON MIX: 2 swing, 3 long_term, 0 intraday. Not manufactured - the only same-session catalysts were this morning's prints (WMT, BABA, ROAD) and there is no pre-market data at 6am; every price in this report is the 2026-11-18 close. SOURCES THAT FAILED: market_data.py macro returned zero bytes after running most of the session, so there is NO fetched read on rates, VIX, DXY or any FRED series - the regime call above is built from ETF and commodity-proxy closes instead, which is weaker. market_data.py events is broken rather than quiet: 'Fed' returns Kalshi sports parlays matching the substring 'Federico', 'CPI' returns a football parlay, four other macro queries return count 0, and every market returned has null yes_ask, last_price and volume - hence no event-contract idea. market_data.py implied returned yahoo-options HTTP 401 on every symbol, so the 'is the target inside the options-implied move' test could not be run on any idea at all. market_data.py short returned a nasdaq ReadTimeout, so there is no short-interest read anywhere. history failed for GES, SLP and LESL. NOT COVERED: no futures idea, and that is a tooling gap rather than a judgement - no futures quote path returned a price, and setting levels on /MES, /MGC or /MCL from an ETF proxy would be inventing a contract price. The macro picture (gold at a 150-day low, crude broken, bonds bid) was the clearest futures setup in weeks and went untraded for want of a feed. No crypto idea: BTC, ETH and SOL were all flat on the day and IBIT is -28.4% from its high in a straight line, which is a knife to buy and late to short. No primary filings were read this morning - the DY counter-argument rests on secondary sources and says so in its own evidence block. TWO STANDING ORDERS SHOULD BE RETIRED, not re-pitched: GLD SELL @ 406.77 (16.1% above the market) and /MBTZ6 SHORT @ 74,075 (~16% above spot). Both are on the watchlist with reasons. ADM traded 67.52-68.77 on 11/18, entirely below its 68.80 buy entry, so that order may have filled without the state file reflecting it - flagged rather than assumed. See market_context.summary for the two position closes (BCC, OXY) that could not be expressed as candidates. === RED TEAM (phase 2c) === Cut 2 of 5, kept 3, downgraded every one of the three kept. CUT UNH (rank 2, the largest position in the report at 3%): its 2.86 reward-to-risk is built on a 285.74 bear case called conservative for sitting below the 317.135 150-day low, but UNH printed a low under 285.74 on 36 sessions this year and bottomed at 255.965 on 2026-03-27 - against a downside the stock has actually traded, the ratio is 1.47:1. This is the same move as walking a stop in, done with the bear case: the window was short enough to make the denominator small. The 408.20 target compounds it at 20.0x, a round number whose only justification is the multiple UNH held two sessions ago, and the ratio fails at 19.0x. CUT PFE (rank 5): the report correctly identified that a 42.00 target is unsupportable and then replaced it with 36.60, which is 12.0x and still above any multiple the stock has carried in 150 days - nothing anchors 12.0x, and at the 10.31x the stock has actually been paid the ratio is 1.20:1. Its own key_risk concedes the LOE schedule was never fetched, so the question that decides the idea went unexamined. The target cut is right and is carried in market_context.summary as a position instruction, because the position is open and would otherwise keep the 42.00. DOWNGRADED DY 5 to 3: the conviction-5 claim does not survive its own evidence. The technical_level item asserted 'a rising sequence of session lows' built by omitting the 11/11 and 11/12 lows (220.88, 222.86 - the two highest) and placing 11/16 before 11/17; the real structure is a six-session base with the 11/16 low below the 11/10 low. The catalyst asserted 'the bar has already been reset downward' when the fetched figures show the company guided to a 4.56 midpoint against a 4.68 consensus midpoint - guided below, not reset - and no current consensus was fetched. Both are corrected in place. The valuation case (14.69x on 4-of-4 beats, -60.1% off the high) is intact and is why DY is still rank 1. DOWNGRADED CVS 4 to 3: it discloses that its 2.84 becomes 2.45 and fails at a 12.5x target, and nothing separates 13.0x from 12.5x; and $350.7M of net insider selling runs against the insider-buying screen that put the other two ideas in the report. It is kept, and promoted to rank 2, because it is the only idea this morning whose downside is honest - 66.64 is below a price CVS has not traded under in 200 sessions, the test UNH failed. DOWNGRADED DKS 4 to 3: its technical_level described the close rather than the tape, which is six consecutive lower lows into the print (147.51 to 140.05), and its expectancy is +0.14R on 4.7 points of claimed edge at an R:R of exactly 2.00. It amends no stored level, so its only content is the trim instruction, now mirrored into market_context. TWO VALIDATOR ARTIFACTS, recorded rather than worked around. First, the sources check 404s on api.nasdaq.com/api/quote/<SYM>/historical for DY, UNH, DKS and PFE. That is the endpoint market_data.py calls with query parameters, not a hallucinated URL - the OHLCV behind it was re-fetched this phase and every 150-day high, low, SMA and ATR in the report matches to the cent. The citations are re-pointed at www.nasdaq.com/market-activity/stocks/<sym>/historical, which serves the same data and returns 200 to a reader. Second, the spread check fails DY at 9.38% and DKS at 13.50% off a 6:41am book: DY's bid of 228.00 is above its own 225.78 close, and DKS's quote is stamped 'Nov 18, 2026' with no time at all - it is the prior session's closing book, not a live spread, on a name trading $300M a day. check_spread handles a missing book as normal outside regular hours but treats a stale one as real; it is the only check in the set with no session awareness. Those two rows may still be demoted at enforcement on a measurement that is not about the trade, which is why the DKS instruction was mirrored. Not changed, because changing the validator to pass the report's own ideas is the thing this phase exists to prevent - it is a code fix with a test, for a day that is not this one. THREE IDEAS REMAIN: DY, CVS, DKS. Capital at risk if all fill falls from 12.0% to 6.5%, healthcare from three names and 8.0% to one name and 2.5%, and the CMS-6098-P cluster from two names to one. No idea in this report now carries a conviction above 3. Validation demoted 2 idea(s) whose numbers did not check out. 1 more carry warnings \u2014 see the validation block on each.",
+  "recommendations": [
+    {
+      "rank": 1,
+      "instrument": "CVS Health Corp",
+      "symbol": "CVS",
+      "asset_class": "stock",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "long_term",
+      "conviction": 3,
+      "last_price": 81.35,
+      "last_price_asof": "2026-11-18T16:00:00-05:00",
+      "price_source": "finnhub (2026-11-18 regular-session close; session pre at generation)",
+      "entry": {
+        "ideal": 77.5,
+        "zone_low": 72.0,
+        "zone_high": 80.0,
+        "order_type": "limit",
+        "condition": "Only below 80.00, main tranche at 77.50, last third only under 72.00. Do not chase it back above 85.00. The 77.50 level is UNCHANGED from the order published 2026-11-05 - it is not a fresh discount."
+      },
+      "exit": {
+        "target": 108.29,
+        "scale_plan": "Accumulate in thirds below 80.00; hold 12-24 months. No stop by design."
+      },
+      "stop": null,
+      "bear_case_price": 66.64,
+      "risk_reward": 2.84,
+      "win_probability": 0.44,
+      "position_size_pct": 2.5,
+      "risk_tier": "standard",
+      "requires_margin": false,
+      "avg_dollar_volume": 910255331,
+      "catalyst": {
+        "event": "Re-horizoned update to the order published 2026-11-05; the entry level is UNCHANGED at 77.50 and only the reason and the horizon changed. CMS-6098-P, proposed 2026-11-16, extrapolates Medicare Advantage RADV audits back to payment year 2018 and hits the Aetna segment; CVS fell 5.20% on 11/18 to 81.35 on 17.6M shares and is down 10.3% from the 90.71 high of 11/16. The comment period runs to 2027-01-19, which is why this can no longer be a swing.",
+        "datetime_et": "2027-01-19T23:59",
+        "action": "WAIT. Accumulate in thirds below 80.00, main tranche at 77.50, last only under 72.00. Do not chase above 85.00. Hold 12-24 months; there is no stop by design.",
+        "wait": true
+      },
+      "thesis": "Four fetched quarters of actual EPS - 2.09, 2.58, 2.57 and 1.09 - sum to $8.33 trailing, and CVS beat the estimate in all four. The 81.35 close is 9.77x and the 77.50 entry is 9.30x, against 17.14x for UNH on the same fetched-TTM method. Both are being sold on the same CMS proposal and this one is already at 9.3x. The 108.29 target is 13.0x, a small discount to the 13.29x the stock itself carried at its 110.68 high inside the last 150 days, on earnings it has already reported rather than earnings it has to grow into.",
+      "key_risk": "Two things the valuation does not answer, and they are why this is 2.5% and not larger. First, insiders are net sellers of $350,741,379 over six months - 8 sells against a single $2,001,315 purchase - and Glenview Capital was reported cutting its position into this selloff. Second, this report already owned CVS and was stopped out of it on 2026-11-04; buying it again 10% lower on a different horizon is a deliberate decision, not an oversight, and if it is wrong it will be wrong twice. EXPLICIT INVALIDATION (a price fall is not one): trailing-four-quarter reported EPS below $6.50 for two consecutive quarters, or CVS abandons the announced breakup, or it withdraws full-year guidance citing RADV liabilities. The 66.64 bear price is 8.0x trailing EPS, below the 9.14x the 150-day low of 76.10 represents.",
+      "counter_argument": "The bear case is that CVS is the worst-placed name in the group, not the cheapest: Aetna carries the MA audit exposure, the planned breakup is unresolved, and the people who know the company best sold $350.7M of it. Answered with the only comparison that is measurable: CVS trades at 9.77x trailing EPS having beaten four of four quarters, while UNH, hit by the identical rule on the identical day, trades at 17.14x having beaten three of four. The audit risk is discounted roughly twice as hard here. The honest weakness is sensitivity - at a 12.5x target instead of 13.0x the reward-to-risk is 2.45 and this idea fails the 2.5 long-term floor outright. It survives on half a turn of multiple, and the reader should size it knowing that. RED TEAM: the UNH leg of that comparison was cut this phase, so the 'same rule, same day, half the multiple' argument now stands without its other half published - the arithmetic is unchanged and still correct, but it is a relative claim and the reader no longer has the relative trade. Two things lower the score to 3. First, the sensitivity this idea discloses about itself is the whole margin: 2.84 at a 13.0x target, 2.45 and failing at 12.5x, and nothing in the evidence distinguishes 13.0x from 12.5x - a ratio that lives inside half a turn of a judgment call is not a 4. Second, positioning runs against the thesis. Insider buying is this report's own primary screen - it is why DY and DKS are here - and CVS shows $350.7M of net insider selling, 8 sells against one $2.0M buy. Applying a screen as a positive when it hits and ignoring it when it misses is not a screen. What keeps CVS in the report is that it is the only idea this morning whose downside is honest: the 66.64 bear case is below a price the stock has not traded under on any of the last 200 sessions (200-day low 69.5101, 2026-03-30), which is the test UNH failed.",
+      "evidence": [
+        {
+          "kind": "valuation_anchor",
+          "detail": "TTM reported EPS $8.33 from four fetched actuals (2026-09-30 2.09, 2026-06-30 2.58, 2026-03-31 2.57, 2025-12-31 1.09), beats in all four. 81.35 = 9.77x, entry 77.50 = 9.30x, target 108.29 = 13.0x, bear 66.64 = 8.0x. The 150-day high of 110.68 is 13.29x and the 150-day low of 76.10 is 9.14x on the same earnings.",
+          "source": "https://finnhub.io/api/v1/stock/earnings?symbol=CVS"
+        },
+        {
+          "kind": "technical_level",
+          "detail": "Close 81.35 after an 11/18 range of 81.09-85.74 on 17.6M shares against a $910M 30-day average dollar volume; 150-day low 76.10, high 110.68, SMA50 89.01. The 77.50 entry sits between the close and the 150-day low and is the level already published on 2026-11-05.",
+          "source": "https://www.nasdaq.com/market-activity/stocks/cvs/historical"
+        },
+        {
+          "kind": "counter_argument_answered",
+          "detail": "Same rule, same day, two prices: CVS -5.20% to 9.77x trailing with 4 of 4 beats, UNH -10.21% to 17.14x with 3 of 4. Both multiples computed from fetched quarterly actuals on the same method.",
+          "source": "https://finnhub.io/api/v1/stock/earnings?symbol=UNH"
+        }
+      ],
+      "sources": [
+        "https://www.tradingkey.com/news/market-movers/262311782-market-movers-cvs-20261118",
+        "https://beinsure.com/news/healthcare-stocks-fall-as-medicare-rules-trigger-a-selloff/",
+        "https://mlq.ai/news/unitedhealth-and-humana-fall-after-cms-proposes-a-90-billion-anti-fraud-rule/",
+        "https://finnhub.io/api/v1/stock/earnings?symbol=CVS",
+        "https://www.nasdaq.com/market-activity/stocks/cvs/historical",
+        "https://investors.cvshealth.com/"
+      ],
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.84,
+        "claimed_risk_reward": 2.84,
+        "breakeven_probability": 0.26,
+        "stated_win_probability": 0.44,
+        "expectancy_r": 0.69,
+        "claimed_edge": 0.18,
+        "stop_atr_multiple": null,
+        "live_price": 81.35,
+        "live_price_asof": "2026-11-18T21:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 891.1,
+        "bid": 80.8,
+        "ask": 82.69,
+        "spread_pct": 2.312,
+        "atr14": 3.8576,
+        "checked_at_et": "2026-11-19T06:51:16-05:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.84:1 clears the 2.5:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 77.5 is -4.7% from live 81.35"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2027-01-19 is ahead of us"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "long-term target is valuation-anchored, not ATR-bound"
+          },
+          {
+            "check": "stop_distance",
+            "status": "pass",
+            "detail": "long-term downside is a bear case, not a stop \u2014 no ATR floor applies"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "44% claimed vs 26% break-even at 2.84:1 \u2014 expectancy +0.69R"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-11-18T21:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "bid/ask spread 2.31%; the round trip costs 6% of the target move \u2014 set the entry as a limit, never market"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "2.5% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 3 rests on 3 independent kinds: counter_argument_answered, technical_level, valuation_anchor"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "1 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    }
+  ],
+  "watchlist": [
+    {
+      "symbol": "LEN",
+      "instrument": "Lennar Corp",
+      "trigger": "A print below 79.50 (back inside Berkshire's own 77.12-81.90 accumulation band), or the fiscal-Q4 report in December arriving as a dated catalyst.",
+      "note": "The find of the morning that does not qualify today. Berkshire Hathaway filed 24 open-market purchases (Form 4 code P) dated 2026-10-02, 1,259,982 shares, $329,017,222, at 77.12-81.90, with zero sells in six months; LEN closed 82.91, just above the top of that band. Relative strength is fine (+5.42% 1m vs XHB +4.71%, SPY -5.05%). It fails on arithmetic, not story: as a swing there is no catalyst inside ten sessions (fiscal Q4 reports mid-December, not on the fetched calendar through 2026-12-01), and as a long_term the mid-cycle anchor of $100.36 against a $64.74 bear gives R:R 1.41 against a 2.5 floor. Clearing 2.5 would need a $116.40 target, above the 150-day high. The levels are already computed: entry 79.50, stop 71.00 (2.20 ATR), target 96.50, R:R 2.00. Missed all four of its last four quarters."
+    },
+    {
+      "symbol": "HUN",
+      "instrument": "Huntsman Corp",
+      "trigger": "A dated catalyst - HUN is not on the fetched earnings calendar through 2026-12-01. The standing buy order at 9.00 is unchanged.",
+      "note": "CEO Peter R. Huntsman bought 100,000 shares at $9.81 on 2026-08-03 ($981,000), one buyer, zero sells in six months, and the stock closed 9.03 - below his own purchase price. -43.9% off the 16.085 150-day high. Levels would work (entry 9.00, stop 7.90 below the 150-day low = 2.57 ATR, target 11.20, R:R 2.00) but there is nothing to value: TTM reported EPS is -$0.53 and the company has beaten in 1 of 4. No P/E anchor exists and no book-value or replacement-cost figure could be fetched. The CEO is buying a chemical cycle, not an earnings stream - which may be right and is not something this report can price today."
+    },
+    {
+      "symbol": "ADM",
+      "instrument": "Archer-Daniels-Midland Co",
+      "trigger": "A dated catalyst, or a price low enough that an honest 10.5x bear case still leaves 2.5:1. The standing buy order at 68.80 is unchanged.",
+      "note": "Interesting and still does not qualify. TTM reported EPS $5.19 with beats in 4 of 4 (+8.2%, +6.6%, +26.8%, +9.3%), and the analyst bullish share swung +22.8 points to 33.3% over four months - the largest improving revision seen today. Close 67.78 = 13.06x. The failure: an honest bear case for a cyclical ag processor with an EPS series that ran 0.87 to 0.71 to 1.84 to 1.77 is about 10.5x = 54.50, so from 67.78 the 2.5 floor demands a 100.98 target = 19.5x, above any multiple in the window. It could have been passed by setting the bear at 12.0x (62.28) for R:R 2.77; that was explicitly refused - a bear case 8% below the market on a stock already down 23.6% is the long-term analogue of walking the stop in. Note: ADM traded 67.52-68.77 on 11/18, entirely below the 68.80 entry, so that order may have filled and the state file may not reflect it."
+    },
+    {
+      "symbol": "GLD",
+      "instrument": "SPDR Gold Shares - RETIRE THIS ORDER",
+      "trigger": "None. Withdraw the standing SELL order at 406.77.",
+      "note": "Standing SELL order at 406.77 published 2026-10-25 is dead and should be retired rather than re-pitched. GLD closed 341.19 on 11/18 after falling 3.20% on 13.5M shares, 0.13% above its 150-day low of 340.76 and -23.96% from the 448.70 high. The entry sits 16.1% above the market and can never fill on the thesis that motivated it. The directional call was right; leaving the order open is anchoring."
+    },
+    {
+      "symbol": "/MBTZ6",
+      "instrument": "Micro Bitcoin futures Dec 2026 - RETIRE THIS ORDER",
+      "trigger": "None. Withdraw the standing SHORT order at 74,075.",
+      "note": "Standing SHORT at 74,075 published 2026-11-09 is dead. BTC spot $63,676, so the entry is ~16% above the market and never filled. Directionally the call was right. Re-pitching the same level is anchoring, not conviction. No crypto idea today either way: BTC -0.73%, ETH $1,801.53, SOL $74.39 all essentially unchanged, while IBIT at 35.36 is -28.41% from its 49.39 150-day high in a near-straight line from 44.94 on 11/05 - buying that is a knife and shorting a 28% drawdown eleven days in is late and badly located."
+    },
+    {
+      "symbol": "UNH",
+      "instrument": "UnitedHealth Group Inc",
+      "note": "Red team cut from rank 2. The 2.86 reward-to-risk is manufactured by the downside, not earned by the upside. The 285.74 bear case is described as conservative because it sits below the 317.135 150-day low - but UNH printed a low under 285.74 on 36 sessions this year, 2026-02-04 to 2026-04-06, bottoming at 255.965 on 2026-03-27. Measured against a price the stock has actually traded, the ratio is (408.20-317.50)/(317.50-255.965) = 1.47:1, against a 2.5 long-term floor. The upside anchor is no better: the 408.20 target is 20.0x trailing, a round number justified as the multiple UNH held two sessions ago, and the ratio already fails at 19.0x (2.21:1). Also the weaker half of the CMS-6098-P pair - the identical bet is available at CVS at 9.3x entry against 15.6x here, with a bear case CVS has not traded below in 200 sessions. Finally the counter-argument's headline arithmetic compares CMS's $90.2B of ten-year industry recoveries against UNH's $55.75B two-day market-cap loss; those are not the same quantity - a permanent re-rating of MA coding economics is worth a multiple of the recovery flow - so the 'market priced worse than the regulator asked for' claim does not hold.",
+      "trigger": "Republish only with a downside the stock has actually traded to - 255.97 or lower - and a target anchored on something other than last week's multiple. At a 255.97 downside the target needs to be above 410 just to reach 2.5:1.",
+      "demoted_from_rank": 2,
+      "demotion_reason": "bear case set above a price printed on 36 sessions this year; R:R 1.47 on a traded downside"
+    },
+    {
+      "symbol": "PFE",
+      "instrument": "Pfizer Inc",
+      "note": "Red team cut from rank 5, but the amendment it carries is correct and is moved to market_context. The report was right that a 42.00 target (13.77x trailing) is unsupportable on a stock that has not traded above 10.31x in 150 days - and then committed a smaller version of the same error: the replacement 36.60 is 12.0x, still above any multiple the stock has carried in the window, and nothing in the evidence anchors 12.0x. It is not a peer multiple, not a historical average, not a DCF - it is a number, and the 2.81 reward-to-risk exists only because of it. At 10.31x (31.44, the 150-day high and the best multiple these earnings have actually been paid) the ratio is (31.44-27.60)/(27.60-24.40) = 1.20:1 against a 2.5 floor. Against that, the idea's own key_risk concedes the loss-of-exclusivity schedule, pipeline and segment revenue could not be fetched - so the thing that decides whether the $3.05 trailing EPS persists at all went unexamined. A long-term valuation idea with an unanchored target multiple and no view of earnings durability is not a recommendation; the 0/4, -15.2% long-term record is what that combination has produced before.",
+      "trigger": "Republish with an LOE schedule read from the 10-K and a target anchored on post-cliff earnings rather than trailing EPS. Until then hold the existing position with the cut target and do not add.",
+      "demoted_from_rank": 5,
+      "demotion_reason": "target multiple unanchored and above the 150-day realized range; R:R 1.20 at a defensible target; LOE schedule never fetched"
+    },
+    {
+      "symbol": "DY",
+      "instrument": "Dycom Industries Inc",
+      "note": "Demoted by validation: bid/ask spread 9.38%; the round trip costs 32% of the target move \u2014 too wide to trade this thesis",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 1,
+      "demotion_reason": "bid/ask spread 9.38%; the round trip costs 32% of the target move \u2014 too wide to trade this thesis"
+    },
+    {
+      "symbol": "DKS",
+      "instrument": "DICK'S Sporting Goods Inc",
+      "note": "Demoted by validation: bid/ask spread 10.89%; the round trip costs 51% of the target move \u2014 too wide to trade this thesis",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 3,
+      "demotion_reason": "bid/ask spread 10.89%; the round trip costs 51% of the target move \u2014 too wide to trade this thesis"
+    }
+  ],
+  "validation_summary": {
+    "checked": 3,
+    "passed": 0,
+    "warned": 1,
+    "failed": 2,
+    "enforced": true,
+    "demoted": 2
+  }
+}
