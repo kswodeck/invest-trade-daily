@@ -1,0 +1,494 @@
+{
+  "date": "2026-11-21",
+  "generated_at_et": "2026-11-21T06:37:19-05:00",
+  "research_minutes": 41,
+  "truncated": false,
+  "data_quality_notes": "Saturday run, US equities and futures closed. Every equity and ETF figure in this report is the Friday 2026-11-20 official close via finnhub, age ~875 minutes at synthesis \u2014 that is a closed market, not a stale quote, and the freshest honest price available. Crypto and the event-contract orderbook were fetched live this morning. Research finished with a RESEARCH COMPLETE block plus a 06:42 addendum, so nothing was truncated.\n\nWHY ONLY FOUR IDEAS, AND ONLY ONE NEW ONE. This is the deliberate output of the tape, not a shortfall of effort. (1) Of eleven instruments levelled, eight closed within 0.7% of their 150-day low after six consecutive down sessions \u2014 shorting there is chasing and buying there is a knife-catch. (2) The book already holds 17 open positions, 16 of them long equity/ETF and seven of those defensive, so the correlation cap on the one lane that is working is not merely met but massively exceeded. (3) The one driver with real conviction \u2014 'the correction continues' \u2014 is already expressed twice (the IWM short and the Fed-pause contract are the SAME driver, not opposing bets), and the third slot the cap permits was declined on purpose rather than through oversight. Short /MES, short /MNQ, short semis, short XLP and a BTC short were all considered and rejected as worse wrappers on a position already held.\n\nRATIOS WERE RECOMPUTED, NOT TRUSTED. KXFEDDECISION 15/6 = 2.50 (floor 2.0). IWM 31.81/14.00 = 2.27 (floor 2.0). LEN 29.00/11.50 = 2.52 against a stated 68.00 bear case (long_term floor 2.50). None sits suspiciously close to its floor from the target side, and the stop side was checked the other way: IWM's 14.00-point stop is 2.23x its 6.28 ATR14, clearing the 1.8 ATR ETF swing floor. LEN has no stop by design and a bear-case price instead. DKS carries risk_reward null because it is an exit instruction, not an idea \u2014 and the REASON for the exit is the ATR test failing: a 129.00 stop sits 0.48 ATR below Friday's close in a name with a 5.15% daily ATR, going into a Monday earnings print. That is a level the stock trades through, not one it stops at.\n\nCHECKS THAT COULD NOT BE RUN. (a) Options-implied moves on every single idea: yahoo-options returned HTTP 401 for IWM and TLT, so the 'is the target inside what the market prices?' test ran on nothing today. No straddle figure is claimed anywhere. (b) No VIX level was fetched and none is stated \u2014 yahoo returned 429/401 across the whole run, killing ^GSPC, ^NDX, ^VIX, ^RUT, ^DXY and all ES/NQ/gold/WTI futures quotes; ETF proxies are used throughout and labelled as such. A futures recommendation was therefore impossible to price, which is part of why no /MES, /MNQ or /MBT idea exists. (c) No post-Friday CME FedWatch reading: the 95%/4.3% figures are secondary reports dated 11-16 to 11-19, i.e. PRE-correction. The only post-crash macro read is the Kalshi/Robinhood orderbook itself (pause 8-10c), which is why the Fed idea leans on that rather than on FedWatch. (d) No company fundamentals: no 10-Q, 8-K or transcript was read today, which is why there is no new long_term idea and why the tech-valuation case \u2014 the most tempting trade on the board \u2014 was rejected rather than published. (e) Not reached at all: FDA calendars, index rebalances, lockup expiries, court dates, small/micro caps (no screener) and short-interest or analyst data on any name.\n\nSOURCES THAT FAILED. yahoo: 429 on all index/futures quotes, 401 on all options chains. finnhub: refused index quotes ('Market data subscription required for CFD indices'), worked for ETFs and single stocks. stooq: 404 on every index symbol. alphavantage: no API key configured. coingecko: the macro subcommand's crypto block failed while the standalone crypto subcommand worked. scripts/market_data.py events is structurally broken rather than facing an unavailable market \u2014 it filters one unsorted 200-market Kalshi page client-side, so every topic returns 0 results. Research worked around it via the Kalshi /markets/<ticker>/orderbook endpoint, since /markets returns null for yes_bid/yes_ask/last_price. Worth a fix plus a test: without that workaround the richest lane in today's tape would have been invisible.\n\nTWO ERRORS THE RESEARCH PHASE MADE AND CORRECTED IN PLACE, recorded because the later entry is the one synthesised here. (1) The 06:05 reading of gold -3.67% as a one-day forced liquidation making a dovish pivot more likely was wrong on both counts: GLD is in a 24.8% bear market and the December meeting is 89% priced to HIKE. Anything in the research log before 06:10 that assumes easing is superseded. (2) LEN was first captured as a SWING cancellation with a 95.00 target and a 72.00 stop, all three invented \u2014 the published record has it as long_term, entry 79.50, target 108.50, no stop by design. That mattered beyond the numbers, because the cancellation argument attacked a swing premise an idea of this horizon never had. The corrected decision published here slows the accumulation instead of cancelling it.\n\nONE IDEA CARRIES NO WIN PROBABILITY. LEN's is omitted rather than invented: a long-term accumulation with no stop has no 'target before stop' event to assign a probability to, and the notes support no number. KXFEDDECISION claims 0.36 against a 0.286 break-even (a deliberately modest ~5-point edge over the market's 10c) and IWM claims 0.42 against 0.306.\n\nTRACK-RECORD CONTEXT, which set today's bar rather than decorating it: 45 closed trades, 5 hit target (11%), average -5.8%. Conviction 2 is 0 for 7 at -10.1% average, so no conviction-2 equity long was published today. Stocks are 2/31 at -7.6% against ETFs at 3/14 and -1.9%. PYPL (-5.7%) and ONON (-12.4%) both traded through their stops on Friday and are closed; neither is re-pitched, and no stop on any of the four positions sitting within 3.2% of theirs (XLV, RTX, DKS, HUN) was widened. The value of this report today is in what it closes and trims, not in what it adds.\n\nRED TEAM (phase 2c, separate pass, did not write the above). Cut one of four ideas, corrected a wrong earnings date, and lowered every surviving conviction.\n\nKILLED LEN (was rank 4). It has no stop by design, so its 2.5217:1 reward-to-risk IS its risk control, and that clears the 2.50 long-term floor by 0.02 \u2014 on a 108.50 target sitting 13% above the 120-day high of 96.03 with no valuation anchor anywhere in the idea, no fundamental or filing evidence read today (the author says so explicitly), and the only driver actually researched today, the rate path, having moved against it. The ratio admits no legitimate repair: raising the bear case worsens it and moving the target out is the one fix the red team may not make. It also contradicts this report's own claim above that no ratio sits suspiciously close to its floor from the target side \u2014 LEN's does, and that claim is withdrawn. The order never filled, so nothing realised is given up; the structural thesis and its business invalidation are kept on the watchlist.\n\nCORRECTED THE DKS EARNINGS DATE, which was the operative fact of rank 3. The print is 2026-11-24 BEFORE THE OPEN (call 08:00 ET) per DICK'S own 2026-11-02 investor-relations release, not 2026-11-23. The fetched finnhub calendar carried 11-23 with a blank hour, and validate_report.py's earnings_date check 'confirmed' it against that same wrong source \u2014 a mechanical pass on a bad input. The exit still stands, because a 129.00 stop 0.48 ATR below price in a 5.15%-daily-ATR name cannot survive an earnings gap whichever morning it lands. What changes is the execution: there is no event risk at Monday's open, so the position should be worked out across Monday and flat by its close rather than sold at market into the first minutes of a session that may open as a violent bounce off a 150-day low. The report's outstanding 'may already be post-event' caveat is resolved.\n\nCONVICTIONS LOWERED ON ALL THREE SURVIVORS. KXFEDDECISION 5 -> 3: of its four evidence kinds, 'positioning' is the 8-10c orderbook, which is the price being paid rather than independent evidence that price is wrong (circular), and 'counter_argument_answered' restates the thesis's own AI-capex mechanism from a single strategist quote in a wire story \u2014 the same confirmation under a second kind. The one real primary document re-verified clean (FRED GASREGW re-fetched: October weekly average 4.3095 against 3.9843 for November's first three weeks, -7.55%, matching the cited figures to the cent) but it is a HEADLINE energy effect pointed at a committee acting on core, and the report itself concedes the Fed votes with no published statistic containing it. Two genuine confirmations, so conviction 3. IWM 4 -> 3: its 'positioning' evidence argues against its own direction \u2014 IWM outperforming SPY by 2.46 points is a reason to cover, which is the action, but not a confirmation of a short. DKS 4 -> 2: a conviction 4 beside direction 'buy' on an idea whose entire content is 'close the position' overstates confidence in the long, and all three of its evidence kinds support exiting.\n\nFIXED, NOT CUT: IWM's stated reason for leaving the stop at 284.50 was wrong. A stop at the 270.50 entry sits 13.89 points from Friday's close, 2.21x the 6.2832 ATR14 and outside the 1.8 ATR ETF floor, so the claim that any meaningful stop 'sits inside 0.5 ATR' does not hold. The conclusion survives on the correct reasoning (measured from the entry, as a filled position must be, any stop under about 281.81 breaches the floor and a breakeven stop would read as infinite reward-to-risk on zero risk), so the forward 0.64:1 is answered by cutting size and not by tightening the stop. Also added to KXFEDDECISION: the November Employment Situation on 2026-12-04 08:30 ET, verified on the BLS calendar, which the idea omitted despite being the largest two-sided event before the vote and the one thing that could supply the labour-market cover key_risk says is missing; and the risk that the December 8-9 meeting carries an SEP, so a Fed worried about financial conditions can hike and signal caution in the dots \u2014 the most likely path where this thesis is right and the contract still resolves NO.\n\nNOT CUT, EXPLICITLY. The IWM half-cover and the DKS exit are both sound and both are risk-reducing instructions; the Fed contract is a defensible 1.5% speculative position whose stated 36% win probability is conservative rather than inflated \u2014 it implies a fair value near 11.6c against the ~15c the thesis argues for, so it claims less edge than it makes the case for. The FOMC date, its two-day structure and its SEP status were verified against the Federal Reserve's own calendar, and the Nov/Dec CPI and payrolls dates against the BLS calendar. The watchlist was left as written: its rejections (XLK, UUP, the CPI bucket contracts, XLE, GLD, /MBTZ6) are reasoned, numerate and in several cases argue against trades the report would have liked to make, which is the behaviour this phase is meant to reward. Three ideas remain, one of them new.\n\nONE KNOWN PIPELINE CONSEQUENCE, FLAGGED RATHER THAN WORKED AROUND. Because validate_report.py's earnings_date check hard-fails any mismatch against the fetched finnhub calendar, the DKS date correction above will itself trip that check and phase 2d will likely demote DKS to the watchlist citing 'report says 2026-11-24 but the calendar says 2026-11-23'. That demotion reason is wrong \u2014 the issuer's own release is the better source \u2014 and the exit instruction stands regardless of the rank it ends up with. The red team deliberately did NOT edit the validator to let its own change pass: that check polices precisely this field, a mismatch almost always does mean the model invented a date, and a phase rewriting the logic that audits it is the failure mode this pipeline is built to prevent. The durable fix belongs in tests/ with a human deciding it \u2014 a claimed date backed by an issuer citation should warn and rank down, not hard-fail against a third-party calendar whose own hour field was blank. Note also that an exit instruction is advice to the reader and does not itself close the tracked position: the open DKS row keeps being graded against its 129.00 stop and 175.50 target until price reaches one, so the demotion costs prominence, not accuracy. Validation demoted 1 idea(s) whose numbers did not check out. 2 more carry warnings \u2014 see the validation block on each.",
+  "market_context": {
+    "summary": "Friday 2026-11-20 was a tech-led liquidation that put the Dow and S&P 500 into correction and left the Nasdaq in a bear market. SPY -3.64% to 689.81, closing 4.0% off its own intraday high of 718.29 and on the session low; QQQ -5.67% and XLK -7.27%, a two-sigma sector day. The shape is rotation rather than indiscriminate selling: staples +0.67%, long bonds +1.37% and healthcare -0.12% all held while tech broke. SPY has now fallen six consecutive sessions, 754.37 -> 689.81 = -8.6%, and QQQ sits -20.24% off its high with XLK -26.69%.\n\nThe driver named by the reporting is an AI-capex unwind \u2014 slowing datacenter buildouts, withdrawn funding for AI projects, a slower tech earnings trajectory. Nvidia fell 13-14% on a Reuters report that the SEC is probing its accounting, and is now -47.5% from its 2026-10-06 peak with roughly $2.7T of market value gone. The Anthropic IPO debuted Friday and closed -8.5% after an initial gain, which is the cleanest available read on sentiment: the marginal buyer for new AI supply has left.\n\nThe single most important macro fact, and the one that overturned this run's own opening frame: the Fed is expected to HIKE in December, not cut. The target range is 3.75-4.00%, the last move was a 12-0 quarter-point hike on 2026-09-16, October CPI ran +0.35% m/m, payrolls were +165,000 and unemployment fell to 4.1%. That makes this one discount-rate story rather than three: mega-cap tech -26.7%, gold -24.8% from its high at a 120-day low, and bitcoin 21.9% below the 74,075 level this report wanted to short on 11-09 are all long-duration assets de-rating together, with the haven bid in the DOLLAR (19-month high) rather than in gold or reliably in duration. Banks confirm there is a funding component and not only a multiple one: XLF is -9.11% off its high below both moving averages after five straight down sessions, and KRE sits 0.78% above its 120-day low, which prices credit rather than the net-interest-margin benefit a hiking Fed with a steepening curve should deliver.\n\nThe one genuinely new, post-crash macro read is the December FOMC orderbook, fetched live this morning: a 25bp hike at 89-90c, a pause at 8-10c, a 50bp hike at 2-3c, a cut at ~1c. Against pre-Friday FedWatch (95.7% / ~0% / 4.3%) the market has not begun pricing cuts \u2014 it has begun pricing a PAUSE and has taken the 50bp tail off the table, which is what a financial-conditions shock landing on hot inflation looks like. Only three instruments on the board are in uptrends: UUP, XLP and TLT. Eight of eleven closed within 0.7% of their 150-day low, so Monday is as likely to be a violent bounce as a continuation \u2014 first resistance is SPY 713.56-718.29, QQQ 638.84-643.28, XLK 158.71-159.01, all of them Friday's own range and all well below the SMA20.",
+    "regime": "risk-off",
+    "levels": {
+      "spx": 6910.39,
+      "nasdaq_composite": 22617.73,
+      "dow": 48147.33,
+      "spy_close": 689.81,
+      "qqq_close": 608.45,
+      "xlk_close": 149.01,
+      "iwm_close": 256.61,
+      "vix": null,
+      "vix_note": "Not fetched \u2014 yahoo returned 429/401 on every index symbol this run. No VIX level is stated.",
+      "us10y": 5.04,
+      "us2y": 4.76,
+      "fed_funds_effective": 3.88,
+      "curve_10y_2y": 0.29,
+      "fed_target_range": "3.75-4.00% (last move: 12-0 25bp HIKE on 2026-09-16)",
+      "dxy": null,
+      "dxy_proxy_uup": 29.62,
+      "dxy_note": "Index quote unavailable (yahoo 429). UUP at 29.62 is 0.15% off its 120-day high; the dollar is reported at a 19-month high via secondary sources.",
+      "btc": 57822.0,
+      "eth": 1638.18,
+      "gold_proxy_gld": 322.87,
+      "gold_note": "GLD closed at a 120-day low, -24.81% off its 429.42 high. Spot gold is reported near $3,500-3,600, a 14-month low, via secondary sources only \u2014 no futures quote was fetched.",
+      "wti_proxy_uso": 139.63,
+      "xlp_close": 90.46,
+      "tlt_close": 81.45,
+      "xlf_close": 54.57,
+      "kre_close": 68.32,
+      "xle_close": 60.51,
+      "price_asof": "2026-11-20T16:00 ET official close for all equities and ETFs (market closed, Saturday run); crypto and event-contract prices live 2026-11-21 ~06:15-06:30 ET"
+    },
+    "econ_calendar": [
+      {
+        "event": "DKS Q3 earnings (BMO/AMC unconfirmed \u2014 the calendar's hour field was blank, so Monday's open is the risk point)",
+        "datetime_et": "2026-11-23T09:30",
+        "importance": "high",
+        "consensus": "EPS 1.4242 on revenue ~$5.142B"
+      },
+      {
+        "event": "Retail earnings cluster: ANF, BURL, KSS, GES; HPE after the close",
+        "datetime_et": "2026-11-23",
+        "importance": "medium",
+        "consensus": null
+      },
+      {
+        "event": "ADI (bmo) and DELL (amc) \u2014 the first hard reads on AI datacenter demand after the crash. Also BBY, HPQ, ADSK, WDAY, MDT, NTNX",
+        "datetime_et": "2026-11-24",
+        "importance": "high",
+        "consensus": null
+      },
+      {
+        "event": "October PCE price index \u2014 the LAST major inflation print before the Dec 9 FOMC. Note it covers OCTOBER and therefore predates the November energy collapse. Two-sided for both ideas in this report",
+        "datetime_et": "2026-11-25T08:30",
+        "importance": "high",
+        "consensus": null
+      },
+      {
+        "event": "Thanksgiving \u2014 US equity markets closed",
+        "datetime_et": "2026-11-26",
+        "importance": "low",
+        "consensus": null
+      },
+      {
+        "event": "Half session, 13:00 ET close",
+        "datetime_et": "2026-11-27T13:00",
+        "importance": "low",
+        "consensus": null
+      },
+      {
+        "event": "MRVL, CRDO, CRWD, MDB, OKTA, DLTR, FIVE, PVH \u2014 MRVL and CRDO are the second datacenter-demand read",
+        "datetime_et": "2026-12-01",
+        "importance": "medium",
+        "consensus": null
+      },
+      {
+        "event": "FOMC rate decision \u2014 89-90c priced for a 25bp hike, 8-10c for a pause, 2-3c for 50bp, ~1c for a cut",
+        "datetime_et": "2026-12-09T14:00",
+        "importance": "high",
+        "consensus": "25bp hike to 4.00-4.25%"
+      },
+      {
+        "event": "November CPI \u2014 lands the day AFTER the FOMC decides, so the committee votes without it. This is the sequencing problem named in the Fed idea's key_risk",
+        "datetime_et": "2026-12-10T08:30",
+        "importance": "high",
+        "consensus": "market-implied ~3.7% YoY (EXACT-bucket contracts centered there)"
+      },
+      {
+        "event": "November PCE price index \u2014 two weeks after the decision",
+        "datetime_et": "2026-12-23T08:30",
+        "importance": "medium",
+        "consensus": null
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "symbol": "KXFEDDECISION-26DEC-H0",
+      "instrument": "Fed rate decision in December \u2014 Fed maintains rate (no change), Dec 9 2026",
+      "asset_class": "event",
+      "venue": "Robinhood Prediction Markets",
+      "direction": "yes",
+      "horizon": "swing",
+      "conviction": 3,
+      "unit": "cents",
+      "last_price": 10,
+      "last_price_asof": "2026-11-21 ~06:15 ET, Robinhood prediction-markets event page (live, 24/7 market)",
+      "price_source": "Robinhood event page (10c) cross-checked against Kalshi KXFEDDECISION-26DEC-H0 orderbook (YES 8c bid / 9c ask)",
+      "entry": {
+        "ideal": 10,
+        "zone_low": 8,
+        "zone_high": 12,
+        "order_type": "limit",
+        "condition": "Buy YES only at 12c or better. Verify the per-contract fee on the Robinhood panel before sizing \u2014 a 1-2c round trip moves break-even from 10% to 11-12%. Do not add above 12c and do not average down below 6c."
+      },
+      "exit": {
+        "target": 25,
+        "target_2": 100
+      },
+      "stop": 4,
+      "risk_reward": 2.5,
+      "win_probability": 0.36,
+      "position_size_pct": 1.5,
+      "requires_margin": false,
+      "risk_tier": "speculative",
+      "catalyst": {
+        "event": "FOMC rate decision, Dec 9 2026 14:00 ET. Contract resolves YES only if the Fed leaves the target range unchanged at 3.75-4.00%. Calendar detail that shapes the trade: the October PCE price index on 2026-11-25 08:30 ET is the LAST major inflation print before the vote \u2014 November CPI is not published until 2026-12-10, the day AFTER the decision, and November PCE not until 2026-12-23. Note the 11-25 print covers OCTOBER and therefore predates the November energy collapse. RED TEAM ADDITION: the October PCE print is the last major INFLATION print before the vote, but it is not the last major print. The November Employment Situation lands 2026-12-04 08:30 ET, five days before the decision, verified against the BLS release calendar (November CPI 2026-12-10 confirmed on the same page, i.e. after the vote, as stated). That is the largest two-sided event between here and resolution, and it is the one that can change the specific thing key_risk says is missing \u2014 labour-market cover for a pause. The FOMC meeting is confirmed as 2026-12-08/09 on the Federal Reserve's own calendar and carries a Summary of Economic Projections.",
+        "datetime_et": "2026-12-09T14:00",
+        "action": "Buy YES at 10c or better, up to 12c, sized as a speculative position. This is a repricing trade, not a hold-to-resolution bet. The near catalyst is the 2026-11-25 08:30 ET October PCE print, four sessions away and two-sided \u2014 but do not expect it to carry the November disinflation, because it covers October. What takes this contract to 20-30c is a still-falling tape into early December, or any FOMC voter publicly floating a wait; that is where to scale out. A firm PCE print alongside stabilising equities is the signal to cut, not to average down. Hold a residual to Dec 9 only with the scale-out money banked. Do not add above 12c and do not average down below 6c. The 2026-12-04 08:30 ET November payrolls print is the event to trade this around: a materially weak print is the most likely route from 10c to 25c, and a firm one alongside stabilising equities is the cut signal.",
+        "wait": false
+      },
+      "thesis": "The market prices a 10% chance the Fed leaves rates unchanged on Dec 9. The claim is that this is too low by a few points, on two things the price looks to be underweighting. First, the thing breaking is itself disinflationary: the selloff is an AI-capex unwind \u2014 slowing datacenter buildouts and withdrawn funding for AI projects \u2014 a negative investment shock to exactly the industrial, power and labour demand that kept core inflation sticky. Second, and this is verifiable rather than narrative, the disinflation is already arriving through energy: US regular gasoline averaged $4.309 in October and $3.984 across the first three weeks of November, -7.55% and still falling, worth roughly -0.3pp on the November CPI index at its basket weight. Layered on that, financial conditions tightened violently and the move is young \u2014 the S&P and Dow entered correction only on Friday, the Nasdaq is 20.2% off its high, and roughly $4 trillion of market value went in five sessions. The pricing itself shows how fast this re-rates: the pause went from essentially nothing pre-Friday to 8-10c in one session while the 50bp tail was cut from 4.3% to 2-3%. The market is already moving this way and has 12 more sessions to do it in.",
+      "key_risk": "The base case is firmly a hike and this contract loses in it. October CPI ran +0.35% m/m, the October minutes had almost all officials seeing further increases as appropriate, the September hike was 12-0 with no dissent, and payrolls were +165,000 with unemployment at 4.1% and falling, so there is no labour-market cover for a pause. The sharpest specific risk is one of sequencing, and it cuts against this trade: the Fed votes on Dec 9 having seen NO official data containing the November energy drop \u2014 November CPI lands 12-10, the day after, and November PCE on 12-23. The 11-25 print covers October and may even read firm. So the cleanest argument for waiting is one the committee cannot yet point to in a published statistic, and pausing would read as subordinating the inflation mandate to equity prices with the 10-year at 5.04%. Event-contract specifics matter enormously at a 10c entry: Robinhood's panel showed $0.00 but the disclosure says additional fees apply and the product launched at 2c per contract, so a 1-2c round trip moves break-even from 10% to 11-12% \u2014 verify the fill cost before sizing. Finally, 10c is not a claim of Fed autopilot; the price already embeds part of this scenario, so the edge asserted is about 5 points, not a repricing to a coin flip. RED TEAM ADDITION \u2014 the dovish outcome has a cheaper expression than the one this contract pays on. The December 8-9 meeting carries a Summary of Economic Projections (confirmed on the Fed's own calendar), so a committee that has become worried about financial conditions can hike 25bp and signal caution in the dots and the press conference instead of pausing. That is the single most likely way this thesis is directionally RIGHT and the contract still resolves NO, and it is an argument for taking the 25c scale-out rather than holding to resolution. Second, the disinflation evidence is pointed at the wrong index: the gasoline move is verified (-7.55% m/m, FRED GASREGW, re-fetched and matching to the cent) but it is a HEADLINE energy effect, while the committee that hiked 12-0 and wrote that further increases were appropriate is acting on core. Energy at -7.55% does not move core, so the strongest piece of primary evidence here supports a weaker claim than the thesis draws from it.",
+      "counter_argument": "The strongest case against: a Fed that has hiked into re-accelerating inflation, unanimously, and told the world in its own minutes that more is coming does not stop because the Nasdaq gave back a year of gains, particularly when unemployment is falling. Equity corrections did not stop hiking cycles in 1994 or 2022 when inflation was the problem. Answered rather than waved away: this trade does not need the Fed to pause. It needs the probability of a pause to be re-rated once, by a tape that already moved it from nothing to 10c in one session, and the exit is 25c rather than resolution for exactly that reason. The honest residual is that if equities simply stabilise over the next fortnight, the contract decays to 4c and the trade is a loss.",
+      "evidence": [
+        {
+          "kind": "dated_catalyst",
+          "detail": "FOMC decision 2026-12-09 14:00 ET, verified two ways: Robinhood's own event page for 'Fed rate decision in December (Dec 09 2026)' and the Kalshi KXFEDDECISION-26DEC series. Current target range 3.75-4.00%; last move a 12-0 25bp hike on 2026-09-16. Release sequence verified against BEA and the CPI calendar: October PCE on 2026-11-25 08:30 ET is the last major inflation print before the vote, with November CPI on 2026-12-10 and November PCE on 2026-12-23 both falling AFTER it.",
+          "source": "https://robinhood.com/us/en/prediction-markets/economics/events/fed-rate-decision-in-december-dec-09-2026/"
+        },
+        {
+          "kind": "positioning",
+          "detail": "Measured repricing fetched live 2026-11-21. Robinhood: maintain 10c, hike 25bp 89c, hike >25bp 5c, cut 25bp 3c. Kalshi orderbook for the same contracts: pause YES 8c/9c, 25bp 89c/90c, >25bp 2c/3c (asks sum ~103, a real two-way book). Against pre-Friday CME FedWatch of 95.7% for 25bp, 4.3% for 50bp and ~0% pause, the pause rose to 8-10% and the 50bp tail was halved in one session.",
+          "source": "https://en.sedaily.com/society/2026/11/19/us-dec-rate-hike-odds-at-957-percent-as-fed-resists-bigger"
+        },
+        {
+          "kind": "counter_argument_answered",
+          "detail": "The hawkish case (hot CPI, 12-0 September hike, near-unanimous hawkish October minutes, falling unemployment) is answered with a mechanism rather than a mood: the AI capex unwind named by Treasury Partners' Richard Saperstein \u2014 slowing datacenter buildouts and reduced AI project funding \u2014 is a negative investment shock that is disinflationary in its own right, and the trade exits at 25c on repricing rather than requiring the pause to happen.",
+          "source": "https://www.upi.com/Top_News/US/2026/11/20/stocks-dow-jones-nasdaq-correction-territory/1061795214998/"
+        },
+        {
+          "kind": "primary_document",
+          "detail": "Read the underlying federal statistical series directly rather than commentary about them. FRED GASREGW weekly US regular gasoline: October 2026 weeks 4.354/4.331/4.284/4.269 (avg 4.309) against November 4.153/3.995/3.805 (avg 3.984) = -7.55% m/m, worth about -0.26 to -0.31pp on the CPI index at a ~3.5% basket weight. FRED CPIAUCNS: October 2026 337.511; the 16-year Oct-to-Nov NSA seasonal is a median -0.093%, so the November print carries a real energy-driven drop. Also confirmed October 2025 CPI was never published, which is why October 2026 YoY is not computable.",
+          "source": "https://fred.stlouisfed.org/series/GASREGW"
+        }
+      ],
+      "sources": [
+        "https://robinhood.com/us/en/prediction-markets/economics/events/fed-rate-decision-in-december-dec-09-2026/",
+        "https://en.sedaily.com/society/2026/11/19/us-dec-rate-hike-odds-at-957-percent-as-fed-resists-bigger",
+        "https://247wallst.com/investing/2026/11/18/traders-now-see-a-95-chance-the-fed-hikes-rates-in-december/",
+        "https://www.upi.com/Top_News/US/2026/11/20/stocks-dow-jones-nasdaq-correction-territory/1061795214998/",
+        "https://www.cnn.com/2026/11/20/investing/us-stocks-anthropic-ai",
+        "https://www.bea.gov/taxonomy/term/716",
+        "https://fred.stlouisfed.org/series/GASREGW",
+        "https://fred.stlouisfed.org/series/CPIAUCNS",
+        "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+        "https://www.bls.gov/schedule/2026/12_sched_list.htm"
+      ],
+      "rank": 1,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.5,
+        "claimed_risk_reward": 2.5,
+        "breakeven_probability": 0.286,
+        "stated_win_probability": 0.36,
+        "expectancy_r": 0.26,
+        "claimed_edge": 0.074,
+        "stop_atr_multiple": null,
+        "live_price": null,
+        "live_price_asof": null,
+        "market_session": null,
+        "price_age_minutes": null,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": null,
+        "checked_at_et": "2026-11-21T06:46:56-05:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.5:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "warn",
+            "detail": "no live price available to compare against"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-12-09 is ahead of us"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "warn",
+            "detail": "no ATR available to size the move against"
+          },
+          {
+            "check": "stop_distance",
+            "status": "warn",
+            "detail": "no ATR available to measure the stop against"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "36% claimed vs 29% break-even at 2.5:1 \u2014 expectancy +0.26R"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "1.5% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 3 rests on 4 independent kinds: counter_argument_answered, dated_catalyst, positioning, primary_document"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "1 of 4 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "IWM",
+      "instrument": "iShares Russell 2000 ETF",
+      "asset_class": "etf",
+      "venue": "Robinhood Stocks",
+      "direction": "sell_short",
+      "horizon": "swing",
+      "conviction": 3,
+      "unit": "usd",
+      "last_price": 256.61,
+      "last_price_asof": "2026-11-20T16:00 ET official close (US equities closed; Saturday run)",
+      "price_source": "finnhub via scripts/market_data.py quote",
+      "entry": {
+        "ideal": 270.5,
+        "zone_low": 268.0,
+        "zone_high": 274.0,
+        "order_type": "on_open",
+        "condition": "Position already filled 2026-11-18 at 270.50. The only order to place is the half-cover at the Monday 2026-11-23 open; the remaining half keeps the original 284.50 stop."
+      },
+      "exit": {
+        "target": 238.69,
+        "target_2": 230.0,
+        "scale_plan": "Cover half at the Monday 2026-11-23 open (2.0% -> 1.0% of capital). Hold the balance to 238.69, then reassess at 230.00; stop unchanged at 284.50."
+      },
+      "stop": 284.5,
+      "risk_reward": 2.27,
+      "win_probability": 0.42,
+      "position_size_pct": 1.0,
+      "requires_margin": true,
+      "risk_tier": "speculative",
+      "catalyst": {
+        "event": "UPDATE to the position opened 2026-11-18, not a new idea. The Russell 2000 broke to a 120-day closing low on 2.2x volume in the session that put the S&P 500 into correction.",
+        "datetime_et": null,
+        "action": "COVER HALF at the market on the Monday 2026-11-23 open (reference 256.61, +5.1% against the 270.5 entry) and bank it. That takes the position from the 2.0% published on 2026-11-20 to 1.0%. Hold that remaining half against the ORIGINAL 284.50 stop, target 238.69, both unchanged. Deliberately do NOT walk the stop in to protect the gain \u2014 but the reason published this morning was wrong and is corrected here. A stop at the 270.50 entry is 13.89 points from Friday's 256.61 close, which is 2.21x the 6.2832 ATR14 and comfortably OUTSIDE the 1.8 ATR floor for a swing ETF, so it is not true that any meaningful stop sits inside 0.5 ATR. The correct reason is that this report measures stop distance from the ENTRY, which is the only honest reference for a filled position: from 270.50, any stop below about 281.81 falls under 1.8 ATR, so tightening would manufacture exactly the ratio inflation these checks exist to catch (a 270.50 stop would read as infinite reward-to-risk on zero risk). The forward asymmetry is therefore addressed by cutting SIZE, not by cutting the stop. Treat the 2026-11-25 08:30 ET PCE print as a two-sided event on the remaining half.",
+        "wait": false
+      },
+      "thesis": "Position update. Filled 2026-11-18 at 270.5 and now ahead 5.1%. IWM closed Friday at 256.61, the lowest close of the 120-day window, on the session low, on 57.5M shares against a 26.1M 30-day average (2.2x), with SMA20 at 276.23 and SMA50 at 278.26 far overhead. Small caps are the most rate- and credit-sensitive cohort and the 10-year sits at 5.04%, so the correction that has now reached the S&P has further to travel here. But the short has already earned most of what it will: from 256.61 the remaining move to 238.69 is 17.92 points against 27.89 of open risk to the standing stop, which is 0.64:1 from here even though it is 2.27:1 measured from entry. Covering half converts a decaying edge into a realised gain and leaves the momentum half working.",
+      "key_risk": "The real risk is mean reversion, not the Fed. IWM sits 15.9% off its high and is already OUTPERFORMING the index \u2014 -7.25% over one month against SPY at -9.71%, a 2.46 point edge \u2014 so it is the most sold-out, most bounce-prone leg of the market, and a rally does not need any catalyst at all. Friday's weakness was mega-cap tech, not small caps: XLK -7.27% against IWM -2.88%, so the cohort this short is aimed at is no longer the one breaking. A squeeze off a 120-day low into a holiday-shortened week on thin liquidity is the specific way this gives back the 5.1% gain. Note that the dovish-pivot risk is NOT the live one: the December meeting is priced 89% hike, 10% pause, 0-3% cut, so easier policy is close to unpriceable inside this horizon. Short equity requires margin and can gap through the stop. RED TEAM NOTE: the 'positioning' evidence below argues AGAINST this direction \u2014 IWM outperforming SPY by 2.46 points is a reason to cover, not a confirmation of a short \u2014 so it is counted as a risk here rather than toward conviction, which is why conviction comes down from 4 to 3.",
+      "counter_argument": "The strongest case against covering anything: the Fed is still hiking \u2014 89% priced for 25bp on Dec 9 against a 3.75-4.00% range \u2014 and small caps carry the most floating-rate debt and the least pricing power in the market, so the cohort has further to de-rate and 238.69 is only 7% below Friday's close. That case is good enough that half the position stays on with the original 284.5 stop untouched rather than being closed out. What it does not answer is the forward arithmetic: from 256.61 the remaining 17.92 points of reward sit against 27.89 points of open risk, which is 0.64:1 no matter how right the thesis is, and that is what the half-cover addresses.",
+      "evidence": [
+        {
+          "kind": "technical_level",
+          "detail": "Friday close 256.61 is the lowest close in the 120-day window (range low 256.32 was Friday low) and it closed on the low. Volume 57.46M vs 26.1M 30-day average = 2.2x. SMA20 276.23 and SMA50 278.26 both far above. ATR14 6.28, 2.45%.",
+          "source": "https://www.nasdaq.com/market-activity/etf/iwm/historical"
+        },
+        {
+          "kind": "positioning",
+          "detail": "Measured relative strength: IWM -7.25% 1m vs SPY -9.71% 1m, outperforming by 2.46 points; -13.88% 3m vs -9.65%. The short is no longer the market weak leg, which is the reason to take half off.",
+          "source": "https://www.nasdaq.com/market-activity/etf/iwm/historical"
+        },
+        {
+          "kind": "counter_argument_answered",
+          "detail": "Dovish-Fed squeeze risk on the highest-beta cohort is the live threat to this short. Answered by realising half at 256.61 rather than asserting it away, with the remainder left on the original 284.5 stop.",
+          "source": "https://www.upi.com/Top_News/US/2026/11/20/stocks-dow-jones-nasdaq-correction-territory/1061795214998/"
+        }
+      ],
+      "sources": [
+        "https://www.nasdaq.com/market-activity/etf/iwm/historical",
+        "https://www.upi.com/Top_News/US/2026/11/20/stocks-dow-jones-nasdaq-correction-territory/1061795214998/"
+      ],
+      "rank": 2,
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.27,
+        "claimed_risk_reward": 2.27,
+        "breakeven_probability": 0.306,
+        "stated_win_probability": 0.42,
+        "expectancy_r": 0.373,
+        "claimed_edge": 0.114,
+        "stop_atr_multiple": 2.23,
+        "live_price": 256.61,
+        "live_price_asof": "2026-11-20T21:00:00+00:00",
+        "market_session": "closed",
+        "price_age_minutes": 886.8,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": 6.2832,
+        "checked_at_et": "2026-11-21T06:46:58-05:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.27:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 270.5 is +5.4% from live 256.61"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "warn",
+            "detail": "no date given for a timed idea"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 5.06 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "stop_distance",
+            "status": "warn",
+            "detail": "stop is 2.23 ATR from entry \u2014 clears the 1.8 ATR floor for a swing etf but sits under the 2.25 ATR level where stop-outs have clustered"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "42% claimed vs 31% break-even at 2.27:1 \u2014 expectancy +0.37R"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is closed; last price 2026-11-20T21:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "no bid/ask available (normal outside regular hours)"
+          },
+          {
+            "check": "instrument_choice",
+            "status": "warn",
+            "detail": "short IWM needs margin; /M2K expresses the same view with defined sizing and near-24h trading"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "1.0% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 3 rests on 3 independent kinds: counter_argument_answered, positioning, technical_level"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "1 of 2 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    }
+  ],
+  "watchlist": [
+    {
+      "symbol": "GLD",
+      "instrument": "SPDR Gold Shares",
+      "note": "WITHDRAWN, not awaiting entry. The SELL @ 406.77 published 2026-10-25 never filled and GLD closed Friday at 322.87, so the short entry now sits 26.0% ABOVE the market \u2014 gold fell to the level instead of rallying into it. A 26%-away short reads as a live idea on the sheet and is not one. Not re-pitched lower: GLD is already -24.81% off its high at a 120-day low, which is late to short.",
+      "trigger": "Only reconsider on a genuine rally back toward the SMA50 at 374.90 with the dollar rolling over \u2014 i.e. a fresh idea with a fresh entry, not this order."
+    },
+    {
+      "symbol": "/MBTZ6",
+      "instrument": "Micro Bitcoin futures, Dec 2026",
+      "note": "WITHDRAWN, not awaiting entry. The SHORT @ 74,075 published 2026-11-09 never filled; bitcoin trades 57,822 this morning, 21.9% BELOW the entry. The direction was right and the fill never came because the entry sat above the market and price left without it \u2014 the pullback-entry problem running in reverse. Not re-pitched at a lower level: a short here is late, and crypto is the same 'correction continues' driver already expressed twice in this report.",
+      "trigger": "A bounce back toward 70,000 with the correlation cap freed up by closing one of the two existing expressions."
+    },
+    {
+      "symbol": "CVS",
+      "instrument": "CVS Health Corp",
+      "note": "The long_term BUY @ 77.50 is LEFT STANDING, unchanged, and deliberately NOT re-pitched as a recommendation. CVS closed 80.84, only 4.1% above the entry, so the accumulate-in-thirds plan is working as designed and restating it with no new information would be anchoring rather than conviction. Two honest caveats: CVS was already stopped out once (opened 10-16, stopped 11-04) before being reframed as a long-term hold, and it has been published repeatedly. It is -26.96% off its 120-day high and 4.54% above the low, with a 4.84% daily ATR. The reason the level stands while LEN's pace was cut is that pharmacy and benefits cash flows are short-duration and fit a rising-real-rate regime.",
+      "trigger": "First third fills on a touch of 77.50; no action otherwise."
+    },
+    {
+      "symbol": "XLK",
+      "instrument": "Technology Select Sector SPDR \u2014 the tech valuation case",
+      "note": "The most tempting trade on the board and REJECTED today, kept here as an observation. Info-tech forward P/E entered Friday at its lowest since March 2020 (FactSet via secondary), with QQQ -20.2%, XLK -26.7% and NVDA -47.5% off their highs. The decisive objection is that 'cheapest since March 2020' compares two completely different discount rates: in March 2020 the funds rate was zero and the 10-year near 0.7%, against a 3.75-4.00% range and a 5.04% 10-year today with the Fed 89% priced to hike again. A multiple is the reciprocal of a discount rate plus growth, so that comparison is the error rather than the insight. Second, no 10-Q was read today, so any long_term target would be a chart level wearing a valuation costume. Third, the capex revision cycle has not visibly finished.",
+      "trigger": "If ADI/DELL (11-24) and MRVL/CRDO (12-01) hold up AND XLK stabilises above the 148.09 Friday low, the valuation case acquires a catalyst and becomes worth underwriting properly \u2014 with filings actually read and a defended earnings estimate."
+    },
+    {
+      "symbol": "UUP",
+      "instrument": "Invesco DB US Dollar Index Bullish Fund",
+      "note": "REJECTED despite being the cleanest uptrend on the board \u2014 29.62, within 0.15% of its 120-day high, above both moving averages, and it did not flinch on Friday (29.63 -> 29.62) with the regime of a 19-month-high dollar and a hiking Fed behind it. The arithmetic kills it: ATR14 is 0.1293, just 0.44% a day, so an ETF-compliant 1.8 ATR stop is 0.23 wide and a 2.0 R:R target is 30.09 \u2014 all of +1.6% of upside, not worth a position slot at any size strategy.md permits, and the entry would be at a 120-day high. The better reason is structural: long dollar is substantially the opposite side of the Fed-pause contract already held, so owning both pays two spreads for a hedge rather than an edge.",
+      "trigger": "A meaningful pullback toward the SMA20 at 29.23 that widens the available stop, and only once the Fed-pause contract is closed."
+    },
+    {
+      "symbol": "KXECONSTATCPIYOY-26NOV",
+      "instrument": "November CPI YoY EXACT-bucket contracts (Kalshi/Robinhood), resolving 2026-12-10",
+      "note": "REJECTED after a tested edge turned out not to exist, recorded because the process is the output. The first pass estimated ~4.0-4.1% YoY against a market centered on 3.7% and looked like a 50-point edge: Oct 2026 CPIAUCNS 337.511 over Nov 2025 CPIAUCNS 324.122, with a 16-year Oct-to-Nov NSA seasonal of median -0.093%, gives +4.03%. A 50-point edge against a liquid, tightly-priced book means something is missing, and it was November gasoline: FRED GASREGW shows the October weekly average at 4.309 against 3.984 so far in November, -7.55% m/m and still falling, worth about -0.26 to -0.31pp at a ~3.5% basket weight. That takes a plausible November NSA m/m to roughly -0.25% to -0.35% and YoY to ~3.82-3.92% \u2014 one or two buckets from the market's center, which is well inside my own error bars when an EXACT-bucket market needs ~0.05pp accuracy. There may be a small edge in the 3.8 bucket at 23-28c, but 'possibly one bucket cheap' is not the explicit probability disagreement universe.md requires.",
+      "trigger": "A professional nowcast (Cleveland Fed) or sell-side November CPI consensus to check against, plus the final November gasoline week. Neither was fetched this run."
+    },
+    {
+      "symbol": "XLE",
+      "instrument": "Energy Select Sector SPDR",
+      "note": "REJECTED, and this corrects a reading made earlier in the same run. XLE -0.62% on Friday looked like a sector holding up; the trend says otherwise \u2014 60.51 is -13.74% off its 120-day high, below both SMA20 (64.61) and SMA50 (64.70), after five consecutive down sessions from 63.69. It is a downtrend that happened to fall less than tech on one day. USO is likewise -18.73% off its high and below both averages. No long, and no short either: the move is mature and OXY is already in the book.",
+      "trigger": "A reclaim of the SMA50 at 64.70, or a genuine capitulation well below the 150-day low that OXY's existing exposure does not already cover."
+    },
+    {
+      "symbol": "IBIT",
+      "instrument": "iShares Bitcoin Trust / crypto generally",
+      "note": "The only live market on a Saturday and nothing tradeable in it. BTC 57,822 (-6.67% /24h), ETH -6.61%, SOL -5.90%, XRP -6.80%, DOGE -7.32%, AVAX -7.83%, LTC -6.93%, LINK -5.62%, ADA -6.51% \u2014 uniformly down 5.6-7.8%, which is one beta across nine tickers with no dispersion to pick from. IBIT closed 33.02, -33.14% off its 49.39 high, with SMA20 41.34 and SMA50 44.57 far above and a 4.69% daily ATR, down six straight sessions; BTC has fallen a further 6.67% since that close, so it gaps down Monday. A short is late, a long is a knife-catch in the regime least kind to zero-cashflow long-duration assets, and either way it is the same driver already held twice.",
+      "trigger": "Real dispersion between coins, or a bounce that makes a short an entry rather than a chase."
+    },
+    {
+      "symbol": "PYPL",
+      "instrument": "PayPal Holdings \u2014 and ONON, both closed Friday",
+      "note": "Both traded through their stops on Friday and are closed trades as of 2026-11-20, recorded here so the performance record and the sheet agree. PYPL stop 54.10 against a 53.10 low, -5.7% from the 56.50 entry. ONON stop 30.69 against a 29.91 low, -12.4% from 34.20 in ten days. NEITHER is re-pitched: nothing about either thesis improved, and ONON at -12.4% was a conviction error rather than an execution one. Four more positions sit within 3.2% of their stops \u2014 XLV (+0.7% headroom), RTX (+2.2%), DKS (+2.5%, being closed outright today) and HUN (+3.2%, which closed ON its low) \u2014 and no stop on any of them was widened, because an adverse price move is not an invalidation.",
+      "trigger": "Nothing. These are closed; a fresh idea on either name would need a fresh thesis."
+    },
+    {
+      "symbol": "DKS",
+      "instrument": "DICK'S Sporting Goods \u2014 re-entry after the print",
+      "note": "The position is being closed before the Q3 report, which is confirmed for Tuesday 2026-11-24 before the open (not Monday, as the fetched calendar said) (see rank 3) because a 129.00 stop sits 0.48 ATR below price in a 5.15%-ATR name going into a binary event \u2014 the thesis is not being rejected, the risk control is. Re-entry is explicitly permitted once the event risk is removed and a functioning stop is available.",
+      "trigger": "After the 11-24 before-open print: a stop at least 2.0 ATR (~13.6 points) below the entry that still clears a 2.0 reward-to-risk to a defensible target, and a close back above the SMA50 at 138.18."
+    },
+    {
+      "symbol": "LEN",
+      "instrument": "Lennar Corp Class A \u2014 long-term accumulation, CUT BY THE RED TEAM",
+      "note": "KILLED, not downgraded, and the unfilled 79.50 order should be cancelled rather than slowed. This is a no-stop position whose entire risk control IS its reward-to-risk ratio, and that ratio is 2.5217:1 against a 2.50 long-term floor \u2014 it clears by 0.02, which is the 'targets nudged until they passed' pattern these checks exist to catch, and the report's own data_quality_notes is wrong to claim no idea sits suspiciously close to its floor from the target side. The ratio cannot be repaired: raising the 68.00 bear case makes it worse, and moving the 108.50 target out is the one fix the red team is forbidden to make. Nor is the target anchored \u2014 108.50 sits 13% ABOVE the 120-day high of 96.03 in a name 15.9% below that high, and no valuation anchor (book value, P/B, normalised EPS) appears anywhere in the idea; the two evidence kinds are a chart and the rate path, with no fundamental or filing work. The author's own key_risk concedes 'I did not re-underwrite the housing thesis today \u2014 no filings read, no order-book data fetched', and a position with no stop needs MORE underwriting than one with a stop, not less. Meanwhile the one input that was researched today moved against it: 89% priced for a further 25bp hike on Dec 9, the 10-year at 5.04%, and the report's own market_context describes long-duration assets de-rating together. Opening a fresh no-stop rate-sensitive long into the sixth consecutive down session, on a thesis the run declined to re-underwrite, is an unmeasured bet rather than a 2.52:1 one. The order never filled, so cancelling costs nothing realised. The structural housing-undersupply thesis is NOT rejected and the stated business invalidation (new-order gross margin under ~18% or net new orders down YoY, either for two consecutive quarters) is a good one worth keeping.",
+      "trigger": "Re-pitch only as a fresh idea carrying work this run did not do: a valuation anchor for the target from Lennar's own filings (book value and normalised margin, not a chart level), and either the Dec 9 FOMC outcome in hand or a price under 74.00 that makes the ratio clear its floor on something other than a rounding.",
+      "demoted_from_rank": 4,
+      "demotion_reason": "No stop, so the 2.5217:1 ratio IS the risk control \u2014 and it clears the 2.50 long-term floor by 0.02 on a target 13% above the 120-day high with no valuation anchor published, no fundamental evidence read today, and the thesis's only researched driver (the rate path) having moved against it."
+    },
+    {
+      "symbol": "DKS",
+      "instrument": "DICK'S Sporting Goods Inc",
+      "note": "Demoted by validation: report says 2026-11-24 but the calendar says 2026-11-23",
+      "trigger": "Republish only once the numbers check out.",
+      "demoted_from_rank": 3,
+      "demotion_reason": "report says 2026-11-24 but the calendar says 2026-11-23"
+    }
+  ],
+  "validation_summary": {
+    "checked": 3,
+    "passed": 0,
+    "warned": 2,
+    "failed": 1,
+    "enforced": true,
+    "demoted": 1
+  }
+}
