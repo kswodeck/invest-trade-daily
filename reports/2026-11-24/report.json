@@ -1,0 +1,657 @@
+{
+  "date": "2026-11-24",
+  "generated_at_et": "2026-11-24T06:26:06-05:00",
+  "research_minutes": 55,
+  "truncated": false,
+  "data_quality_notes": "NOT TRUNCATED. Research ran 06:03-06:58 ET and closed with a RESEARCH COMPLETE block, so nothing was lost to the clock. All six captured candidates are published; none was dropped on arithmetic.\n\nWHY FOUR OF SIX ARE POSITION MANAGEMENT AND ONLY ONE IS A NEW ENTRY. This is the honest skew and it is deliberate. IWM, TLT, XLU and OXY are updates to open positions, DKS is an exit, and CVS is the only new entry (itself an amendment to a 2026-11-05 order whose level has now been reached, not a second position). The day after a +7.0% Nasdaq squeeze driven by a personnel reversal, with a 95%-priced rate HIKE eleven sessions out and a core PCE print tomorrow at 08:30 ET, is not a day to add beta \u2014 it is a day to fix a book that is long defensives and duration into a hiking cycle. The report's own 11% hit rate across 47 closed trades is better explained by that one repeated bet than by 47 bad stock picks: 42 of the 47 were swing longs.\n\nTHE CENTRAL FACT. The Fed is ~95% priced to hike 25bp on 2026-12-09 (94% Kalshi/Polymarket, ~97% CME FedWatch, against 76.3% a month earlier), with a second January hike ~55-60% priced. Core PCE consensus RE-ACCELERATES to 3.2% y/y from 3.1%. The 10y is 4.92% against a 3.88% effective funds rate, so the real policy rate is only +0.68%. Monday's squeeze repriced one man's job title and repriced nothing about rates.\n\nPRICES. Every equity and ETF figure here is the 2026-11-23 official close via finnhub, age ~861 minutes at synthesis. That is a CLOSED market ahead of a 09:30 ET open, not stale data. All six quotes re-fetched at synthesis and matched the research values exactly; all six ATR14 values independently re-fetched and matched.\n\nSOURCES THAT FAILED, and what each cost:\n- Every index quote (^GSPC, ^NDX, ^DJI, ^RUT, ^VIX), ES/NQ futures, DXY, gold and WTI returned ok:false \u2014 finnhub wants a CFD-index subscription, yahoo returned 429, stooq 404, no alphavantage key. ALL index context in this report is therefore ETF proxies (SPY/QQQ/IWM/GLD/USO/XLF/XHB), which are primary finnhub OHLCV. VIX, DXY, SPX and NDX are published as null rather than estimated.\n- Options-implied move unavailable: market_data.py implied returned HTTP 401 from yahoo-options for both CVS and DKS, so the strategy's 'is the target inside what options price' check COULD NOT BE RUN on any candidate today. Every target here rests on price structure and ATR alone, which is a materially weaker basis than usual.\n- Event-contract prices unavailable: Kalshi's public endpoints returned null yes_bid, yes_ask, last_price, volume and open_interest for every KXFEDDECISION, KXFED, KXCPIYOY and KXRATECUT market. Hence ZERO event-contract recommendations despite the strategy actively wanting them \u2014 a probability disagreement cannot be stated without the market's price, and no implied price was invented to make one work. The Fed odds quoted throughout come from news coverage of Kalshi/Polymarket/CME, not from a fetched quote.\n- market_data.py events '<topic>' is not a real search \u2014 it pulls the first 200 open markets and substring-filters, so 'Fed' matched 'Federico Bondioli', a footballer. Series must be queried via ?series_ticker=. Worth fixing.\n- Gold's absolute price levels and the forced-selling attribution come from market commentary sites, not primary data; WGC Q4 central-bank figures are not published yet. GLD's own OHLCV is primary.\n\nARITHMETIC, RECOMPUTED FROM SOURCE RATHER THAN CARRIED OVER. Every ratio was recomputed from the final entry, target and stop, and every stop re-measured in ATRs: IWM 2.27 at 2.07 ATR, TLT 2.67 at 1.93 ATR, XLU 2.20 at 2.29 ATR, CVS 2.00 at 2.02 ATR, OXY 2.08 at 2.03 ATR. All clear the 2.0 swing floor and all clear their asset-class stop floor (1.8 ATR ETF, 2.0 ATR stock). DKS carries no ratio by design \u2014 it is an exit, sized 0%.\n\nRATIOS CLUSTERED NEAR THE FLOOR \u2014 stated because it is the signature CLAUDE.md warns about. CVS lands on exactly 2.00 and OXY on 2.08. The mitigating fact is that four of the five ratios belong to positions whose levels were set on earlier dates and are UNCHANGED today, so they were not fitted this morning; TLT at 1.93 ATR and CVS at 2.02 ATR are likewise inherited, not tuned. The one to treat with suspicion is CVS, the only new entry, at exactly 2.00 \u2014 and research said so itself, naming the 95.40 target as 'the weak part of this idea' because it requires recovering half a 30% de-rate in a swing horizon. A trim at sma20 86.30 is in the scale plan for that reason. No stop was tightened to improve any ratio, and three of the six actions explicitly forbid tightening.\n\nOXY'S WIN PROBABILITY IS BELOW ITS OWN BREAK-EVEN, and it is published anyway as a HOLD rather than suppressed. Its 0.26 sits under the 0.325 implied by 1/(1+2.08), i.e. the position claims no edge. It clears both published floors from its fixed entry, and the decision on a filled position is hold-or-close rather than enter-or-not \u2014 research closed DKS on exactly this test and kept OXY only because sma20 at 57.95 sits above the 54.0 entry so a reachable target still yields positive reward. That is a thin distinction, it is stated as such, and the hold comes with a tightened invalidation: a daily close below the 52.55 ninety-day low exits ahead of the 50.15 stop. Flagged for the red team.\n\nCONVICTION. All six scores are supported by the evidence as captured, checked against the kinds-plus-one rule: IWM 4 on 3 distinct kinds, TLT 3 on 3, XLU 3 on 2, CVS 3 on 2, DKS 3 on 2, OXY 2 on 1. None was inflated and none needed lowering. CVS's repetition is flagged honestly in its key_risk \u2014 four pitches in ten days is a flag, not conviction, and the CEO purchase is the only genuinely new fact since the first.\n\nCORRELATION. Exactly at the cap, not over it. Three ideas depend on the Fed path into 2026-12-09 \u2014 IWM short, TLT, XLU \u2014 against a limit of 3. CVS is deliberately rate-insensitive, and DKS and OXY are risk reductions rather than bets.\n\nLANES DELIBERATELY EMPTY. Nothing intraday: an intraday idea needs a same-session dated catalyst and today's only scheduled item is Conference Board confidence, while the real event is tomorrow at 08:30. No event contract: prices unfetchable, above. No futures: the /MNQ short was rejected because QQQ's 3.70% ATR demands a ~9.3% stop no reachable target repays. No long_term idea: market_data.py has no fundamentals or valuation command, so no bear case could be defended with a number, which is also why CVS is published as a swing rather than the long_term idea it might be. Not reached at all: small- and micro-cap screening, and crypto beyond the macro print. GLD was wanted and rejected in full on its arithmetic \u2014 the workings are on the watchlist rather than hidden.\n\nHOLIDAY WEEK. Thursday 11/26 is closed and Friday 11/27 is a 13:00 ET half day; liquidity drains from Wednesday afternoon, which exaggerates any PCE surprise. That is why the IWM stop was left wide at 284.5 rather than pulled in, and why the DKS exit carries a 11/27 time stop.\n\nWHAT THE MECHANICAL VALIDATOR FLAGGED, AND WHY TWO FAILURES ARE LEFT STANDING RATHER THAN FIXED. Every reward-to-risk ratio was recomputed independently by validate_report.py against live prices and matched the figure published here exactly, in all five cases that have one (2.27, 2.67, 2.20, 2.00, 2.08 \u2014 claimed equals computed). Four ideas warn and two fail.\n\nThe warnings are mostly one thing worth knowing: IWM at 2.07 ATR, TLT at 1.93 ATR, CVS at 2.02 ATR and OXY at 2.03 ATR all clear their published floors but sit UNDER the 2.25-2.5 ATR band where this report's historical stop-outs have clustered. Four of the five are inherited levels on filled positions that cannot now be widened without moving a stop on a live trade, so the warning is recorded rather than engineered away. The others are benign: no bid/ask outside regular hours, and no datetime on the three ideas whose catalyst is genuinely undated.\n\nOXY fails on expectancy \u2014 26% claimed against a 32% break-even at 2.08:1, an expectancy of -0.20R, i.e. the idea loses money at its own stated hit rate. This is left exactly as it is. Raising win_probability to 0.33 would clear the check and would be precisely the fitting-numbers-to-pass failure the 2b-2d phases exist to catch; the 0.26 is research's own derivation and it stands. If phase 2d demotes OXY to the watchlist, that is the floor working as designed, and the position-management guidance still holds: do not add, and a daily close below the 52.55 ninety-day low exits ahead of the 50.15 stop.\n\nDKS fails for a structural reason rather than a substantive one, and the distinction matters: it is a CLOSE instruction being measured by a validator built for entries. 'No stop, so risk is undefined' and 'no entry or stop, so the stop distance is undefined' are both true and both inapplicable \u2014 a position being sold has no stop, and inventing one to pass would be fabricating a risk control on a trade being exited. Its third failure, a 10.53% bid/ask spread costing '301% of the target move', is an off-hours quote artifact on a $133 stock, not a real spread; the validator itself notes elsewhere that no bid/ask is available outside regular hours. The exit case rests on the arithmetic in the thesis \u2014 9:1 against from spot, a 0.70 ATR remaining stop, and three repair routes each failing a published floor \u2014 not on clearing an entry screen. Should enforcement demote it, read the watchlist entry as the live instruction: sell the shares into the 131.0-136.4 band, do not establish a short.\n\nRED TEAM (phase 2c). Six ideas in, three out. Cut CVS, DKS and OXY; downgraded IWM from 4 to 3; re-ranked the three survivors; corrected one figure in the notes above.\n\nCVS IS THE ONLY DISCRETIONARY KILL, and the reason is arithmetic rather than judgement. Its 95.40 target is exactly what the 2.0 floor requires from the published levels \u2014 79.80 + 2 x (79.80 - 72.00) = 95.4000, matching the published number to the cent \u2014 and it is the only one of the five targets for which that is true; IWM, TLT, XLU and OXY all sit away from their floor-implied figures (242.50, 83.30, 46.30, 61.70). Nothing in the 1-year 58.50-110.68 range marks 95.40 and no evidence entry cites a level there. The nearest defensible resistance above is sma50 88.11, which yields 1.07:1, and the sma20 86.30 the thesis itself calls 'reachable' yields 0.83:1 \u2014 both under the floor \u2014 and the stop cannot repair them, since 72.00 is already 2.02 ATR against a 2.0 ATR stock floor. The amendment had also walked the stop IN, from the 2026-11-05 order's 71.50 (2.20 ATR) to 72.00 (2.02 ATR), so both legs of the level set moved toward the minimum that passes. Synthesis named the target 'the weak part of this idea' and was right: an idea that clears the floor only at a price no structure supports never cleared it. The order was still pending, so this abandons no live position.\n\nDKS AND OXY WERE ALREADY FAILING THE MECHANICAL CHECKS and phase 2d would have demoted both. Doing it here buys two things. First a usable instruction: enforcement's note would have read 'no stop, so risk is undefined', which is true of every exit and tells the holder of a live DKS long nothing. Second, and more important, DKS carried direction 'sell' while the open DKS row is direction 'buy', and merge_report keys a position on (symbol, direction) \u2014 so a DKS 'sell' surviving into publish would have opened a NEW short at 133.67 rather than closing the 144.50 long, the exact thing the recommendation's own condition forbids. Demotion prevents that by design instead of by luck. Both watchlist notes carry the operative instruction, because the live positions stay tracked on their stored levels whether or not anyone acts.\n\nOXY'S KILL IS ON ITS OWN STATED NUMBERS: 0.26 against a 0.325 break-even is -0.20R, the thesis is being falsified rather than merely unconfirmed (crude made a lower low on the single biggest risk-on day since April 2025, and XLE was the only red sector ETF), spot is 0.3% above the 90-day low, and conviction 2 rests on one evidence kind. Synthesis declined to raise win_probability to make it pass; that was the right call, and this demotion is its consequence rather than a rebuke.\n\nWHERE THE REPORT HAS TWO IDEAS BACKWARDS. It closes DKS on an enter-or-not test while holding OXY on a hold-or-close test, and the choice of frame is what produces the opposite verdicts, not the underlying facts \u2014 applied consistently from spot the two look alike (DKS 1.89:1 to sma20 142.48, OXY 2.06:1 to sma20 57.95). What actually separates them is evidence: DKS's seven-insider, $5.59M cluster bracketing spot on the window's heaviest up-volume is intact, while OXY's crude thesis is being contradicted by new data. On thesis grounds the weaker hold is OXY. The DKS exit is left standing anyway, because its published 175.50 target is genuinely unreachable in a swing horizon, so the position as published cannot win and something had to change. Its exit instruction is also corrected from the market order it was published as to a limit, which the validator asked for on a 1.74% spread, and the watchlist note carries it.\n\nONE FIGURE ABOVE IS WRONG AND IS CORRECTED RATHER THAN EDITED AWAY: the DKS spread is 1.74%, costing 50% of the target move, per its validation block. The 10.53% spread 'costing 301% of the target move' quoted earlier is a pre-revalidation figure, and the argument it was making \u2014 that an off-hours spread on a $133 stock is an artifact \u2014 survives at the smaller number.\n\nIWM GOES TO CONVICTION 3 because its central mechanism is measurably not working. The claim is that the most floating-rate-levered index underperforms into a hiking path; over the month in which hike odds went from 76.3% to 95% \u2014 the cleanest test the thesis will ever get \u2014 IWM OUTPERFORMED SPY by 1.33%, which the report concedes in its own counter_argument. Its dated_catalyst is a 25bp hike priced at 94-97%, which is agreement with the market rather than a disagreement with it, and no reason is given why the path should reprice further. The position is kept, since it is the only thing in the book aligned with the rate regime and carries the best expectancy here at +0.37R, but 4 claimed an edge the evidence does not pay for.\n\nNOTHING WAS CUT FOR CORRELATION, AND THE CAP WAS NOT THE BINDING CONSTRAINT IT WAS DESCRIBED AS. 'Three ideas depend on the Fed path' counts IWM, TLT and XLU together, but IWM short needs rates higher while TLT and XLU need them lower, so this is not one position wearing three tickers \u2014 it is a 2-vs-1 straddle of the same axis. Worth saying plainly: after the cuts the entire report is three ETFs at 2% each expressing a rate view in both directions, which means the honest read of today is that the book has no net conviction, not that it has three.\n\nRE-RANKED ON STRUCTURE RATHER THAN RATIO. IWM 1 (only regime-aligned position, best expectancy at +0.37R). XLU 2 (the only idea in the report whose stop clears the 2.25 ATR guide outright, the lowest ATR in the book at 1.51%, above its 50-day, and a target at a real range high). TLT 3 (the highest ratio at 2.67 but the least believed \u2014 its 84.30 target sits at the top of the 90-day range and is reachable mainly if the ~95%-priced hike path the rest of the report rests on fails, so that ratio is conditional on the central thesis being wrong; its counter_argument now says so).\n\nXLU'S LEVELS AND CONVICTION STAND BUT ITS CATALYST IS RESTATED. 'Datacenter power demand re-ignited' rests on an NVIDIA press release about NVIDIA's CEO, three inferential steps from utility load growth, with no utility-specific datum behind it, and on the day the catalyst supposedly fired XLU added 1.48% \u2014 about one ATR, off a 42.63 low, on the biggest risk-on day in 19 months \u2014 which is indistinguishable from beta. XLU is also down from 44.12 on 11/16, so it is rolling over rather than breaking out. Conviction 3 is retained on the structural leg alone, not because the narrative leg was answered.\n\nLEVELS RE-VERIFIED INDEPENDENTLY, and the report's price discipline is not the problem anywhere \u2014 only its level selection, in exactly one place. Every technical_level figure re-fetched and matched to the decimal: XLU 43.32 / sma20 43.417 / sma50 41.971 / 90d 39.03-46.625; IWM 265.74 / sma20 275.6625 / sma50 277.8202 / 90d low 256.32 / -12.92% off high; CVS 79.65 / sma20 86.296 / sma50 88.1122 / 90d low 77.33 / -28.04%; OXY 52.70 / 90d low 52.55 / sma20 57.946 / ATR 1.8938. IWM's target also survives the test that killed CVS's: 238.69 sits below the 90-day low of 256.32 and so is in open space on that window, but it is inside the 1-year 206.81-305.18 range and it is not the floor-implied 242.50, so it was chosen rather than fitted.\n\nNOT RE-EXAMINED, for the clock: the 15 pre-existing watchlist entries, and the unfetchable event-contract and options-implied checks already disclosed above \u2014 neither can be repaired at this phase.",
+  "market_context": {
+    "summary": "A two-day event dominates the tape: Friday 11/20 was a correlation-to-one liquidation \u2014 stocks, gold AND crypto fell together while Treasuries rallied, on multiples of normal volume \u2014 and Monday 11/23 snapped back +4.71% on SPY and +7.00% on QQQ after Nvidia's board unanimously reinstated Jensen Huang, with Trump saying he personally intervened. NVDA closed +31%, the best Nasdaq session since 2025-04-09. But the snapback closed weak: SPY finished 722.29 below its 724.33 open, QQQ mid-range off its high, and EVERYTHING remains below both its 20- and 50-day. The central fact is unchanged by any of it: the Fed is ~95% priced to HIKE 25bp on 2026-12-09, a second January hike is ~55-60% priced, and core PCE consensus re-accelerates to 3.2% y/y at tomorrow's 08:30 ET print. Crude diverged \u2014 USO fell 4.49% to a lower low on the biggest risk-on day in 19 months \u2014 which says this inflation is services, shelter and goods rather than energy-led, i.e. the stickier kind a Fed cannot wait out. ATRs are enormous (QQQ 3.70%, IWM 2.54%), so a 2.0 ATR swing stop on QQQ is 7.4%. Gold is the biggest dislocation on the board at 22.45% off its 90-day high, and it was rejected as a long on its own arithmetic rather than its story. Thanksgiving Thursday is closed and Friday is a half day, so liquidity thins from Wednesday afternoon and any PCE surprise moves more than it should.",
+    "regime": "mixed",
+    "levels": {
+      "us10y": 4.92,
+      "us2y": 4.63,
+      "t10y2y": 0.29,
+      "fed_funds_effective": 3.88,
+      "fed_target_range": "3.75-4.00%",
+      "unemployment": 4.1,
+      "spy": 722.29,
+      "qqq": 651.03,
+      "iwm": 265.74,
+      "gld": 333.02,
+      "tlt": 81.69,
+      "uso": 133.36,
+      "xlf": 55.65,
+      "xhb": 99.72,
+      "btc": 59738,
+      "eth": 1681.63,
+      "sol": 70.34,
+      "spx": null,
+      "ndx": null,
+      "vix": null,
+      "dxy": null,
+      "gold_spot": null,
+      "wti": null,
+      "price_note": "All equity/ETF values are the 2026-11-23 official close (finnhub), age ~861 min at synthesis \u2014 a closed market, not stale. Index, VIX, DXY, spot gold and WTI quotes all failed and are null rather than estimated; index context throughout is ETF proxies."
+    },
+    "econ_calendar": [
+      {
+        "event": "Conference Board November consumer confidence",
+        "datetime_et": "2026-11-24T10:00",
+        "importance": "medium",
+        "consensus": "~92.4"
+      },
+      {
+        "event": "2-year FRN and 5-year note auctions",
+        "datetime_et": "2026-11-24T13:00",
+        "importance": "low",
+        "consensus": null
+      },
+      {
+        "event": "October Personal Income & Outlays (core PCE price index) \u2014 the week's one real macro event",
+        "datetime_et": "2026-11-25T08:30",
+        "importance": "high",
+        "consensus": "core 3.2% y/y vs 3.1% prior \u2014 consensus is for inflation to RE-ACCELERATE"
+      },
+      {
+        "event": "Q3 GDP second estimate + Corporate Profits",
+        "datetime_et": "2026-11-25T08:30",
+        "importance": "high",
+        "consensus": null
+      },
+      {
+        "event": "Weekly jobless claims (pulled forward from Thursday for the holiday)",
+        "datetime_et": "2026-11-25T08:30",
+        "importance": "medium",
+        "consensus": null
+      },
+      {
+        "event": "Thanksgiving \u2014 US equity market CLOSED",
+        "datetime_et": "2026-11-26T00:00",
+        "importance": "medium",
+        "consensus": null
+      },
+      {
+        "event": "Half session \u2014 13:00 ET close; liquidity drains from Wednesday afternoon",
+        "datetime_et": "2026-11-27T13:00",
+        "importance": "medium",
+        "consensus": null
+      },
+      {
+        "event": "NFP (November employment report)",
+        "datetime_et": "2026-12-04T08:30",
+        "importance": "high",
+        "consensus": null
+      },
+      {
+        "event": "FOMC decision \u2014 25bp HIKE priced ~94-97%, hold ~3%, cut ~2%",
+        "datetime_et": "2026-12-09T14:00",
+        "importance": "high",
+        "consensus": "25bp hike to 4.00-4.25%"
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "rank": 1,
+      "symbol": "IWM",
+      "instrument": "iShares Russell 2000 ETF",
+      "asset_class": "etf",
+      "venue": "Robinhood Stocks",
+      "direction": "sell_short",
+      "requires_margin": true,
+      "horizon": "swing",
+      "conviction": 3,
+      "risk_tier": "standard",
+      "entry": {
+        "ideal": 270.5,
+        "zone_low": 265.0,
+        "zone_high": 272.0,
+        "order_type": "limit",
+        "condition": "Already filled \u2014 entry unchanged at 270.5. Do not chase a new short below 265.0; if covering and re-shorting, the 265.0-272.0 band is the only acceptable re-entry."
+      },
+      "exit": {
+        "target": 238.69,
+        "scale_plan": "Trim half into the 256.32 capitulation low if it breaks and holds below; carry the rest toward 238.69 through the Dec 9 FOMC."
+      },
+      "stop": 284.5,
+      "position_size_pct": 2,
+      "risk_reward": 2.27,
+      "win_probability": 0.42,
+      "last_price": 265.74,
+      "last_price_asof": "2026-11-23T21:00:00+00:00",
+      "price_source": "finnhub (2026-11-23 official close)",
+      "catalyst": {
+        "event": "FOMC decision \u2014 25bp HIKE priced at ~94-97%; October core PCE lands first on 11/25 08:30 ET",
+        "datetime_et": "2026-12-09T14:00",
+        "action": "UPDATE to an existing open short, entry unchanged at 270.5 and already filled. HOLD through the 11/25 08:30 ET PCE print. Do not add into Monday-style squeezes, and do not tighten the stop \u2014 284.5 sits above both moving averages for a reason, and a holiday week's thin liquidity exaggerates any bounce.",
+        "wait": false
+      },
+      "thesis": "This is the only position in the book aligned with the rate regime, and Monday's +3.56% bounce improved the price rather than breaking the thesis. The Russell 2000 is the most floating-rate-levered, most rate-sensitive index available, and the Fed is ~95% priced to hike 25bp on Dec 9 with a second hike in January at ~57%. Monday repriced one man's job title and repriced nothing about rates.",
+      "key_risk": "Short squeeze. Monday showed this tape can add 3.6% in a session on news that has nothing to do with rates, and a holiday week's thin liquidity exaggerates it. The 284.5 stop is 2.07 ATR and above the 50-day, so it survives a normal squeeze but not a genuine trend reversal.",
+      "counter_argument": "The strongest case against, and it is strong enough that conviction came down to 3: the mechanism is not working. The claim is that the most floating-rate-levered index underperforms into a hiking path, and over the month in which hike odds went from 76.3% to 95% \u2014 the cleanest test the thesis will ever get \u2014 IWM OUTPERFORMED SPY by 1.33%. A 25bp hike priced at 94-97% is also agreement with the market, not a disagreement with it, and nothing here argues the path should be repriced further, so the pay-off has to come from a larger hike, a higher January probability, or small-cap underperformance that has so far refused to appear. Separately, 11/20 was a capitulation low on 57.5M shares and Monday reclaimed it, so the bottom may be in.",
+      "evidence": [
+        {
+          "kind": "dated_catalyst",
+          "detail": "December FOMC confirmed 2026-12-08/09 from the Kalshi KXFEDDECISION-26DEC series close time of 2026-12-09T18:59Z; 25bp hike priced ~94% on Kalshi/Polymarket and ~97% on CME FedWatch as of 11/23, vs 76.3% a month earlier",
+          "source": "https://predictionmarketspicks.com/articles/fed-rate-december-2026-odds-half-point-hike-dot-plot-kalshi-polymarket-futures"
+        },
+        {
+          "kind": "technical_level",
+          "detail": "Fetched OHLCV: close 265.74 on 11/23, below sma20 275.66 and sma50 277.82, 12.92% off the 90d high of 305.18. Stop 284.5 is 2.07x the 6.76 ATR and sits above both MAs; target 238.69 is below the 11/20 capitulation low of 256.32",
+          "source": "https://finnhub.io/api/v1/stock/candle?symbol=IWM"
+        },
+        {
+          "kind": "counter_argument_answered",
+          "detail": "The squeeze-means-reversal case is answered by the squeeze's own tape: SPY closed 722.29 BELOW its 724.33 open on 11/23 and QQQ closed 651.03 mid-range against a 657.53 high, and IWM still ended below both MAs. The rate path that drives the short \u2014 4.92% 10y, 3.2% core PCE consensus, 95% hike odds \u2014 was unchanged by a CEO reinstatement",
+          "source": "https://sg.finance.yahoo.com/news/live/stock-market-today-monday-november-23-dow-sp-500-nasdaq-surge-after-nvidia-reinstates-jensen-huang-182039397.html"
+        }
+      ],
+      "sources": [
+        "https://predictionmarketspicks.com/articles/fed-rate-december-2026-odds-half-point-hike-dot-plot-kalshi-polymarket-futures",
+        "https://247wallst.com/investing/2026/11/18/traders-now-see-a-95-chance-the-fed-hikes-rates-in-december/",
+        "https://www.bea.gov/news/schedule",
+        "https://finance.biggo.com/news/78ad00f8-6255-4ebc-9b35-179f5a35e276"
+      ],
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.27,
+        "claimed_risk_reward": 2.27,
+        "breakeven_probability": 0.306,
+        "stated_win_probability": 0.42,
+        "expectancy_r": 0.373,
+        "claimed_edge": 0.114,
+        "stop_atr_multiple": 2.07,
+        "live_price": 265.74,
+        "live_price_asof": "2026-11-23T21:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 878.8,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": 6.7557,
+        "checked_at_et": "2026-11-24T06:39:05-05:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.27:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 270.5 is +1.8% from live 265.74"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-12-09 is ahead of us"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 4.71 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "stop_distance",
+            "status": "warn",
+            "detail": "stop is 2.07 ATR from entry \u2014 clears the 1.8 ATR floor for a swing etf but sits under the 2.25 ATR level where stop-outs have clustered"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "42% claimed vs 31% break-even at 2.27:1 \u2014 expectancy +0.37R"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-11-23T21:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "no bid/ask available (normal outside regular hours)"
+          },
+          {
+            "check": "instrument_choice",
+            "status": "warn",
+            "detail": "short IWM needs margin; /M2K expresses the same view with defined sizing and near-24h trading"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "2% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 3 rests on 3 independent kinds: counter_argument_answered, dated_catalyst, technical_level"
+          },
+          {
+            "check": "sources",
+            "status": "pass",
+            "detail": "all 4 checked source(s) resolve"
+          }
+        ]
+      }
+    },
+    {
+      "rank": 2,
+      "symbol": "XLU",
+      "instrument": "Utilities Select Sector SPDR Fund",
+      "asset_class": "etf",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 3,
+      "risk_tier": "standard",
+      "entry": {
+        "ideal": 43.3,
+        "zone_low": 42.6,
+        "zone_high": 43.6,
+        "order_type": "limit",
+        "condition": "Already filled \u2014 entry unchanged at 43.3. Do not add ahead of the 11/25 08:30 ET PCE print."
+      },
+      "exit": {
+        "target": 46.6
+      },
+      "stop": 41.8,
+      "position_size_pct": 2,
+      "risk_reward": 2.2,
+      "win_probability": 0.4,
+      "last_price": 43.32,
+      "last_price_asof": "2026-11-23T21:00:00+00:00",
+      "price_source": "finnhub (2026-11-23 official close)",
+      "catalyst": {
+        "event": "Datacenter power demand re-ignited \u2014 Huang's reinstatement on 11/23 restarted the AI capex trade that drives utility load growth",
+        "datetime_et": null,
+        "action": "UPDATE to an existing open long, entry unchanged at 43.3 and already filled. HOLD on levels as published. The 11/25 08:30 ET PCE print is the near risk to the bond-proxy half of this position; do not add ahead of it.",
+        "wait": false
+      },
+      "thesis": "The best-structured equity-side position in the book and the only one with two independent drivers pulling in opposite directions, which is why it has gone nowhere in 21 days. The bond-proxy leg is a headwind into a hiking Fed; the datacenter power-demand leg was just handed new life, since Nvidia's AI capex cycle is what drives utility load growth and that trade restarted on 11/23.",
+      "key_risk": "Utilities are the cleanest bond proxy in the sector lineup and the Fed is ~95% priced to hike on Dec 9 with a second January hike ~57% priced. If tomorrow's core PCE prints hot, the rate leg overwhelms the power-demand leg and the 41.8 stop comes into play. The position has also produced exactly 0.0% in 21 days, so it is consuming capital for no return.",
+      "counter_argument": "The strongest case against: holding a bond proxy into a hiking cycle is the same error that explains this book's 11% hit rate, and the power-demand story is a multi-year thesis being used to justify a swing position with a 3.5% stop. The red team's addition is sharper \u2014 the power-demand leg rests on an NVIDIA press release about NVIDIA's CEO, three inferential steps from utility load growth, with no utility-specific number behind it. On the day that catalyst supposedly fired, XLU added 1.48%: roughly one ATR, off a 42.63 low, on the biggest risk-on day in 19 months, which is indistinguishable from beta. XLU is also down from 44.12 on 11/16, so it is rolling over rather than breaking out. The answer is structural, not narrative, and conviction stays at 3 on the structural leg alone: XLU is one of only two positions above its 50-day, its 1.51% ATR is the lowest in the book, and its stop is the only one in the report clear of the 2.25 ATR guide outright \u2014 so it is the cheapest place in the book to be wrong.",
+      "evidence": [
+        {
+          "kind": "technical_level",
+          "detail": "Fetched OHLCV: close 43.32, above sma50 41.97 and effectively at sma20 43.42 \u2014 one of only two open ETF positions above its 50-day. ATR 0.6552 (1.51%), the lowest in the book. Stop 41.8 is 2.29 ATR from entry against a 1.8 ATR ETF floor. 90d range 39.03-46.625 places the 46.60 target just under the high",
+          "source": "https://finnhub.io/api/v1/stock/candle?symbol=XLU"
+        },
+        {
+          "kind": "counter_argument_answered",
+          "detail": "The bond-proxy objection is answered by a dated change in the opposing driver rather than by assertion: the AI capex cycle that drives utility load growth was in doubt for ten sessions while Nvidia had no permanent CEO, and on 11/23 the board unanimously reinstated Huang, with NVDA +31% and MU +19.5%. That is the load-growth bid being restored, not a narrative",
+          "source": "https://nvidianews.nvidia.com/news/nvidia-board-reinstates-jensen-huang-as-president-ceo-and-board-director"
+        }
+      ],
+      "sources": [
+        "https://finnhub.io/api/v1/stock/candle?symbol=XLU",
+        "https://nvidianews.nvidia.com/news/nvidia-board-reinstates-jensen-huang-as-president-ceo-and-board-director",
+        "https://predictionmarketspicks.com/articles/fed-rate-december-2026-odds-half-point-hike-dot-plot-kalshi-polymarket-futures"
+      ],
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.2,
+        "claimed_risk_reward": 2.2,
+        "breakeven_probability": 0.312,
+        "stated_win_probability": 0.4,
+        "expectancy_r": 0.28,
+        "claimed_edge": 0.088,
+        "stop_atr_multiple": 2.29,
+        "live_price": 43.32,
+        "live_price_asof": "2026-11-23T21:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 879.0,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": 0.6552,
+        "checked_at_et": "2026-11-24T06:39:06-05:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.2:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 43.3 is -0.0% from live 43.32"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "warn",
+            "detail": "no date given for a timed idea"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 5.04 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "stop_distance",
+            "status": "pass",
+            "detail": "stop is 2.29 ATR from entry, clear of the 2.25 ATR guide for a swing etf"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "40% claimed vs 31% break-even at 2.2:1 \u2014 expectancy +0.28R"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-11-23T21:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "no bid/ask available (normal outside regular hours)"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "2% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 3 rests on 2 independent kinds: counter_argument_answered, technical_level"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "1 of 3 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    },
+    {
+      "rank": 3,
+      "symbol": "TLT",
+      "instrument": "iShares 20+ Year Treasury Bond ETF",
+      "asset_class": "etf",
+      "venue": "Robinhood Stocks",
+      "direction": "buy",
+      "horizon": "swing",
+      "conviction": 3,
+      "risk_tier": "standard",
+      "entry": {
+        "ideal": 80.3,
+        "zone_low": 79.6,
+        "zone_high": 81.0,
+        "order_type": "limit",
+        "condition": "Already filled \u2014 entry unchanged at 80.3. Do NOT add at the current 81.69; this is held as a hedge, not accumulated as a rates bet."
+      },
+      "exit": {
+        "target": 84.3,
+        "scale_plan": "The 84.3 target sits at the top of the 90-day range and is not consistent with a hiking path \u2014 trim into any approach to the 84.34 high rather than waiting for the print."
+      },
+      "stop": 78.8,
+      "position_size_pct": 2,
+      "risk_reward": 2.67,
+      "win_probability": 0.36,
+      "last_price": 81.69,
+      "last_price_asof": "2026-11-23T21:00:00+00:00",
+      "price_source": "finnhub (2026-11-23 official close)",
+      "catalyst": {
+        "event": "October core PCE + Q3 GDP second estimate, 08:30 ET \u2014 the direct near-term threat to this position, not its catalyst",
+        "datetime_et": "2026-11-25T08:30",
+        "action": "UPDATE to an existing open long, entry unchanged at 80.3 and already filled. HOLD, but hold it as the book's only duration hedge rather than as a rate-cut bet. Do NOT tighten the 78.8 stop: at 1.93x the 0.78 ATR it is barely above the 1.8 ATR ETF floor, and pulling it in to lock gains would both fail that floor and fake an improvement in reward-to-risk.",
+        "wait": false
+      },
+      "thesis": "Reframing why this is held, because the original reason no longer applies. TLT has returned +0.43% over a month while SPY fell 4.96% \u2014 outperformance of 5.39% \u2014 so it is doing real work as the only hedge against fifteen equity longs. It is not working because rates are falling: the Fed is ~95% priced to hike on Dec 9.",
+      "key_risk": "Tomorrow's 08:30 ET core PCE is consensus 3.2% y/y against 3.1% prior. A hot print strengthens the hiking path, and with the 10y at 4.92% and a second January hike ~57% priced, the 84.3 target sits above the 84.34 90-day high and is not consistent with that rate path. The honest expectation is that this position hedges rather than reaches its target.",
+      "counter_argument": "The strongest case against holding: buying 20-year duration two weeks before a near-certain hike, with inflation re-accelerating, is fighting the stated regime. If the equity book is the thing that needs hedging, cash or short-duration does it without the duration risk \u2014 and if PCE runs hot, TLT and the equity longs can fall together, which is exactly what did NOT happen on 11/20 and is the scenario that breaks the hedge. The red team's addition: the 2.67:1 ratio is itself conditional on the rest of this report being wrong. The 84.30 target sits at the top of the 90-day 76.43-84.34 range and, as the thesis concedes, is not consistent with a ~95%-priced hike, so the ratio that makes this idea pass is measured to a level reachable mainly if the central thesis fails. Hold it as a hedge on that understanding, not as a 2.67:1 trade.",
+      "evidence": [
+        {
+          "kind": "positioning",
+          "detail": "Measured relative strength: TLT +0.43% vs SPY -4.96% over 1m (+5.39% relative) and +3.57% relative over 3m. On the 11/20 liquidation TLT rose to 81.45 on 66.1M shares while SPY fell 3.5% \u2014 the hedge demonstrably functioned under stress",
+          "source": "https://finnhub.io/api/v1/stock/candle?symbol=TLT"
+        },
+        {
+          "kind": "dated_catalyst",
+          "detail": "October Personal Income & Outlays and Q3 GDP second estimate both confirmed for 2026-11-25 08:30 ET on BEA's own release schedule; jobless claims pulled forward to the same day for the holiday",
+          "source": "https://www.bea.gov/news/schedule"
+        },
+        {
+          "kind": "technical_level",
+          "detail": "Fetched OHLCV: close 81.69, above sma20 80.99 and sma50 80.09 \u2014 the only open ETF position above both. Stop 78.8 is 1.93x the 0.7764 ATR; the 90d range is 76.43-84.34, placing the 84.3 target at the very top of it",
+          "source": "https://finnhub.io/api/v1/stock/candle?symbol=TLT"
+        }
+      ],
+      "sources": [
+        "https://www.bea.gov/news/schedule",
+        "https://fred.stlouisfed.org/series/DGS10",
+        "https://predictionmarketspicks.com/articles/fed-rate-december-2026-odds-half-point-hike-dot-plot-kalshi-polymarket-futures"
+      ],
+      "validation": {
+        "verdict": "warn",
+        "computed_risk_reward": 2.67,
+        "claimed_risk_reward": 2.67,
+        "breakeven_probability": 0.272,
+        "stated_win_probability": 0.36,
+        "expectancy_r": 0.321,
+        "claimed_edge": 0.088,
+        "stop_atr_multiple": 1.93,
+        "live_price": 81.69,
+        "live_price_asof": "2026-11-23T21:00:00+00:00",
+        "market_session": "pre",
+        "price_age_minutes": 879.0,
+        "bid": null,
+        "ask": null,
+        "spread_pct": null,
+        "atr14": 0.7764,
+        "checked_at_et": "2026-11-24T06:39:16-05:00",
+        "checks": [
+          {
+            "check": "direction_consistency",
+            "status": "pass",
+            "detail": "entry, target and downside are ordered correctly"
+          },
+          {
+            "check": "risk_reward",
+            "status": "pass",
+            "detail": "computed 2.67:1 clears the 2.0:1 floor"
+          },
+          {
+            "check": "entry_vs_live",
+            "status": "pass",
+            "detail": "entry 80.3 is -1.7% from live 81.69"
+          },
+          {
+            "check": "catalyst_date",
+            "status": "pass",
+            "detail": "catalyst 2026-11-25 is ahead of us"
+          },
+          {
+            "check": "target_feasibility",
+            "status": "pass",
+            "detail": "target is 5.15 ATR away, 15 session(s) to get there"
+          },
+          {
+            "check": "stop_distance",
+            "status": "warn",
+            "detail": "stop is 1.93 ATR from entry \u2014 clears the 1.8 ATR floor for a swing etf but sits under the 2.25 ATR level where stop-outs have clustered"
+          },
+          {
+            "check": "expectancy",
+            "status": "pass",
+            "detail": "36% claimed vs 27% break-even at 2.67:1 \u2014 expectancy +0.32R"
+          },
+          {
+            "check": "price_freshness",
+            "status": "pass",
+            "detail": "market is pre; last price 2026-11-23T21:00:00+00:00 is the freshest available"
+          },
+          {
+            "check": "spread",
+            "status": "warn",
+            "detail": "no bid/ask available (normal outside regular hours)"
+          },
+          {
+            "check": "conviction",
+            "status": "pass",
+            "detail": "conviction 3 clears the floor of 2"
+          },
+          {
+            "check": "position_size",
+            "status": "pass",
+            "detail": "2% is within the 5% per-idea ceiling"
+          },
+          {
+            "check": "conviction_evidence",
+            "status": "pass",
+            "detail": "conviction 3 rests on 3 independent kinds: dated_catalyst, positioning, technical_level"
+          },
+          {
+            "check": "sources",
+            "status": "warn",
+            "detail": "1 of 3 source(s) could not be verified (bot-blocked or unreachable), which is not proof they are wrong"
+          }
+        ]
+      }
+    }
+  ],
+  "watchlist": [
+    {
+      "symbol": "GLD",
+      "instrument": "SPDR Gold Shares",
+      "note": "The biggest dislocation on the board \u2014 22.45% off its 90d high of 429.42, with gold ~35% below its 2026-01-28 high \u2014 and it was WANTED as a long but fails its own floors in both horizons. As long_term, a 2.5 ratio against a ~300 bear case demands a 415.5 target, within 3.2% of the all-time high. As swing, a stop below the 320.95 capitulation low is only 1.61 ATR and fails the 1.8 ATR ETF floor; widening to 315 then needs exactly 363.0 to hit 2.00 \u2014 a ratio landing precisely on the floor. Central-bank demand has NOT turned (WGC: 321t bought in Q3 vs a ~227t average), but the drivers that caused the fall \u2014 rising yields, hike expectations \u2014 have not reversed either.",
+      "trigger": "Either GLD reclaims its 20-day at 358.68, confirming the forced-selling explanation was the whole story, or the Fed signals a pause."
+    },
+    {
+      "symbol": "SLV",
+      "instrument": "iShares Silver Trust",
+      "note": "Higher-beta version of the same unconfirmed gold trade \u2014 39.5% off its high, ATR 4.52%. Rejected for the same reason: no honest level set clears the floors while the rate driver is still adverse.",
+      "trigger": "Same as GLD \u2014 a 20-day reclaim or a Fed pause signal."
+    },
+    {
+      "symbol": "GDX",
+      "instrument": "VanEck Gold Miners ETF",
+      "note": "Higher-beta version of the same unconfirmed gold trade \u2014 31.1% off its high, ATR 5.85%. Rejected with SLV.",
+      "trigger": "Same as GLD \u2014 a 20-day reclaim or a Fed pause signal."
+    },
+    {
+      "symbol": "GLD-SHORT",
+      "instrument": "SPDR Gold Shares \u2014 pending SELL @ 406.77 from 2026-10-25",
+      "note": "CANCEL. GLD is 333.02; the short entry was set ABOVE the market and never filled while gold fell ~18% from that level. The call was correct and earned exactly zero. config/strategy.md names the long-side version of this error; the short-side mirror is identical and is not yet written down \u2014 a short entry above the market only fills if the trade first goes against you.",
+      "trigger": "Cancel the order. Any new gold short is a new trade needing its own levels, and after an 18% move the reward left does not clear the floor."
+    },
+    {
+      "symbol": "/MBTZ6",
+      "instrument": "Micro Bitcoin futures \u2014 pending SHORT @ 74075 from 2026-11-09",
+      "note": "CANCEL. BTC is $59,738, down ~19% from the entry level, which never filled for the same structural reason as the GLD short: entry set above market, thesis worked immediately, nothing earned.",
+      "trigger": "Cancel the order. Re-shorting here has no reward left to clear the futures floor."
+    },
+    {
+      "symbol": "KXFEDDECISION-26DEC-H0",
+      "instrument": "Kalshi \u2014 Fed maintains rate at Dec 9 FOMC, pending YES @ 10 from 2026-11-21",
+      "note": "CANCEL \u2014 thesis falsified by the tape. A hold is now priced ~3% against the 10c paid for. Separately flagged and NOT published as an idea: ~3c for 'Fed holds' is a genuinely cheap hedge against a market accident before Dec 9, but every Kalshi public price field returned null today, so no implied probability could be quoted and config/universe.md requires exactly that.",
+      "trigger": "A fetchable bid/ask on the KXFEDDECISION-26DEC ladder."
+    },
+    {
+      "symbol": "LEN",
+      "instrument": "Lennar Corp \u2014 pending BUY @ 79.5 from 2026-11-13",
+      "note": "Level UNCHANGED and still unfilled; spot 81.80, above the entry. Deliberately not advanced today: a homebuilder long is the wrong side of a Fed that is 95% priced to hike on Dec 9 and ~57% to hike again in January. Flagged as a regime conflict rather than re-pitched. Note the tape does not confirm the opposite trade either \u2014 XHB is above its 50-day at 98.46 despite a 4.92% 10y, so shorting builders was also rejected.",
+      "trigger": "Either a pullback to 79.5 with the rate path repriced, or a Fed pause signal."
+    },
+    {
+      "symbol": "VZ",
+      "instrument": "Verizon Communications \u2014 pending BUY @ 46.0 from 2026-11-22",
+      "note": "Level UNCHANGED and still unfilled; spot 46.45, close but above the entry. Nothing new to report.",
+      "trigger": "A touch of 46.0."
+    },
+    {
+      "symbol": "HUN",
+      "instrument": "Huntsman Corp \u2014 open long, entry 9.0, spot 8.54",
+      "note": "Same negative-expectancy shape as DKS but too small to be worth the exit: from spot the target is +26.7% and the stop -5.3%, roughly 5:1 against for a ~17% implied hit rate against a 33% break-even, and it cannot be repaired \u2014 a target at sma20 9.35 gives R:R 0.38. CEO Peter Huntsman bought 100,000 shares at 9.81 on 2026-08-03 and the stock is 13% below his price, but that is ONE buyer, not DKS's seven. Treat as a lottery ticket already struck.",
+      "trigger": "Do not add. Let the 8.09 stop do its work \u2014 it is 5.3% below spot, the nearest stop in the book."
+    },
+    {
+      "symbol": "PFE",
+      "instrument": "Pfizer Inc \u2014 open long, entry 27.6, spot 27.40",
+      "note": "STRUCTURAL DEFECT, not a view on the business: this position carries NO STOP and no stated invalidation condition, which config/strategy.md requires on every long equity idea. It has been open 69 days and gone nowhere. Flagged rather than fixed, because a stop retro-fitted at a price the position never traded against is not a risk control.",
+      "trigger": "Needs an invalidation level set deliberately, not back-filled."
+    },
+    {
+      "symbol": "CAG",
+      "instrument": "Conagra Brands \u2014 open long, entry 14.4, spot 14.86",
+      "note": "Same STRUCTURAL DEFECT as PFE: no stop and no stated invalidation condition. Currently +3.2%. Flagged rather than fixed, for the same reason.",
+      "trigger": "Needs an invalidation level set deliberately, not back-filled."
+    },
+    {
+      "symbol": "/MNQ",
+      "instrument": "Micro E-mini Nasdaq-100 futures \u2014 short, rejected",
+      "note": "The futures-preferred expression of shorting the squeeze, and it was rejected on arithmetic: QQQ's 3.70% ATR demands a 2.5 ATR futures stop of ~9.3%, which no reachable target repays. Also rejected on judgement \u2014 shorting the Nasdaq the session after Huang's return with explicit White House backing is a fight that cannot be sized safely in a holiday week.",
+      "trigger": "A lower ATR, or a failed retest of the QQQ 20-day at 675.47."
+    },
+    {
+      "symbol": "XLF",
+      "instrument": "Financial Select Sector SPDR \u2014 rejected",
+      "note": "A steepening curve (10y2y +0.29) and higher reinvestment yields are a real tailwind for banks, but 11/20 put through 81.9M shares of liquidation and there is no edge that can be dated. Spot 55.65, below sma20 57.17, just above sma50 55.84, 7.31% off its high.",
+      "trigger": "A dateable catalyst \u2014 a bank-specific event or a confirmed reclaim of sma20."
+    },
+    {
+      "symbol": "DKS-REENTRY",
+      "instrument": "Dick's Sporting Goods \u2014 re-entry after today's close",
+      "note": "The DKS thesis is the best-evidenced long in the book at a different price: seven distinct insiders bought $5.59M between 128.70 and 136.39, and 11/23 traded the heaviest volume of the window on an up day. Once today's close completes, a fresh long is a genuinely separate trade, not a re-pitch.",
+      "trigger": "A fresh long inside or below the 128.70-136.39 insider band, structured with its own 2.0+ ATR stop below the 120.15 ninety-day low."
+    },
+    {
+      "symbol": "HII,KHC,UNP,ABT,RTX,XLV,ADM",
+      "instrument": "Open longs held on unchanged levels",
+      "note": "HOLD, levels unchanged, nothing new to report and so deliberately not published as recommendations. HII +9.4% (defence, rate-insensitive, working), KHC +9.1% (staples, working), UNP +0.1% (flat 39 days), ABT +0.3% (flat 34 days), RTX -2.1%, XLV -2.5%, ADM -1.9%. None is near its stop.",
+      "trigger": "None pending. Note the book-level problem these illustrate: it is long defensives, staples, healthcare, utilities, rails and duration \u2014 a cut-cycle book being run in a hike cycle."
+    },
+    {
+      "symbol": "CVS",
+      "instrument": "CVS Health Corp",
+      "note": "Red team cut, on arithmetic rather than judgement. The 95.40 target is exactly what the 2.0 floor requires from the published levels: 79.80 + 2 x (79.80 - 72.00) = 95.4000, matching the published figure to the cent, and it is the only one of the report's five targets for which that is true. No level in the 1-year 58.50-110.68 range marks 95.40 and no evidence entry cites one there. The nearest defensible resistance above, sma50 88.11, yields 1.07:1, and the sma20 86.30 the thesis itself calls 'reachable' yields 0.83:1 \u2014 both under the 2.0 swing floor \u2014 and the stop cannot be moved to rescue them, since 72.00 is already 2.02 ATR against a 2.0 ATR stock floor. The amendment had also walked the stop IN, from the 2026-11-05 order's 71.50 (2.20 ATR) to 72.00 (2.02 ATR), so both legs of the level set moved toward the minimum that passes. Synthesis named the target 'the weak part of this idea' and was right: an idea that clears the floor only at a price no structure supports never cleared it. The CEO's $2.0M purchase at 83.895 with zero insider sales in six months is a real signal and the 80.00 entry has been reached \u2014 this kills the levels, not the idea, and it abandons no live position because the order is still pending.",
+      "trigger": "Republish only with a target taken from structure rather than from the floor. sma50 88.11 is the defensible one, and at a 2.0 ATR stop it needs an entry near 83.3 or below to clear 2.0:1 \u2014 i.e. a materially lower entry than 79.80, or a wider stop and a smaller size. Do not amend the standing pending order's target upward to make the ratio work.",
+      "demoted_from_rank": 4,
+      "demotion_reason": "Target fitted to the reward-to-risk floor to the cent with no structure behind it; no repair route clears 2.0:1."
+    },
+    {
+      "symbol": "DKS",
+      "instrument": "Dick's Sporting Goods Inc",
+      "note": "NOT a new trade \u2014 this is the live instruction for the open DKS long (opened 2026-11-13 at 144.50, filled 11-16, stored stop 129.00). SELL THE SHARES into the 131.00-136.40 band, as a LIMIT order, before Wednesday's holiday liquidity drain. Do NOT establish a short. From spot 133.67 the published 175.50 target is 31.3% away while the 129.00 stop is 3.5% (0.70 ATR), so the position as published cannot reach its own target, and exiting near 133 rather than at 129 is the whole edge \u2014 worth about 3.5%. The red team moved this here rather than leaving it a recommendation for a mechanical reason: merge_report keys a position on (symbol, direction), the open DKS row is direction 'buy', and a 'sell' row reaching publish would have opened a NEW short at 133.67 instead of closing the long \u2014 the exact thing the recommendation's own condition forbids. The honest caveat cuts the other way: seven insiders bought 128.70-136.39 for $5.59M, bracketing spot, and 11/23 put through the window's heaviest volume on an up day, so that evidence is intact and closing here may be selling the bottom. If you choose to hold, the stored 129.00 stop stands and is 3.5% away.",
+      "trigger": "Re-entry is a separate trade: only at or below the 128.70-136.39 insider band, with its own stop below the 120.15 ninety-day low and a target inside the 90-day range rather than the old 175.50.",
+      "demoted_from_rank": 5,
+      "demotion_reason": "An exit measured by an entry validator fails structurally (no stop, no stop distance); demoted deliberately so the note carries the instruction and no phantom short can be opened."
+    },
+    {
+      "symbol": "OXY",
+      "instrument": "Occidental Petroleum Corp",
+      "note": "Red team cut on the idea's own numbers. Win probability 0.26 against the 0.325 break-even implied by its 2.08:1 ratio is an expectancy of -0.20R: it loses money at its stated hit rate, and synthesis rightly refused to raise the figure to make the check pass. The thesis is being actively falsified rather than merely unconfirmed \u2014 USO fell 4.49% to a lower low on 11/23, the single biggest risk-on day since April 2025, and XLE was the only red sector ETF that session. Spot 52.70 sits 0.3% above the 90-day low of 52.55, and conviction 2 rests on one evidence kind. The open long (opened 2026-09-24 at 54.00, filled 11-10) remains tracked on its stored 62.00 target and 50.15 stop whether or not anyone acts. Operative instruction unchanged: do NOT add, and treat a daily CLOSE below 52.55 as the exit, ahead of and regardless of the 50.15 stop \u2014 that is where the thesis is actually wrong.",
+      "trigger": "Nothing here is actionable until crude itself turns: USO back above its 20-day at 148.46, and a daily close back above OXY's 57.95 sma20.",
+      "demoted_from_rank": 6,
+      "demotion_reason": "Expectancy -0.20R at its own stated hit rate; underlying being falsified by new data rather than awaiting confirmation."
+    }
+  ],
+  "validation_summary": {
+    "checked": 3,
+    "passed": 0,
+    "warned": 3,
+    "failed": 0,
+    "enforced": true
+  }
+}
