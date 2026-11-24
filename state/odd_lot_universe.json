@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-11-24T05:31:15-05:00",
-  "last_run_at": "2026-11-24T05:31:15-05:00",
+  "updated_at": "2026-11-24T18:32:26-05:00",
+  "last_run_at": "2026-11-24T18:32:26-05:00",
   "discovery_error": null,
   "open": [
     {
@@ -170,7 +170,7 @@
       "status": "rejected",
       "tier": null,
       "rejections": [
-        "spread -12.42% below the 1.5% floor"
+        "spread -12.78% below the 1.5% floor"
       ],
       "risk_flags": [
         "market_price_above_offer",
@@ -218,14 +218,14 @@
       "withdrawal_deadline": "2026-12-10",
       "withdrawal_basis": "expiration_date",
       "max_shares_sought": null,
-      "market_price": 4.91,
-      "price_asof": "2026-11-23T21:00:00+00:00",
+      "market_price": 4.93,
+      "price_asof": "2026-11-24T21:00:00+00:00",
       "price_source": "finnhub",
-      "spread_pct": -0.124236,
-      "capital": 486.09,
+      "spread_pct": -0.127789,
+      "capital": 488.07,
       "days_to_expiry": 16,
-      "annualized": -2.83414,
-      "gross_profit": -60.39,
+      "annualized": -2.915188,
+      "gross_profit": -62.37,
       "avg_volume_30d": 97333
     },
     {
@@ -414,6 +414,73 @@
       "withdrawal_deadline": "2026-12-18",
       "withdrawal_basis": "expiration_date",
       "max_shares_sought": 18674986
+    },
+    {
+      "accession": "0001193125-26-474906",
+      "cik": "0002012139",
+      "company": "Fortress Private Lending Fund",
+      "ticker": "",
+      "form": "SC TO-I",
+      "filed": "2026-11-24",
+      "url": "https://www.sec.gov/Archives/edgar/data/2012139/000119312526474906/ck0002012139-ex99_a1ii.htm",
+      "index_url": "https://www.sec.gov/Archives/edgar/data/2012139/000119312526474906/0001193125-26-474906-index.htm",
+      "highlights": [],
+      "documents": [
+        {
+          "name": "ck0002012139-ex99_a1ii.htm",
+          "type": "EX-99.(A)(1)(II)",
+          "url": "https://www.sec.gov/Archives/edgar/data/2012139/000119312526474906/ck0002012139-ex99_a1ii.htm"
+        },
+        {
+          "name": "ck0002012139-ex99_a1iii.htm",
+          "type": "EX-99.(A)(1)(III)",
+          "url": "https://www.sec.gov/Archives/edgar/data/2012139/000119312526474906/ck0002012139-ex99_a1iii.htm"
+        }
+      ],
+      "found_by": "\"odd lot\" / SC TO-I",
+      "first_seen": "2026-11-24",
+      "status": "rejected",
+      "tier": null,
+      "rejections": [
+        "no ticker for CIK 0002012139 in the filing or the SEC company list \u2014 cannot price the trade"
+      ],
+      "risk_flags": [],
+      "last_scored": "2026-11-24",
+      "warnings": [],
+      "documents_read": [
+        "ck0002012139-ex99_a1ii.htm"
+      ],
+      "document": "ck0002012139-ex99_a1ii.htm",
+      "terms": {
+        "has_threshold": true,
+        "has_proration_preference": true,
+        "is_cash_offer": true,
+        "consideration": "cash",
+        "is_common_equity": true,
+        "subject_security": "Common Shares",
+        "offer_price": 0.01,
+        "dutch_range": null,
+        "price_basis": "fixed",
+        "expiration_date": "2026-12-22",
+        "withdrawal_deadline": "2026-12-22",
+        "withdrawal_basis": "expiration_date",
+        "max_shares_sought": 2376733,
+        "preference_removed": false,
+        "record_holder_condition": null,
+        "restricted_offer": false,
+        "terminated": false,
+        "risk_flags": [
+          "foreign_private_issuer"
+        ]
+      },
+      "odd_lot_paragraph": "class=\"main-content-container\" style=\"z-index:5;position:relative;\"> class=\"fixed-width-container\" style=\"margin-left:auto;padding-left:0.5in;width:7.5in;box-sizing:content-box;margin-right:auto;padding-right:0.5in;\"> style=\"text-indent:36pt;tab-size:26.66px;font-size:10pt;margin-top:0;font-family:Times New Roman;margin-bottom:12pt;text-align:justify;\"> Any Shareholder who (i) owns, beneficially or of record, fewer than 100 Shares in the aggregate (an \u201codd lot\u201d), (ii) validly tenders all, but not less than all, of its Shares, completes the section entitled \u201cOdd Lots\u201d in the Letter of Transmittal, and (iii) does not validly withdraw any of the tendered Shares before the Expiration Date is referred to herein as an \u201cOdd Lot Holder.\u201d To the extent that the number of Shares validly tendered and not validly withdrawn exceeds the number of Shares offered for repurchase, all of the Shares of Odd Lot Holders will be accepted for payment before any pro rata reduction of the repurchase of Shares validly tendered and not validly withdrawn by Shareholders who are not Odd Lot Holders, provided that this priority to Odd Lot Holders is not available to partial tenders or to beneficial or record holders of 100 or more Shares in the aggregate, even if such holders have separate accounts or certificates representing fewer than 100 Shares. To qualify for this priority, an Odd Lot Holder must validly tender (and not validly withdraw) all Shares owned by such Odd Lot Holder in accordance with the procedures described in Section 4 below.",
+      "offer_price": 0.01,
+      "dutch_range": null,
+      "price_basis": "fixed",
+      "expiration_date": "2026-12-22",
+      "withdrawal_deadline": "2026-12-22",
+      "withdrawal_basis": "expiration_date",
+      "max_shares_sought": 2376733
     }
   ],
   "archive": [
@@ -2601,18 +2668,21 @@
   ],
   "funnel": {
     "queries": 96,
-    "pages": 96,
-    "raw_hits": 122,
-    "filings": 21,
-    "documents": 41,
+    "pages": 94,
+    "raw_hits": 113,
+    "filings": 22,
+    "documents": 40,
     "window": "2026-09-10..2026-11-24",
     "slices": 4,
-    "failed_queries": 0,
-    "failures": [],
+    "failed_queries": 2,
+    "failures": [
+      "SC 13E3 \"odd lot\" 2026-11-24..2026-11-24: HTTPError: 500 Server Error: Internal Server Error for url: https://efts.sec.gov/LATEST/search-index?q=%22odd+lot%22&forms=SC+13E3&dateRange=custom&startdt=2026-11-24&enddt=2026-11-24",
+      "SC TO-I \"odd lots\" 2026-09-10..2026-10-04: HTTPError: 500 Server Error: Internal Server Error for url: https://efts.sec.gov/LATEST/search-index?q=%22odd+lots%22&forms=SC+TO-I&dateRange=custom&startdt=2026-09-10&enddt=2026-10-04"
+    ],
     "rejected_by": {
       "no odd-lot language": 5,
+      "no ticker": 3,
       "expired or terminated": 2,
-      "no ticker": 2,
       "no consideration stated": 1,
       "not common equity": 1,
       "an exchange offer, not cash": 1,

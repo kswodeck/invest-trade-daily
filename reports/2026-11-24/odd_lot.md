@@ -1,6 +1,6 @@
 # Odd-lot tender screener — 2026-11-24
 
-Run 2026-11-24 05:31 ET (premarket slot). 6 offers tracked, 0 clear every gate: 0 Tier A, 0 Tier B, 0 Tier C.
+Run 2026-11-24 18:32 ET (evening slot). 7 offers tracked, 0 clear every gate: 0 Tier A, 0 Tier B, 0 Tier C.
 
 **No Tier A opportunities today.** That is the ordinary result — an odd-lot tender with a 3%+ spread and a clean condition set is rare, and the thresholds below are not moved to produce one.
 
@@ -20,10 +20,11 @@ _None._
 
 | Ticker | Form | Filed | Reason |
 | --- | --- | --- | --- |
+| — | SC TO-I | 2026-11-24 | no ticker for CIK 0002012139 in the filing or the SEC company list — cannot price the trade |
 | — | SC TO-I | 2026-11-19 | no ticker for CIK 0002031750 in the filing or the SEC company list — cannot price the trade |
 | — | SC TO-I | 2026-11-19 | no ticker for CIK 0001918712 in the filing or the SEC company list — cannot price the trade |
 | — | SC TO-I | 2026-11-13 | no 'fewer than 100 shares' odd-lot threshold in the document; odd lots mentioned but no acceptance-before-proration language |
-| MYPS | SC TO-I | 2026-11-12 | spread -12.42% below the 1.5% floor |
+| MYPS | SC TO-I | 2026-11-12 | spread -12.78% below the 1.5% floor |
 | XFLT | SC TO-I | 2026-09-18 | no 'fewer than 100 shares' odd-lot threshold in the document; odd lots mentioned but no acceptance-before-proration language; an exchange offer for other securities, not cash; no expiration date could be read from the document |
 | — | EX-99 | 2026-09-01 | odd lots mentioned but no acceptance-before-proration language; no cash consideration stated in the document; subject security is not common equity (unidentified security); no expiration date could be read from the document |
 
@@ -31,19 +32,24 @@ _None._
 
 A screener that finds nothing reads exactly like one that is broken. This is the difference.
 
-- **96** full-text queries over `2026-09-10..2026-11-24` returned **122** document hit(s) across **21** filing(s) (**41** exhibits kept as candidates)
-- searched as **4** date slice(s), **96** result page(s) read
-- **6** offers open, **33** archived
+- **96** full-text queries over `2026-09-10..2026-11-24` returned **113** document hit(s) across **22** filing(s) (**40** exhibits kept as candidates)
+- searched as **4** date slice(s), **94** result page(s) read
+- **7** offers open, **33** archived
 
 | Turned away for | Count |
 | --- | --- |
 | no odd-lot language | 5 |
+| no ticker | 3 |
 | expired or terminated | 2 |
-| no ticker | 2 |
 | no consideration stated | 1 |
 | not common equity | 1 |
 | an exchange offer, not cash | 1 |
 | spread too thin | 1 |
+
+> ⚠ **2 of 96 queries failed**, so this sweep is thinner than it looks. EFTS returns 500s; a failed slice is retried on the next run rather than losing the pass.
+
+> - `SC 13E3 "odd lot" 2026-11-24..2026-11-24: HTTPError: 500 Server Error: Internal Server Error for url: https://efts.sec.gov/LATEST/search-index?q=%22odd+lot%22&forms=SC+13E3&dateRange=custom&startdt=2026-11-24&enddt=2026-11-24`
+> - `SC TO-I "odd lots" 2026-09-10..2026-10-04: HTTPError: 500 Server Error: Internal Server Error for url: https://efts.sec.gov/LATEST/search-index?q=%22odd+lots%22&forms=SC+TO-I&dateRange=custom&startdt=2026-09-10&enddt=2026-10-04`
 
 ## Thresholds in force
 
