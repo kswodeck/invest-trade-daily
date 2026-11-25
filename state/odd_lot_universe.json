@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-11-24T18:32:26-05:00",
-  "last_run_at": "2026-11-24T18:32:26-05:00",
+  "updated_at": "2026-11-25T05:32:29-05:00",
+  "last_run_at": "2026-11-25T05:32:29-05:00",
   "discovery_error": null,
   "open": [
     {
@@ -25,7 +25,7 @@
         "no expiration date could be read from the document"
       ],
       "risk_flags": [],
-      "last_scored": "2026-11-24",
+      "last_scored": "2026-11-25",
       "warnings": [],
       "terms": {
         "has_threshold": true,
@@ -92,7 +92,7 @@
         "no expiration date could be read from the document"
       ],
       "risk_flags": [],
-      "last_scored": "2026-11-24",
+      "last_scored": "2026-11-25",
       "warnings": [],
       "documents_read": [
         "ea0305940-01_ex99di.htm",
@@ -176,7 +176,7 @@
         "market_price_above_offer",
         "litigation_or_regulatory_condition"
       ],
-      "last_scored": "2026-11-24",
+      "last_scored": "2026-11-25",
       "warnings": [],
       "documents_read": [
         "ea031178201ex99a1i.htm"
@@ -223,10 +223,10 @@
       "price_source": "finnhub",
       "spread_pct": -0.127789,
       "capital": 488.07,
-      "days_to_expiry": 16,
-      "annualized": -2.915188,
+      "days_to_expiry": 15,
+      "annualized": -3.109533,
       "gross_profit": -62.37,
-      "avg_volume_30d": 97333
+      "avg_volume_30d": 97758
     },
     {
       "accession": "0001193125-26-460080",
@@ -254,7 +254,7 @@
         "odd lots mentioned but no acceptance-before-proration language"
       ],
       "risk_flags": [],
-      "last_scored": "2026-11-24",
+      "last_scored": "2026-11-25",
       "warnings": [],
       "documents_read": [
         "d141726dex99a1ii.htm"
@@ -316,7 +316,7 @@
         "no ticker for CIK 0002031750 in the filing or the SEC company list \u2014 cannot price the trade"
       ],
       "risk_flags": [],
-      "last_scored": "2026-11-24",
+      "last_scored": "2026-11-25",
       "warnings": [],
       "documents_read": [
         "tm2630271d1_ex99-a1ii.htm"
@@ -378,7 +378,7 @@
         "no ticker for CIK 0001918712 in the filing or the SEC company list \u2014 cannot price the trade"
       ],
       "risk_flags": [],
-      "last_scored": "2026-11-24",
+      "last_scored": "2026-11-25",
       "warnings": [],
       "documents_read": [
         "tm2630003d1_ex99-a1ii.htm"
@@ -445,7 +445,7 @@
         "no ticker for CIK 0002012139 in the filing or the SEC company list \u2014 cannot price the trade"
       ],
       "risk_flags": [],
-      "last_scored": "2026-11-24",
+      "last_scored": "2026-11-25",
       "warnings": [],
       "documents_read": [
         "ck0002012139-ex99_a1ii.htm"
@@ -2668,17 +2668,14 @@
   ],
   "funnel": {
     "queries": 96,
-    "pages": 94,
-    "raw_hits": 113,
+    "pages": 96,
+    "raw_hits": 128,
     "filings": 22,
-    "documents": 40,
-    "window": "2026-09-10..2026-11-24",
+    "documents": 43,
+    "window": "2026-09-11..2026-11-25",
     "slices": 4,
-    "failed_queries": 2,
-    "failures": [
-      "SC 13E3 \"odd lot\" 2026-11-24..2026-11-24: HTTPError: 500 Server Error: Internal Server Error for url: https://efts.sec.gov/LATEST/search-index?q=%22odd+lot%22&forms=SC+13E3&dateRange=custom&startdt=2026-11-24&enddt=2026-11-24",
-      "SC TO-I \"odd lots\" 2026-09-10..2026-10-04: HTTPError: 500 Server Error: Internal Server Error for url: https://efts.sec.gov/LATEST/search-index?q=%22odd+lots%22&forms=SC+TO-I&dateRange=custom&startdt=2026-09-10&enddt=2026-10-04"
-    ],
+    "failed_queries": 0,
+    "failures": [],
     "rejected_by": {
       "no odd-lot language": 5,
       "no ticker": 3,
